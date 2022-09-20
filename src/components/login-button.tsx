@@ -1,10 +1,9 @@
-import { IMsalContext, useMsal } from "@azure/msal-react";
+import { useMsal } from "@azure/msal-react";
 import { FunctionComponent } from "react";
 import { loginRequest } from "../../auth-config";
 import { IPublicClientApplication } from "@azure/msal-browser";
 
 function handleLogin(instance: IPublicClientApplication) {
-  instance.setActiveAccount(null);
   instance.loginRedirect(loginRequest).catch((e: any) => {
     console.error(e);
   });

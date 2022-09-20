@@ -1,15 +1,16 @@
-import { IMsalContext, useMsal } from "@azure/msal-react";
+import { useMsal } from "@azure/msal-react";
 import { FunctionComponent } from "react";
+import { IPublicClientApplication } from "@azure/msal-browser";
 
-function handleLogout(context: IMsalContext) {
-  context.instance.logout().catch((e: any) => {
+function handleLogout(instance: IPublicClientApplication) {
+  instance.logoutRedirect().catch((e: any) => {
     console.error(e);
   });
 }
 
 const LogoutButton: FunctionComponent = () => {
-  const msalContext = useMsal();
-  return <button onClick={() => handleLogout(msalContext)}>Logout</button>;
+  const { instance } = useMsal();
+  return <button onClick={() => handleLogout(instance)}>Logout</button>;
 };
 
 export default LogoutButton;
