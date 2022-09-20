@@ -1,4 +1,5 @@
 import { PublicClientApplication } from "@azure/msal-browser";
+import { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
 
 // See https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-react
 
@@ -15,6 +16,13 @@ const msalConfig = {
 };
 
 export const msalInstance = new PublicClientApplication(msalConfig);
+
+function handleResponse(response: AuthenticationResult | null) {
+  if (!response) return;
+  msalInstance.setActiveAccount(response.account);
+}
+
+msalInstance.handleRedirectPromise().then(handleResponse);
 
 // Add scopes here for ID token to be used at Microsoft identity platform endpoints.
 export const loginRequest = {
