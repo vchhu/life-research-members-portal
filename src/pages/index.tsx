@@ -5,6 +5,7 @@ import LoginButton from "../components/login-button";
 import UserData from "../components/user-data";
 import LogoutButton from "../components/logout-button";
 import Head from "next/head";
+import IdTokenButton from "../components/get-id-token";
 
 const App: NextPage = () => {
   return (
@@ -16,6 +17,8 @@ const App: NextPage = () => {
         <LoginButton />
         <br />
         <LogoutButton />
+        <br />
+        <IdTokenButton />
         <br />
         <UserData />
       </MsalProvider>
