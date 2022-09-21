@@ -3,7 +3,7 @@ import { FunctionComponent } from "react";
 import { IPublicClientApplication } from "@azure/msal-browser";
 
 function handleLogout(instance: IPublicClientApplication) {
-  instance.logoutRedirect().catch((e: any) => {
+  instance.logoutRedirect({ onRedirectNavigate: () => false }).catch((e: any) => {
     console.error(e);
   });
 }
