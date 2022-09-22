@@ -2,11 +2,12 @@ import { useMsal } from "@azure/msal-react";
 import { FunctionComponent } from "react";
 import { IPublicClientApplication } from "@azure/msal-browser";
 import authHeader from "../utils/auth-header";
+import { scopes } from "../../auth-config";
 
 function handleValidate(instance: IPublicClientApplication) {
   instance
     .acquireTokenSilent({
-      scopes: ["openid"], // openid scope is required to check cache for tokens
+      scopes,
       account: instance.getActiveAccount() || undefined,
     })
     .then(({ accessToken }) => fetch("/api/validate", { headers: authHeader(accessToken) }))
