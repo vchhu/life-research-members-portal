@@ -1,11 +1,12 @@
 import { useMsal } from "@azure/msal-react";
 import { FunctionComponent } from "react";
 import { IPublicClientApplication } from "@azure/msal-browser";
+import { scopes } from "../../auth-config";
 
 function handleGetToken(instance: IPublicClientApplication) {
   instance
     .acquireTokenSilent({
-      scopes: ["openid"], // openid scope is required to check cache for tokens
+      scopes,
       account: instance.getActiveAccount() || undefined,
     })
     .then((res) => console.log("Tokens:", res))

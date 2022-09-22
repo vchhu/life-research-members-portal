@@ -1,7 +1,7 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import { AccountInfo } from "@azure/msal-browser";
 import React, { FunctionComponent } from "react";
-import useForceUpdate from "../utils/forceUpdate";
+import useForceUpdate from "../utils/use-force-update";
 
 const UserData: FunctionComponent = () => {
   const forceUpdate = useForceUpdate();

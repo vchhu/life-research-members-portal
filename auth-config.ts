@@ -22,9 +22,10 @@ const msalConfig: Configuration = {
 
 export const msalInstance = new PublicClientApplication(msalConfig);
 
-// Add scopes here for ID token to be used at Microsoft identity platform endpoints.
+export const scopes = ["openid", "email"];
+
 export const loginRequest: RedirectRequest = {
-  scopes: ["openid"],
+  scopes,
   prompt: "select_account",
 };
 

@@ -1,6 +1,7 @@
 import { useMsal } from "@azure/msal-react";
 import { FunctionComponent } from "react";
 import { IPublicClientApplication } from "@azure/msal-browser";
+import authHeader from "../utils/auth-header";
 
 function handleValidate(instance: IPublicClientApplication) {
   instance
@@ -8,8 +9,9 @@ function handleValidate(instance: IPublicClientApplication) {
       scopes: ["openid"], // openid scope is required to check cache for tokens
       account: instance.getActiveAccount() || undefined,
     })
-    .then(({ accessToken }) => fetch("/api/validate", { headers: { "access-token": accessToken } }))
-    .then(({ body }) => console.log(body))
+    .then(({ accessToken }) => fetch("/api/validate", { headers: authHeader(accessToken) }))
+    .then((res) => res.text())
+    .then((m) => console.log(m))
     .catch((e: any) => console.error(e));
 }
 

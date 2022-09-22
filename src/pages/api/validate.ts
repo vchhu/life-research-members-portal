@@ -1,10 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
+import getUserInfo from "../../utils/get-user-info";
 
 type Data = any;
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  const accessToken = req.headers["access-token"];
-  if (typeof accessToken !== "string") return res.status(401).send("Access Token Not Found");
-  res.status(200).json({ message: "Access Token was: " + accessToken });
+  if (!req.headers.authorization) return res.status(401).send("No Authorization Header");
+  return getUserInfo(req.headers.authorization)
+    .then((userInfoRes) =>
+      userInfoRes.text().then((body) => res.status(userInfoRes.status).send(body))
+    )
+    .catch((e: any) => res.status(500).json(e));
 }
