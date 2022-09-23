@@ -1,0 +1,578 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model main_Events {
+  ID                 Int                      @id(map: "main_Events$PrimaryKey") @default(autoincrement())
+  name_en            String?                  @db.NVarChar(255)
+  name_fr            String?                  @db.NVarChar(255)
+  start_date         DateTime?
+  end_date           DateTime?
+  notes              String?                  @db.NVarChar(Max)
+  type               Int?
+  SSMA_TimeStamp     Unsupported("timestamp")
+  types_Event        types_Event?             @relation(fields: [type], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "main_Events$types_Eventmain_Events")
+  relp_Event_Event   relp_Event_Event[]
+  relp_Event_Grant   relp_Event_Grant[]
+  relp_Event_Member  relp_Event_Member[]
+  relp_Event_Partner relp_Event_Partner[]
+  relp_Event_Product relp_Event_Product[]
+  relp_Event_Topic   relp_Event_Topic[]
+}
+
+model main_Grants {
+  ID                Int                      @id(map: "main_Grants$PrimaryKey") @default(autoincrement())
+  title             String?                  @db.NVarChar(255)
+  amount            Float?                   @default(0, map: "DF__main_Gran__amoun__04AFB25B") @db.Money
+  is_through_LRI    Boolean?                 @default(false, map: "DF__main_Gran__is_th__05A3D694")
+  status            Int?
+  submission_date   DateTime?
+  received_date     DateTime?
+  finished_date     DateTime?
+  source            Int?
+  investigators_all String?                  @db.NVarChar(Max)
+  notes             String?                  @db.NVarChar(Max)
+  SSMA_TimeStamp    Unsupported("timestamp")
+  types_GrantSource types_GrantSource?       @relation(fields: [source], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "main_Grants$types_GrantGrants")
+  types_GrantStatus types_GrantStatus?       @relation(fields: [status], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "main_Grants$types_GrantStatusGrants")
+  relp_Event_Grant  relp_Event_Grant[]
+  relp_Grant_Topic  relp_Grant_Topic[]
+}
+
+model main_Members {
+  ID                                       Int                                        @id(map: "main_Members$PrimaryKey") @default(autoincrement())
+  first_name                               String?                                    @db.NVarChar(255)
+  last_name                                String?                                    @db.NVarChar(255)
+  business_name                            String?                                    @db.NVarChar(255)
+  date_joined                              DateTime?
+  interview_date                           DateTime?
+  date_guest_joined                        DateTime?
+  date_in_active                           DateTime?
+  email                                    String?                                    @db.NVarChar(255)
+  address                                  String?                                    @db.NVarChar(255)
+  city                                     String?                                    @db.NVarChar(255)
+  province                                 String?                                    @db.NVarChar(255)
+  country                                  String?                                    @db.NVarChar(255)
+  postal_code                              String?                                    @db.NVarChar(255)
+  business_phone                           String?                                    @db.NVarChar(255)
+  mobile_phone                             String?                                    @db.NVarChar(255)
+  interview_notes                          String?                                    @db.NVarChar(Max)
+  is_active                                Boolean?                                   @default(false, map: "DF__main_Memb__is_ac__0697FACD")
+  is_guest                                 Boolean?                                   @default(false, map: "DF__main_Memb__is_gu__078C1F06")
+  category                                 Int?
+  keywords_EN                              String?                                    @db.NVarChar(Max)
+  keywords_FR                              String?                                    @db.NVarChar(Max)
+  problems_EN                              String?                                    @db.NVarChar(Max)
+  problems_FR                              String?                                    @db.NVarChar(Max)
+  dream                                    String?                                    @db.NVarChar(Max)
+  notes                                    String?                                    @db.NVarChar(Max)
+  how_can_we_help                          String?                                    @db.NVarChar(Max)
+  faculty                                  Int?
+  partnerships_1_notes                     String?                                    @db.NVarChar(Max)
+  partnerships_2_notes                     String?                                    @db.NVarChar(Max)
+  partnerships_3_notes                     String?                                    @db.NVarChar(Max)
+  partnerships_future_notes                String?                                    @db.NVarChar(Max)
+  future_promotion_notes                   String?                                    @db.NVarChar(Max)
+  indicators_frequency                     Int?
+  other_comments                           String?                                    @db.NVarChar(Max)
+  interviewer_notes                        String?                                    @db.NVarChar(Max)
+  cv                                       String?                                    @db.VarChar(8000)
+  SSMA_TimeStamp                           Unsupported("timestamp")
+  types_Faculty                            types_Faculty?                             @relation(fields: [faculty], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "main_Members$types_Facultymain_Members")
+  types_FrequencyIndicator                 types_FrequencyIndicator?                  @relation(fields: [indicators_frequency], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "main_Members$types_FrequencyIndicatormain_Members")
+  types_memberCat                          types_memberCat?                           @relation(fields: [category], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "main_Members$types_memberCatmain_Members")
+  main_Supervision                         main_Supervision[]
+  relp_Event_Member                        relp_Event_Member[]
+  relp_Grant_Member                        relp_Grant_Member[]
+  relp_Grant_MemberInvestigator            relp_Grant_MemberInvestigator[]
+  relp_Member_Affiliation                  relp_Member_Affiliation[]
+  relp_Member_CurrentPromotion             relp_Member_CurrentPromotion[]
+  relp_Member_FuturePromotion              relp_Member_FuturePromotion[]
+  relp_Member_IndicatorFormat              relp_Member_IndicatorFormat[]
+  relp_Member_PartnershipScope1            relp_Member_PartnershipScope1[]
+  relp_Member_PartnershipScope2            relp_Member_PartnershipScope2[]
+  relp_Member_PartnershipScope3            relp_Member_PartnershipScope3[]
+  relp_Member_PartnershipScopeFuture       relp_Member_PartnershipScopeFuture[]
+  relp_Member_PartnershipType1             relp_Member_PartnershipType1[]
+  relp_Member_PartnershipType2             relp_Member_PartnershipType2[]
+  relp_Member_PartnershipType3             relp_Member_PartnershipType3[]
+  relp_Member_PartnershipTypeFutrure       relp_Member_PartnershipTypeFutrure[]
+  relp_Member_StrategicDirection           relp_Member_StrategicDirection[]
+  relp_Partner_Member                      relp_Partner_Member[]
+  relp_Product_Member                      relp_Product_Member[]
+  relp_Supervision_CoSupervisor            relp_Supervision_CoSupervisor[]
+  relp_Supervision_PrincipalSupervisor     relp_Supervision_PrincipalSupervisor[]
+  relp_Supervision_ThesisAdvisoryCommittee relp_Supervision_ThesisAdvisoryCommittee[]
+
+  @@index([postal_code], map: "main_Members$postalCode")
+}
+
+model main_Partners {
+  ID                    Int                      @id(map: "main_Partners$PrimaryKey") @default(autoincrement())
+  name                  String?                  @db.NVarChar(255)
+  type                  Int?
+  scope                 Int?
+  notes                 String?                  @db.NVarChar(Max)
+  SSMA_TimeStamp        Unsupported("timestamp")
+  types_PartnershipType types_PartnershipType?   @relation(fields: [type], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "main_Partners$types_PartnershipTypemain_Partners")
+  relp_Event_Partner    relp_Event_Partner[]
+  relp_Partner_Member   relp_Partner_Member[]
+  relp_Product_Partner  relp_Product_Partner[]
+}
+
+model main_Products {
+  ID                             Int                              @id(map: "main_Products$PrimaryKey") @default(autoincrement())
+  title                          String?                          @db.NVarChar(255)
+  date                           DateTime?
+  on_going                       Boolean?                         @default(false, map: "DF__main_Prod__on_go__0880433F")
+  peer_reviewed                  Boolean?                         @default(false, map: "DF__main_Prod__peer___09746778")
+  doi                            String?                          @db.NVarChar(255)
+  authors_all                    String?                          @db.NVarChar(255)
+  notes                          String?                          @db.NVarChar(Max)
+  type                           Int?
+  SSMA_TimeStamp                 Unsupported("timestamp")
+  types_Product                  types_Product?                   @relation(fields: [type], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "main_Products$types_Productmain_Products")
+  relp_Event_Product             relp_Event_Product[]
+  relp_Product_Member            relp_Product_Member[]
+  relp_Product_Partner           relp_Product_Partner[]
+  relp_Product_TargetStakeholder relp_Product_TargetStakeholder[]
+  relp_Product_Topic             relp_Product_Topic[]
+}
+
+model main_Supervision {
+  ID                                       Int                                        @id(map: "main_Supervision$PrimaryKey") @default(autoincrement())
+  trainee                                  Int?
+  last_name                                String?                                    @db.NVarChar(255)
+  first_name                               String?                                    @db.NVarChar(255)
+  level                                    Int?
+  faculty                                  Int?
+  start_date                               DateTime?
+  end_date                                 DateTime?
+  notes                                    String?                                    @db.NVarChar(Max)
+  SSMA_TimeStamp                           Unsupported("timestamp")
+  main_Members                             main_Members?                              @relation(fields: [trainee], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "main_Supervision$MembersSupervision")
+  types_Faculty                            types_Faculty?                             @relation(fields: [faculty], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "main_Supervision$types_Facultymain_Supervision1")
+  types_TraineeLevel                       types_TraineeLevel?                        @relation(fields: [level], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "main_Supervision$types_TraineeLevelmain_Supervision")
+  relp_Supervision_CoSupervisor            relp_Supervision_CoSupervisor[]
+  relp_Supervision_PrincipalSupervisor     relp_Supervision_PrincipalSupervisor[]
+  relp_Supervision_ThesisAdvisoryCommittee relp_Supervision_ThesisAdvisoryCommittee[]
+}
+
+model relp_Event_Event {
+  past_event_id   Int         @default(0, map: "DF__relp_Even__past___0A688BB1")
+  future_event_id Int         @default(0, map: "DF__relp_Even__futur__0B5CAFEA")
+  main_Events     main_Events @relation(fields: [past_event_id], references: [ID], onDelete: Cascade, map: "relp_Event_Event$main_Eventsrelp_Event_Event")
+
+  @@id([past_event_id, future_event_id], map: "relp_Event_Event$PrimaryKey")
+  @@index([future_event_id], map: "relp_Event_Event$future_event_id")
+}
+
+model relp_Event_Grant {
+  event_id    Int         @default(0, map: "DF__relp_Even__event__0C50D423")
+  grant_id    Int         @default(0, map: "DF__relp_Even__grant__0D44F85C")
+  main_Events main_Events @relation(fields: [event_id], references: [ID], onDelete: Cascade, map: "relp_Event_Grant$Eventsrelp_Event_Grant")
+  main_Grants main_Grants @relation(fields: [grant_id], references: [ID], onUpdate: NoAction, map: "relp_Event_Grant$Grantsrelp_Event_Grant")
+
+  @@id([event_id, grant_id], map: "relp_Event_Grant$PrimaryKey")
+  @@index([grant_id], map: "relp_Event_Grant$grant_id")
+}
+
+model relp_Event_Member {
+  event_id     Int          @default(0, map: "DF__relp_Even__event__0E391C95")
+  member_id    Int          @default(0, map: "DF__relp_Even__membe__0F2D40CE")
+  main_Events  main_Events  @relation(fields: [event_id], references: [ID], onDelete: Cascade, map: "relp_Event_Member$main_Eventsrelp_Event_Member")
+  main_Members main_Members @relation(fields: [member_id], references: [ID], onUpdate: NoAction, map: "relp_Event_Member$main_Membersrelp_Event_Member")
+
+  @@id([event_id, member_id], map: "relp_Event_Member$PrimaryKey")
+  @@index([member_id], map: "relp_Event_Member$member_id")
+}
+
+model relp_Event_Partner {
+  event_id      Int           @default(0, map: "DF__relp_Even__event__10216507")
+  partner_id    Int           @default(0, map: "DF__relp_Even__partn__11158940")
+  main_Events   main_Events   @relation(fields: [event_id], references: [ID], onDelete: Cascade, map: "relp_Event_Partner$Eventsrelp_Event_Partner")
+  main_Partners main_Partners @relation(fields: [partner_id], references: [ID], onUpdate: NoAction, map: "relp_Event_Partner$Partnersrelp_Event_Partner")
+
+  @@id([event_id, partner_id], map: "relp_Event_Partner$PrimaryKey")
+  @@index([partner_id], map: "relp_Event_Partner$partner_id")
+}
+
+model relp_Event_Product {
+  event_id      Int           @default(0, map: "DF__relp_Even__event__1209AD79")
+  product_id    Int           @default(0, map: "DF__relp_Even__produ__12FDD1B2")
+  main_Events   main_Events   @relation(fields: [event_id], references: [ID], onDelete: Cascade, map: "relp_Event_Product$Eventsrelp_Event_Product")
+  main_Products main_Products @relation(fields: [product_id], references: [ID], onUpdate: NoAction, map: "relp_Event_Product$Productsrelp_Event_Product")
+
+  @@id([event_id, product_id], map: "relp_Event_Product$PrimaryKey")
+  @@index([product_id], map: "relp_Event_Product$product_id")
+}
+
+model relp_Event_Topic {
+  event_id    Int         @default(0, map: "DF__relp_Even__event__13F1F5EB")
+  theme_id    Int         @default(0, map: "DF__relp_Even__theme__14E61A24")
+  main_Events main_Events @relation(fields: [event_id], references: [ID], onDelete: Cascade, map: "relp_Event_Topic$main_Eventsrelp_Event_Theme")
+  types_Topic types_Topic @relation(fields: [theme_id], references: [theme_id], onDelete: Cascade, map: "relp_Event_Topic$types_Themerelp_Event_Theme")
+
+  @@id([event_id, theme_id], map: "relp_Event_Topic$PrimaryKey")
+  @@index([theme_id], map: "relp_Event_Topic$theme_id")
+}
+
+model relp_Grant_Member {
+  member_id         Int               @default(0, map: "DF__relp_Gran__membe__15DA3E5D")
+  grant_id          Int               @default(0, map: "DF__relp_Gran__grant__16CE6296")
+  main_Members      main_Members      @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Grant_Member$Membersrelp_Grant_Member")
+  types_GrantSource types_GrantSource @relation(fields: [grant_id], references: [ID], onUpdate: NoAction, map: "relp_Grant_Member$types_Grantrelp_Grant_Member")
+
+  @@id([member_id, grant_id], map: "relp_Grant_Member$PrimaryKey")
+  @@index([grant_id], map: "relp_Grant_Member$grant_id")
+}
+
+model relp_Grant_MemberInvestigator {
+  member_id         Int               @default(0, map: "DF__relp_Gran__membe__17C286CF")
+  grant_id          Int               @default(0, map: "DF__relp_Gran__grant__18B6AB08")
+  main_Members      main_Members      @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Grant_MemberInvestigator$Membersrelp_Grant_MemberInvestigator")
+  types_GrantSource types_GrantSource @relation(fields: [grant_id], references: [ID], onUpdate: NoAction, map: "relp_Grant_MemberInvestigator$types_Grantrelp_Grant_MemberInvestigator")
+
+  @@id([member_id, grant_id], map: "relp_Grant_MemberInvestigator$PrimaryKey")
+  @@index([grant_id], map: "relp_Grant_MemberInvestigator$grant_id")
+}
+
+model relp_Grant_Topic {
+  grant_id    Int         @default(0, map: "DF__relp_Gran__grant__19AACF41")
+  theme_id    Int         @default(0, map: "DF__relp_Gran__theme__1A9EF37A")
+  main_Grants main_Grants @relation(fields: [grant_id], references: [ID], onDelete: Cascade, map: "relp_Grant_Topic$main_Grantsrelp_Grant_Themes")
+  types_Topic types_Topic @relation(fields: [theme_id], references: [theme_id], onDelete: Cascade, map: "relp_Grant_Topic$types_Themerelp_Grant_Themes")
+
+  @@id([grant_id, theme_id], map: "relp_Grant_Topic$PrimaryKey")
+  @@index([theme_id], map: "relp_Grant_Topic$theme_id")
+}
+
+model relp_Member_Affiliation {
+  member_id         Int               @default(0, map: "DF__relp_Memb__membe__1B9317B3")
+  affiliation_id    Int               @default(0, map: "DF__relp_Memb__affil__1C873BEC")
+  main_Members      main_Members      @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_Affiliation$main_Membersrelp_Member_Affiliation")
+  types_Affiliation types_Affiliation @relation(fields: [affiliation_id], references: [ID], onUpdate: NoAction, map: "relp_Member_Affiliation$types_Affiliationrelp_Member_Affiliation")
+
+  @@id([member_id, affiliation_id], map: "relp_Member_Affiliation$PrimaryKey")
+}
+
+model relp_Member_CurrentPromotion {
+  member_id       Int             @default(0, map: "DF__relp_Memb__membe__1D7B6025")
+  promotion_id    Int             @default(0, map: "DF__relp_Memb__promo__1E6F845E")
+  main_Members    main_Members    @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_CurrentPromotion$main_Membersrelp_Member_CurrentPromotion")
+  types_Promotion types_Promotion @relation(fields: [promotion_id], references: [ID], onUpdate: NoAction, map: "relp_Member_CurrentPromotion$types_Promotionrelp_Member_CurrentPromotion")
+
+  @@id([member_id, promotion_id], map: "relp_Member_CurrentPromotion$PrimaryKey")
+}
+
+model relp_Member_FuturePromotion {
+  member_id       Int             @default(0, map: "DF__relp_Memb__membe__1F63A897")
+  promotion_id    Int             @default(0, map: "DF__relp_Memb__promo__2057CCD0")
+  main_Members    main_Members    @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_FuturePromotion$main_Membersrelp_Member_FuturePromotion")
+  types_Promotion types_Promotion @relation(fields: [promotion_id], references: [ID], onUpdate: NoAction, map: "relp_Member_FuturePromotion$types_Promotionrelp_Member_FuturePromotion")
+
+  @@id([member_id, promotion_id], map: "relp_Member_FuturePromotion$PrimaryKey")
+}
+
+model relp_Member_IndicatorFormat {
+  member_id             Int                   @default(0, map: "DF__relp_Memb__membe__214BF109")
+  format_id             Int                   @default(0, map: "DF__relp_Memb__forma__22401542")
+  main_Members          main_Members          @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_IndicatorFormat$main_Membersrelp_Member_IndicatorFormat")
+  types_IndicatorFormat types_IndicatorFormat @relation(fields: [format_id], references: [ID], onUpdate: NoAction, map: "relp_Member_IndicatorFormat$types_IndicatorFormatrelp_Member_IndicatorFormat")
+
+  @@id([member_id, format_id], map: "relp_Member_IndicatorFormat$PrimaryKey")
+}
+
+model relp_Member_PartnershipScope1 {
+  member_id              Int                    @default(0, map: "DF__relp_Memb__membe__2334397B")
+  scope_id               Int                    @default(0, map: "DF__relp_Memb__scope__24285DB4")
+  main_Members           main_Members           @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_PartnershipScope1$main_Membersrelp_Member_PartnershipScope1")
+  types_PartnershipScope types_PartnershipScope @relation(fields: [scope_id], references: [ID], onUpdate: NoAction, map: "relp_Member_PartnershipScope1$types_PartnershipScoperelp_Member_PartnershipScope1")
+
+  @@id([member_id, scope_id], map: "relp_Member_PartnershipScope1$PrimaryKey")
+}
+
+model relp_Member_PartnershipScope2 {
+  member_id              Int                    @default(0, map: "DF__relp_Memb__membe__251C81ED")
+  scope_id               Int                    @default(0, map: "DF__relp_Memb__scope__2610A626")
+  main_Members           main_Members           @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_PartnershipScope2$main_Membersrelp_Member_PartnershipScope2")
+  types_PartnershipScope types_PartnershipScope @relation(fields: [scope_id], references: [ID], onUpdate: NoAction, map: "relp_Member_PartnershipScope2$types_PartnershipScoperelp_Member_PartnershipScope2")
+
+  @@id([member_id, scope_id], map: "relp_Member_PartnershipScope2$PrimaryKey")
+}
+
+model relp_Member_PartnershipScope3 {
+  member_id              Int                    @default(0, map: "DF__relp_Memb__membe__2704CA5F")
+  scope_id               Int                    @default(0, map: "DF__relp_Memb__scope__27F8EE98")
+  main_Members           main_Members           @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_PartnershipScope3$main_Membersrelp_Member_PartnershipScope3")
+  types_PartnershipScope types_PartnershipScope @relation(fields: [scope_id], references: [ID], onUpdate: NoAction, map: "relp_Member_PartnershipScope3$types_PartnershipScoperelp_Member_PartnershipScope3")
+
+  @@id([member_id, scope_id], map: "relp_Member_PartnershipScope3$PrimaryKey")
+}
+
+model relp_Member_PartnershipScopeFuture {
+  member_id              Int                    @default(0, map: "DF__relp_Memb__membe__28ED12D1")
+  scope_id               Int                    @default(0, map: "DF__relp_Memb__scope__29E1370A")
+  main_Members           main_Members           @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_PartnershipScopeFuture$main_Membersrelp_Member_PartnershipScopeFuture")
+  types_PartnershipScope types_PartnershipScope @relation(fields: [scope_id], references: [ID], onUpdate: NoAction, map: "relp_Member_PartnershipScopeFuture$types_PartnershipScoperelp_Member_PartnershipScopeFuture")
+
+  @@id([member_id, scope_id], map: "relp_Member_PartnershipScopeFuture$PrimaryKey")
+}
+
+model relp_Member_PartnershipType1 {
+  member_id             Int                   @default(0, map: "DF__relp_Memb__membe__2AD55B43")
+  type_id               Int                   @default(0, map: "DF__relp_Memb__type___2BC97F7C")
+  main_Members          main_Members          @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_PartnershipType1$main_Membersrelp_Member_PartnershipType1")
+  types_PartnershipType types_PartnershipType @relation(fields: [type_id], references: [ID], onUpdate: NoAction, map: "relp_Member_PartnershipType1$types_PartnershipTyperelp_Member_PartnershipType1")
+
+  @@id([member_id, type_id], map: "relp_Member_PartnershipType1$PrimaryKey")
+}
+
+model relp_Member_PartnershipType2 {
+  member_id             Int                   @default(0, map: "DF__relp_Memb__membe__2CBDA3B5")
+  type_id               Int                   @default(0, map: "DF__relp_Memb__type___2DB1C7EE")
+  main_Members          main_Members          @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_PartnershipType2$main_Membersrelp_Member_PartnershipType2")
+  types_PartnershipType types_PartnershipType @relation(fields: [type_id], references: [ID], onUpdate: NoAction, map: "relp_Member_PartnershipType2$types_PartnershipTyperelp_Member_PartnershipType2")
+
+  @@id([member_id, type_id], map: "relp_Member_PartnershipType2$PrimaryKey")
+}
+
+model relp_Member_PartnershipType3 {
+  member_id             Int                   @default(0, map: "DF__relp_Memb__membe__2EA5EC27")
+  type_id               Int                   @default(0, map: "DF__relp_Memb__type___2F9A1060")
+  main_Members          main_Members          @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_PartnershipType3$main_Membersrelp_Member_PartnershipType3")
+  types_PartnershipType types_PartnershipType @relation(fields: [type_id], references: [ID], onUpdate: NoAction, map: "relp_Member_PartnershipType3$types_PartnershipTyperelp_Member_PartnershipType3")
+
+  @@id([member_id, type_id], map: "relp_Member_PartnershipType3$PrimaryKey")
+}
+
+model relp_Member_PartnershipTypeFutrure {
+  member_id             Int                   @default(0, map: "DF__relp_Memb__membe__308E3499")
+  type_id               Int                   @default(0, map: "DF__relp_Memb__type___318258D2")
+  main_Members          main_Members          @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_PartnershipTypeFutrure$main_Membersrelp_Member_PartnershipTypeFutrure")
+  types_PartnershipType types_PartnershipType @relation(fields: [type_id], references: [ID], onUpdate: NoAction, map: "relp_Member_PartnershipTypeFutrure$types_PartnershipTyperelp_Member_PartnershipTypeFutrure")
+
+  @@id([member_id, type_id], map: "relp_Member_PartnershipTypeFutrure$PrimaryKey")
+}
+
+model relp_Member_StrategicDirection {
+  member_id                Int                      @default(0, map: "DF__relp_Memb__membe__32767D0B")
+  direction_id             Int                      @default(0, map: "DF__relp_Memb__direc__336AA144")
+  main_Members             main_Members             @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Member_StrategicDirection$main_Membersrelp_Member_StrategicDirection")
+  types_StrategicDirection types_StrategicDirection @relation(fields: [direction_id], references: [ID], onUpdate: NoAction, map: "relp_Member_StrategicDirection$types_StrategicDirectionrelp_Member_StrategicDirection")
+
+  @@id([member_id, direction_id], map: "relp_Member_StrategicDirection$PrimaryKey")
+}
+
+model relp_Partner_Member {
+  partner_id    Int           @default(0, map: "DF__relp_Part__partn__345EC57D")
+  member_id     Int           @default(0, map: "DF__relp_Part__membe__3552E9B6")
+  main_Members  main_Members  @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Partner_Member$MembersPartner_Members")
+  main_Partners main_Partners @relation(fields: [partner_id], references: [ID], onUpdate: NoAction, map: "relp_Partner_Member$PartnersPartner_Members")
+
+  @@id([partner_id, member_id], map: "relp_Partner_Member$PrimaryKey")
+  @@index([member_id], map: "relp_Partner_Member$member_id")
+}
+
+model relp_Product_Member {
+  product_id    Int           @default(0, map: "DF__relp_Prod__produ__36470DEF")
+  member_id     Int           @default(0, map: "DF__relp_Prod__membe__373B3228")
+  main_Members  main_Members  @relation(fields: [member_id], references: [ID], onDelete: Cascade, map: "relp_Product_Member$tbl_MembersProduct_Members")
+  main_Products main_Products @relation(fields: [product_id], references: [ID], onUpdate: NoAction, map: "relp_Product_Member$tbl_ProductsProduct_Members")
+
+  @@id([product_id, member_id], map: "relp_Product_Member$PrimaryKey")
+  @@index([member_id], map: "relp_Product_Member$member_id")
+}
+
+model relp_Product_Partner {
+  product_id    Int           @default(0, map: "DF__relp_Prod__produ__382F5661")
+  partner_id    Int           @default(0, map: "DF__relp_Prod__partn__39237A9A")
+  main_Partners main_Partners @relation(fields: [partner_id], references: [ID], onDelete: Cascade, map: "relp_Product_Partner$PartnersProduct_Partners")
+  main_Products main_Products @relation(fields: [product_id], references: [ID], onUpdate: NoAction, map: "relp_Product_Partner$ProductsProduct_Partners")
+
+  @@id([product_id, partner_id], map: "relp_Product_Partner$PrimaryKey")
+  @@index([partner_id], map: "relp_Product_Partner$partner_id")
+}
+
+model relp_Product_TargetStakeholder {
+  product_id              Int                     @default(0, map: "DF__relp_Prod__produ__3A179ED3")
+  target_stakeholder_id   Int                     @default(0, map: "DF__relp_Prod__targe__3B0BC30C")
+  main_Products           main_Products           @relation(fields: [product_id], references: [ID], onDelete: Cascade, map: "relp_Product_TargetStakeholder$main_Productsrelp_Product_TargetStakeholders")
+  types_TargetStakeholder types_TargetStakeholder @relation(fields: [target_stakeholder_id], references: [ID], onUpdate: NoAction, map: "relp_Product_TargetStakeholder$types_TargetStakeholderrelp_Product_TargetStakeholders")
+
+  @@id([product_id, target_stakeholder_id], map: "relp_Product_TargetStakeholder$PrimaryKey")
+  @@index([target_stakeholder_id], map: "relp_Product_TargetStakeholder$target_stakeholder_id")
+}
+
+model relp_Product_Topic {
+  product_id    Int           @default(0, map: "DF__relp_Prod__produ__3BFFE745")
+  theme_id      Int           @default(0, map: "DF__relp_Prod__theme__3CF40B7E")
+  main_Products main_Products @relation(fields: [product_id], references: [ID], onDelete: Cascade, map: "relp_Product_Topic$main_Productsrelp_Product_Themes")
+  types_Topic   types_Topic   @relation(fields: [theme_id], references: [theme_id], onDelete: Cascade, map: "relp_Product_Topic$types_Themerelp_Product_Themes")
+
+  @@id([product_id, theme_id], map: "relp_Product_Topic$PrimaryKey")
+  @@index([theme_id], map: "relp_Product_Topic$theme_id")
+}
+
+model relp_Supervision_CoSupervisor {
+  supervision_id   Int              @default(0, map: "DF__relp_Supe__super__3DE82FB7")
+  member_id        Int              @default(0, map: "DF__relp_Supe__membe__3EDC53F0")
+  main_Members     main_Members     @relation(fields: [member_id], references: [ID], map: "relp_Supervision_CoSupervisor$Membersrelp_Supervision_CoSupervisor")
+  main_Supervision main_Supervision @relation(fields: [supervision_id], references: [ID], onUpdate: NoAction, map: "relp_Supervision_CoSupervisor$Supervisionrelp_Supervision_CoSupervisor")
+
+  @@id([supervision_id, member_id], map: "relp_Supervision_CoSupervisor$PrimaryKey")
+  @@index([member_id], map: "relp_Supervision_CoSupervisor$member_id")
+}
+
+model relp_Supervision_PrincipalSupervisor {
+  supervision_id   Int              @default(0, map: "DF__relp_Supe__super__3FD07829")
+  member_id        Int              @default(0, map: "DF__relp_Supe__membe__40C49C62")
+  main_Members     main_Members     @relation(fields: [member_id], references: [ID], map: "relp_Supervision_PrincipalSupervisor$Membersrelp_Supervision_PrincipalSupervisor")
+  main_Supervision main_Supervision @relation(fields: [supervision_id], references: [ID], onUpdate: NoAction, map: "relp_Supervision_PrincipalSupervisor$Supervisionrelp_Supervision_PrincipalSupervisor")
+
+  @@id([supervision_id, member_id], map: "relp_Supervision_PrincipalSupervisor$PrimaryKey")
+  @@index([member_id], map: "relp_Supervision_PrincipalSupervisor$member_id")
+}
+
+model relp_Supervision_ThesisAdvisoryCommittee {
+  supervision_id   Int              @default(0, map: "DF__relp_Supe__super__41B8C09B")
+  member_id        Int              @default(0, map: "DF__relp_Supe__membe__42ACE4D4")
+  main_Members     main_Members     @relation(fields: [member_id], references: [ID], map: "relp_Supervision_ThesisAdvisoryCommittee$Membersrelp_Supervision_ThesisAdvisoryCommittee")
+  main_Supervision main_Supervision @relation(fields: [supervision_id], references: [ID], onUpdate: NoAction, map: "relp_Supervision_ThesisAdvisoryCommittee$Supervisionrelp_Supervision_ThesisAdvisoryCommittee")
+
+  @@id([supervision_id, member_id], map: "relp_Supervision_ThesisAdvisoryCommittee$PrimaryKey")
+  @@index([member_id], map: "relp_Supervision_ThesisAdvisoryCommittee$member_id")
+}
+
+model types_Affiliation {
+  ID                      Int                       @id(map: "types_Affiliation$PrimaryKey") @default(autoincrement())
+  name                    String?                   @db.NVarChar(255)
+  relp_Member_Affiliation relp_Member_Affiliation[]
+}
+
+model types_Event {
+  ID          Int           @id(map: "types_Event$PrimaryKey") @default(autoincrement())
+  type_en     String?       @db.NVarChar(255)
+  type_fr     String?       @db.NVarChar(255)
+  main_Events main_Events[]
+}
+
+model types_Faculty {
+  ID               Int                @id(map: "types_Faculty$PrimaryKey") @default(autoincrement())
+  name_en          String?            @db.NVarChar(255)
+  name_fr          String?            @db.NVarChar(255)
+  main_Members     main_Members[]
+  main_Supervision main_Supervision[]
+}
+
+model types_FrequencyIndicator {
+  ID           Int            @id(map: "types_FrequencyIndicator$PrimaryKey") @default(autoincrement())
+  frequency    String?        @db.NVarChar(255)
+  main_Members main_Members[]
+}
+
+model types_GrantSource {
+  ID                            Int                             @id(map: "types_GrantSource$PrimaryKey") @default(autoincrement())
+  type_en                       String?                         @db.NVarChar(255)
+  type_fr                       String?                         @db.NVarChar(255)
+  main_Grants                   main_Grants[]
+  relp_Grant_Member             relp_Grant_Member[]
+  relp_Grant_MemberInvestigator relp_Grant_MemberInvestigator[]
+}
+
+model types_GrantStatus {
+  ID          Int           @id(map: "types_GrantStatus$PrimaryKey") @default(autoincrement())
+  status_en   String?       @db.NVarChar(255)
+  status_fr   String?       @db.NVarChar(255)
+  main_Grants main_Grants[]
+}
+
+model types_IndicatorFormat {
+  ID                          Int                           @id(map: "types_IndicatorFormat$PrimaryKey") @default(autoincrement())
+  name                        String?                       @db.NVarChar(255)
+  relp_Member_IndicatorFormat relp_Member_IndicatorFormat[]
+}
+
+model types_memberCat {
+  ID           Int            @id(map: "types_memberCat$PrimaryKey") @default(autoincrement())
+  cat_en       String?        @db.NVarChar(255)
+  cat_fr       String?        @db.NVarChar(255)
+  main_Members main_Members[]
+}
+
+model types_PartnershipScope {
+  ID                                 Int                                  @id(map: "types_PartnershipScope$PrimaryKey") @default(autoincrement())
+  scope_en                           String?                              @db.NVarChar(255)
+  scope_fr                           String?                              @db.NVarChar(255)
+  relp_Member_PartnershipScope1      relp_Member_PartnershipScope1[]
+  relp_Member_PartnershipScope2      relp_Member_PartnershipScope2[]
+  relp_Member_PartnershipScope3      relp_Member_PartnershipScope3[]
+  relp_Member_PartnershipScopeFuture relp_Member_PartnershipScopeFuture[]
+}
+
+model types_PartnershipType {
+  ID                                 Int                                  @id(map: "types_PartnershipType$PrimaryKey") @default(autoincrement())
+  type_en                            String?                              @db.NVarChar(255)
+  type_fr                            String?                              @db.NVarChar(255)
+  main_Partners                      main_Partners[]
+  relp_Member_PartnershipType1       relp_Member_PartnershipType1[]
+  relp_Member_PartnershipType2       relp_Member_PartnershipType2[]
+  relp_Member_PartnershipType3       relp_Member_PartnershipType3[]
+  relp_Member_PartnershipTypeFutrure relp_Member_PartnershipTypeFutrure[]
+}
+
+model types_Product {
+  ID            Int             @id(map: "types_Product$PrimaryKey") @default(autoincrement())
+  type_en       String?         @db.NVarChar(255)
+  type_fr       String?         @db.NVarChar(255)
+  main_Products main_Products[]
+}
+
+model types_Promotion {
+  ID                           Int                            @id(map: "types_Promotion$PrimaryKey") @default(autoincrement())
+  name_en                      String?                        @db.NVarChar(255)
+  relp_Member_CurrentPromotion relp_Member_CurrentPromotion[]
+  relp_Member_FuturePromotion  relp_Member_FuturePromotion[]
+}
+
+model types_StrategicDirection {
+  ID                             Int                              @id(map: "types_StrategicDirection$PrimaryKey") @default(autoincrement())
+  name                           String?                          @db.NVarChar(255)
+  relp_Member_StrategicDirection relp_Member_StrategicDirection[]
+}
+
+model types_TargetStakeholder {
+  ID                             Int                              @id(map: "types_TargetStakeholder$PrimaryKey") @default(autoincrement())
+  name_en                        String?                          @db.NVarChar(255)
+  name_fr                        String?                          @db.NVarChar(255)
+  relp_Product_TargetStakeholder relp_Product_TargetStakeholder[]
+}
+
+model types_Topic {
+  theme_id           Int                  @id(map: "types_Topic$PrimaryKey") @default(autoincrement())
+  name_en            String?              @db.NVarChar(255)
+  name_fr            String?              @db.NVarChar(255)
+  relp_Event_Topic   relp_Event_Topic[]
+  relp_Grant_Topic   relp_Grant_Topic[]
+  relp_Product_Topic relp_Product_Topic[]
+
+  @@index([theme_id], map: "types_Topic$theme_id")
+}
+
+model types_TraineeLevel {
+  ID               Int                @id(map: "types_TraineeLevel$PrimaryKey") @default(autoincrement())
+  level_en         String?            @db.NVarChar(255)
+  level_fr         String?            @db.NVarChar(255)
+  main_Supervision main_Supervision[]
+}
+
+model auth_Users {
+  email         String  @id(map: "PK_auth_Users") @db.VarChar(320)
+  admin         Boolean @default(false, map: "DF_auth_Users_admin")
+  microsoft_sub String? @db.VarChar(50)
+}
