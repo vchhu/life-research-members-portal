@@ -15,7 +15,7 @@ const msalConfig: Configuration = {
     redirectUri: typeof window === "undefined" ? undefined : window.location.origin, // undefined if in Node.js server
   },
   cache: {
-    cacheLocation: BrowserCacheLocation.SessionStorage, // This configures where your cache will be stored
+    cacheLocation: BrowserCacheLocation.LocalStorage, // This configures where your cache will be stored
     storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
   },
 };

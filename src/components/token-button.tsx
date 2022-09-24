@@ -1,21 +1,13 @@
-import { useMsal } from "@azure/msal-react";
 import { FunctionComponent } from "react";
-import { IPublicClientApplication } from "@azure/msal-browser";
-import { scopes } from "../../auth-config";
+import getAccessToken from "../utils/front-end/get-access-token";
 
-function handleGetToken(instance: IPublicClientApplication) {
-  instance
-    .acquireTokenSilent({
-      scopes,
-      account: instance.getActiveAccount() || undefined,
-    })
-    .then((res) => console.log("Tokens:", res))
-    .catch((e: any) => console.error(e));
+async function handleGetToken() {
+  const accessToken = await getAccessToken();
+  console.log(accessToken);
 }
 
 const TokenButton: FunctionComponent = () => {
-  const { instance } = useMsal();
-  return <button onClick={() => handleGetToken(instance)}>Log Tokens</button>;
+  return <button onClick={() => handleGetToken()}>Log Access Token</button>;
 };
 
 export default TokenButton;

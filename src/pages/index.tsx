@@ -6,7 +6,7 @@ import UserData from "../components/user-data";
 import LogoutButton from "../components/logout-button";
 import Head from "next/head";
 import TokenButton from "../components/token-button";
-import TestButton from "../components/test-button";
+import RegisterUser from "../components/register-user";
 
 const App: NextPage = () => {
   return (
@@ -21,7 +21,7 @@ const App: NextPage = () => {
         <br />
         <TokenButton />
         <br />
-        <TestButton />
+        <RegisterUser />
         <br />
         <UserData />
       </MsalProvider>
