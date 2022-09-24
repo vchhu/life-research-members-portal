@@ -7,6 +7,7 @@ import LogoutButton from "../components/logout-button";
 import Head from "next/head";
 import TokenButton from "../components/token-button";
 import RegisterUser from "../components/register-user";
+import AllMembers from "../components/all-members";
 
 const App: NextPage = () => {
   return (
@@ -15,15 +16,18 @@ const App: NextPage = () => {
         <title>WIIM</title>
       </Head>
       <MsalProvider instance={msalInstance}>
-        <LoginButton />
+        <UserData />
         <br />
+        <LoginButton />
         <LogoutButton />
+        <br />
         <br />
         <TokenButton />
         <br />
         <RegisterUser />
         <br />
-        <UserData />
+        <AllMembers />
+        <br />
       </MsalProvider>
     </>
   );

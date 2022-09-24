@@ -1,13 +1,13 @@
 import { FunctionComponent } from "react";
 import getAccessToken from "../utils/front-end/get-access-token";
 
-async function handleGetToken() {
+async function logToken() {
   const accessToken = await getAccessToken();
   console.log(accessToken);
 }
 
 const TokenButton: FunctionComponent = () => {
-  return <button onClick={() => handleGetToken()}>Log Access Token</button>;
+  return <button onClick={logToken}>Log Access Token</button>;
 };
 
 export default TokenButton;

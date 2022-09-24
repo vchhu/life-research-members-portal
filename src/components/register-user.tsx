@@ -10,8 +10,7 @@ async function registerUser(email: string) {
       body: JSON.stringify({ email }),
     });
     if (!result.ok) return console.error(await result.text());
-    const text = await result.text();
-    console.log(text);
+    console.log(await result.text());
   } catch (e: any) {
     console.error(e);
   }

@@ -1,17 +1,14 @@
-import { useMsal } from "@azure/msal-react";
 import { FunctionComponent } from "react";
-import { loginRequest } from "../../auth-config";
-import { IPublicClientApplication } from "@azure/msal-browser";
+import { loginRequest, msalInstance } from "../../auth-config";
 
-function handleLogin(instance: IPublicClientApplication) {
-  instance.loginRedirect(loginRequest).catch((e: any) => {
+function login() {
+  msalInstance.loginRedirect(loginRequest).catch((e: any) => {
     console.error(e);
   });
 }
 
 const LoginButton: FunctionComponent = () => {
-  const { instance } = useMsal();
-  return <button onClick={() => handleLogin(instance)}>Login</button>;
+  return <button onClick={login}>Login</button>;
 };
 
 export default LoginButton;

@@ -2,7 +2,7 @@
 
 import { auth_Users } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../prisma/prisma-client";
+import db from "../../../prisma/prisma-client";
 
 type UserId = {
   sub: string;
@@ -14,7 +14,7 @@ function getUserIdFromMsGraph(authorization: string) {
 }
 
 async function getUserFromDatabase(userId: UserId) {
-  return await prisma.auth_Users.findFirst({
+  return await db.auth_Users.findFirst({
     where: { OR: [{ email: userId.email }, { microsoft_sub: userId.sub }] },
   });
 }
@@ -54,7 +54,7 @@ export default async function getUser(
   }
   // Email registered, but not unique id - save id in case primary email changes
   if (!user.microsoft_sub) {
-    await prisma.auth_Users.update({
+    await db.auth_Users.update({
       where: { email: userId.email },
       data: { microsoft_sub: userId.sub },
     });
