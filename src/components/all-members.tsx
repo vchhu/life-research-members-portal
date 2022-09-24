@@ -17,6 +17,8 @@ const AllMembers: FunctionComponent = () => {
     <>
       <h1>All Members</h1>
       <button onClick={fetchAllMembers}>Get All Members</button>
+      <br />
+      <button onClick={() => setAllMembers([])}>Clear</button>
       {allMembers}
     </>
   );

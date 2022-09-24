@@ -8,6 +8,7 @@ import Head from "next/head";
 import TokenButton from "../components/token-button";
 import RegisterUser from "../components/register-user";
 import AllMembers from "../components/all-members";
+import AllUsers from "../components/all-users";
 
 const App: NextPage = () => {
   return (
@@ -25,6 +26,8 @@ const App: NextPage = () => {
         <TokenButton />
         <br />
         <RegisterUser />
+        <br />
+        <AllUsers />
         <br />
         <AllMembers />
         <br />
