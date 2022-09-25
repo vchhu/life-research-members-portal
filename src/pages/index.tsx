@@ -13,25 +13,20 @@ import AllUsers from "../components/all-users";
 const App: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>WIIM</title>
-      </Head>
-      <MsalProvider instance={msalInstance}>
-        <UserData />
-        <br />
-        <LoginButton />
-        <LogoutButton />
-        <br />
-        <br />
-        <TokenButton />
-        <br />
-        <RegisterUser />
-        <br />
-        <AllUsers />
-        <br />
-        <AllMembers />
-        <br />
-      </MsalProvider>
+      <UserData />
+      <br />
+      <LoginButton />
+      <LogoutButton />
+      <br />
+      <br />
+      <TokenButton />
+      <br />
+      <RegisterUser />
+      <br />
+      <AllUsers />
+      <br />
+      <AllMembers />
+      <br />
     </>
   );
 };
