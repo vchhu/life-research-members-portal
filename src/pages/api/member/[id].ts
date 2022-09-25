@@ -9,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     const currentUser = await getUser(req, res);
     if (!currentUser) return;
+    // TODO: allow a regular user to view their own member info
     if (!currentUser.admin)
       return res.status(401).send("You are not authorized to perform this action.");
 
