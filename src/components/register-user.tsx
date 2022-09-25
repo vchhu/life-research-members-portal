@@ -1,10 +1,11 @@
 import { FunctionComponent, useRef } from "react";
+import ApiRoutes from "../utils/front-end/api-routes";
 import authHeader from "../utils/front-end/auth-header";
 import { contentTypeJsonHeader } from "../utils/front-end/content-type-headers";
 
 async function registerUser(email: string) {
   try {
-    const result = await fetch("/api/register-user", {
+    const result = await fetch(ApiRoutes.registerUser, {
       method: "PUT",
       headers: { ...(await authHeader()), ...contentTypeJsonHeader },
       body: JSON.stringify({ email }),

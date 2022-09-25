@@ -1,4 +1,5 @@
 import { FunctionComponent, useState } from "react";
+import ApiRoutes from "../utils/front-end/api-routes";
 import authHeader from "../utils/front-end/auth-header";
 
 const AllMembers: FunctionComponent = () => {
@@ -8,7 +9,7 @@ const AllMembers: FunctionComponent = () => {
   ));
 
   async function fetchAllMembers() {
-    const result = await fetch("/api/get-all-members", { headers: await authHeader() });
+    const result = await fetch(ApiRoutes.allMembers, { headers: await authHeader() });
     if (!result.ok) return console.error(await result.text());
     setAllMembers(await result.json());
   }
