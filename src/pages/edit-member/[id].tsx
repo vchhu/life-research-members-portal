@@ -7,10 +7,21 @@ import { msalInstance } from "../../../auth-config";
 import ApiRoutes from "../../utils/front-end/api-routes";
 import authHeader from "../../utils/front-end/auth-header";
 
-const ViewMember: NextPage = () => {
+const EditMember: NextPage = () => {
   const [member, setMember] = useState<main_Members | null>(null);
   const router = useRouter();
   const { id } = router.query as { id: string };
+
+  async function deleteMember(member: main_Members) {
+    const confirmation = confirm(
+      "Are you sure you want to delete Member: " + member.first_name + " " + member.last_name + "?"
+    );
+    if (!confirmation) return;
+    const result = await fetch(ApiRoutes.deleteMember + id, { headers: await authHeader() });
+    if (!result.ok) return console.error(await result.text());
+    alert("Member: " + member.first_name + " " + member.last_name + " deleted successfully.");
+    router.push("/");
+  }
 
   useEffect(() => {
     async function fetchMember(id: string) {
@@ -27,6 +38,7 @@ const ViewMember: NextPage = () => {
       <>
         <h1>{member.first_name + " " + member.last_name}</h1>
         <pre>{JSON.stringify(member, null, 2)}</pre>
+        <button onClick={() => deleteMember(member)}>DELETE</button>
       </>
     );
   }
@@ -41,4 +53,4 @@ const ViewMember: NextPage = () => {
   );
 };
 
-export default ViewMember;
+export default EditMember;

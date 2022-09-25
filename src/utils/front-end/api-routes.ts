@@ -1,8 +1,9 @@
 const ApiRoutes = {
-  allMembers: "/api/all-members" as const,
-  allUsers: "/api/all-users" as const,
-  registerUser: "/api/register-user" as const,
-  member: "/api/member/" as const,
-};
+  allMembers: "/api/all-members",
+  allUsers: "/api/all-users",
+  registerUser: "/api/register-user",
+  member: "/api/member/",
+  deleteMember: "/api/delete-member/",
+} as const;
 
 export default ApiRoutes;

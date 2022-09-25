@@ -9,14 +9,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     const currentUser = await getUser(req, res);
     if (!currentUser) return;
-    // TODO: allow a regular user to view their own member info
+    // TODO: allow a regular user to delete their own member info
     if (!currentUser.admin)
       return res.status(401).send("You are not authorized to perform this action.");
 
-    const member = await db.main_Members.findUnique({
+    const member = await db.main_Members.delete({
       where: { ID: parseInt(id) },
     });
-    if (!member) return res.status(400).send("Member not found. ID: " + id);
     return res.status(200).send(member);
   } catch (e: any) {
     return res.status(500).send({ ...e, message: e.message }); // prisma error messages are getters

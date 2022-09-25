@@ -1,1 +1,1 @@
-export const contentTypeJsonHeader = { "Content-Type": "application/json" as const };
+export const contentTypeJsonHeader = { "Content-Type": "application/json" } as const;
