@@ -7,7 +7,7 @@ import { msalInstance } from "../../../auth-config";
 import ApiRoutes from "../../utils/front-end/api-routes";
 import authHeader from "../../utils/front-end/auth-header";
 
-const ViewMember: NextPage = () => {
+const ViewMemberPage: NextPage = () => {
   const [member, setMember] = useState<main_Members | null>(null);
   const router = useRouter();
   const { id } = router.query as { id: string };
@@ -41,4 +41,4 @@ const ViewMember: NextPage = () => {
   );
 };
 
-export default ViewMember;
+export default ViewMemberPage;

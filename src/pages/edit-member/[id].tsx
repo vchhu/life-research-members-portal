@@ -7,7 +7,7 @@ import { msalInstance } from "../../../auth-config";
 import ApiRoutes from "../../utils/front-end/api-routes";
 import authHeader from "../../utils/front-end/auth-header";
 
-const EditMember: NextPage = () => {
+const EditMemberPage: NextPage = () => {
   const [member, setMember] = useState<main_Members | null>(null);
   const [changes, setChanges] = useState<Partial<main_Members>>({});
   const router = useRouter();
@@ -100,4 +100,4 @@ const EditMember: NextPage = () => {
   );
 };
 
-export default EditMember;
+export default EditMemberPage;

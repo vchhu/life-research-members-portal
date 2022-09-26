@@ -10,9 +10,9 @@ html {
   color-scheme: dark;
 }
 body {
-  padding-left: 10px;
   color: white;
   background: black;
+  padding: 10px;
 }
 
 a {
@@ -22,4 +22,19 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid white;
+  font-size: 1.5rem;
+}
+
+.navbar a:hover {
+  color: yellow;
+}
+
+.navbar button {
+  font-size: 1.2rem;
 }

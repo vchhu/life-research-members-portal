@@ -8,12 +8,12 @@ const UserData: FunctionComponent = () => {
   return (
     <>
       <AuthenticatedTemplate>
-        <h1>You are signed in!</h1>
+        <h1>Welcome!</h1>
         <h2>{user?.name}</h2>
         <h2>{user?.username}</h2>
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
-        <h1>Please sign in</h1>
+        <h1>Please sign in...</h1>
       </UnauthenticatedTemplate>
     </>
   );
