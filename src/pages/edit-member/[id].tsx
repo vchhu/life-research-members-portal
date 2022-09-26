@@ -9,7 +9,7 @@ import authHeader from "../../utils/front-end/auth-header";
 
 const EditMember: NextPage = () => {
   const [member, setMember] = useState<main_Members | null>(null);
-  const [changes, setChanges] = useState<Partial<main_Members> | null>(null);
+  const [changes, setChanges] = useState<Partial<main_Members>>({});
   const router = useRouter();
   const { id } = router.query as { id: string };
 
@@ -35,7 +35,7 @@ const EditMember: NextPage = () => {
     if (!result.ok) return console.error(await result.text());
     const updated = await result.json();
     setMember(updated);
-    setChanges(null);
+    setChanges({});
     alert("Member: " + updated.first_name + " " + updated.last_name + " updated successfully.");
   }
 
@@ -50,8 +50,11 @@ const EditMember: NextPage = () => {
 
   function handleChange(ev: ChangeEvent<HTMLInputElement>, key: string) {
     setChanges((prev) => {
-      if (!prev) prev = {};
-      return { ...prev, [key]: ev.target.value };
+      const oldValue = (member as any)[key];
+      let newValue: string | undefined = ev.target.value;
+      if (newValue === String(oldValue)) newValue = undefined;
+      if (!newValue && !oldValue) newValue = undefined;
+      return { ...prev, [key]: newValue };
     });
   }
 
