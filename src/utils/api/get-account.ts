@@ -17,7 +17,7 @@ function getMicrosoftAccount(authorization: string) {
 
 function getAccountFromDatabase(userId: MsAccountInfo) {
   return db.auth_accounts.findFirst({
-    where: { OR: [{ microsoft_email: userId.userPrincipalName }, { microsoft_id: userId.id }] },
+    where: { OR: [{ microsoft_id: userId.id }, { microsoft_email: userId.userPrincipalName }] },
   });
 }
 

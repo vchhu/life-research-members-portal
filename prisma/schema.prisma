@@ -9,7 +9,7 @@ datasource db {
 
 model auth_accounts {
   id              Int            @id(map: "PK_microsoft_users") @default(autoincrement())
-  microsoft_email String         @unique(map: "unique_microsoft_email") @db.VarChar(320)
+  microsoft_email String         @unique(map: "UK_microsoft_email") @db.VarChar(320)
   microsoft_id    String?        @db.VarChar(50)
   is_admin        Boolean        @default(false, map: "DF_auth_users_is_admin")
   main_members    main_members[]

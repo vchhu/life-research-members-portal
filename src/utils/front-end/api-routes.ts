@@ -1,7 +1,8 @@
 const ApiRoutes = {
   allMembers: "/api/all-members",
-  allUsers: "/api/all-users",
-  registerUser: "/api/register-user",
+  allAccounts: "/api/all-accounts",
+  registerAccount: "/api/register-account",
+  account: "/api/account",
   member: "/api/member/",
   deleteMember: "/api/delete-member/",
   updateMember: "/api/update-member/",

@@ -9,7 +9,7 @@ const AllUsers: FunctionComponent = () => {
   ));
 
   async function fetchAllUsers() {
-    const result = await fetch(ApiRoutes.allUsers, { headers: await authHeader() });
+    const result = await fetch(ApiRoutes.allAccounts, { headers: await authHeader() });
     if (!result.ok) return console.error(await result.text());
     setAllUsers(await result.json());
   }

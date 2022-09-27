@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
-import RegisterUser from "../components/register-user";
+import RegisterAccount from "../components/register-account";
 
 const RegisterPage: NextPage = () => {
   return (
     <>
-      <RegisterUser />
+      <RegisterAccount />
     </>
   );
 };

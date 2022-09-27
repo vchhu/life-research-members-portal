@@ -3,9 +3,9 @@ import ApiRoutes from "../utils/front-end/api-routes";
 import authHeader from "../utils/front-end/auth-header";
 import { contentTypeJsonHeader } from "../utils/front-end/content-type-headers";
 
-async function registerUser(email: string) {
+async function registerAccount(email: string) {
   try {
-    const result = await fetch(ApiRoutes.registerUser, {
+    const result = await fetch(ApiRoutes.registerAccount, {
       method: "PUT",
       headers: { ...(await authHeader()), ...contentTypeJsonHeader },
       body: JSON.stringify({ email }),
@@ -17,18 +17,21 @@ async function registerUser(email: string) {
   }
 }
 
-const RegisterUser: FunctionComponent = () => {
+const RegisterAccount: FunctionComponent = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const getEmail = () => emailRef.current?.value || "";
 
   return (
     <>
-      <h1>Register User</h1>
-      <input type="text" ref={emailRef}></input>
+      <h1>Register Account</h1>
+      <label>
+        Email:&nbsp;
+        <input type="text" ref={emailRef}></input>
+      </label>
       <br />
-      <button onClick={() => registerUser(getEmail())}>Register User</button>
+      <button onClick={() => registerAccount(getEmail())}>Register Account</button>
     </>
   );
 };
 
-export default RegisterUser;
+export default RegisterAccount;

@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const newUser = await db.auth_accounts.create({
       data: { microsoft_email, is_admin, microsoft_id },
     });
-    return res.status(200).send("User created: " + JSON.stringify(newUser));
+    return res.status(200).send("Account created: " + JSON.stringify(newUser));
   } catch (e: any) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
       return res.status(400).send("This email is already registered. Email: " + microsoft_email);
