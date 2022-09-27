@@ -3,12 +3,12 @@ import ApiRoutes from "../utils/front-end/api-routes";
 import authHeader from "../utils/front-end/auth-header";
 import { contentTypeJsonHeader } from "../utils/front-end/content-type-headers";
 
-async function registerAccount(email: string) {
+async function registerAccount(microsoft_email: string) {
   try {
     const result = await fetch(ApiRoutes.registerAccount, {
       method: "PUT",
       headers: { ...(await authHeader()), ...contentTypeJsonHeader },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ microsoft_email }),
     });
     if (!result.ok) return console.error(await result.text());
     console.log(await result.text());
@@ -25,9 +25,10 @@ const RegisterAccount: FunctionComponent = () => {
     <>
       <h1>Register Account</h1>
       <label>
-        Email:&nbsp;
+        Microsoft Email:&nbsp;
         <input type="text" ref={emailRef}></input>
       </label>
+      <br />
       <br />
       <button onClick={() => registerAccount(getEmail())}>Register Account</button>
     </>
