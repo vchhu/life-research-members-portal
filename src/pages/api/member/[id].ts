@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../../prisma/prisma-client";
-import getUser from "../../../utils/api/get-user";
+import getAccount from "../../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   const { id } = req.query as { id: string };
   if (!id) return res.status(400).send("Member ID is required.");
 
   try {
-    const currentUser = await getUser(req, res);
+    const currentUser = await getAccount(req, res);
     if (!currentUser) return;
     // TODO: allow a regular user to view their own member info
     if (!currentUser.is_admin)

@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../prisma/prisma-client";
-import getUser from "../../utils/api/get-user";
+import getAccount from "../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   try {
-    const currentUser = await getUser(req, res);
+    const currentUser = await getAccount(req, res);
     if (!currentUser) return;
     if (!currentUser.is_admin)
       return res.status(401).send("You are not authorized to perform this action.");

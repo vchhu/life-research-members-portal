@@ -1,7 +1,7 @@
 import { main_members } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../../prisma/prisma-client";
-import getUser from "../../../utils/api/get-user";
+import getAccount from "../../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   const { id } = req.query as { id: string };
@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   try {
     const member: Partial<main_members> = JSON.parse(req.body);
-    const currentUser = await getUser(req, res);
+    const currentUser = await getAccount(req, res);
     if (!currentUser) return;
     // TODO: allow a regular user to edit their own member info
     if (!currentUser.is_admin)
