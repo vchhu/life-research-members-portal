@@ -10,11 +10,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const currentUser = await getUser(req, res);
     if (!currentUser) return;
     // TODO: allow a regular user to view their own member info
-    if (!currentUser.admin)
+    if (!currentUser.is_admin)
       return res.status(401).send("You are not authorized to perform this action.");
 
-    const member = await db.main_Members.findUnique({
-      where: { ID: parseInt(id) },
+    const member = await db.main_members.findUnique({
+      where: { id: parseInt(id) },
     });
     if (!member) return res.status(400).send("Member not found. ID: " + id);
     return res.status(200).send(member);

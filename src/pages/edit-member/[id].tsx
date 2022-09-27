@@ -1,5 +1,5 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
-import { main_Members } from "@prisma/client";
+import { main_members } from "@prisma/client";
 import { useRouter } from "next/router";
 import { NextPage } from "next/types";
 import { ChangeEvent, Fragment, useEffect, useState } from "react";
@@ -8,8 +8,8 @@ import ApiRoutes from "../../utils/front-end/api-routes";
 import authHeader from "../../utils/front-end/auth-header";
 
 const EditMemberPage: NextPage = () => {
-  const [member, setMember] = useState<main_Members | null>(null);
-  const [changes, setChanges] = useState<Partial<main_Members>>({});
+  const [member, setMember] = useState<main_members | null>(null);
+  const [changes, setChanges] = useState<Partial<main_members>>({});
   const router = useRouter();
   const { id } = router.query as { id: string };
 
@@ -71,7 +71,7 @@ const EditMemberPage: NextPage = () => {
               defaultValue={(member as any)[k]}
               onChange={(ev) => handleChange(ev, k)}
               style={{ width: "calc(95vw - 200px)", display: "inline-block" }}
-              readOnly={k === "ID"}
+              readOnly={k === "id"}
             />
           </div>
         ))}

@@ -10,11 +10,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const currentUser = await getUser(req, res);
     if (!currentUser) return;
     // TODO: allow a regular user to delete their own member info
-    if (!currentUser.admin)
+    if (!currentUser.is_admin)
       return res.status(401).send("You are not authorized to perform this action.");
 
-    const member = await db.main_Members.delete({
-      where: { ID: parseInt(id) },
+    const member = await db.main_members.delete({
+      where: { id: parseInt(id) },
     });
     return res.status(200).send(member);
   } catch (e: any) {

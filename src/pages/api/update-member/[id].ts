@@ -1,4 +1,4 @@
-import { main_Members } from "@prisma/client";
+import { main_members } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../../prisma/prisma-client";
 import getUser from "../../../utils/api/get-user";
@@ -8,15 +8,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (!id) return res.status(400).send("Member ID is required.");
 
   try {
-    const member: Partial<main_Members> = JSON.parse(req.body);
+    const member: Partial<main_members> = JSON.parse(req.body);
     const currentUser = await getUser(req, res);
     if (!currentUser) return;
     // TODO: allow a regular user to edit their own member info
-    if (!currentUser.admin)
+    if (!currentUser.is_admin)
       return res.status(401).send("You are not authorized to perform this action.");
 
-    const updated = await db.main_Members.update({
-      where: { ID: parseInt(id) },
+    const updated = await db.main_members.update({
+      where: { id: parseInt(id) },
       data: member,
     });
     return res.status(200).send(updated);

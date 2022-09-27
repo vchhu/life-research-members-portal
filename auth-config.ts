@@ -22,7 +22,7 @@ const msalConfig: Configuration = {
 
 export const msalInstance = new PublicClientApplication(msalConfig);
 
-export const scopes = ["openid", "email"];
+export const scopes = ["User.Read", "openid", "email"];
 
 export const loginRequest: RedirectRequest = {
   scopes,
