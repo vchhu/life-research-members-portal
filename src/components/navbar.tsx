@@ -5,13 +5,6 @@ import PageRoutes from "../utils/front-end/page-routes";
 import LoginButton from "./login-button";
 import LogoutButton from "./logout-button";
 
-const navBarStyle: CSSProperties = {
-  display: "flex",
-  width: "100%",
-  borderBottom: "1px solid white",
-  fontSize: "1.5rem",
-};
-
 const Navbar: FunctionComponent = () => {
   const { instance } = useMsal();
   const account = instance.getActiveAccount();
@@ -26,6 +19,10 @@ const Navbar: FunctionComponent = () => {
           <a>Members</a>
         </Link>
         <span style={{ width: "1rem" }}></span>
+        <Link href={PageRoutes.accounts}>
+          <a>Accounts</a>
+        </Link>
+        <span style={{ width: "1rem" }}></span>
         <Link href={PageRoutes.register}>
           <a>Register</a>
         </Link>
@@ -34,7 +31,7 @@ const Navbar: FunctionComponent = () => {
           <LoginButton />
         </UnauthenticatedTemplate>
         <AuthenticatedTemplate>
-          <span>{account?.username}</span>
+          <span style={{ fontSize: "1.2rem" }}>{account?.username}</span>
           <span style={{ width: "1rem" }}></span>
           <LogoutButton />
         </AuthenticatedTemplate>

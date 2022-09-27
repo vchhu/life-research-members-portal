@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import db from "../../../prisma/prisma-client";
 import getAccount from "../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {

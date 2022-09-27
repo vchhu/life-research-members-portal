@@ -6,7 +6,7 @@ import authHeader from "../utils/front-end/auth-header";
 
 let cachedLocalAccount: auth_accounts | null = null;
 
-const UserData: FunctionComponent = () => {
+const AccountData: FunctionComponent = () => {
   const { instance } = useMsal();
   const user = instance.getActiveAccount();
   const [localAccount, setLocalAccount] = useState(cachedLocalAccount);
@@ -27,6 +27,17 @@ const UserData: FunctionComponent = () => {
     if (!cachedLocalAccount) fetchLocalAccount();
   }, []);
 
+  function localAccountData() {
+    if (!localAccount) return <p>Loading...</p>;
+    return (
+      <>
+        <p>{localAccount.microsoft_email}</p>
+        <p>{localAccount.microsoft_id}</p>
+        <p>{"admin: " + localAccount.is_admin}</p>
+      </>
+    );
+  }
+
   return (
     <>
       <AuthenticatedTemplate>
@@ -36,9 +47,7 @@ const UserData: FunctionComponent = () => {
         <p>{user?.username}</p>
         <p>{user?.localAccountId}</p>
         <h2>Local Account:</h2>
-        <p>{localAccount?.microsoft_email}</p>
-        <p>{localAccount?.microsoft_id}</p>
-        <p>{"admin: " + localAccount?.is_admin}</p>
+        {localAccountData()}
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
         <h1>Please sign in...</h1>
@@ -47,4 +56,4 @@ const UserData: FunctionComponent = () => {
   );
 };
 
-export default UserData;
+export default AccountData;

@@ -41,8 +41,10 @@ const AllMembers: FunctionComponent = () => {
   }
 
   useEffect(() => {
-    if (firstRender) fetchAllMembers();
-    firstRender = false;
+    if (firstRender) {
+      fetchAllMembers();
+      firstRender = false;
+    }
   }, []);
 
   return (
