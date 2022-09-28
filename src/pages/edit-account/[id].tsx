@@ -2,12 +2,13 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/
 import { auth_accounts, main_members } from "@prisma/client";
 import { useRouter } from "next/router";
 import { NextPage } from "next/types";
-import { ChangeEvent, Fragment, useEffect, useState } from "react";
+import { ChangeEvent, Fragment, useCallback, useEffect, useState } from "react";
 import { msalInstance } from "../../../auth-config";
 import { all_account_info } from "../../../prisma/types";
 import isEmptyObject from "../../utils/common/isEmptyObject";
 import ApiRoutes from "../../utils/front-end/api-routes";
 import authHeader from "../../utils/front-end/auth-header";
+import { contentTypeJsonHeader } from "../../utils/front-end/content-type-headers";
 
 const EditAccountPage: NextPage = () => {
   const [account, setAccount] = useState<all_account_info | null>(null);
@@ -22,11 +23,15 @@ const EditAccountPage: NextPage = () => {
       "Are you sure you want to delete Account: " + account.microsoft_email + "?"
     );
     if (!confirmation) return;
-
-    const result = await fetch(ApiRoutes.deleteAccount + id, { headers: await authHeader() });
-    if (!result.ok) return console.error(await result.text());
-    alert("Account: " + account.microsoft_email + " deleted successfully.");
-    router.push("/");
+    try {
+      const result = await fetch(ApiRoutes.deleteAccount + id, { headers: await authHeader() });
+      if (!result.ok) return console.error(await result.text());
+      alert("Account: " + account.microsoft_email + " deleted successfully.");
+      router.push("/");
+    } catch (e: any) {
+      console.error(e);
+      alert(e);
+    }
   }
 
   async function updateAccount() {
@@ -47,15 +52,66 @@ const EditAccountPage: NextPage = () => {
     alert("Account: " + updated.microsoft_email + " updated successfully.");
   }
 
-  async function fetchAccount(id: string) {
+  const fetchAccount = useCallback(async () => {
     const res = await fetch(ApiRoutes.account + id, { headers: await authHeader() });
     if (!res.ok) return console.error(await res.text());
     setAccount(await res.json());
-  }
+  }, [id]);
 
   useEffect(() => {
-    if (id && msalInstance.getActiveAccount()) fetchAccount(id).catch((e) => console.error(e));
-  }, [id]);
+    if (id && msalInstance.getActiveAccount()) fetchAccount();
+  }, [id, fetchAccount]);
+
+  async function registerAsMember() {
+    try {
+      const result = await fetch(ApiRoutes.registerMember, {
+        headers: { ...(await authHeader()), ...contentTypeJsonHeader },
+        body: JSON.stringify({ account_id: account?.id }),
+        method: "PUT",
+      });
+      if (!result.ok) {
+        const e = await result.text();
+        console.error(e);
+        alert(e);
+        return;
+      }
+      const newMember: main_members = await result.json();
+      fetchAccount();
+      alert("Member Registered. Member ID: " + newMember.id);
+    } catch (e: any) {
+      console.error(e);
+      alert(e);
+    }
+  }
+
+  async function unregisterMember() {
+    if (!account?.main_members?.id) return;
+    const confirmation = confirm(
+      "Are you sure you want to unregister member for: " + account.microsoft_email + "?"
+    );
+    if (!confirmation) return;
+    try {
+      const result = await fetch(ApiRoutes.deleteMember + account.main_members.id, {
+        headers: await authHeader(),
+        method: "DELETE",
+      });
+      if (!result.ok) {
+        const e = await result.text();
+        console.error(e);
+        alert(e);
+        return;
+      }
+      const deleted = await result.json();
+      setAccount((prev) => {
+        if (!prev) return prev;
+        return { ...prev, main_members: null };
+      });
+      alert("Member Unregistered. Member ID: " + deleted.id);
+    } catch (e: any) {
+      console.error(e);
+      alert(e);
+    }
+  }
 
   function diff(oldValue: any, newValue: any) {
     if (!oldValue && !newValue) return undefined;
@@ -102,8 +158,6 @@ const EditAccountPage: NextPage = () => {
       </>
     );
   }
-
-  async function registerAsMember() {}
 
   function memberInfoHtml() {
     if (!account?.main_members)
@@ -343,6 +397,10 @@ const EditAccountPage: NextPage = () => {
         <pre>{JSON.stringify(memberInfoChanges, null, 2)}</pre>
         <br />
         <button onClick={() => updateAccount()}>APPLY CHANGES</button>
+        <br />
+        <br />
+        <br />
+        <button onClick={() => unregisterMember()}>UNREGISTER MEMBER</button>
         <br />
         <br />
         <br />

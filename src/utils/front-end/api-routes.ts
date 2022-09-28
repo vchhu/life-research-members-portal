@@ -9,6 +9,7 @@ const ApiRoutes = {
   updateAccount: "/api/update-account/",
   deleteMember: "/api/delete-member/",
   updateMember: "/api/update-member/",
+  registerMember: "/api/register-member",
 } as const;
 
 export default ApiRoutes;
