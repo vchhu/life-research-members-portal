@@ -2,7 +2,9 @@
 
 import { auth_accounts } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
+import { includeAllInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
+import { all_account_info } from "../../../prisma/types";
 
 type MsAccountInfo = {
   id: string;
@@ -18,6 +20,7 @@ function getMicrosoftAccount(authorization: string) {
 function getAccountFromDatabase(userId: MsAccountInfo) {
   return db.auth_accounts.findFirst({
     where: { OR: [{ microsoft_id: userId.id }, { microsoft_email: userId.userPrincipalName }] },
+    include: includeAllInfo,
   });
 }
 
@@ -28,7 +31,7 @@ function getAccountFromDatabase(userId: MsAccountInfo) {
 export default async function getAccount(
   req: NextApiRequest,
   res: NextApiResponse
-): Promise<auth_accounts | undefined> {
+): Promise<all_account_info | undefined> {
   if (!req.headers.authorization) {
     res.status(401).send("No Authorization Header");
     return;
@@ -65,6 +68,7 @@ export default async function getAccount(
     account = await db.auth_accounts.update({
       where: { id: account.id },
       data: { microsoft_id: msAccountInfo.id, microsoft_email: msAccountInfo.userPrincipalName },
+      include: includeAllInfo,
     });
   }
 

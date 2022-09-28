@@ -15,10 +15,6 @@ const Navbar: FunctionComponent = () => {
           <a>Home</a>
         </Link>
         <span style={{ width: "1rem" }}></span>
-        <Link href={PageRoutes.members}>
-          <a>Members</a>
-        </Link>
-        <span style={{ width: "1rem" }}></span>
         <Link href={PageRoutes.accounts}>
           <a>Accounts</a>
         </Link>

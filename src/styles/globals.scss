@@ -39,3 +39,17 @@ a {
 .navbar button {
   font-size: 1.2rem;
 }
+
+.edit-account {
+  label {
+    width: 200px;
+    display: inline-block;
+  }
+  input {
+    width: calc(95vw - 200px);
+    display: inline-block;
+  }
+  input[type="checkbox"] {
+    width: auto;
+  }
+}

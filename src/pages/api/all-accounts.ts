@@ -9,8 +9,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (!currentUser.is_admin)
       return res.status(401).send("You are not authorized to perform this action.");
 
-    const allUsers = await db.auth_accounts.findMany();
-    return res.status(200).send(allUsers);
+    const accounts = await db.auth_accounts.findMany({
+      include: { main_members: { select: { id: true, first_name: true, last_name: true } } },
+    });
+    const mappedAccounts = accounts.map((acc) => ({
+      ...acc,
+      member_id: acc.main_members?.id,
+      first_name: acc.main_members?.first_name,
+      last_name: acc.main_members?.last_name,
+      main_members: undefined,
+    }));
+    return res.status(200).send(mappedAccounts);
   } catch (e: any) {
     return res.status(500).send({ ...e, message: e.message }); // prisma error messages are getters
   }

@@ -1,17 +1,28 @@
-import { auth_accounts } from "@prisma/client";
-import { FunctionComponent, useEffect, useState } from "react";
+import Link from "next/link";
+import { Fragment, FunctionComponent, useEffect, useState } from "react";
+import { all_account_info } from "../../prisma/types";
 import ApiRoutes from "../utils/front-end/api-routes";
 import authHeader from "../utils/front-end/auth-header";
+import PageRoutes from "../utils/front-end/page-routes";
 
 let firstRender = true;
-let cachedAccounts: auth_accounts[] = [];
+let cachedAccounts: all_account_info[] = [];
 
 const AllUsers: FunctionComponent = () => {
-  const [allAccounts, setAllAccounts] = useState<auth_accounts[]>(cachedAccounts);
+  const [allAccounts, setAllAccounts] = useState<all_account_info[]>(cachedAccounts);
   const [loading, setLoading] = useState(false);
 
   const allAccountsHtml = allAccounts.map((acc) => (
-    <pre key={acc.id}>{JSON.stringify(acc, null, 2)}</pre>
+    <Fragment key={acc.id}>
+      <pre>{JSON.stringify(acc, null, 2)}</pre>
+      <Link href={PageRoutes.viewAccount + acc.id}>
+        <button>VIEW</button>
+      </Link>
+      <span style={{ width: "6px", display: "inline-block" }}></span>
+      <Link href={PageRoutes.editAccount + acc.id}>
+        <button>EDIT</button>
+      </Link>
+    </Fragment>
   ));
 
   async function fetchAllAccounts() {

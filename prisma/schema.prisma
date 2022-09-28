@@ -21,7 +21,6 @@ model main_members {
   first_name            String?                @db.NVarChar(255)
   last_name             String?                @db.NVarChar(255)
   business_name         String?                @db.NVarChar(255)
-  date_joined           DateTime?
   email                 String?                @db.NVarChar(255)
   address               String?                @db.NVarChar(255)
   city                  String?                @db.NVarChar(255)

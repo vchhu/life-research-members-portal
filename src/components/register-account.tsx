@@ -3,23 +3,31 @@ import ApiRoutes from "../utils/front-end/api-routes";
 import authHeader from "../utils/front-end/auth-header";
 import { contentTypeJsonHeader } from "../utils/front-end/content-type-headers";
 
-async function registerAccount(microsoft_email: string) {
-  try {
-    const result = await fetch(ApiRoutes.registerAccount, {
-      method: "PUT",
-      headers: { ...(await authHeader()), ...contentTypeJsonHeader },
-      body: JSON.stringify({ microsoft_email }),
-    });
-    if (!result.ok) return console.error(await result.text());
-    console.log(await result.text());
-  } catch (e: any) {
-    console.error(e);
-  }
-}
-
 const RegisterAccount: FunctionComponent = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const getEmail = () => emailRef.current?.value || "";
+
+  async function registerAccount() {
+    try {
+      const microsoft_email = getEmail();
+      const result = await fetch(ApiRoutes.registerAccount, {
+        method: "PUT",
+        headers: { ...(await authHeader()), ...contentTypeJsonHeader },
+        body: JSON.stringify({ microsoft_email }),
+      });
+      if (!result.ok) {
+        const e = await result.text();
+        console.error(e);
+        alert(e);
+        return;
+      }
+      alert(await result.text());
+      if (emailRef.current) emailRef.current.value = "";
+    } catch (e: any) {
+      console.error(e);
+      alert(e);
+    }
+  }
 
   return (
     <>
@@ -30,7 +38,7 @@ const RegisterAccount: FunctionComponent = () => {
       </label>
       <br />
       <br />
-      <button onClick={() => registerAccount(getEmail())}>Register Account</button>
+      <button onClick={() => registerAccount()}>Register Account</button>
     </>
   );
 };

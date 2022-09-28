@@ -13,7 +13,7 @@ const AccountData: FunctionComponent = () => {
 
   async function fetchLocalAccount() {
     try {
-      const accountRes = await fetch(ApiRoutes.account, { headers: await authHeader() });
+      const accountRes = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
       if (!accountRes.ok) return console.error(await accountRes.text());
       const account = await accountRes.json();
       setLocalAccount(account);
