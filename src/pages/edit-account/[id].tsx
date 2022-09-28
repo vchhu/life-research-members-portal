@@ -2,7 +2,7 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/
 import { auth_accounts, main_members } from "@prisma/client";
 import { useRouter } from "next/router";
 import { NextPage } from "next/types";
-import { ChangeEvent, Fragment, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { msalInstance } from "../../../auth-config";
 import { all_account_info } from "../../../prisma/types";
 import isEmptyObject from "../../utils/common/isEmptyObject";
@@ -12,6 +12,7 @@ import { contentTypeJsonHeader } from "../../utils/front-end/content-type-header
 
 const EditAccountPage: NextPage = () => {
   const [account, setAccount] = useState<all_account_info | null>(null);
+  const memberInfo = account?.main_members;
   const [accountInfoChanges, setAccountInfoChanges] = useState<Partial<auth_accounts>>({});
   const [memberInfoChanges, setMemberInfoChanges] = useState<Partial<main_members>>({});
   const router = useRouter();
@@ -160,7 +161,7 @@ const EditAccountPage: NextPage = () => {
   }
 
   function memberInfoHtml() {
-    if (!account?.main_members)
+    if (!memberInfo)
       return (
         <>
           <p>This account is not registered as a member</p>
@@ -176,206 +177,200 @@ const EditAccountPage: NextPage = () => {
     return (
       <>
         <label>Member ID:</label>
-        <input readOnly defaultValue={account?.main_members?.id}></input>
+        <input readOnly defaultValue={memberInfo?.id}></input>
         <label>First Name:</label>
         <input
-          defaultValue={account?.main_members.first_name || ""}
+          defaultValue={memberInfo.first_name || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              first_name: diff(prev.first_name, ev.target.value),
+              first_name: diff(memberInfo.first_name, ev.target.value),
             }))
           }
         ></input>
         <label>Last Name:</label>
         <input
-          defaultValue={account?.main_members.last_name || ""}
+          defaultValue={memberInfo.last_name || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              last_name: diff(prev.last_name, ev.target.value),
+              last_name: diff(memberInfo.last_name, ev.target.value),
             }))
           }
         ></input>
         <label>Business Name:</label>
         <input
-          defaultValue={account?.main_members.business_name || ""}
+          defaultValue={memberInfo.business_name || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              business_name: diff(prev.business_name, ev.target.value),
+              business_name: diff(memberInfo.business_name, ev.target.value),
             }))
           }
         ></input>
         <label>Email:</label>
         <input
-          defaultValue={account?.main_members.email || ""}
+          defaultValue={memberInfo.email || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              email: diff(prev.email, ev.target.value),
+              email: diff(memberInfo.email, ev.target.value),
             }))
           }
         ></input>
         <label>Address:</label>
         <input
-          defaultValue={account?.main_members.address || ""}
+          defaultValue={memberInfo.address || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              address: diff(prev.address, ev.target.value),
+              address: diff(memberInfo.address, ev.target.value),
             }))
           }
         ></input>
         <label>City:</label>
         <input
-          defaultValue={account?.main_members.city || ""}
+          defaultValue={memberInfo.city || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              city: diff(prev.city, ev.target.value),
+              city: diff(memberInfo.city, ev.target.value),
             }))
           }
         ></input>
         <label>Province:</label>
         <input
-          defaultValue={account?.main_members.province || ""}
+          defaultValue={memberInfo.province || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              province: diff(prev.province, ev.target.value),
+              province: diff(memberInfo.province, ev.target.value),
             }))
           }
         ></input>
         <label>Country:</label>
         <input
-          defaultValue={account?.main_members.country || ""}
+          defaultValue={memberInfo.country || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              country: diff(prev.country, ev.target.value),
+              country: diff(memberInfo.country, ev.target.value),
             }))
           }
         ></input>
         <label>Postal Code:</label>
         <input
-          defaultValue={account?.main_members.postal_code || ""}
+          defaultValue={memberInfo.postal_code || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              postal_code: diff(prev.postal_code, ev.target.value),
+              postal_code: diff(memberInfo.postal_code, ev.target.value),
             }))
           }
         ></input>
         <label>Business Phone:</label>
         <input
-          defaultValue={account?.main_members.business_phone || ""}
+          defaultValue={memberInfo.business_phone || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              business_phone: diff(prev.business_phone, ev.target.value),
+              business_phone: diff(memberInfo.business_phone, ev.target.value),
             }))
           }
         ></input>
         <label>Mobile Phone:</label>
         <input
-          defaultValue={account?.main_members.mobile_phone || ""}
+          defaultValue={memberInfo.mobile_phone || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              mobile_phone: diff(prev.mobile_phone, ev.target.value),
+              mobile_phone: diff(memberInfo.mobile_phone, ev.target.value),
             }))
           }
         ></input>
         <label>Keywords (English):</label>
         <input
-          defaultValue={account?.main_members.keywords_EN || ""}
+          defaultValue={memberInfo.keywords_EN || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              keywords_EN: diff(prev.keywords_EN, ev.target.value),
+              keywords_EN: diff(memberInfo.keywords_EN, ev.target.value),
             }))
           }
         ></input>
         <label>Keywords (French):</label>
         <input
-          defaultValue={account?.main_members.keywords_FR || ""}
+          defaultValue={memberInfo.keywords_FR || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              keywords_FR: diff(prev.keywords_FR, ev.target.value),
+              keywords_FR: diff(memberInfo.keywords_FR, ev.target.value),
             }))
           }
         ></input>
         <label>Problems (English):</label>
         <input
-          defaultValue={account?.main_members.problems_EN || ""}
+          defaultValue={memberInfo.problems_EN || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              problems_EN: diff(prev.problems_EN, ev.target.value),
+              problems_EN: diff(memberInfo.problems_EN, ev.target.value),
             }))
           }
         ></input>
         <label>Problems (French):</label>
         <input
-          defaultValue={account?.main_members.problems_FR || ""}
+          defaultValue={memberInfo.problems_FR || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              problems_FR: diff(prev.problems_FR, ev.target.value),
+              problems_FR: diff(memberInfo.problems_FR, ev.target.value),
             }))
           }
         ></input>
         <label>Dream:</label>
         <input
-          defaultValue={account?.main_members.dream || ""}
+          defaultValue={memberInfo.dream || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              dream: diff(prev.dream, ev.target.value),
+              dream: diff(memberInfo.dream, ev.target.value),
             }))
           }
         ></input>
         <label>Notes:</label>
         <input
-          defaultValue={account?.main_members.notes || ""}
+          defaultValue={memberInfo.notes || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              notes: diff(prev.notes, ev.target.value),
+              notes: diff(memberInfo.notes, ev.target.value),
             }))
           }
         ></input>
         <label>How can we help:</label>
         <input
-          defaultValue={account?.main_members.how_can_we_help || ""}
+          defaultValue={memberInfo.how_can_we_help || ""}
           onChange={(ev) =>
             setMemberInfoChanges((prev) => ({
               ...prev,
-              how_can_we_help: diff(prev.how_can_we_help, ev.target.value),
+              how_can_we_help: diff(memberInfo.how_can_we_help, ev.target.value),
             }))
           }
         ></input>
         <label>Faculty (English):</label>
-        <input
-          readOnly
-          defaultValue={account?.main_members.types_faculty?.faculty_name_en || ""}
-        ></input>
+        <input readOnly defaultValue={memberInfo.types_faculty?.faculty_name_en || ""}></input>
         <label>Faculty (French):</label>
-        <input
-          readOnly
-          defaultValue={account?.main_members.types_faculty?.faculty_name_fr || ""}
-        ></input>
+        <input readOnly defaultValue={memberInfo.types_faculty?.faculty_name_fr || ""}></input>
         <label>Category (English):</label>
         <input
           readOnly
-          defaultValue={account?.main_members.types_member_category?.category_name_en || ""}
+          defaultValue={memberInfo.types_member_category?.category_name_en || ""}
         ></input>
         <label>Category (French):</label>
         <input
           readOnly
-          defaultValue={account?.main_members.types_member_category?.category_name_fr || ""}
+          defaultValue={memberInfo.types_member_category?.category_name_fr || ""}
         ></input>
       </>
     );
