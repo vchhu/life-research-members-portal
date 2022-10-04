@@ -18,9 +18,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const currentAccount = await getAccount(req, res);
     if (!currentAccount) return;
 
-    // Only admins may update account info
-    const authorized = currentAccount.is_admin;
-    if (!authorized) return res.status(401).send("You are not authorized to perform this action.");
+    if (!currentAccount.is_admin)
+      return res.status(401).send("You are not authorized to edit account information.");
+
+    if (currentAccount.id === id)
+      return res
+        .status(401)
+        .send(
+          "Admins may not edit their own account info. This prevents corrupting the only admin account."
+        );
 
     // Including an update statement for member info will error if the user is not registered as a member.
     // Set main_members to undefined if we receive something falsey or an empty object as memberInfo

@@ -13,7 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (!currentAccount) return;
 
     const authorized = currentAccount.is_admin || currentAccount.id === id;
-    if (!authorized) return res.status(401).send("You are not authorized to perform this action.");
+    if (!authorized)
+      return res.status(401).send("You are not authorized to view this account information.");
 
     const account = await db.auth_accounts.findUnique({
       where: { id },

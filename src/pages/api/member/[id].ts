@@ -1,22 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../../prisma/prisma-client";
-import getAccount from "../../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  const { id } = req.query as { id: string };
-  if (!id) return res.status(400).send("Member ID is required.");
+  if (!(typeof req.query.id === "string")) return res.status(400).send("Member ID is required.");
 
   try {
-    const currentUser = await getAccount(req, res);
-    if (!currentUser) return;
-    // TODO: allow a regular user to view their own member info
-    if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to perform this action.");
+    const id = parseInt(req.query.id);
+
+    // TODO: filter what information is public / private
 
     const member = await db.main_members.findUnique({
-      where: { id: parseInt(id) },
+      where: { id },
     });
+
     if (!member) return res.status(400).send("Member not found. ID: " + id);
+
     return res.status(200).send(member);
   } catch (e: any) {
     return res.status(500).send({ ...e, message: e.message }); // prisma error messages are getters

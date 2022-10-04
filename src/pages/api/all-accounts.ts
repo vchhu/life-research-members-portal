@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const currentUser = await getAccount(req, res);
     if (!currentUser) return;
     if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to perform this action.");
+      return res.status(401).send("You are not authorized to view account information.");
 
     const accounts = await db.auth_accounts.findMany({
       include: { main_members: { select: { id: true, first_name: true, last_name: true } } },
