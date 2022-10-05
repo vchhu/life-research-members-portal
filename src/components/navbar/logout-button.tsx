@@ -12,7 +12,7 @@ function logout() {
 
 const LogoutButton: FunctionComponent = () => {
   return (
-    <Button type="primary" onClick={logout}>
+    <Button type="primary" onClick={logout} className="logout-button">
       Logout
     </Button>
   );

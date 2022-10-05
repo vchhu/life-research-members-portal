@@ -19,6 +19,18 @@
     font-size: 1.2rem;
     height: fit-content;
   }
+
+  .avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--blue-6);
+    width: 2.25em;
+    height: 2.25em;
+    cursor: pointer;
+    color: white;
+  }
 }
 
 .avatar-dropdown {
@@ -26,4 +38,9 @@
   display: flex;
   flex-direction: column;
   text-align: center;
+
+  .logout-button {
+    font-size: 1rem;
+    height: fit-content;
+  }
 }
