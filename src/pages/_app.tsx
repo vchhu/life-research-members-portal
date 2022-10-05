@@ -3,7 +3,8 @@ import type { AppProps } from "next/app";
 import { MsalProvider } from "@azure/msal-react";
 import { msalInstance } from "../../auth-config";
 import Head from "next/head";
-import Navbar from "../components/navbar";
+import Navbar from "../components/navbar/@navbar";
+import { LocalAccountCtxProvider } from "../context/local-account-ctx";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -12,8 +13,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>WIIM</title>
       </Head>
       <MsalProvider instance={msalInstance}>
-        <Navbar />
-        <Component {...pageProps} />
+        <LocalAccountCtxProvider>
+          <Navbar />
+          <Component {...pageProps} />
+        </LocalAccountCtxProvider>
       </MsalProvider>
     </>
   );

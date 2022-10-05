@@ -1,39 +1,14 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import { auth_accounts } from "@prisma/client";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useContext, useEffect, useState } from "react";
+import { LocalAccountCtx } from "../context/local-account-ctx";
 import ApiRoutes from "../utils/front-end/api-routes";
 import authHeader from "../utils/front-end/auth-header";
 
-let firstRender = true;
-let cachedLocalAccount: auth_accounts | null = null;
-
 const AccountData: FunctionComponent = () => {
+  const { localAccount, loading } = useContext(LocalAccountCtx);
   const { instance } = useMsal();
   const user = instance.getActiveAccount();
-  const [localAccount, setLocalAccount] = useState(cachedLocalAccount);
-  const [loading, setLoading] = useState(false);
-
-  async function fetchLocalAccount() {
-    try {
-      setLoading(true);
-      const accountRes = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
-      if (!accountRes.ok) return console.error(await accountRes.text());
-      const account = await accountRes.json();
-      setLocalAccount(account);
-      cachedLocalAccount = account;
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    if (firstRender && user) {
-      fetchLocalAccount();
-      firstRender = false;
-    }
-  }, [user]);
 
   function localAccountData() {
     if (loading) return <p>Loading...</p>;

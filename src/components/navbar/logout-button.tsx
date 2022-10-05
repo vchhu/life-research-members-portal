@@ -1,5 +1,6 @@
+import Button from "antd/lib/button";
 import { FunctionComponent } from "react";
-import { msalInstance } from "../../auth-config";
+import { msalInstance } from "../../../auth-config";
 
 // TODO: make this logout from server
 // TODO: make server session expire
@@ -10,7 +11,11 @@ function logout() {
 }
 
 const LogoutButton: FunctionComponent = () => {
-  return <button onClick={logout}>Logout</button>;
+  return (
+    <Button type="primary" onClick={logout}>
+      Logout
+    </Button>
+  );
 };
 
 export default LogoutButton;
