@@ -28,10 +28,10 @@ const NavMenu: FunctionComponent = () => {
   ];
 
   const items: { label: string; href: string }[] = [...generalItems];
-  if (!loading) {
-    if (localAccount) for (const it of registeredItems) items.push(it);
-    if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
-  }
+  // if (!loading) {
+  //   if (localAccount) for (const it of registeredItems) items.push(it);
+  //   if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
+  // }
 
   const menuItems: MenuItemType[] = items.map((it) => ({
     label: (
