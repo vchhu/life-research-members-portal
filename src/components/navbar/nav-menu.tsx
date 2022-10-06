@@ -1,12 +1,9 @@
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
-import { useMsal } from "@azure/msal-react";
-import Button from "antd/lib/button";
-import Item from "antd/lib/list/Item";
 import Menu from "antd/lib/menu";
 import { MenuItemType } from "antd/lib/menu/hooks/useItems";
 import Spin from "antd/lib/spin";
 import Link from "next/link";
-import { FunctionComponent, useContext, useRef, useState } from "react";
+import { FunctionComponent, useContext } from "react";
 import { LocalAccountCtx } from "../../context/local-account-ctx";
 import PageRoutes from "../../utils/front-end/page-routes";
 
@@ -28,10 +25,10 @@ const NavMenu: FunctionComponent = () => {
   ];
 
   const items: { label: string; href: string }[] = [...generalItems];
-  // if (!loading) {
-  //   if (localAccount) for (const it of registeredItems) items.push(it);
-  //   if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
-  // }
+  if (!loading) {
+    if (localAccount) for (const it of registeredItems) items.push(it);
+    if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
+  }
 
   const menuItems: MenuItemType[] = items.map((it) => ({
     label: (
@@ -47,7 +44,7 @@ const NavMenu: FunctionComponent = () => {
   return (
     <div className="nav-menu">
       <Menu
-        items={[]}
+        items={[...menuItems]}
         mode="horizontal"
         overflowedIndicator={<MenuOutlined className="collapsed-icon" />}
         style={{ fontSize: "inherit" }}
