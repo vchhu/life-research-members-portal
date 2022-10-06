@@ -39,15 +39,12 @@ const NavMenu: FunctionComponent = () => {
     key: it.label,
   }));
 
-  if (loading) menuItems.push({ label: <Spin />, key: "loading" });
+  // if (loading) menuItems.push({ label: <Spin />, key: "loading" });
 
   return (
     <div className="nav-menu">
       <Menu
-        items={[
-          { label: "test1", key: "test1" },
-          { label: "test2", key: "test2" },
-        ]}
+        items={menuItems}
         mode="horizontal"
         overflowedIndicator={<MenuOutlined className="collapsed-icon" />}
         style={{ fontSize: "inherit" }}
