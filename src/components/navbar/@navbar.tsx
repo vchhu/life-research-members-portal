@@ -9,8 +9,9 @@ const Navbar: FunctionComponent = () => {
   return (
     <div className="navbar">
       <HomeLogo />
+      <span className="spacer" style={{ width: 24 }}></span>
       <NavMenu />
-      <span style={{ flexGrow: 1 }}></span>
+      <span className="spacer" style={{ width: 24 }}></span>
       <UnauthenticatedTemplate>
         <LoginButton />
       </UnauthenticatedTemplate>

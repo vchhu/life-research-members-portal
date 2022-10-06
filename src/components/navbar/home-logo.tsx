@@ -8,7 +8,7 @@ const HomeLogo: FunctionComponent = () => {
   return (
     <Link href={PageRoutes.home}>
       <a className="logo" style={{ lineHeight: 0 }}>
-        <Image src={logo} alt="logo" width="60em" height="60em" />
+        <Image src={logo} alt="logo" width="60rem" height="60rem" />
       </a>
     </Link>
   );

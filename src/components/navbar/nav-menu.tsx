@@ -4,24 +4,54 @@ import Button from "antd/lib/button";
 import Item from "antd/lib/list/Item";
 import Menu from "antd/lib/menu";
 import { MenuItemType } from "antd/lib/menu/hooks/useItems";
-import { FunctionComponent, useRef, useState } from "react";
+import Spin from "antd/lib/spin";
+import Link from "next/link";
+import { FunctionComponent, useContext, useRef, useState } from "react";
+import { LocalAccountCtx } from "../../context/local-account-ctx";
+import PageRoutes from "../../utils/front-end/page-routes";
 
 const NavMenu: FunctionComponent = () => {
-  const { instance } = useMsal();
-  const account = instance.getActiveAccount();
+  const { localAccount, loading } = useContext(LocalAccountCtx);
 
-  const links = [{ label: "Members" }];
+  // Everyone
+  const generalItems = [{ label: "Members", href: PageRoutes.members }];
 
-  const items: MenuItemType[] = [{ label: "item 1" }, { label: "item 2" }, { label: "item 3" }].map(
-    (item) => ({
-      ...item,
-      key: item.label,
-    })
-  );
+  // Registered Acounts
+  const registeredItems = [
+    { label: "My Profile", href: PageRoutes.viewAccount + localAccount?.id },
+  ];
+
+  // Admins
+  const adminItems = [
+    { label: "Accounts", href: PageRoutes.accounts },
+    { label: "Register", href: PageRoutes.register },
+  ];
+
+  const items: { label: string; href: string }[] = generalItems;
+  if (!loading) {
+    if (localAccount) for (const it of registeredItems) items.push(it);
+    if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
+  }
+
+  const menuItems: MenuItemType[] = items.map((it) => ({
+    label: (
+      <Link href={it.href}>
+        <a>{it.label}</a>
+      </Link>
+    ),
+    key: it.label,
+  }));
+
+  if (loading) menuItems.push({ label: <Spin />, key: "loading" });
 
   return (
     <div className="nav-menu">
-      <Menu items={items} mode="horizontal"></Menu>
+      <Menu
+        items={menuItems}
+        mode="horizontal"
+        overflowedIndicator={<MenuOutlined className="collapsed-icon" />}
+        style={{ fontSize: "inherit" }}
+      />
     </div>
   );
 };

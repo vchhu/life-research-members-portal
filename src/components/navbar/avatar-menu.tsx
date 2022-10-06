@@ -13,7 +13,6 @@ const AvatarMenu: FunctionComponent = () => {
 
   const avatarLabel = account?.name?.split(" ").reduce((prev, curr) => prev + curr[0], "");
 
-  const items: MenuItemType[] = [{ label: "Logout", key: "Logout" }];
   const dropdown = (
     <Card bodyStyle={{ padding: 0 }}>
       <div className="avatar-dropdown">
@@ -27,9 +26,7 @@ const AvatarMenu: FunctionComponent = () => {
 
   return (
     <Dropdown overlay={dropdown}>
-      <div className="avatar">
-        <div>{avatarLabel}</div>
-      </div>
+      <div className="avatar">{avatarLabel}</div>
     </Dropdown>
   );
 };

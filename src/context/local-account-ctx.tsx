@@ -18,7 +18,7 @@ export const LocalAccountCtxProvider: FunctionComponent<any> = ({ children }) =>
 
   const fetchLocalAccount = useCallback(async () => {
     try {
-      if (!instance.getActiveAccount()) return null;
+      if (!instance.getActiveAccount()) return setLocalAccount(null);
       setLoading(true);
       const accountRes = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
       if (!accountRes.ok) return console.error(await accountRes.text());
