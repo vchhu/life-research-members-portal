@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import ApiRoutes from "../utils/front-end/api-routes";
+import ApiRoutes from "../utils/front-end/api-facade/api-routes";
 
 async function test() {
   console.log(await (await fetch(ApiRoutes.allAccounts)).json());

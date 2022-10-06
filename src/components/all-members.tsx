@@ -1,16 +1,13 @@
 import { main_members } from "@prisma/client";
 import Link from "next/link";
 import { Fragment, FunctionComponent, useEffect, useState } from "react";
-import ApiRoutes from "../utils/front-end/api-routes";
-import authHeader from "../utils/front-end/auth-header";
+import ApiRoutes from "../utils/front-end/api-facade/api-routes";
+import authHeader from "../utils/front-end/api-facade/auth-header";
+import useAllMembers from "../utils/front-end/api-facade/use-all-members";
 import PageRoutes from "../utils/front-end/page-routes";
 
-let firstRender = true;
-let cachedMembers: main_members[] = [];
-
 const AllMembers: FunctionComponent = () => {
-  const [allMembers, setAllMembers] = useState<main_members[]>(cachedMembers);
-  const [loading, setLoading] = useState(false);
+  const { allMembers, loading, fetchAllMembers } = useAllMembers();
 
   const allMembersHtml = allMembers.map((member) => (
     <Fragment key={member.id}>
@@ -24,28 +21,6 @@ const AllMembers: FunctionComponent = () => {
       </Link>
     </Fragment>
   ));
-
-  async function fetchAllMembers() {
-    try {
-      setLoading(true);
-      const result = await fetch(ApiRoutes.allMembers, { headers: await authHeader() });
-      if (!result.ok) return console.error(await result.text());
-      const members = await result.json();
-      setAllMembers(members);
-      cachedMembers = members;
-    } catch (e: any) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    if (firstRender) {
-      fetchAllMembers();
-      firstRender = false;
-    }
-  }, []);
 
   return (
     <>

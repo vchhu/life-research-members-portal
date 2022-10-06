@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Fragment, FunctionComponent, useEffect, useState } from "react";
 import { all_account_info } from "../../prisma/types";
-import ApiRoutes from "../utils/front-end/api-routes";
-import authHeader from "../utils/front-end/auth-header";
+import ApiRoutes from "../utils/front-end/api-facade/api-routes";
+import authHeader from "../utils/front-end/api-facade/auth-header";
 import PageRoutes from "../utils/front-end/page-routes";
 
 let firstRender = true;

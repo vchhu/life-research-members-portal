@@ -1,7 +1,7 @@
 import { FunctionComponent, useRef } from "react";
-import ApiRoutes from "../utils/front-end/api-routes";
-import authHeader from "../utils/front-end/auth-header";
-import { contentTypeJsonHeader } from "../utils/front-end/content-type-headers";
+import ApiRoutes from "../utils/front-end/api-facade/api-routes";
+import authHeader from "../utils/front-end/api-facade/auth-header";
+import { contentTypeJsonHeader } from "../utils/front-end/api-facade/content-type-headers";
 
 const RegisterAccount: FunctionComponent = () => {
   const emailRef = useRef<HTMLInputElement>(null);

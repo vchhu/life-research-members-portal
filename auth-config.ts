@@ -4,7 +4,6 @@ import {
   Configuration,
   BrowserCacheLocation,
 } from "@azure/msal-browser";
-import { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
 
 // See https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-react
 
@@ -28,13 +27,3 @@ export const loginRequest: RedirectRequest = {
   scopes,
   prompt: "select_account",
 };
-
-function handleResponse(response: AuthenticationResult | null) {
-  if (!response) return;
-  msalInstance.setActiveAccount(response.account);
-}
-
-msalInstance
-  .handleRedirectPromise()
-  .then(handleResponse)
-  .catch((e: any) => console.error("Error after redirect:", e));

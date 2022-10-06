@@ -4,7 +4,7 @@ import { MsalProvider } from "@azure/msal-react";
 import { msalInstance } from "../../auth-config";
 import Head from "next/head";
 import Navbar from "../components/navbar/@navbar";
-import { LocalAccountCtxProvider } from "../context/local-account-ctx";
+import { AccountCtxProvider } from "../context/account-ctx";
 import { useRouter } from "next/router";
 import PageRoutes from "../utils/front-end/page-routes";
 
@@ -24,18 +24,21 @@ function MyApp({ Component, pageProps }: AppProps) {
     return "";
   }
   let suffix = getSuffix();
-  if (suffix) suffix = " - " + suffix;
+  let title = "LIFE";
+  if (suffix) title += " - " + suffix;
 
   return (
     <>
       <Head>
-        <title>LIFE{suffix}</title>
+        <title>{title}</title>
       </Head>
       <MsalProvider instance={msalInstance}>
-        <LocalAccountCtxProvider>
+        <AccountCtxProvider>
           <Navbar />
-          <Component {...pageProps} />
-        </LocalAccountCtxProvider>
+          <div className="next-page-container">
+            <Component {...pageProps} />
+          </div>
+        </AccountCtxProvider>
       </MsalProvider>
     </>
   );

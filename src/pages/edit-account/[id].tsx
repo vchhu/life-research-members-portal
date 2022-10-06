@@ -6,17 +6,18 @@ import { useCallback, useEffect, useState } from "react";
 import { msalInstance } from "../../../auth-config";
 import { all_account_info } from "../../../prisma/types";
 import isEmptyObject from "../../utils/common/isEmptyObject";
-import ApiRoutes from "../../utils/front-end/api-routes";
-import authHeader from "../../utils/front-end/auth-header";
-import { contentTypeJsonHeader } from "../../utils/front-end/content-type-headers";
+import ApiRoutes from "../../utils/front-end/api-facade/api-routes";
+import authHeader from "../../utils/front-end/api-facade/auth-header";
+import { contentTypeJsonHeader } from "../../utils/front-end/api-facade/content-type-headers";
 
 const EditAccountPage: NextPage = () => {
+  const router = useRouter();
+  const { id } = router.query as { id: string };
+
   const [account, setAccount] = useState<all_account_info | null>(null);
   const memberInfo = account?.main_members;
   const [accountInfoChanges, setAccountInfoChanges] = useState<Partial<auth_accounts>>({});
   const [memberInfoChanges, setMemberInfoChanges] = useState<Partial<main_members>>({});
-  const router = useRouter();
-  const { id } = router.query as { id: string };
 
   async function deleteAccount() {
     if (!account) return;

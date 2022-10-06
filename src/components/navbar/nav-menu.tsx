@@ -4,11 +4,11 @@ import { MenuItemType } from "antd/lib/menu/hooks/useItems";
 import Spin from "antd/lib/spin";
 import Link from "next/link";
 import { FunctionComponent, useContext } from "react";
-import { LocalAccountCtx } from "../../context/local-account-ctx";
+import { AccountCtx } from "../../context/account-ctx";
 import PageRoutes from "../../utils/front-end/page-routes";
 
 const NavMenu: FunctionComponent = () => {
-  const { localAccount, loading } = useContext(LocalAccountCtx);
+  const { localAccount, loading } = useContext(AccountCtx);
 
   // Everyone
   const generalItems = [{ label: "Members", href: PageRoutes.members }];

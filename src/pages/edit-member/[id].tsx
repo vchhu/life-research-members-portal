@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 import { NextPage } from "next/types";
 import { ChangeEvent, Fragment, useEffect, useState } from "react";
 import { msalInstance } from "../../../auth-config";
-import ApiRoutes from "../../utils/front-end/api-routes";
-import authHeader from "../../utils/front-end/auth-header";
+import ApiRoutes from "../../utils/front-end/api-facade/api-routes";
+import authHeader from "../../utils/front-end/api-facade/auth-header";
 
 const EditMemberPage: NextPage = () => {
   const [member, setMember] = useState<main_members | null>(null);

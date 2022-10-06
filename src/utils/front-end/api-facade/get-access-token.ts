@@ -1,4 +1,4 @@
-import { msalInstance, scopes } from "../../../auth-config";
+import { msalInstance, scopes } from "../../../../auth-config";
 
 export default function getAccessToken() {
   return msalInstance
