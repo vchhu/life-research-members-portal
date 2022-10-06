@@ -47,7 +47,7 @@ const NavMenu: FunctionComponent = () => {
   return (
     <div className="nav-menu">
       <Menu
-        items={menuItems}
+        items={[]}
         mode="horizontal"
         overflowedIndicator={<MenuOutlined className="collapsed-icon" />}
         style={{ fontSize: "inherit" }}
