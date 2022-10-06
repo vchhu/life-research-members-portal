@@ -32,5 +32,5 @@ export default function useAllMembers() {
     }
   }, []);
 
-  return { allMembers, loading, fetchAllMembers };
+  return { allMembers, loading, refresh: fetchAllMembers };
 }
