@@ -24,7 +24,7 @@ const NavMenu: FunctionComponent = () => {
     { label: "Register", href: PageRoutes.register },
   ];
 
-  const items: { label: string; href: string }[] = [...generalItems];
+  const items: { label: string; href: string }[] = generalItems;
   if (!loading) {
     if (localAccount) for (const it of registeredItems) items.push(it);
     if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
@@ -39,7 +39,7 @@ const NavMenu: FunctionComponent = () => {
     key: it.label,
   }));
 
-  // if (loading) menuItems.push({ label: <Spin />, key: "loading" });
+  if (loading) menuItems.push({ label: <Spin />, key: "loading" });
 
   return (
     <div className="nav-menu">
