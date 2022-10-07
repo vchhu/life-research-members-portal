@@ -2,6 +2,7 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/
 import Spin from "antd/lib/spin";
 import { FunctionComponent, useContext } from "react";
 import { AccountCtx } from "../context/account-ctx";
+import { blue } from "@ant-design/colors";
 
 const Greeting: FunctionComponent = () => {
   const { instance } = useMsal();
@@ -9,7 +10,8 @@ const Greeting: FunctionComponent = () => {
   const { localAccount, loading } = useContext(AccountCtx);
 
   const adminGreeting = () => {
-    if (localAccount?.is_admin) return <h2>You are an administrator.</h2>;
+    if (localAccount?.is_admin)
+      return <h2 style={{ color: blue[6] }}>You are an administrator, congrats!</h2>;
   };
 
   const memberGreeting = () => {
@@ -46,7 +48,7 @@ const Greeting: FunctionComponent = () => {
   };
 
   return (
-    <div style={{ textAlign: "center", paddingTop: 36 }}>
+    <div style={{ textAlign: "center", marginTop: "10vh" }}>
       <h1>Welcome to the LIFE Research Insitute Member Directory!</h1>
       <UnauthenticatedTemplate>
         <h2>If you are a member, please login.</h2>
