@@ -8,7 +8,7 @@ import { all_account_info } from "../../../prisma/types";
 import isEmptyObject from "../../utils/common/isEmptyObject";
 import ApiRoutes from "../../routing/api-routes";
 import authHeader from "../../api-facade/headers/auth-header";
-import { contentTypeJsonHeader } from "../../api-facade/content-type-headers";
+import { contentTypeJsonHeader } from "../../api-facade/headers/content-type-headers";
 
 const EditAccountPage: NextPage = () => {
   const router = useRouter();
