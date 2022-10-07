@@ -1,5 +1,13 @@
 import { useMsal } from "@azure/msal-react";
-import { createContext, FunctionComponent, PropsWithChildren, useEffect, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  FunctionComponent,
+  PropsWithChildren,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { msalInstance } from "../../auth-config";
 import { all_account_info } from "../../prisma/types";
 import ApiRoutes from "../routing/api-routes";
@@ -21,7 +29,14 @@ export const AccountCtx = createContext<{
   loading: boolean;
   refresh: () => void;
   logout: () => void;
-}>({ localAccount: null, loading: false, refresh: () => {}, logout: () => {} });
+  setLocalAccount: Dispatch<SetStateAction<all_account_info | null>>;
+}>({
+  localAccount: null,
+  loading: false,
+  refresh: () => {},
+  logout: () => {},
+  setLocalAccount: () => {},
+});
 
 export const AccountCtxProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const { instance } = useMsal();
@@ -71,7 +86,9 @@ export const AccountCtxProvider: FunctionComponent<PropsWithChildren> = ({ child
   };
 
   return (
-    <AccountCtx.Provider value={{ localAccount, loading, logout, refresh: fetchLocalAccount }}>
+    <AccountCtx.Provider
+      value={{ localAccount, loading, logout, refresh: fetchLocalAccount, setLocalAccount }}
+    >
       {children}
     </AccountCtx.Provider>
   );

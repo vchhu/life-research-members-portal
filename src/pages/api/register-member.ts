@@ -1,6 +1,8 @@
 import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { includeAllMemberInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
+import { all_member_info } from "../../../prisma/types";
 import getAccount from "../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
@@ -17,8 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         .status(401)
         .send("You are not authorized to add member information to this account.");
 
-    const newMember = await db.main_members.create({
+    const newMember: all_member_info = await db.main_members.create({
       data: { account_id: account_id },
+      include: includeAllMemberInfo,
     });
 
     return res.status(200).send(newMember);

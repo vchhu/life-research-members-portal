@@ -6,7 +6,6 @@ import Authorizations from "../components/auth-guard/authorizations";
 const RegisterPage: NextPage = () => {
   return (
     <AuthGuard auths={[Authorizations.registered]}>
-      <h1>My Profile</h1>
       <MyProfile />
     </AuthGuard>
   );
