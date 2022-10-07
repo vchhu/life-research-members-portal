@@ -5,7 +5,7 @@ import Spin from "antd/lib/spin";
 import Link from "next/link";
 import { FunctionComponent, useContext } from "react";
 import { AccountCtx } from "../../context/account-ctx";
-import PageRoutes from "../../utils/front-end/page-routes";
+import PageRoutes from "../../routing/page-routes";
 
 const NavMenu: FunctionComponent = () => {
   const { localAccount, loading } = useContext(AccountCtx);
@@ -14,9 +14,7 @@ const NavMenu: FunctionComponent = () => {
   const generalItems = [{ label: "Members", href: PageRoutes.members }];
 
   // Registered Acounts
-  const registeredItems = [
-    { label: "My Profile", href: PageRoutes.viewAccount + localAccount?.id },
-  ];
+  const registeredItems = [{ label: "My Profile", href: PageRoutes.myProfile }];
 
   // Admins
   const adminItems = [

@@ -1,8 +1,7 @@
-import { main_members } from "@prisma/client";
 import { useEffect, useState } from "react";
-import { all_member_info } from "../../../../prisma/types";
-import ApiRoutes from "./api-routes";
-import authHeader from "./auth-header";
+import { all_member_info } from "../../prisma/types";
+import ApiRoutes from "../routing/api-routes";
+import authHeader from "./headers/auth-header";
 
 let firstRender = true;
 let cachedMembers: all_member_info[] = [];

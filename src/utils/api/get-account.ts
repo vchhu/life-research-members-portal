@@ -1,6 +1,5 @@
 // See https://learn.microsoft.com/en-us/azure/active-directory/develop/userinfo
 
-import { auth_accounts } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { includeAllInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";

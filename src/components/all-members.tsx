@@ -2,7 +2,7 @@ import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import { FunctionComponent } from "react";
-import useAllMembers from "../utils/front-end/api-facade/use-all-members";
+import useAllMembers from "../api-facade/use-all-members";
 import { all_member_info } from "../../prisma/types";
 
 const AllMembers: FunctionComponent = () => {

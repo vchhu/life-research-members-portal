@@ -1,7 +1,8 @@
 import Spin from "antd/lib/spin";
 import { useRouter } from "next/router";
 import { FunctionComponent, PropsWithChildren, useContext, useEffect, useState } from "react";
-import { AccountCtx } from "../../../context/account-ctx";
+import { AccountCtx } from "../../context/account-ctx";
+import CenteredSpinner from "../centered-spinner";
 import Authorizations from "./authorizations";
 
 type Props = {
@@ -22,12 +23,7 @@ const AuthGuard: FunctionComponent<PropsWithChildren<Props>> = ({ auths, id, chi
       return setAuthorized(true);
   }, [loading, auths, localAccount, id, router]);
 
-  if (loading)
-    return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <Spin size="large" />
-      </div>
-    );
+  if (loading) return <CenteredSpinner />;
   if (authorized) return <>{children}</>;
   return <h1 style={{ textAlign: "center" }}>You are not authorized to view this page.</h1>;
 };

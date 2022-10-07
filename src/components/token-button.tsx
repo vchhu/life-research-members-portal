@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import getAccessToken from "../utils/front-end/api-facade/get-access-token";
+import getAccessToken from "../api-facade/get-access-token";
 
 async function logToken() {
   const accessToken = await getAccessToken();

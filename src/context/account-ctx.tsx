@@ -2,8 +2,8 @@ import { useMsal } from "@azure/msal-react";
 import { createContext, FunctionComponent, PropsWithChildren, useEffect, useState } from "react";
 import { msalInstance } from "../../auth-config";
 import { all_account_info } from "../../prisma/types";
-import ApiRoutes from "../utils/front-end/api-facade/api-routes";
-import authHeader from "../utils/front-end/api-facade/auth-header";
+import ApiRoutes from "../routing/api-routes";
+import authHeader from "../api-facade/headers/auth-header";
 import { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
 
 function handleResponse(response: AuthenticationResult | null) {

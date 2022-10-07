@@ -6,9 +6,9 @@ import { useCallback, useEffect, useState } from "react";
 import { msalInstance } from "../../../auth-config";
 import { all_account_info } from "../../../prisma/types";
 import isEmptyObject from "../../utils/common/isEmptyObject";
-import ApiRoutes from "../../utils/front-end/api-facade/api-routes";
-import authHeader from "../../utils/front-end/api-facade/auth-header";
-import { contentTypeJsonHeader } from "../../utils/front-end/api-facade/content-type-headers";
+import ApiRoutes from "../../routing/api-routes";
+import authHeader from "../../api-facade/headers/auth-header";
+import { contentTypeJsonHeader } from "../../api-facade/content-type-headers";
 
 const EditAccountPage: NextPage = () => {
   const router = useRouter();

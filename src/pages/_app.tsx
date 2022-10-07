@@ -6,7 +6,7 @@ import Head from "next/head";
 import Navbar from "../components/navbar/@navbar";
 import { AccountCtxProvider } from "../context/account-ctx";
 import { useRouter } from "next/router";
-import PageRoutes from "../utils/front-end/page-routes";
+import PageRoutes from "../routing/page-routes";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

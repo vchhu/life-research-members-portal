@@ -3,9 +3,9 @@ import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
 import { FunctionComponent, useRef } from "react";
-import ApiRoutes from "../utils/front-end/api-facade/api-routes";
-import authHeader from "../utils/front-end/api-facade/auth-header";
-import { contentTypeJsonHeader } from "../utils/front-end/api-facade/content-type-headers";
+import ApiRoutes from "../routing/api-routes";
+import authHeader from "../api-facade/headers/auth-header";
+import { contentTypeJsonHeader } from "../api-facade/content-type-headers";
 
 type Data = { email: string };
 

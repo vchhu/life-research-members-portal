@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FunctionComponent } from "react";
-import PageRoutes from "../../utils/front-end/page-routes";
+import PageRoutes from "../../routing/page-routes";
 import Image from "next/image";
 import logo from "../../../public/favicon.png";
 
