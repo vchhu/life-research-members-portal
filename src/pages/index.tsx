@@ -1,5 +1,6 @@
-import { useMsal } from "@azure/msal-react";
+import { AuthenticatedTemplate, useMsal } from "@azure/msal-react";
 import type { NextPage } from "next";
+import { useEffect, useState } from "react";
 
 const App: NextPage = () => {
   const { instance } = useMsal();
@@ -8,7 +9,9 @@ const App: NextPage = () => {
   return (
     <div style={{ textAlign: "center", paddingTop: 36 }}>
       <h1>Welcome!</h1>
-      {name ? <h1>Good to see you {name}!</h1> : ""}
+      <AuthenticatedTemplate>
+        <h1>Good to see you {name}!</h1>
+      </AuthenticatedTemplate>
     </div>
   );
 };
