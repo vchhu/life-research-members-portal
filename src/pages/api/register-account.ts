@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(200).send(newUser);
   } catch (e: any) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
-      return res.status(400).send("This email is already registered. Email: " + microsoft_email);
+      return res.status(400).send("This email is already registered: " + microsoft_email);
 
     return res.status(500).send({ ...e, message: e.message }); // prisma error messages are getters
   }
