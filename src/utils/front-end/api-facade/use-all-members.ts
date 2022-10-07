@@ -1,13 +1,14 @@
 import { main_members } from "@prisma/client";
 import { useEffect, useState } from "react";
+import { all_member_info } from "../../../../prisma/types";
 import ApiRoutes from "./api-routes";
 import authHeader from "./auth-header";
 
 let firstRender = true;
-let cachedMembers: main_members[] = [];
+let cachedMembers: all_member_info[] = [];
 
 export default function useAllMembers() {
-  const [allMembers, setAllMembers] = useState<main_members[]>(cachedMembers);
+  const [allMembers, setAllMembers] = useState<all_member_info[]>(cachedMembers);
   const [loading, setLoading] = useState(false);
 
   async function fetchAllMembers() {
