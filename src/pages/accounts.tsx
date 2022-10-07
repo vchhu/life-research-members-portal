@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { NextPage } from "next/types";
 import AllAccounts from "../components/all-accounts";
 import Authorizations from "../utils/front-end/auth-guard/authorizations";
 import AuthGuard from "../utils/front-end/auth-guard/auth-guard";

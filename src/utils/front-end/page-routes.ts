@@ -7,6 +7,7 @@ enum PageRoutes {
   editAccount = "/edit-account/",
   viewMember = "/view-member/",
   editMember = "/edit-member/",
+  _404 = "/404",
 }
 
 export default PageRoutes;

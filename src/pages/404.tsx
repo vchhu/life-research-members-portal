@@ -1,7 +1,7 @@
-import { NextPage } from "next";
+import { NextPage } from "next/types";
 
-const FourZeroFour: NextPage = () => {
+const _404: NextPage = () => {
   return <h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>;
 };
 
-export default FourZeroFour;
+export default _404;
