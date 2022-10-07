@@ -39,13 +39,18 @@ const RegisterAccount: FunctionComponent = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        paddingTop: "10vh",
       }}
     >
       <h1>Register Account</h1>
-      <p style={{ marginBottom: 24 }}>
-        This page will create an account and assign it to an email address.
-      </p>
-      <Form form={form} onFinish={registerAccount} style={{ width: "100%", maxWidth: "25rem" }}>
+      <h2 style={{ marginBottom: 24 }}>This page will create an account for the given email.</h2>
+      <Form
+        form={form}
+        onFinish={registerAccount}
+        style={{ width: "100%", maxWidth: "25rem" }}
+        size="large"
+        layout="vertical"
+      >
         <Form.Item
           label="Email"
           name="email"
@@ -53,8 +58,13 @@ const RegisterAccount: FunctionComponent = () => {
         >
           <Input />
         </Form.Item>
-        <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button type="primary" htmlType="submit" style={{ paddingLeft: 40, paddingRight: 40 }}>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ paddingLeft: 40, paddingRight: 40, marginTop: 30 }}
+            size="large"
+          >
             Register
           </Button>
         </Form.Item>
