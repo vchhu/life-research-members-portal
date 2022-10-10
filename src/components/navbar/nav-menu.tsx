@@ -43,9 +43,10 @@ const NavMenu: FunctionComponent = () => {
 
   if (loading) menuItems.push({ label: <Spin />, key: "loading" });
 
+  // Highlights the right menu item when navigating by url
   function getSelectedKey() {
-    const key = items.find((it) => it.href === router.pathname)?.label;
-    return key ? [key] : [];
+    const item = items.find((it) => router.pathname.startsWith(it.href));
+    return item ? [item.label] : [];
   }
 
   return (

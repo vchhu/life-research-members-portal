@@ -8,6 +8,7 @@ enum PageRoutes {
   viewMember = "/view-member/",
   editMember = "/edit-member/",
   myProfile = "/my-profile",
+  myProfileEdit = "/my-profile/edit",
   _404 = "/404",
 }
 
