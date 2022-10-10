@@ -3,12 +3,14 @@ import Menu from "antd/lib/menu";
 import { MenuItemType } from "antd/lib/menu/hooks/useItems";
 import Spin from "antd/lib/spin";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { FunctionComponent, useContext } from "react";
 import { AccountCtx } from "../../context/account-ctx";
 import PageRoutes from "../../routing/page-routes";
 
 const NavMenu: FunctionComponent = () => {
   const { localAccount, loading } = useContext(AccountCtx);
+  const router = useRouter();
 
   // Everyone
   const generalItems = [{ label: "Members", href: PageRoutes.members }];
@@ -28,16 +30,23 @@ const NavMenu: FunctionComponent = () => {
     if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
   }
 
-  const menuItems: MenuItemType[] = items.map((it) => ({
-    label: (
-      <Link href={it.href}>
-        <a>{it.label}</a>
-      </Link>
-    ),
-    key: it.label,
-  }));
+  const menuItems: MenuItemType[] = items.map((it) => {
+    return {
+      label: (
+        <Link href={it.href}>
+          <a>{it.label}</a>
+        </Link>
+      ),
+      key: it.label,
+    };
+  });
 
   if (loading) menuItems.push({ label: <Spin />, key: "loading" });
+
+  function getSelectedKey() {
+    const key = items.find((it) => it.href === router.pathname)?.label;
+    return key ? [key] : [];
+  }
 
   return (
     <div className="nav-menu">
@@ -46,6 +55,7 @@ const NavMenu: FunctionComponent = () => {
         mode="horizontal"
         overflowedIndicator={<MenuOutlined className="collapsed-icon" />}
         style={{ fontSize: "inherit" }}
+        selectedKeys={getSelectedKey()}
       />
     </div>
   );
