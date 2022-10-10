@@ -1,8 +1,10 @@
 import { Button } from "antd";
+import Card from "antd/lib/card/Card";
 import { FunctionComponent, useContext, useState } from "react";
 import registerMember from "../api-facade/register-member";
 import { AccountCtx } from "../context/account-ctx";
-import CenteredSpinner from "./centered-spinner";
+import CenteredSpinner from "./loading/centered-spinner";
+import MemberInfoSkeleton from "./loading/member-info-skeleton";
 import MemberInfo from "./member-info";
 
 const MyProfile: FunctionComponent = () => {
@@ -25,8 +27,8 @@ const MyProfile: FunctionComponent = () => {
     }
   }
 
-  if (loading || waiting) return <CenteredSpinner />;
-  if (!localAccount) return null;
+  if (loading || waiting) return <MemberInfoSkeleton />;
+  if (!localAccount) return null; // Auth guard should prevent this
   if (!localAccount.main_members)
     return (
       <div

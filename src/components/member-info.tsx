@@ -4,6 +4,7 @@ import Item from "antd/lib/descriptions/Item";
 import Title from "antd/lib/typography/Title";
 import { FunctionComponent } from "react";
 import { all_member_info } from "../../prisma/types";
+import MemberInfoSkeleton from "./loading/member-info-skeleton";
 
 type Props = {
   editable: boolean;
@@ -11,6 +12,8 @@ type Props = {
 };
 
 const MemberInfo: FunctionComponent<Props> = ({ editable, member }) => {
+  if (!member) return <MemberInfoSkeleton />;
+
   let title = "";
   if (!member.first_name || !member.last_name) title = "Member " + member.id;
   else title = (member.first_name || "") + " " + (member.last_name || "");
