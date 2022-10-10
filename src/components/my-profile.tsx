@@ -48,12 +48,7 @@ const MyProfile: FunctionComponent = () => {
       </div>
     );
 
-  return (
-    <div style={{ textAlign: "center" }}>
-      <h1>My Profile</h1>
-      <MemberInfo editable member={localAccount.main_members} />
-    </div>
-  );
+  return <MemberInfo editable member={localAccount.main_members} />;
 };
 
 export default MyProfile;
