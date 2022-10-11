@@ -62,8 +62,7 @@ const MemberDescription: FunctionComponent<Props> = ({ member }) => {
       <Item label="How We Can Help">{member.how_can_we_help}</Item>
       <Item label="Dream">{member.dream}</Item>
       <Item label="Notes">{member.notes}</Item>
-      <Item label="Keywords (EN)">{member.keywords_EN}</Item>
-      <Item label="Keywords (FR)">{member.keywords_FR}</Item>
+      <Item label="Keywords">{member.keywords_EN}</Item>
     </Descriptions>
   );
 };

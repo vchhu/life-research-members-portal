@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   try {
     const id = parseInt(req.query.id);
-    const member: Partial<main_members> = JSON.parse(req.body);
+    const member: Partial<main_members> = req.body;
 
     const currentUser = await getAccount(req, res);
     if (!currentUser) return;

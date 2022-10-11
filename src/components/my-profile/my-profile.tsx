@@ -38,7 +38,19 @@ const MyProfile: FunctionComponent<Props> = ({ editMode }) => {
     </Button>
   );
 
-  const title = (
+  const cancelButton = (
+    <Button
+      size="large"
+      type="primary"
+      danger
+      style={{ flexGrow: 1, maxWidth: "10rem" }}
+      onClick={() => router.push(PageRoutes.myProfile)}
+    >
+      Cancel
+    </Button>
+  );
+
+  const header = (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       <Title
         level={2}
@@ -52,13 +64,20 @@ const MyProfile: FunctionComponent<Props> = ({ editMode }) => {
       >
         {titleText}
       </Title>
-      {editButton}
+      {editMode ? cancelButton : editButton}
     </div>
   );
 
+  if (editMode)
+    return (
+      <Card title={header}>
+        <MemberForm member={member} />
+      </Card>
+    );
+
   return (
-    <Card title={title} bodyStyle={{ padding: 0 }}>
-      {editMode ? <MemberForm member={member} /> : <MemberDescription member={member} />}
+    <Card title={header} bodyStyle={{ padding: 0 }}>
+      <MemberDescription member={member} />
     </Card>
   );
 };
