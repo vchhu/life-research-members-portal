@@ -2,8 +2,10 @@ import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import { FunctionComponent } from "react";
-import useAllMembers from "../api-facade/use-all-members";
-import { all_member_info } from "../../prisma/types";
+import useAllMembers from "../../api-facade/use-all-members";
+import { all_member_info } from "../../../prisma/types";
+import {} from "antd/lib/";
+import PageRoutes from "../../routing/page-routes";
 
 const AllMembers: FunctionComponent = () => {
   const { allMembers, loading, refresh } = useAllMembers();
@@ -72,7 +74,12 @@ const AllMembers: FunctionComponent = () => {
       loading={loading}
       title={header}
       tableLayout="fixed"
-      sticky
+      sticky={{ offsetHeader: 80 }}
+      onRow={(record, _) => ({
+        onDoubleClick: (_) => {
+          window.open(PageRoutes.memberProfile(record.id));
+        },
+      })}
     />
   );
 };

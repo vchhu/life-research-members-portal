@@ -13,7 +13,7 @@ const NavMenu: FunctionComponent = () => {
   const router = useRouter();
 
   // Everyone
-  const generalItems = [{ label: "Members", href: PageRoutes.members }];
+  const generalItems = [{ label: "Members", href: PageRoutes.allMembers }];
 
   // Registered Acounts
   const registeredItems = [{ label: "My Profile", href: PageRoutes.myProfile }];

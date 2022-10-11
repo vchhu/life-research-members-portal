@@ -1,6 +1,5 @@
 import Button from "antd/lib/button";
 import Form from "antd/lib/form";
-import Select from "antd/lib/select";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
 import { FunctionComponent } from "react";
@@ -8,6 +7,7 @@ import { all_member_info } from "../../../prisma/types";
 import authHeader from "../../api-facade/headers/auth-header";
 import { contentTypeJsonHeader } from "../../api-facade/headers/content-type-headers";
 import ApiRoutes from "../../routing/api-routes";
+import InputNumber from "antd/lib/input-number";
 
 type Props = {
   member: all_member_info;
@@ -85,11 +85,11 @@ const MemberForm: FunctionComponent<Props> = ({ member }) => {
       </Form.Item>
 
       <Form.Item label="Faculty" name="faculty_id">
-        <Input />
+        <InputNumber />
       </Form.Item>
 
       <Form.Item label="Category" name="category_id">
-        <Input />
+        <InputNumber />
       </Form.Item>
 
       <Form.Item label="Problems" name="problems_EN">
@@ -112,14 +112,14 @@ const MemberForm: FunctionComponent<Props> = ({ member }) => {
         <Input />
       </Form.Item>
 
-      <Form.Item>
+      <Form.Item style={{ marginBottom: 0 }}>
         <Button
           type="primary"
           htmlType="submit"
           style={{ paddingLeft: 40, paddingRight: 40 }}
           size="large"
         >
-          Submit
+          Save Changes
         </Button>
       </Form.Item>
     </Form>

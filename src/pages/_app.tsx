@@ -15,8 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     // Order matters!
     if (path.startsWith(PageRoutes.accounts)) return "Accounts";
     if (path.startsWith(PageRoutes.editAccount)) return "Edit Account";
-    if (path.startsWith(PageRoutes.editMember)) return "Edit Member";
-    if (path.startsWith(PageRoutes.members)) return "Members";
+    if (path.startsWith(PageRoutes.allMembers)) return "Members";
     if (path.startsWith(PageRoutes.register)) return "Register";
     if (path.startsWith(PageRoutes.viewAccount)) return "View Account";
     if (path.startsWith(PageRoutes.viewMember)) return "View Member";

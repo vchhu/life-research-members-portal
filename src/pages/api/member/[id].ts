@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { includeAllMemberInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
@@ -11,6 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     const member = await db.main_members.findUnique({
       where: { id },
+      include: includeAllMemberInfo,
     });
 
     if (!member) return res.status(400).send("Member not found. ID: " + id);

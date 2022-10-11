@@ -6,8 +6,8 @@ import { FunctionComponent, useContext } from "react";
 import { AccountCtx } from "../../context/account-ctx";
 import PageRoutes from "../../routing/page-routes";
 import MemberInfoSkeleton from "../loading/member-info-skeleton";
-import MemberDescription from "../member-info/member-description";
-import MemberForm from "../member-info/member-form";
+import MemberDescription from "./member-description";
+import MemberForm from "./member-form";
 import MyProfileRegister from "./my-profile-register";
 
 type Props = {

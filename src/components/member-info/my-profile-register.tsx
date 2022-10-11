@@ -5,7 +5,7 @@ import { AccountCtx } from "../../context/account-ctx";
 import MemberInfoSkeleton from "../loading/member-info-skeleton";
 
 const MyProfileRegister: FunctionComponent = () => {
-  const { localAccount, loading, setLocalAccount } = useContext(AccountCtx);
+  const { localAccount, setLocalAccount } = useContext(AccountCtx);
   const [waiting, setWaiting] = useState(false);
 
   async function handleRegisterMember(id: number) {

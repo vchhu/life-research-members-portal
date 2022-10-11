@@ -1,13 +1,13 @@
 import type { NextPage } from "next/types";
 import AllAccounts from "../components/all-accounts";
 import Authorizations from "../components/auth-guard/authorizations";
-import AuthGuard from "../components/auth-guard/auth-guard";
+import PageAuthGuard from "../components/auth-guard/page-auth-guard";
 
 const AccountsPage: NextPage = () => {
   return (
-    <AuthGuard auths={[Authorizations.admin]}>
+    <PageAuthGuard auths={[Authorizations.admin]}>
       <AllAccounts />
-    </AuthGuard>
+    </PageAuthGuard>
   );
 };
 
