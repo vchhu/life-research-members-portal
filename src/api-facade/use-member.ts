@@ -5,7 +5,7 @@ import authHeader from "./headers/auth-header";
 
 export default function useMember(id: number) {
   const [member, setMember] = useState<all_member_info | null>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   async function fetchMember(id: number) {
     try {

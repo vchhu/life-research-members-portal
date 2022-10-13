@@ -2,7 +2,7 @@ import Button from "antd/lib/button";
 import { FunctionComponent, useContext, useState } from "react";
 import registerMember from "../../api-facade/register-member";
 import { AccountCtx } from "../../context/account-ctx";
-import MemberInfoSkeleton from "../loading/member-info-skeleton";
+import CardSkeleton from "../loading/card-skeleton";
 
 const MyProfileRegister: FunctionComponent = () => {
   const { localAccount, setLocalAccount } = useContext(AccountCtx);
@@ -25,7 +25,7 @@ const MyProfileRegister: FunctionComponent = () => {
   }
 
   if (!localAccount) return null; // Auth guard should prevent this
-  if (waiting) return <MemberInfoSkeleton />;
+  if (waiting) return <CardSkeleton />;
 
   return (
     <div

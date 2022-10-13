@@ -6,11 +6,13 @@ import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 import useMember from "../../api-facade/use-member";
 import PageRoutes from "../../routing/page-routes";
-import MemberInfoSkeleton from "../loading/member-info-skeleton";
+import CardSkeleton from "../loading/card-skeleton";
 import MemberDescription from "../member-info/member-description";
 import MemberForm from "../member-info/member-form";
 import AuthGuard from "../auth-guard/auth-guard";
 import Authorizations from "../auth-guard/authorizations";
+
+// TODO: remove /edit path and just have editMode as a local state
 
 type Props = {
   id: number;
@@ -19,9 +21,9 @@ type Props = {
 
 const MemberProfile: FunctionComponent<Props> = ({ id, editMode }) => {
   const router = useRouter();
-  const { member, loading } = useMember(id);
+  const { member, loading, refresh } = useMember(id);
 
-  if (loading) return <MemberInfoSkeleton />;
+  if (loading) return <CardSkeleton />;
   if (!member) return <Empty />;
 
   let titleText = "";
@@ -77,6 +79,7 @@ const MemberProfile: FunctionComponent<Props> = ({ id, editMode }) => {
         <MemberForm
           member={member}
           onSuccess={() => {
+            refresh();
             router.push(PageRoutes.memberProfile(id));
           }}
         />

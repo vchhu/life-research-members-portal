@@ -2,9 +2,9 @@ import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import { FunctionComponent } from "react";
-import { all_account_info } from "../../prisma/types";
-import useAllAccounts from "../api-facade/use-all-accounts";
-import PageRoutes from "../routing/page-routes";
+import { all_account_info } from "../../../prisma/types";
+import useAllAccounts from "../../api-facade/use-all-accounts";
+import PageRoutes from "../../routing/page-routes";
 
 const AllAccounts: FunctionComponent = () => {
   const { allAccounts, loading, refresh } = useAllAccounts();

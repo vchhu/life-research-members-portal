@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { FunctionComponent, useContext } from "react";
 import { AccountCtx } from "../../context/account-ctx";
 import PageRoutes from "../../routing/page-routes";
-import MemberInfoSkeleton from "../loading/member-info-skeleton";
+import CardSkeleton from "../loading/card-skeleton";
 import MemberDescription from "./member-description";
 import MemberForm from "./member-form";
 import MyProfileRegister from "./my-profile-register";
@@ -18,7 +18,7 @@ const MyProfile: FunctionComponent<Props> = ({ editMode }) => {
   const router = useRouter();
   const { localAccount, loading, refresh } = useContext(AccountCtx);
 
-  if (loading) return <MemberInfoSkeleton />;
+  if (loading) return <CardSkeleton />;
   if (!localAccount) return null; // Auth guard should prevent this
   if (!localAccount.main_members) return <MyProfileRegister />;
 
