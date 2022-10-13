@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { all_member_info } from "../../prisma/types";
 import ApiRoutes from "../routing/api-routes";
-import authHeader from "./headers/auth-header";
 
 let firstRender = true;
 let cachedMembers: all_member_info[] = [];
@@ -13,7 +12,7 @@ export default function useAllMembers() {
   async function fetchAllMembers() {
     try {
       setLoading(true);
-      const result = await fetch(ApiRoutes.allMembers, { headers: await authHeader() });
+      const result = await fetch(ApiRoutes.allMembers);
       if (!result.ok) return console.error(await result.text());
       const members = await result.json();
       setAllMembers(members);

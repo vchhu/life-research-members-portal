@@ -10,7 +10,7 @@ export default function useMember(id: number) {
   async function fetchMember(id: number) {
     try {
       setLoading(true);
-      const result = await fetch(ApiRoutes.member + id, { headers: await authHeader() });
+      const result = await fetch(ApiRoutes.member + id);
       if (!result.ok) return console.error(await result.text());
       const member = await result.json();
       setMember(member);

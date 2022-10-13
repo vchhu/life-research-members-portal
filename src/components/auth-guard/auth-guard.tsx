@@ -18,9 +18,10 @@ const AuthGuard: FunctionComponent<PropsWithChildren<Props>> = ({
   if (!loadingIcon) loadingIcon = null;
   const { localAccount, loading } = useContext(AccountCtx);
   if (loading) return loadingIcon;
-  if (auths.includes(Authorizations.admin) && localAccount?.is_admin) return <>{children}</>;
-  if (auths.includes(Authorizations.registered) && localAccount) return <>{children}</>;
-  if (auths.includes(Authorizations.matchId) && localAccount?.id === id) return <>{children}</>;
+  if (!localAccount) return null;
+  if (auths.includes(Authorizations.registered)) return <>{children}</>;
+  if (auths.includes(Authorizations.admin) && localAccount.is_admin) return <>{children}</>;
+  if (auths.includes(Authorizations.matchId) && localAccount.id === id) return <>{children}</>;
   return null;
 };
 
