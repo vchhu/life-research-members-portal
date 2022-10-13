@@ -1,6 +1,6 @@
 import { auth_accounts, main_members } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { includeAllInfo } from "../../../../prisma/helpers";
+import { includeAllAccountInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
 import getAccount from "../../../utils/api/get-account";
 import isTruthyAndNotEmpty from "../../../utils/common/isTruthyAndNotEmpty";
@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         ...accountInfo,
         main_members: isTruthyAndNotEmpty(memberInfo) ? { update: { ...memberInfo } } : undefined,
       },
-      include: includeAllInfo,
+      include: includeAllAccountInfo,
     });
 
     return res.status(200).send(updated);

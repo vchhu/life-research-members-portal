@@ -16,7 +16,7 @@ type Props = {
 
 const MyProfile: FunctionComponent<Props> = ({ editMode }) => {
   const router = useRouter();
-  const { localAccount, loading } = useContext(AccountCtx);
+  const { localAccount, loading, refresh } = useContext(AccountCtx);
 
   if (loading) return <MemberInfoSkeleton />;
   if (!localAccount) return null; // Auth guard should prevent this
@@ -71,7 +71,13 @@ const MyProfile: FunctionComponent<Props> = ({ editMode }) => {
   if (editMode)
     return (
       <Card title={header}>
-        <MemberForm member={member} />
+        <MemberForm
+          member={member}
+          onSuccess={() => {
+            refresh();
+            router.push(PageRoutes.myProfile);
+          }}
+        />
       </Card>
     );
 

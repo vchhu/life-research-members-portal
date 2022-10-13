@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { includeAllInfo } from "../../../../prisma/helpers";
+import { includeAllAccountInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
 import getAccount from "../../../utils/api/get-account";
 
@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     const account = await db.auth_accounts.findUnique({
       where: { id },
-      include: includeAllInfo,
+      include: includeAllAccountInfo,
     });
 
     if (!account) return res.status(400).send("Account not found. ID: " + id);

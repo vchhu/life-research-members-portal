@@ -11,11 +11,12 @@ import InputNumber from "antd/lib/input-number";
 
 type Props = {
   member: all_member_info;
+  onSuccess?: () => void;
 };
 
 type Data = Partial<all_member_info>;
 
-const MemberForm: FunctionComponent<Props> = ({ member }) => {
+const MemberForm: FunctionComponent<Props> = ({ member, onSuccess }) => {
   const [form] = useForm<Data>();
 
   async function updateMember(data: Data) {
@@ -32,6 +33,7 @@ const MemberForm: FunctionComponent<Props> = ({ member }) => {
         return;
       }
       alert("Success!");
+      if (onSuccess) onSuccess();
     } catch (e: any) {
       console.error(e);
       alert(e);

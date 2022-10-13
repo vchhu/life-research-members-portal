@@ -1,7 +1,7 @@
 // See https://learn.microsoft.com/en-us/azure/active-directory/develop/userinfo
 
 import { NextApiRequest, NextApiResponse } from "next";
-import { includeAllInfo } from "../../../prisma/helpers";
+import { includeAllAccountInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
 import { all_account_info } from "../../../prisma/types";
 
@@ -19,7 +19,7 @@ function getMicrosoftAccount(authorization: string) {
 function getAccountFromDatabase(userId: MsAccountInfo) {
   return db.auth_accounts.findFirst({
     where: { OR: [{ microsoft_id: userId.id }, { microsoft_email: userId.userPrincipalName }] },
-    include: includeAllInfo,
+    include: includeAllAccountInfo,
   });
 }
 
@@ -67,7 +67,7 @@ export default async function getAccount(
     account = await db.auth_accounts.update({
       where: { id: account.id },
       data: { microsoft_id: msAccountInfo.id, microsoft_email: msAccountInfo.userPrincipalName },
-      include: includeAllInfo,
+      include: includeAllAccountInfo,
     });
   }
 

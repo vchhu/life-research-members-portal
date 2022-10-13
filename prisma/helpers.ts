@@ -3,6 +3,6 @@ export const includeAllMemberInfo = {
   types_member_category: true,
 } as const;
 
-export const includeAllInfo = {
+export const includeAllAccountInfo = {
   main_members: { include: includeAllMemberInfo },
 } as const;

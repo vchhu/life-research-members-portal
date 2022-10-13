@@ -4,7 +4,6 @@ import Title from "antd/lib/typography/Title";
 import { FunctionComponent } from "react";
 import useAllMembers from "../../api-facade/use-all-members";
 import { all_member_info } from "../../../prisma/types";
-import {} from "antd/lib/";
 import PageRoutes from "../../routing/page-routes";
 
 const AllMembers: FunctionComponent = () => {
@@ -73,8 +72,10 @@ const AllMembers: FunctionComponent = () => {
       dataSource={keyedMembers}
       loading={loading}
       title={header}
-      tableLayout="fixed"
+      pagination={false}
+      showSorterTooltip={false}
       sticky={{ offsetHeader: 80 }}
+      scroll={{ x: "max-content" }}
       onRow={(record, _) => ({
         onDoubleClick: (_) => {
           window.open(PageRoutes.memberProfile(record.id));

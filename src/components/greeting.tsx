@@ -25,7 +25,9 @@ const Greeting: FunctionComponent = () => {
     return (
       <>
         <h2>Looks like you have some member information.</h2>
-        <h2>Please go to your profile and make sure it is up to date!</h2>
+        <h2>
+          Please go to <i>My Profile</i> and make sure it is up to date!
+        </h2>
       </>
     );
   };

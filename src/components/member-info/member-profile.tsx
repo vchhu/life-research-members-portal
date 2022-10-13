@@ -4,7 +4,6 @@ import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
-import { all_member_info } from "../../../prisma/types";
 import useMember from "../../api-facade/use-member";
 import PageRoutes from "../../routing/page-routes";
 import MemberInfoSkeleton from "../loading/member-info-skeleton";
@@ -75,7 +74,12 @@ const MemberProfile: FunctionComponent<Props> = ({ id, editMode }) => {
   if (editMode)
     return (
       <Card title={header}>
-        <MemberForm member={member} />
+        <MemberForm
+          member={member}
+          onSuccess={() => {
+            router.push(PageRoutes.memberProfile(id));
+          }}
+        />
       </Card>
     );
 

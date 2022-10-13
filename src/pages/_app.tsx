@@ -13,12 +13,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   function getSuffix() {
     const path = router.pathname;
     // Order matters!
-    if (path.startsWith(PageRoutes.accounts)) return "Accounts";
-    if (path.startsWith(PageRoutes.editAccount)) return "Edit Account";
+    if (path.startsWith(PageRoutes.allAccounts)) return "Accounts";
     if (path.startsWith(PageRoutes.allMembers)) return "Members";
     if (path.startsWith(PageRoutes.register)) return "Register";
-    if (path.startsWith(PageRoutes.viewAccount)) return "View Account";
-    if (path.startsWith(PageRoutes.viewMember)) return "View Member";
     if (path.startsWith(PageRoutes.home)) return "Home";
     return "";
   }

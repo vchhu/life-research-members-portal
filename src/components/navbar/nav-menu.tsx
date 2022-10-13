@@ -20,7 +20,7 @@ const NavMenu: FunctionComponent = () => {
 
   // Admins
   const adminItems = [
-    { label: "Accounts", href: PageRoutes.accounts },
+    { label: "Accounts", href: PageRoutes.allAccounts },
     { label: "Register", href: PageRoutes.register },
   ];
 
