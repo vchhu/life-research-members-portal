@@ -48,7 +48,7 @@ const MemberDescription: FunctionComponent<Props> = ({ member }) => {
       size="small"
       bordered
       column={1}
-      labelStyle={{ whiteSpace: "nowrap" }}
+      labelStyle={{ whiteSpace: "nowrap", width: "2rem" }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
       <Item label="Business Name">{member.business_name}</Item>

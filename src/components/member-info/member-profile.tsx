@@ -46,7 +46,6 @@ const MemberProfile: FunctionComponent<Props> = ({ id, editMode }) => {
   const cancelButton = (
     <Button
       size="large"
-      type="primary"
       danger
       style={{ flexGrow: 1, maxWidth: "10rem" }}
       onClick={() => router.push(PageRoutes.memberProfile(id))}

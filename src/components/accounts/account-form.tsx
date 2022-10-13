@@ -12,15 +12,15 @@ import Checkbox from "antd/lib/checkbox";
 type Props = {
   account: all_account_info;
   onSuccess?: () => void;
+  onDelete?: () => void;
 };
 
 type Data = Partial<all_account_info>;
 
-const AccountForm: FunctionComponent<Props> = ({ account, onSuccess }) => {
+const AccountForm: FunctionComponent<Props> = ({ account, onSuccess, onDelete }) => {
   const [form] = useForm<Data>();
 
   async function updateAccount(data: Data) {
-    console.log(data);
     try {
       const result = await fetch(ApiRoutes.updateAccount + account.id, {
         method: "PATCH",
@@ -41,6 +41,28 @@ const AccountForm: FunctionComponent<Props> = ({ account, onSuccess }) => {
     }
   }
 
+  async function deleteAccount() {
+    try {
+      const message = "Are you sure you want to delete account: " + account.microsoft_email + "?";
+      if (!confirm(message)) return;
+      const result = await fetch(ApiRoutes.deleteAccount + account.id, {
+        method: "DELETE",
+        headers: await authHeader(),
+      });
+      if (!result.ok) {
+        const e = await result.text();
+        console.error(e);
+        alert(e);
+        return;
+      }
+      alert("Success!");
+      if (onDelete) onDelete();
+    } catch (e: any) {
+      console.error(e);
+      alert(e);
+    }
+  }
+
   return (
     <Form form={form} onFinish={updateAccount} initialValues={account}>
       <Form.Item label="Login Email" name="microsoft_email">
@@ -55,16 +77,28 @@ const AccountForm: FunctionComponent<Props> = ({ account, onSuccess }) => {
         <Checkbox />
       </Form.Item>
 
-      <Form.Item style={{ marginBottom: 0 }}>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ paddingLeft: 40, paddingRight: 40, marginBottom: 24 }}
+            size="large"
+          >
+            Save Changes
+          </Button>
+        </Form.Item>
+        <span style={{ flexGrow: 1 }}></span>
         <Button
+          danger
           type="primary"
-          htmlType="submit"
-          style={{ paddingLeft: 40, paddingRight: 40 }}
+          style={{ paddingLeft: 40, paddingRight: 40, marginBottom: 24 }}
           size="large"
+          onClick={deleteAccount}
         >
-          Save Changes
+          Delete Account
         </Button>
-      </Form.Item>
+      </div>
     </Form>
   );
 };

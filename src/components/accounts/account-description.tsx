@@ -18,7 +18,7 @@ const AccountDescription: FunctionComponent<Props> = ({ account }) => {
       size="small"
       bordered
       column={1}
-      labelStyle={{ whiteSpace: "nowrap" }}
+      labelStyle={{ whiteSpace: "nowrap", width: "2rem" }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
       <Item label="Login Email">{account.microsoft_email}</Item>

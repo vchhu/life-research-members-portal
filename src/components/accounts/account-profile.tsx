@@ -7,12 +7,15 @@ import CardSkeleton from "../loading/card-skeleton";
 import useAccount from "../../api-facade/use-account";
 import AccountDescription from "./account-description";
 import AccountForm from "./account-form";
+import { useRouter } from "next/router";
+import PageRoutes from "../../routing/page-routes";
 
 type Props = {
   id: number;
 };
 
 const AccountProfile: FunctionComponent<Props> = ({ id }) => {
+  const router = useRouter();
   const { account, loading, refresh } = useAccount(id);
   const [editMode, setEditMode] = useState(false);
 
@@ -33,7 +36,6 @@ const AccountProfile: FunctionComponent<Props> = ({ id }) => {
   const cancelButton = (
     <Button
       size="large"
-      type="primary"
       danger
       style={{ flexGrow: 1, maxWidth: "10rem" }}
       onClick={() => setEditMode(false)}
@@ -62,12 +64,15 @@ const AccountProfile: FunctionComponent<Props> = ({ id }) => {
 
   if (editMode)
     return (
-      <Card title={header}>
+      <Card title={header} bodyStyle={{ paddingBottom: 0 }}>
         <AccountForm
           account={account}
           onSuccess={() => {
             refresh();
             setEditMode(false);
+          }}
+          onDelete={() => {
+            router.push(PageRoutes.allAccounts);
           }}
         />
       </Card>
