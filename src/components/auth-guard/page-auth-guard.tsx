@@ -9,6 +9,10 @@ type Props = {
   loadingIcon?: ReactElement;
 };
 
+const notAuthorized = (
+  <h1 style={{ textAlign: "center" }}>You are not authorized to view this page.</h1>
+);
+
 const PageAuthGuard: FunctionComponent<PropsWithChildren<Props>> = ({
   auths,
   id,
@@ -18,10 +22,11 @@ const PageAuthGuard: FunctionComponent<PropsWithChildren<Props>> = ({
   if (!loadingIcon) loadingIcon = <CenteredSpinner />;
   const { localAccount, loading } = useContext(AccountCtx);
   if (loading) return loadingIcon;
-  if (auths.includes(Authorizations.admin) && localAccount?.is_admin) return <>{children}</>;
-  if (auths.includes(Authorizations.registered) && localAccount) return <>{children}</>;
-  if (auths.includes(Authorizations.matchId) && localAccount?.id === id) return <>{children}</>;
-  return <h1 style={{ textAlign: "center" }}>You are not authorized to view this page.</h1>;
+  if (!localAccount) return notAuthorized;
+  if (auths.includes(Authorizations.registered)) return <>{children}</>;
+  if (auths.includes(Authorizations.admin) && localAccount.is_admin) return <>{children}</>;
+  if (auths.includes(Authorizations.matchId) && localAccount.id === id) return <>{children}</>;
+  return notAuthorized;
 };
 
 export default PageAuthGuard;

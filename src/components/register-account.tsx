@@ -25,7 +25,7 @@ const RegisterAccount: FunctionComponent = () => {
         alert(e);
         return;
       }
-      alert("Sucess! Account added: " + (await result.text()));
+      alert("Success! Account added: " + (await result.text()));
     } catch (e: any) {
       console.error(e);
       alert(e);
