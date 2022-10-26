@@ -16,15 +16,15 @@ function getMicrosoftAccount(authorization: string) {
   return fetch("https://graph.microsoft.com/v1.0/me", { headers: { authorization } });
 }
 
-function getAccountFromDatabase(userId: MsAccountInfo) {
+function getAccountFromDatabase(userId: MsAccountInfo): Promise<all_account_info | null> {
   return db.account.findFirst({
-    where: { OR: [{ microsoft_id: userId.id }, { microsoft_email: userId.userPrincipalName }] },
+    where: { OR: [{ microsoft_id: userId.id }, { login_email: userId.userPrincipalName }] },
     include: includeAllAccountInfo,
   });
 }
 
 /**
- * Attempts to retrieve user identification.
+ * Attempts to retrieve user identification using access token in request header.
  * On a failure, sends the appropriate response and returns undefined.
  */
 export default async function getAccount(
@@ -62,11 +62,11 @@ export default async function getAccount(
   // Keep account info synchronized
   if (
     account.microsoft_id !== msAccountInfo.id ||
-    account.microsoft_email !== msAccountInfo.userPrincipalName
+    account.login_email !== msAccountInfo.userPrincipalName
   ) {
     account = await db.account.update({
       where: { id: account.id },
-      data: { microsoft_id: msAccountInfo.id, microsoft_email: msAccountInfo.userPrincipalName },
+      data: { microsoft_id: msAccountInfo.id, login_email: msAccountInfo.userPrincipalName },
       include: includeAllAccountInfo,
     });
   }

@@ -5,12 +5,17 @@ import db from "../../../../prisma/prisma-client";
 import { all_member_info } from "../../../../prisma/types";
 import getAccount from "../../../utils/api/get-account";
 
+type Body = { memberInfo?: Partial<member>; deleteKeywords?: number[]; addKeywords?: number[] };
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   if (!(typeof req.query.id === "string")) return res.status(400).send("Member ID is required.");
 
   try {
     const id = parseInt(req.query.id);
-    const member: Partial<member> = req.body;
+    let { memberInfo, deleteKeywords, addKeywords } = req.body as Body;
+    if (!memberInfo) memberInfo = {};
+    if (!deleteKeywords) deleteKeywords = [];
+    if (!addKeywords) addKeywords = [];
 
     const currentUser = await getAccount(req, res);
     if (!currentUser) return;
@@ -21,7 +26,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     const updated: all_member_info = await db.member.update({
       where: { id },
-      data: member,
+      data: {
+        ...memberInfo,
+        has_keyword: {
+          deleteMany: deleteKeywords.map((id) => ({ keyword_id: id })),
+          create: addKeywords.map((id) => ({ keyword_id: id })),
+        },
+      },
       include: includeAllMemberInfo,
     });
 

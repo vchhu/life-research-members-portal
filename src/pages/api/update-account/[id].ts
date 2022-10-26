@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   try {
     const id = parseInt(req.query.id);
-    const accountInfo = req.body as account;
+    const accountInfo: account = req.body;
 
     const currentAccount = await getAccount(req, res);
     if (!currentAccount) return;

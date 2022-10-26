@@ -4,11 +4,10 @@ import db from "../../../prisma/prisma-client";
 import getAccount from "../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  let { login_email, first_name, last_name, is_admin } = req.body;
+  const { login_email, first_name, last_name, is_admin } = req.body;
   if (typeof login_email !== "string") return res.status(400).send("Email is required.");
   if (typeof first_name !== "string") return res.status(400).send("First Name is required.");
   if (typeof last_name !== "string") return res.status(400).send("Last Name is required.");
-  if (is_admin !== true) is_admin = false; // default to false for malformed is_admin params
 
   try {
     const currentUser = await getAccount(req, res);
