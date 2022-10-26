@@ -21,7 +21,7 @@ const AccountDescription: FunctionComponent<Props> = ({ account }) => {
       labelStyle={{ whiteSpace: "nowrap", width: "2rem" }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
-      <Item label="Login Email">{account.microsoft_email}</Item>
+      <Item label="Login Email">{account.login_email}</Item>
       <Item label="Microsoft ID">{account.microsoft_id}</Item>
       <Item label="Admin">{account.is_admin ? "Yes" : "No"}</Item>
       <Item label="Member">{account.member ? "Yes" : "No"}</Item>

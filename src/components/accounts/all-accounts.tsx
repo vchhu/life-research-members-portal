@@ -13,8 +13,8 @@ const AllAccounts: FunctionComponent = () => {
   const columns: ColumnType<all_account_info>[] = [
     {
       title: "Login Email",
-      dataIndex: "microsoft_email",
-      sorter: (a, b) => (a.microsoft_email || "").localeCompare(b.microsoft_email || ""),
+      dataIndex: "login_email",
+      sorter: (a, b) => (a.login_email || "").localeCompare(b.login_email || ""),
     },
     {
       title: "Admin",
@@ -27,24 +27,23 @@ const AllAccounts: FunctionComponent = () => {
     },
     {
       title: "First Name",
-      dataIndex: ["member", "first_name"],
-      sorter: (a, b) => (a.member?.first_name || "").localeCompare(b.member?.first_name || ""),
+      dataIndex: "first_name",
+      sorter: (a, b) => (a.first_name || "").localeCompare(b.first_name || ""),
     },
     {
       title: "Last Name",
-      dataIndex: ["member", "last_name"],
-      sorter: (a, b) => (a.member?.last_name || "").localeCompare(b.member?.last_name || ""),
+      dataIndex: "last_name",
+      sorter: (a, b) => (a.last_name || "").localeCompare(b.last_name || ""),
     },
     {
       title: "Contact Email",
-      dataIndex: ["member", "email"],
-      sorter: (a, b) => (a.member?.email || "").localeCompare(b.member?.email || ""),
+      dataIndex: ["member", "work_email"],
+      sorter: (a, b) => (a.member?.work_email || "").localeCompare(b.member?.work_email || ""),
     },
     {
       title: "Phone (Business)",
-      dataIndex: ["member", "business_phone"],
-      sorter: (a, b) =>
-        (a.member?.business_phone || "").localeCompare(b.member?.business_phone || ""),
+      dataIndex: ["member", "work_phone"],
+      sorter: (a, b) => (a.member?.work_phone || "").localeCompare(b.member?.work_phone || ""),
     },
     {
       title: "Phone (Mobile)",

@@ -22,7 +22,7 @@ const AccountForm: FunctionComponent<Props> = ({ account, onSuccess, onDelete })
 
   async function updateAccount(data: Data) {
     try {
-      const result = await fetch(ApiRoutes.updateAccount + account.id, {
+      const result = await fetch(ApiRoutes.updateAccount(account.id), {
         method: "PATCH",
         headers: { ...(await authHeader()), ...contentTypeJsonHeader },
         body: JSON.stringify(data),
@@ -43,9 +43,9 @@ const AccountForm: FunctionComponent<Props> = ({ account, onSuccess, onDelete })
 
   async function deleteAccount() {
     try {
-      const message = "Are you sure you want to delete account: " + account.microsoft_email + "?";
+      const message = "Are you sure you want to delete account: " + account.login_email + "?";
       if (!confirm(message)) return;
-      const result = await fetch(ApiRoutes.deleteAccount + account.id, {
+      const result = await fetch(ApiRoutes.deleteAccount(account.id), {
         method: "DELETE",
         headers: await authHeader(),
       });
@@ -65,7 +65,7 @@ const AccountForm: FunctionComponent<Props> = ({ account, onSuccess, onDelete })
 
   return (
     <Form form={form} onFinish={updateAccount} initialValues={account}>
-      <Form.Item label="Login Email" name="microsoft_email">
+      <Form.Item label="Login Email" name="login_email">
         <Input />
       </Form.Item>
 

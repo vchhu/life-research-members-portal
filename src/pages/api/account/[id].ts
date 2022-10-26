@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (!authorized)
       return res.status(401).send("You are not authorized to view this account information.");
 
-    const account: all_account_info | null = await db.account.findUnique({
+    const account = await db.account.findUnique({
       where: { id },
       include: includeAllAccountInfo,
     });

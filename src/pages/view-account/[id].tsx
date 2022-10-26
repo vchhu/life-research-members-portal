@@ -25,7 +25,7 @@ const ViewAccountPage: NextPage = () => {
     if (!account) return <div>Loading...</div>;
     return (
       <>
-        <h1>{account.microsoft_email}</h1>
+        <h1>{account.login_email}</h1>
         <pre>{JSON.stringify(account, null, 2)}</pre>
       </>
     );

@@ -3,52 +3,43 @@ import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import { FunctionComponent } from "react";
 import useAllMembers from "../../api-facade/use-all-members";
-import { all_member_info } from "../../../prisma/types";
+import { all_member_info, public_member_info } from "../../../prisma/types";
 import PageRoutes from "../../routing/page-routes";
 
 const AllMembers: FunctionComponent = () => {
   const { allMembers, loading, refresh } = useAllMembers();
   const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id }));
 
-  const columns: ColumnType<all_member_info>[] = [
+  const columns: ColumnType<public_member_info>[] = [
     {
       title: "First Name",
-      dataIndex: "first_name",
-      sorter: (a, b) => (a.first_name || "").localeCompare(b.first_name || ""),
+      dataIndex: ["account", "first_name"],
+      sorter: (a, b) => (a.account.first_name || "").localeCompare(b.account.first_name || ""),
     },
     {
       title: "Last Name",
-      dataIndex: "last_name",
-      sorter: (a, b) => (a.last_name || "").localeCompare(b.last_name || ""),
+      dataIndex: ["account", "last_name"],
+      sorter: (a, b) => (a.account.last_name || "").localeCompare(b.account.last_name || ""),
     },
     {
       title: "Email",
-      dataIndex: "email",
-      sorter: (a, b) => (a.email || "").localeCompare(b.email || ""),
+      dataIndex: "work_email",
+      sorter: (a, b) => (a.work_email || "").localeCompare(b.work_email || ""),
     },
     {
       title: "Phone (Business)",
-      dataIndex: "business_phone",
-      sorter: (a, b) => (a.business_phone || "").localeCompare(b.business_phone || ""),
-    },
-    {
-      title: "Phone (Mobile)",
-      dataIndex: "mobile_phone",
-      sorter: (a, b) => (a.mobile_phone || "").localeCompare(b.mobile_phone || ""),
+      dataIndex: "work_phone",
+      sorter: (a, b) => (a.work_phone || "").localeCompare(b.work_phone || ""),
     },
     {
       title: "Faculty",
-      dataIndex: ["faculty", "faculty_name_en"],
-      sorter: (a, b) =>
-        (a.faculty?.faculty_name_en || "").localeCompare(b.faculty?.faculty_name_en || ""),
+      dataIndex: ["faculty", "name_en"],
+      sorter: (a, b) => (a.faculty?.name_en || "").localeCompare(b.faculty?.name_en || ""),
     },
     {
       title: "Member Type",
-      dataIndex: ["member_type", "category_name_en"],
-      sorter: (a, b) =>
-        (a.member_type?.category_name_en || "").localeCompare(
-          b.member_type?.category_name_en || ""
-        ),
+      dataIndex: ["member_type", "name_en"],
+      sorter: (a, b) => (a.member_type?.name_en || "").localeCompare(b.member_type?.name_en || ""),
     },
   ];
 

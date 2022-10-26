@@ -17,7 +17,7 @@ const RegisterAccount: FunctionComponent = () => {
       const result = await fetch(ApiRoutes.registerAccount, {
         method: "PUT",
         headers: { ...(await authHeader()), ...contentTypeJsonHeader },
-        body: JSON.stringify({ microsoft_email: data.email }),
+        body: JSON.stringify({ login_email: data.email }),
       });
       if (!result.ok) {
         const e = await result.text();
