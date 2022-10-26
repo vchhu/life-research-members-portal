@@ -33,15 +33,12 @@ const MemberDescription: FunctionComponent<Props> = ({ member }) => {
   }
 
   let faculty = "";
-  if (member.types_faculty)
-    faculty = member.types_faculty.faculty_name_en + " / " + member.types_faculty.faculty_name_fr;
+  if (member.faculty)
+    faculty = member.faculty.faculty_name_en + " / " + member.faculty.faculty_name_fr;
 
   let category = "";
-  if (member.types_member_category)
-    category =
-      member.types_member_category.category_name_en +
-      " / " +
-      member.types_member_category.category_name_fr;
+  if (member.member_type)
+    category = member.member_type.category_name_en + " / " + member.member_type.category_name_fr;
 
   return (
     <Descriptions

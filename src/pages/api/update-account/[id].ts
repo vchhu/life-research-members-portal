@@ -1,7 +1,8 @@
-import { auth_accounts, main_members } from "@prisma/client";
+import { account, member } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
+import { all_account_info } from "../../../../prisma/types";
 import getAccount from "../../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
@@ -9,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   try {
     const id = parseInt(req.query.id);
-    const accountInfo = req.body as auth_accounts;
+    const accountInfo = req.body as account;
 
     const currentAccount = await getAccount(req, res);
     if (!currentAccount) return;
@@ -24,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           "Admins may not edit their own account info. This prevents corrupting the only admin account."
         );
 
-    const updated = await db.auth_accounts.update({
+    const updated: all_account_info = await db.account.update({
       where: { id },
       data: accountInfo,
       include: includeAllAccountInfo,

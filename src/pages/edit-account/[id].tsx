@@ -1,5 +1,5 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
-import { auth_accounts, main_members } from "@prisma/client";
+import { account, member } from "@prisma/client";
 import { useRouter } from "next/router";
 import { NextPage } from "next/types";
 import { useCallback, useEffect, useState } from "react";
@@ -15,9 +15,9 @@ const EditAccountPage: NextPage = () => {
   const { id } = router.query as { id: string };
 
   const [account, setAccount] = useState<all_account_info | null>(null);
-  const memberInfo = account?.main_members;
-  const [accountInfoChanges, setAccountInfoChanges] = useState<Partial<auth_accounts>>({});
-  const [memberInfoChanges, setMemberInfoChanges] = useState<Partial<main_members>>({});
+  const memberInfo = account?.member;
+  const [accountInfoChanges, setAccountInfoChanges] = useState<Partial<account>>({});
+  const [memberInfoChanges, setMemberInfoChanges] = useState<Partial<member>>({});
 
   async function deleteAccount() {
     if (!account) return;
@@ -77,7 +77,7 @@ const EditAccountPage: NextPage = () => {
         alert(e);
         return;
       }
-      const newMember: main_members = await result.json();
+      const newMember: member = await result.json();
       fetchAccount();
       alert("Member Registered. Member ID: " + newMember.id);
     } catch (e: any) {
@@ -87,13 +87,13 @@ const EditAccountPage: NextPage = () => {
   }
 
   async function unregisterMember() {
-    if (!account?.main_members?.id) return;
+    if (!account?.member?.id) return;
     const confirmation = confirm(
       "Are you sure you want to unregister member for: " + account.microsoft_email + "?"
     );
     if (!confirmation) return;
     try {
-      const result = await fetch(ApiRoutes.deleteMember + account.main_members.id, {
+      const result = await fetch(ApiRoutes.deleteMember + account.member.id, {
         headers: await authHeader(),
         method: "DELETE",
       });
@@ -106,7 +106,7 @@ const EditAccountPage: NextPage = () => {
       const deleted = await result.json();
       setAccount((prev) => {
         if (!prev) return prev;
-        return { ...prev, main_members: null };
+        return { ...prev, member: null };
       });
       alert("Member Unregistered. Member ID: " + deleted.id);
     } catch (e: any) {
@@ -360,19 +360,13 @@ const EditAccountPage: NextPage = () => {
           }
         ></input>
         <label>Faculty (English):</label>
-        <input readOnly defaultValue={memberInfo.types_faculty?.faculty_name_en || ""}></input>
+        <input readOnly defaultValue={memberInfo.faculty?.faculty_name_en || ""}></input>
         <label>Faculty (French):</label>
-        <input readOnly defaultValue={memberInfo.types_faculty?.faculty_name_fr || ""}></input>
+        <input readOnly defaultValue={memberInfo.faculty?.faculty_name_fr || ""}></input>
         <label>Category (English):</label>
-        <input
-          readOnly
-          defaultValue={memberInfo.types_member_category?.category_name_en || ""}
-        ></input>
+        <input readOnly defaultValue={memberInfo.member_type?.category_name_en || ""}></input>
         <label>Category (French):</label>
-        <input
-          readOnly
-          defaultValue={memberInfo.types_member_category?.category_name_fr || ""}
-        ></input>
+        <input readOnly defaultValue={memberInfo.member_type?.category_name_fr || ""}></input>
       </>
     );
   }

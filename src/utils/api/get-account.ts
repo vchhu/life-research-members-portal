@@ -17,7 +17,7 @@ function getMicrosoftAccount(authorization: string) {
 }
 
 function getAccountFromDatabase(userId: MsAccountInfo) {
-  return db.auth_accounts.findFirst({
+  return db.account.findFirst({
     where: { OR: [{ microsoft_id: userId.id }, { microsoft_email: userId.userPrincipalName }] },
     include: includeAllAccountInfo,
   });
@@ -64,7 +64,7 @@ export default async function getAccount(
     account.microsoft_id !== msAccountInfo.id ||
     account.microsoft_email !== msAccountInfo.userPrincipalName
   ) {
-    account = await db.auth_accounts.update({
+    account = await db.account.update({
       where: { id: account.id },
       data: { microsoft_id: msAccountInfo.id, microsoft_email: msAccountInfo.userPrincipalName },
       include: includeAllAccountInfo,

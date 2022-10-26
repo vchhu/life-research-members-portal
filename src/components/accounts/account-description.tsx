@@ -24,7 +24,7 @@ const AccountDescription: FunctionComponent<Props> = ({ account }) => {
       <Item label="Login Email">{account.microsoft_email}</Item>
       <Item label="Microsoft ID">{account.microsoft_id}</Item>
       <Item label="Admin">{account.is_admin ? "Yes" : "No"}</Item>
-      <Item label="Member">{account.main_members ? "Yes" : "No"}</Item>
+      <Item label="Member">{account.member ? "Yes" : "No"}</Item>
     </Descriptions>
   );
 };

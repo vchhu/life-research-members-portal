@@ -7,54 +7,219 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model auth_accounts {
-  id              Int           @id(map: "PK_microsoft_users") @default(autoincrement())
-  microsoft_email String        @unique(map: "UK_microsoft_email") @db.VarChar(320)
-  microsoft_id    String?       @db.VarChar(50)
-  is_admin        Boolean       @default(false, map: "DF_auth_users_is_admin")
-  main_members    main_members?
+model account {
+  id           Int     @id(map: "PK_account") @default(autoincrement())
+  login_email  String  @unique(map: "UK_login_email") @db.NVarChar(255)
+  microsoft_id String? @db.NVarChar(255)
+  first_name   String  @db.NVarChar(255)
+  last_name    String  @db.NVarChar(255)
+  is_admin     Boolean @default(false, map: "DF_account_is_admin")
+  member       member?
 }
 
-model main_members {
-  id                    Int                    @id(map: "main_Members$PrimaryKey") @default(autoincrement())
-  account_id            Int                    @unique(map: "UK_account_id")
-  first_name            String?                @db.NVarChar(255)
-  last_name             String?                @db.NVarChar(255)
-  business_name         String?                @db.NVarChar(255)
-  email                 String?                @db.NVarChar(255)
-  address               String?                @db.NVarChar(255)
-  city                  String?                @db.NVarChar(255)
-  province              String?                @db.NVarChar(255)
-  country               String?                @db.NVarChar(255)
-  postal_code           String?                @db.NVarChar(255)
-  business_phone        String?                @db.NVarChar(255)
-  mobile_phone          String?                @db.NVarChar(255)
-  keywords_EN           String?                @db.NVarChar(Max)
-  keywords_FR           String?                @db.NVarChar(Max)
-  problems_EN           String?                @db.NVarChar(Max)
-  problems_FR           String?                @db.NVarChar(Max)
-  dream                 String?                @db.NVarChar(Max)
-  notes                 String?                @db.NVarChar(Max)
-  how_can_we_help       String?                @db.NVarChar(Max)
-  faculty_id            Int?
-  category_id           Int?
-  auth_accounts         auth_accounts          @relation(fields: [account_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_main_members_user_id")
-  types_faculty         types_faculty?         @relation(fields: [faculty_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "main_Members$types_Facultymain_Members")
-  types_member_category types_member_category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "main_Members$types_memberCatmain_Members")
+model current_partnership {
+  member_id       Int
+  organization_id Int
+  description     String?      @db.NVarChar(Max)
+  member          member       @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_current_partnership_member_id")
+  organization    organization @relation(fields: [organization_id], references: [id], onUpdate: NoAction, map: "FK_current_partnership_organization_id")
 
-  @@index([postal_code], map: "main_Members$postalCode")
+  @@id([member_id, organization_id], map: "PK_current_partnership")
 }
 
-model types_faculty {
-  id              Int            @id(map: "types_Faculty$PrimaryKey") @default(autoincrement())
-  faculty_name_en String?        @db.NVarChar(255)
-  faculty_name_fr String?        @db.NVarChar(255)
-  main_members    main_members[]
+model current_promotion_strategy {
+  member_id             Int
+  promotion_strategy_id Int
+  member                member             @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_current_promotion_strategy_member_id")
+  promotion_strategy    promotion_strategy @relation(fields: [promotion_strategy_id], references: [id], onUpdate: NoAction, map: "FK_current_promotion_strategy_promotion_strategy_id")
+
+  @@id([member_id, promotion_strategy_id], map: "PK_current_promotion_strategy")
 }
 
-model types_member_category {
-  id               Int            @id(map: "types_memberCat$PrimaryKey") @default(autoincrement())
-  category_name_en String?        @db.NVarChar(255)
-  category_name_fr String?        @db.NVarChar(255)
-  main_members     main_members[]
+model desired_partnership {
+  id          Int        @id(map: "PK_desired_partnership")
+  member_id   Int        @unique(map: "UK_desired_partnership_member_id")
+  type_id     Int?
+  scope_id    Int?
+  description String?    @db.VarChar(Max)
+  member      member     @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_desired_partnership_member_id")
+  org_scope   org_scope? @relation(fields: [scope_id], references: [id], onUpdate: SetNull, map: "FK_desired_partnership_scope_id")
+  org_type    org_type?  @relation(fields: [type_id], references: [id], onUpdate: SetNull, map: "FK_desired_partnership_type_id")
+}
+
+model desired_promotion_strategy {
+  member_id             Int
+  promotion_strategy_id Int
+  member                member             @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_desired_promotion_strategy_member_id")
+  promotion_strategy    promotion_strategy @relation(fields: [promotion_strategy_id], references: [id], onUpdate: NoAction, map: "FK_desired_promotion_strategy_promotion_strategy_id")
+
+  @@id([member_id, promotion_strategy_id], map: "PK_desired_promotion_strategy")
+}
+
+model faculty {
+  id      Int      @id(map: "PK_faculty") @default(autoincrement())
+  name_en String   @db.NVarChar(255)
+  name_fr String   @db.NVarChar(255)
+  member  member[]
+}
+
+model has_keyword {
+  member_id  Int
+  keyword_id Int
+  keyword    keyword @relation(fields: [keyword_id], references: [id], onUpdate: NoAction, map: "FK_has_keyword_keyword_id")
+  member     member  @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_has_keyword_member_id")
+
+  @@id([member_id, keyword_id], map: "PK_has_keyword")
+}
+
+model insight {
+  id               Int       @id(map: "PK_insight") @unique(map: "UK_insight_member_id") @default(autoincrement())
+  member_id        Int
+  interview_date   DateTime? @db.Date
+  about_member     String?   @db.NVarChar(Max)
+  about_promotions String?   @db.NVarChar(Max)
+  dream            String?   @db.NVarChar(Max)
+  how_can_we_help  String?   @db.NVarChar(Max)
+  admin_notes      String?   @db.NVarChar(Max)
+  other_notes      String?   @db.NVarChar(Max)
+  member           member    @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_insight_member_id")
+}
+
+model keyword {
+  id          Int           @id(map: "PK_keyword") @default(autoincrement())
+  name_en     String?       @db.NVarChar(255)
+  name_fr     String?       @db.NVarChar(255)
+  has_keyword has_keyword[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model legacy {
+  ID                        Int
+  first_name                String?   @db.NVarChar(255)
+  last_name                 String?   @db.NVarChar(255)
+  business_name             String?   @db.NVarChar(255)
+  date_joined               DateTime? @db.DateTime
+  interview_date            DateTime? @db.DateTime
+  date_in_active            DateTime? @db.DateTime
+  email                     String?   @db.NVarChar(255)
+  address                   String?   @db.NVarChar(255)
+  city                      String?   @db.NVarChar(255)
+  province                  String?   @db.NVarChar(255)
+  country                   String?   @db.NVarChar(255)
+  postal_code               String?   @db.NVarChar(255)
+  business_phone            String?   @db.NVarChar(255)
+  mobile_phone              String?   @db.NVarChar(255)
+  interview_notes           String?   @db.NVarChar(Max)
+  is_active                 Boolean
+  category                  Int?
+  keywords_EN               String?   @db.NVarChar(Max)
+  keywords_FR               String?   @db.NVarChar(Max)
+  problems_EN               String?   @db.NVarChar(Max)
+  problems_FR               String?   @db.NVarChar(Max)
+  dream                     String?   @db.NVarChar(Max)
+  notes                     String?   @db.NVarChar(Max)
+  how_can_we_help           String?   @db.NVarChar(Max)
+  faculty                   Int?
+  partnerships_1_notes      String?   @db.NVarChar(Max)
+  partnerships_2_notes      String?   @db.NVarChar(Max)
+  partnerships_3_notes      String?   @db.NVarChar(Max)
+  partnerships_future_notes String?   @db.NVarChar(Max)
+  future_promotion_notes    String?   @db.NVarChar(Max)
+  indicators_frequency      Int?
+  other_comments            String?   @db.NVarChar(Max)
+  interviewer_notes         String?   @db.NVarChar(Max)
+
+  @@ignore
+}
+
+model member {
+  id                         Int                          @id(map: "PK_member") @default(autoincrement())
+  account_id                 Int                          @unique(map: "UK_account_id")
+  faculty_id                 Int?
+  type_id                    Int?
+  work_email                 String?                      @db.NVarChar(255)
+  work_phone                 String?                      @db.NVarChar(50)
+  about_me                   String?                      @db.NVarChar(Max)
+  website_link               String?                      @db.NVarChar(4000)
+  twitter_link               String?                      @db.NVarChar(4000)
+  linkedin_link              String?                      @db.NVarChar(4000)
+  cv_link                    String?                      @db.NVarChar(4000)
+  address                    String?                      @db.NVarChar(255)
+  city                       String?                      @db.NVarChar(255)
+  province                   String?                      @db.NVarChar(255)
+  country                    String?                      @db.NVarChar(255)
+  postal_code                String?                      @db.NVarChar(255)
+  mobile_phone               String?                      @db.NVarChar(50)
+  date_joined                DateTime?                    @db.Date
+  is_active                  Boolean                      @default(true, map: "DF_member_is_active")
+  last_active                DateTime?                    @db.Date
+  account                    account                      @relation(fields: [account_id], references: [id], onDelete: Cascade, map: "FK_member_account_id")
+  faculty                    faculty?                     @relation(fields: [faculty_id], references: [id], map: "FK_member_faculty_id")
+  member_type                member_type?                 @relation(fields: [type_id], references: [id], map: "FK_member_type_id")
+  current_partnership        current_partnership[]
+  current_promotion_strategy current_promotion_strategy[]
+  desired_partnership        desired_partnership?
+  desired_promotion_strategy desired_promotion_strategy[]
+  has_keyword                has_keyword[]
+  insight                    insight[]
+  works_on                   works_on[]
+}
+
+model member_type {
+  id      Int      @id(map: "PK_member_type") @default(autoincrement())
+  name_en String   @db.NVarChar(255)
+  name_fr String   @db.NVarChar(255)
+  member  member[]
+}
+
+model org_scope {
+  id                  Int                   @id(map: "PK_org_scope") @default(autoincrement())
+  name_en             String?               @db.NVarChar(255)
+  name_fr             String?               @db.NVarChar(255)
+  desired_partnership desired_partnership[]
+  organization        organization[]
+}
+
+model org_type {
+  id                  Int                   @id(map: "PK_org_type") @default(autoincrement())
+  name_en             String?               @db.NVarChar(255)
+  name_fr             String?               @db.NVarChar(255)
+  desired_partnership desired_partnership[]
+  organization        organization[]
+}
+
+model organization {
+  id                  Int                   @id(map: "PK_organization") @default(autoincrement())
+  name_en             String?               @db.NVarChar(255)
+  name_fr             String?               @db.NVarChar(255)
+  scope_id            Int
+  type_id             Int
+  description         String?               @db.NVarChar(4000)
+  org_scope           org_scope             @relation(fields: [scope_id], references: [id], onUpdate: NoAction, map: "FK_organization_scope_id")
+  org_type            org_type              @relation(fields: [type_id], references: [id], onUpdate: NoAction, map: "FK_organization_type_id")
+  current_partnership current_partnership[]
+}
+
+model problem {
+  id       Int        @id(map: "PK_problem") @default(autoincrement())
+  name_en  String?    @db.NVarChar(4000)
+  name_fr  String?    @db.NVarChar(4000)
+  works_on works_on[]
+}
+
+model promotion_strategy {
+  id                         Int                          @id(map: "PK_promotion_strategy") @default(autoincrement())
+  name_en                    String?                      @db.NVarChar(255)
+  name_fr                    String?                      @db.NVarChar(255)
+  current_promotion_strategy current_promotion_strategy[]
+  desired_promotion_strategy desired_promotion_strategy[]
+}
+
+model works_on {
+  member_id  Int
+  problem_id Int
+  member     member  @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_works_on_member_id")
+  problem    problem @relation(fields: [problem_id], references: [id], onUpdate: NoAction, map: "FK_works_on_problem_id")
+
+  @@id([member_id, problem_id], map: "PK_works_on")
 }

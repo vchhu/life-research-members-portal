@@ -27,32 +27,29 @@ const AllAccounts: FunctionComponent = () => {
     },
     {
       title: "First Name",
-      dataIndex: ["main_members", "first_name"],
-      sorter: (a, b) =>
-        (a.main_members?.first_name || "").localeCompare(b.main_members?.first_name || ""),
+      dataIndex: ["member", "first_name"],
+      sorter: (a, b) => (a.member?.first_name || "").localeCompare(b.member?.first_name || ""),
     },
     {
       title: "Last Name",
-      dataIndex: ["main_members", "last_name"],
-      sorter: (a, b) =>
-        (a.main_members?.last_name || "").localeCompare(b.main_members?.last_name || ""),
+      dataIndex: ["member", "last_name"],
+      sorter: (a, b) => (a.member?.last_name || "").localeCompare(b.member?.last_name || ""),
     },
     {
       title: "Contact Email",
-      dataIndex: ["main_members", "email"],
-      sorter: (a, b) => (a.main_members?.email || "").localeCompare(b.main_members?.email || ""),
+      dataIndex: ["member", "email"],
+      sorter: (a, b) => (a.member?.email || "").localeCompare(b.member?.email || ""),
     },
     {
       title: "Phone (Business)",
-      dataIndex: ["main_members", "business_phone"],
+      dataIndex: ["member", "business_phone"],
       sorter: (a, b) =>
-        (a.main_members?.business_phone || "").localeCompare(b.main_members?.business_phone || ""),
+        (a.member?.business_phone || "").localeCompare(b.member?.business_phone || ""),
     },
     {
       title: "Phone (Mobile)",
-      dataIndex: ["main_members", "mobile_phone"],
-      sorter: (a, b) =>
-        (a.main_members?.mobile_phone || "").localeCompare(b.main_members?.mobile_phone || ""),
+      dataIndex: ["member", "mobile_phone"],
+      sorter: (a, b) => (a.member?.mobile_phone || "").localeCompare(b.member?.mobile_phone || ""),
     },
   ];
 

@@ -1,6 +1,8 @@
-import { main_members } from "@prisma/client";
+import { member } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { includeAllMemberInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
+import { all_member_info } from "../../../../prisma/types";
 import getAccount from "../../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
@@ -8,18 +10,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   try {
     const id = parseInt(req.query.id);
-    const member: Partial<main_members> = req.body;
+    const member: Partial<member> = req.body;
 
     const currentUser = await getAccount(req, res);
     if (!currentUser) return;
 
-    const authorized = currentUser.is_admin || currentUser.main_members?.id === id;
+    const authorized = currentUser.is_admin || currentUser.member?.id === id;
     if (!authorized)
       return res.status(401).send("You are not authorized to edit this member information.");
 
-    const updated = await db.main_members.update({
+    const updated: all_member_info = await db.member.update({
       where: { id },
       data: member,
+      include: includeAllMemberInfo,
     });
 
     return res.status(200).send(updated);

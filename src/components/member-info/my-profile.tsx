@@ -20,9 +20,9 @@ const MyProfile: FunctionComponent<Props> = ({ editMode }) => {
 
   if (loading) return <CardSkeleton />;
   if (!localAccount) return null; // Auth guard should prevent this
-  if (!localAccount.main_members) return <MyProfileRegister />;
+  if (!localAccount.member) return <MyProfileRegister />;
 
-  const member = localAccount.main_members;
+  const member = localAccount.member;
   let titleText = "";
   if (!member.first_name || !member.last_name) titleText = "Member " + member.id;
   else titleText = (member.first_name || "") + " " + (member.last_name || "");

@@ -7,7 +7,7 @@ import getAccount from "../../utils/api/get-account";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   const { account_id } = req.body;
-  if (!(typeof account_id === "number")) return res.status(400).send("Account ID is required.");
+  if (typeof account_id !== "number") return res.status(400).send("Account ID is required.");
 
   try {
     const currentUser = await getAccount(req, res);
@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         .status(401)
         .send("You are not authorized to add member information to this account.");
 
-    const newMember: all_member_info = await db.main_members.create({
+    const newMember: all_member_info = await db.member.create({
       data: { account_id: account_id },
       include: includeAllMemberInfo,
     });

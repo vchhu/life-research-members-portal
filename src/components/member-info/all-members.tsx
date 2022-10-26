@@ -38,18 +38,16 @@ const AllMembers: FunctionComponent = () => {
     },
     {
       title: "Faculty",
-      dataIndex: ["types_faculty", "faculty_name_en"],
+      dataIndex: ["faculty", "faculty_name_en"],
       sorter: (a, b) =>
-        (a.types_faculty?.faculty_name_en || "").localeCompare(
-          b.types_faculty?.faculty_name_en || ""
-        ),
+        (a.faculty?.faculty_name_en || "").localeCompare(b.faculty?.faculty_name_en || ""),
     },
     {
       title: "Member Type",
-      dataIndex: ["types_member_category", "category_name_en"],
+      dataIndex: ["member_type", "category_name_en"],
       sorter: (a, b) =>
-        (a.types_member_category?.category_name_en || "").localeCompare(
-          b.types_member_category?.category_name_en || ""
+        (a.member_type?.category_name_en || "").localeCompare(
+          b.member_type?.category_name_en || ""
         ),
     },
   ];

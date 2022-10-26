@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllMemberInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
+import { all_member_info } from "../../../../prisma/types";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   if (!(typeof req.query.id === "string")) return res.status(400).send("Member ID is required.");
@@ -10,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     // TODO: filter what information is public / private
 
-    const member = await db.main_members.findUnique({
+    const member: all_member_info | null = await db.member.findUnique({
       where: { id },
       include: includeAllMemberInfo,
     });

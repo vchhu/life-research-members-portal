@@ -15,7 +15,7 @@ const Greeting: FunctionComponent = () => {
   };
 
   const memberGreeting = () => {
-    if (!localAccount?.main_members)
+    if (!localAccount?.member)
       return (
         <>
           <h2>This account has no member information!</h2>

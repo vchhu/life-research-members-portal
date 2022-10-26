@@ -13,7 +13,7 @@ const MyProfileRegister: FunctionComponent = () => {
       setWaiting(true);
       const newMember = await registerMember(id);
       setLocalAccount((prev) => {
-        return prev && { ...prev, main_members: newMember };
+        return prev && { ...prev, member: newMember };
       });
       alert("Success!");
     } catch (e) {

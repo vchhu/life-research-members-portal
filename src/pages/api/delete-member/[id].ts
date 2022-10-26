@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (!currentUser.is_admin)
       return res.status(401).send("You are not authorized to delete member information.");
 
-    const deletedMember = await db.main_members.delete({
+    const deletedMember = await db.member.delete({
       where: { id },
     });
 

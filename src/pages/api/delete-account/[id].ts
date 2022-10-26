@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         .status(401)
         .send("Admins may not delete themselves. This ensures there is always at least one admin.");
 
-    const account = await db.auth_accounts.delete({
+    const account = await db.account.delete({
       where: { id },
     });
 
