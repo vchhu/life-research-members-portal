@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../prisma/prisma-client";
-import getAccountFromRequest from "../../utils/api/get-account";
+import getAccountFromRequest from "../../utils/api/get-account-from-request";
 
 export type RegisterKeywordParams = { name_en: string; name_fr: string };
 export type RegisterKeywordRes = Awaited<ReturnType<typeof registerKeyword>>;

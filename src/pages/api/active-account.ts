@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getAccountFromRequest from "../../utils/api/get-account";
+import getAccountFromRequest from "../../utils/api/get-account-from-request";
 
 export type ActiveAccountRes = Awaited<ReturnType<typeof getAccountFromRequest>>;
 

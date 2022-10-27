@@ -21,8 +21,8 @@ model current_partnership {
   member_id       Int
   organization_id Int
   description     String?      @db.NVarChar(Max)
-  member          member       @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_current_partnership_member_id")
-  organization    organization @relation(fields: [organization_id], references: [id], onUpdate: NoAction, map: "FK_current_partnership_organization_id")
+  member          member       @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_current_partnership_member_id")
+  organization    organization @relation(fields: [organization_id], references: [id], onDelete: Cascade, map: "FK_current_partnership_organization_id")
 
   @@id([member_id, organization_id], map: "PK_current_partnership")
 }
@@ -66,10 +66,11 @@ model faculty {
 model has_keyword {
   member_id  Int
   keyword_id Int
-  keyword    keyword @relation(fields: [keyword_id], references: [id], onUpdate: NoAction, map: "FK_has_keyword_keyword_id")
-  member     member  @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_has_keyword_member_id")
+  keyword    keyword @relation(fields: [keyword_id], references: [id], onDelete: Cascade, map: "FK_has_keyword_keyword_id")
+  member     member  @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_has_keyword_member_id")
 
   @@id([member_id, keyword_id], map: "PK_has_keyword")
+  @@unique([member_id, keyword_id], map: "UK_has_keyword")
 }
 
 model insight {
@@ -87,9 +88,11 @@ model insight {
 
 model keyword {
   id          Int           @id(map: "PK_keyword") @default(autoincrement())
-  name_en     String?       @db.NVarChar(255)
-  name_fr     String?       @db.NVarChar(255)
+  name_en     String?       @db.NVarChar(200)
+  name_fr     String?       @db.NVarChar(200)
   has_keyword has_keyword[]
+
+  @@unique([name_en, name_fr], map: "UK_keyword_names")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
@@ -162,7 +165,7 @@ model member {
   desired_promotion_strategy desired_promotion_strategy[]
   has_keyword                has_keyword[]
   insight                    insight[]
-  works_on                   works_on[]
+  problem                    problem[]
 }
 
 model member_type {
@@ -201,10 +204,11 @@ model organization {
 }
 
 model problem {
-  id       Int        @id(map: "PK_problem") @default(autoincrement())
-  name_en  String?    @db.NVarChar(4000)
-  name_fr  String?    @db.NVarChar(4000)
-  works_on works_on[]
+  id        Int     @id(map: "PK_problem") @default(autoincrement())
+  member_id Int
+  name_en   String? @db.NVarChar(4000)
+  name_fr   String? @db.NVarChar(4000)
+  member    member  @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_problem_member_id")
 }
 
 model promotion_strategy {
@@ -213,13 +217,4 @@ model promotion_strategy {
   name_fr                    String?                      @db.NVarChar(255)
   current_promotion_strategy current_promotion_strategy[]
   desired_promotion_strategy desired_promotion_strategy[]
-}
-
-model works_on {
-  member_id  Int
-  problem_id Int
-  member     member  @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_works_on_member_id")
-  problem    problem @relation(fields: [problem_id], references: [id], onUpdate: NoAction, map: "FK_works_on_problem_id")
-
-  @@id([member_id, problem_id], map: "PK_works_on")
 }

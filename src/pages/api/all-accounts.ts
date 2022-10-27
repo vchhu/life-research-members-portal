@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
-import getAccountFromRequest from "../../utils/api/get-account";
+import getAccountFromRequest from "../../utils/api/get-account-from-request";
 
 export type AllAccountsRes = Awaited<ReturnType<typeof getAllAccounts>>;
 

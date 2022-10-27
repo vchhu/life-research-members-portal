@@ -1,7 +1,7 @@
 import { account, Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../prisma/prisma-client";
-import getAccountFromRequest from "../../utils/api/get-account";
+import getAccountFromRequest from "../../utils/api/get-account-from-request";
 
 export type RegisterAccountParams = {
   login_email: string;

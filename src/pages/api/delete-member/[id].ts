@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../../prisma/prisma-client";
-import getAccountFromRequest from "../../../utils/api/get-account";
+import getAccountFromRequest from "../../../utils/api/get-account-from-request";
 
 export type DeleteMemberRes = Awaited<ReturnType<typeof deleteMember>>;
 

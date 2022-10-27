@@ -1,19 +1,27 @@
-import type { member } from "@prisma/client";
+import type { member, problem } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllMemberInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
-import getAccountFromRequest from "../../../utils/api/get-account";
+import getAccountFromRequest from "../../../utils/api/get-account-from-request";
 
 export type UpdateMemberParams = {
   memberInfo?: Partial<member>;
   deleteKeywords?: number[];
   addKeywords?: number[];
+  deleteProblems?: number[];
+  addProblems?: Omit<problem, "id" | "member_id">[];
 };
 export type UpdateMemberRes = Awaited<ReturnType<typeof updateMember>>;
 
 function updateMember(
   id: number,
-  { memberInfo = {}, deleteKeywords = [], addKeywords = [] }: UpdateMemberParams
+  {
+    memberInfo = {},
+    deleteKeywords = [],
+    addKeywords = [],
+    deleteProblems = [],
+    addProblems = [],
+  }: UpdateMemberParams
 ) {
   return db.member.update({
     where: { id },
@@ -22,6 +30,10 @@ function updateMember(
       has_keyword: {
         deleteMany: deleteKeywords.map((id) => ({ keyword_id: id })),
         create: addKeywords.map((id) => ({ keyword_id: id })),
+      },
+      problem: {
+        deleteMany: deleteProblems.map((id) => ({ id })),
+        create: addProblems,
       },
     },
     include: includeAllMemberInfo,
