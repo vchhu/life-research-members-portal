@@ -1,13 +1,11 @@
 import { useMsal } from "@azure/msal-react";
-import Avatar from "antd/lib/avatar";
 import Dropdown from "antd/lib/dropdown";
-import { FunctionComponent } from "react";
-import { MenuItemType } from "antd/lib/menu/hooks/useItems";
+import type { FC } from "react";
 import Typography from "antd/lib/typography";
 import Card from "antd/lib/card";
 import LogoutButton from "./logout-button";
 
-const AvatarMenu: FunctionComponent = () => {
+const AvatarMenu: FC = () => {
   const { instance } = useMsal();
   const account = instance.getActiveAccount();
 

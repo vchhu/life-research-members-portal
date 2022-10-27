@@ -1,10 +1,10 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import Spin from "antd/lib/spin";
-import { FunctionComponent, useContext } from "react";
-import { AccountCtx } from "../context/account-ctx";
+import { FC, useContext } from "react";
+import { AccountCtx } from "../api-facade/account-ctx";
 import { blue } from "@ant-design/colors";
 
-const Greeting: FunctionComponent = () => {
+const Greeting: FC = () => {
   const { instance } = useMsal();
   const name = instance.getActiveAccount()?.name?.split(" ")[0];
   const { localAccount, loading } = useContext(AccountCtx);

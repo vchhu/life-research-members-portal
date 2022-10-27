@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { FunctionComponent } from "react";
+import type { FC } from "react";
 import PageRoutes from "../../routing/page-routes";
 import Image from "next/image";
 import logo from "../../../public/favicon.png";
 
-const HomeLogo: FunctionComponent = () => {
+const HomeLogo: FC = () => {
   return (
     <Link href={PageRoutes.home}>
       <a className="logo" style={{ lineHeight: 0 }}>

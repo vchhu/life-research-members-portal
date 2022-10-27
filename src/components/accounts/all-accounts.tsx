@@ -1,16 +1,16 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import { FunctionComponent } from "react";
-import { all_account_info } from "../../../prisma/types";
+import type { FC } from "react";
 import useAllAccounts from "../../api-facade/use-all-accounts";
+import type { AllAccountsRes } from "../../pages/api/all-accounts";
 import PageRoutes from "../../routing/page-routes";
 
-const AllAccounts: FunctionComponent = () => {
+const AllAccounts: FC = () => {
   const { allAccounts, loading, refresh } = useAllAccounts();
   const keyedAccounts = allAccounts.map((m) => ({ ...m, key: m.id }));
 
-  const columns: ColumnType<all_account_info>[] = [
+  const columns: ColumnType<AllAccountsRes[number]>[] = [
     {
       title: "Login Email",
       dataIndex: "login_email",

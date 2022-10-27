@@ -2,22 +2,23 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import { FunctionComponent } from "react";
-import { all_account_info } from "../../../prisma/types";
+import type { FC } from "react";
 import authHeader from "../../api-facade/headers/auth-header";
 import { contentTypeJsonHeader } from "../../api-facade/headers/content-type-headers";
 import ApiRoutes from "../../routing/api-routes";
 import Checkbox from "antd/lib/checkbox";
+import type { AccountRes } from "../../pages/api/account/[id]";
+import type { Account } from "../../api-facade/_types";
 
 type Props = {
-  account: all_account_info;
+  account: Account;
   onSuccess?: () => void;
   onDelete?: () => void;
 };
 
-type Data = Partial<all_account_info>;
+type Data = Partial<AccountRes>;
 
-const AccountForm: FunctionComponent<Props> = ({ account, onSuccess, onDelete }) => {
+const AccountForm: FC<Props> = ({ account, onSuccess, onDelete }) => {
   const [form] = useForm<Data>();
 
   async function updateAccount(data: Data) {

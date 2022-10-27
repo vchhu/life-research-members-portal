@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import type { FC } from "react";
 import getAccessToken from "../api-facade/headers/get-access-token";
 
 async function logToken() {
@@ -6,7 +6,7 @@ async function logToken() {
   console.log(accessToken);
 }
 
-const TokenButton: FunctionComponent = () => {
+const TokenButton: FC = () => {
   return <button onClick={logToken}>Log Access Token</button>;
 };
 

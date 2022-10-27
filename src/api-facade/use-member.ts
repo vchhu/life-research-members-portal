@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { all_member_info } from "../../prisma/types";
 import ApiRoutes from "../routing/api-routes";
-import authHeader from "./headers/auth-header";
+import type { MemberRes } from "../pages/api/member/[id]";
 
 export default function useMember(id: number) {
-  const [member, setMember] = useState<all_member_info | null>();
+  const [member, setMember] = useState<MemberRes | null>();
   const [loading, setLoading] = useState(true);
 
   async function fetchMember(id: number) {

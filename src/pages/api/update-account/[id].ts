@@ -1,18 +1,32 @@
-import { account, member } from "@prisma/client";
+import type { account } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
-import { all_account_info } from "../../../../prisma/types";
-import getAccount from "../../../utils/api/get-account";
+import getAccountFromRequest from "../../../utils/api/get-account";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  if (!(typeof req.query.id === "string")) return res.status(400).send("Account ID is required.");
+export type UpdateAccountParams = Partial<account>;
+export type UpdateAccountRes = Awaited<ReturnType<typeof updateAccount>>;
+
+function updateAccount(id: number, accountInfo: UpdateAccountParams) {
+  return db.account.update({
+    where: { id },
+    data: accountInfo,
+    include: includeAllAccountInfo,
+  });
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<UpdateAccountRes | string>
+) {
+  if (!req.query.id || typeof req.query.id !== "string")
+    return res.status(400).send("Account ID is required.");
 
   try {
     const id = parseInt(req.query.id);
-    const accountInfo: account = req.body;
+    const params: UpdateAccountParams = req.body;
 
-    const currentAccount = await getAccount(req, res);
+    const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
     if (!currentAccount.is_admin)
@@ -25,11 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           "Admins may not edit their own account info. This prevents corrupting the only admin account."
         );
 
-    const updated: all_account_info = await db.account.update({
-      where: { id },
-      data: accountInfo,
-      include: includeAllAccountInfo,
-    });
+    const updated = await updateAccount(id, params);
 
     return res.status(200).send(updated);
   } catch (e: any) {

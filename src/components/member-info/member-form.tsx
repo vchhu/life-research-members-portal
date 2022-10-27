@@ -2,26 +2,26 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import { FunctionComponent } from "react";
-import { all_member_info } from "../../../prisma/types";
+import type { FC } from "react";
 import authHeader from "../../api-facade/headers/auth-header";
 import { contentTypeJsonHeader } from "../../api-facade/headers/content-type-headers";
 import ApiRoutes from "../../routing/api-routes";
 import InputNumber from "antd/lib/input-number";
+import type { Member } from "../../api-facade/_types";
 
 type Props = {
-  member: all_member_info;
+  member: Member;
   onSuccess?: () => void;
 };
 
-type Data = Partial<all_member_info>;
+type Data = Partial<Member>;
 
-const MemberForm: FunctionComponent<Props> = ({ member, onSuccess }) => {
+const MemberForm: FC<Props> = ({ member, onSuccess }) => {
   const [form] = useForm<Data>();
 
   async function updateMember(data: Data) {
     try {
-      const result = await fetch(ApiRoutes.updateMember + member.id, {
+      const result = await fetch(ApiRoutes.updateMember(member.id), {
         method: "PATCH",
         headers: { ...(await authHeader()), ...contentTypeJsonHeader },
         body: JSON.stringify(data),

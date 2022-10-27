@@ -2,14 +2,14 @@ import { Button } from "antd";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import { FunctionComponent, useRef } from "react";
+import type { FC } from "react";
 import ApiRoutes from "../routing/api-routes";
 import authHeader from "../api-facade/headers/auth-header";
 import { contentTypeJsonHeader } from "../api-facade/headers/content-type-headers";
 
 type Data = { email: string };
 
-const RegisterAccount: FunctionComponent = () => {
+const RegisterAccount: FC = () => {
   const [form] = useForm<Data>();
 
   async function registerAccount(data: Data) {

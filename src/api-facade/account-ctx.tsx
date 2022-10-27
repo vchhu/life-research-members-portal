@@ -2,17 +2,17 @@ import { useMsal } from "@azure/msal-react";
 import {
   createContext,
   Dispatch,
-  FunctionComponent,
+  FC,
   PropsWithChildren,
   SetStateAction,
   useEffect,
   useState,
 } from "react";
 import { msalInstance } from "../../auth-config";
-import { all_account_info } from "../../prisma/types";
 import ApiRoutes from "../routing/api-routes";
-import authHeader from "../api-facade/headers/auth-header";
-import { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
+import authHeader from "./headers/auth-header";
+import type { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
+import type { ActiveAccountRes } from "../pages/api/active-account";
 
 function handleResponse(response: AuthenticationResult | null) {
   if (!response) return;
@@ -25,11 +25,11 @@ msalInstance
   .catch((e: any) => console.error("Error after redirect:", e));
 
 export const AccountCtx = createContext<{
-  localAccount: all_account_info | null;
+  localAccount: ActiveAccountRes | null;
   loading: boolean;
   refresh: () => void;
   logout: () => void;
-  setLocalAccount: Dispatch<SetStateAction<all_account_info | null>>;
+  setLocalAccount: Dispatch<SetStateAction<ActiveAccountRes | null>>;
 }>({
   localAccount: null,
   loading: false,
@@ -38,12 +38,12 @@ export const AccountCtx = createContext<{
   setLocalAccount: () => {},
 });
 
-export const AccountCtxProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const { instance } = useMsal();
   const msAccount = instance.getActiveAccount();
   const msId = msAccount?.localAccountId;
 
-  const [localAccount, setLocalAccount] = useState<all_account_info | null>(null);
+  const [localAccount, setLocalAccount] = useState<ActiveAccountRes | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Gets the current user's account from the database

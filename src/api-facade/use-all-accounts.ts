@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { all_account_info } from "../../prisma/types";
+import type { AllAccountsRes } from "../pages/api/all-accounts";
 import ApiRoutes from "../routing/api-routes";
 import authHeader from "./headers/auth-header";
 
 let firstRender = true;
-let cachedAccounts: all_account_info[] = [];
+let cachedAccounts: AllAccountsRes = [];
 
 export default function useAllAccounts() {
-  const [allAccounts, setAllAccounts] = useState<all_account_info[]>(cachedAccounts);
+  const [allAccounts, setAllAccounts] = useState<AllAccountsRes>(cachedAccounts);
   const [loading, setLoading] = useState(false);
 
   async function fetchAllAccounts() {

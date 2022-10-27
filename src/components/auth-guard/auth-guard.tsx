@@ -1,5 +1,5 @@
-import { FunctionComponent, PropsWithChildren, ReactElement, useContext } from "react";
-import { AccountCtx } from "../../context/account-ctx";
+import { FC, PropsWithChildren, ReactElement, useContext } from "react";
+import { AccountCtx } from "../../api-facade/account-ctx";
 import CenteredSpinner from "../loading/centered-spinner";
 import Authorizations from "./authorizations";
 
@@ -9,12 +9,7 @@ type Props = {
   loadingIcon?: ReactElement | null;
 };
 
-const AuthGuard: FunctionComponent<PropsWithChildren<Props>> = ({
-  auths,
-  id,
-  loadingIcon,
-  children,
-}) => {
+const AuthGuard: FC<PropsWithChildren<Props>> = ({ auths, id, loadingIcon, children }) => {
   if (!loadingIcon) loadingIcon = null;
   const { localAccount, loading } = useContext(AccountCtx);
   if (loading) return loadingIcon;

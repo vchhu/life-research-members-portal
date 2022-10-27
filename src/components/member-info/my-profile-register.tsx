@@ -1,17 +1,17 @@
 import Button from "antd/lib/button";
-import { FunctionComponent, useContext, useState } from "react";
+import { FC, useContext, useState } from "react";
 import registerMember from "../../api-facade/register-member";
-import { AccountCtx } from "../../context/account-ctx";
+import { AccountCtx } from "../../api-facade/account-ctx";
 import CardSkeleton from "../loading/card-skeleton";
 
-const MyProfileRegister: FunctionComponent = () => {
+const MyProfileRegister: FC = () => {
   const { localAccount, setLocalAccount } = useContext(AccountCtx);
   const [waiting, setWaiting] = useState(false);
 
-  async function handleRegisterMember(id: number) {
+  async function handleRegisterMember(account_id: number) {
     try {
       setWaiting(true);
-      const newMember = await registerMember(id);
+      const newMember = await registerMember({ account_id });
       setLocalAccount((prev) => {
         return prev && { ...prev, member: newMember };
       });

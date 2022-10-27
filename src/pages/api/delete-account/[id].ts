@@ -1,14 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../../prisma/prisma-client";
-import getAccount from "../../../utils/api/get-account";
+import getAccountFromRequest from "../../../utils/api/get-account";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  if (!(typeof req.query.id === "string")) return res.status(400).send("Account ID is required.");
+export type DeleteAccountRes = Awaited<ReturnType<typeof deleteAccount>>;
+
+function deleteAccount(id: number) {
+  return db.account.delete({
+    where: { id },
+  });
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<DeleteAccountRes | string>
+) {
+  if (!req.query.id || typeof req.query.id !== "string")
+    return res.status(400).send("Account ID is required.");
 
   try {
     const id = parseInt(req.query.id);
 
-    const currentAccount = await getAccount(req, res);
+    const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
     if (!currentAccount.is_admin)
@@ -19,9 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         .status(401)
         .send("Admins may not delete themselves. This ensures there is always at least one admin.");
 
-    const account = await db.account.delete({
-      where: { id },
-    });
+    const account = await deleteAccount(id);
 
     return res.status(200).send(account);
   } catch (e: any) {

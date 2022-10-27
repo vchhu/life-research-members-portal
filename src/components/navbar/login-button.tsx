@@ -1,7 +1,7 @@
 import Button from "antd/lib/button";
 import Typography from "antd/lib/typography";
 import Image from "next/image";
-import { FunctionComponent } from "react";
+import type { FC } from "react";
 import { loginRequest, msalInstance } from "../../../auth-config";
 import msIcon from "../../../public/microsoft-logo.png";
 
@@ -11,7 +11,7 @@ function login() {
   });
 }
 
-const LoginButton: FunctionComponent = () => {
+const LoginButton: FC = () => {
   return (
     <Button type="primary" onClick={login} className="login-button">
       <div style={{ display: "flex", alignItems: "center" }}>

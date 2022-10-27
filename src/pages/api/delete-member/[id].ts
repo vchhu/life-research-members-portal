@@ -1,22 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../../prisma/prisma-client";
-import getAccount from "../../../utils/api/get-account";
+import getAccountFromRequest from "../../../utils/api/get-account";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  if (!(typeof req.query.id === "string")) return res.status(400).send("Member ID is required.");
+export type DeleteMemberRes = Awaited<ReturnType<typeof deleteMember>>;
+
+function deleteMember(id: number) {
+  return db.member.delete({
+    where: { id },
+  });
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<DeleteMemberRes | string>
+) {
+  if (!req.query.id || typeof req.query.id !== "string")
+    return res.status(400).send("Member ID is required.");
 
   try {
     const id = parseInt(req.query.id);
 
-    const currentUser = await getAccount(req, res);
+    const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
     if (!currentUser.is_admin)
       return res.status(401).send("You are not authorized to delete member information.");
 
-    const deletedMember = await db.member.delete({
-      where: { id },
-    });
+    const deletedMember = await deleteMember(id);
 
     return res.status(200).send(deletedMember);
   } catch (e: any) {

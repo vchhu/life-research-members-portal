@@ -1,9 +1,8 @@
 // See https://learn.microsoft.com/en-us/azure/active-directory/develop/userinfo
 
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
-import { all_account_info } from "../../../prisma/types";
 
 type MsAccountInfo = {
   id: string;
@@ -16,7 +15,7 @@ function getMicrosoftAccount(authorization: string) {
   return fetch("https://graph.microsoft.com/v1.0/me", { headers: { authorization } });
 }
 
-function getAccountFromDatabase(userId: MsAccountInfo): Promise<all_account_info | null> {
+function getAccountFromDatabase(userId: MsAccountInfo) {
   return db.account.findFirst({
     where: { OR: [{ microsoft_id: userId.id }, { login_email: userId.userPrincipalName }] },
     include: includeAllAccountInfo,
@@ -27,10 +26,7 @@ function getAccountFromDatabase(userId: MsAccountInfo): Promise<all_account_info
  * Attempts to retrieve user identification using access token in request header.
  * On a failure, sends the appropriate response and returns undefined.
  */
-export default async function getAccount(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<all_account_info | undefined> {
+export default async function getAccountFromRequest(req: NextApiRequest, res: NextApiResponse) {
   if (!req.headers.authorization) {
     res.status(401).send("No Authorization Header");
     return;

@@ -1,8 +1,8 @@
 import Card from "antd/lib/card";
 import Skeleton from "antd/lib/skeleton/Skeleton";
-import { FunctionComponent } from "react";
+import type { FC } from "react";
 
-const CardSkeleton: FunctionComponent = () => {
+const CardSkeleton: FC = () => {
   return <Card loading title={<Skeleton paragraph={false} active style={{ margin: 0 }} />} />;
 };
 

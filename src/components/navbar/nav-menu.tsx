@@ -1,14 +1,14 @@
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
 import Menu from "antd/lib/menu";
-import { MenuItemType } from "antd/lib/menu/hooks/useItems";
+import type { MenuItemType } from "antd/lib/menu/hooks/useItems";
 import Spin from "antd/lib/spin";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FunctionComponent, useContext } from "react";
-import { AccountCtx } from "../../context/account-ctx";
+import { FC, useContext } from "react";
+import { AccountCtx } from "../../api-facade/account-ctx";
 import PageRoutes from "../../routing/page-routes";
 
-const NavMenu: FunctionComponent = () => {
+const NavMenu: FC = () => {
   const { localAccount, loading } = useContext(AccountCtx);
   const router = useRouter();
 

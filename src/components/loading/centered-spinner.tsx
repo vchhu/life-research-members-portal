@@ -1,7 +1,7 @@
 import Spin from "antd/lib/spin";
-import { FunctionComponent } from "react";
+import type { FC } from "react";
 
-const CenteredSpinner: FunctionComponent = () => {
+const CenteredSpinner: FC = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
       <Spin size="large"></Spin>

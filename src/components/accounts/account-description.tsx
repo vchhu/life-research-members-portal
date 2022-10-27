@@ -1,16 +1,16 @@
 import Grid from "antd/lib/grid";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
-import { FunctionComponent } from "react";
-import { all_account_info } from "../../../prisma/types";
+import type { FC } from "react";
+import type { Account } from "../../api-facade/_types";
 
 const { useBreakpoint } = Grid;
 
 type Props = {
-  account: all_account_info;
+  account: Account;
 };
 
-const AccountDescription: FunctionComponent<Props> = ({ account }) => {
+const AccountDescription: FC<Props> = ({ account }) => {
   const screens = useBreakpoint();
 
   return (

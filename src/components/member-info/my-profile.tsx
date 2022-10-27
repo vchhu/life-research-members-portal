@@ -2,8 +2,8 @@ import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import { useRouter } from "next/router";
-import { FunctionComponent, useContext } from "react";
-import { AccountCtx } from "../../context/account-ctx";
+import { FC, useContext } from "react";
+import { AccountCtx } from "../../api-facade/account-ctx";
 import PageRoutes from "../../routing/page-routes";
 import CardSkeleton from "../loading/card-skeleton";
 import MemberDescription from "./member-description";
@@ -14,7 +14,7 @@ type Props = {
   editMode?: boolean;
 };
 
-const MyProfile: FunctionComponent<Props> = ({ editMode }) => {
+const MyProfile: FC<Props> = ({ editMode }) => {
   const router = useRouter();
   const { localAccount, loading, refresh } = useContext(AccountCtx);
 
@@ -24,8 +24,8 @@ const MyProfile: FunctionComponent<Props> = ({ editMode }) => {
 
   const member = localAccount.member;
   let titleText = "";
-  if (!member.first_name || !member.last_name) titleText = "Member " + member.id;
-  else titleText = (member.first_name || "") + " " + (member.last_name || "");
+  if (!member.account.first_name || !member.account.last_name) titleText = "Member " + member.id;
+  else titleText = (member.account.first_name || "") + " " + (member.account.last_name || "");
 
   const editButton = (
     <Button

@@ -1,9 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getAccount from "../../utils/api/get-account";
+import getAccountFromRequest from "../../utils/api/get-account";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
+export type ActiveAccountRes = Awaited<ReturnType<typeof getAccountFromRequest>>;
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ActiveAccountRes>) {
   try {
-    const currentAccount = await getAccount(req, res);
+    const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
     return res.status(200).send(currentAccount);
   } catch (e: any) {

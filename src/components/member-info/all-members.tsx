@@ -1,16 +1,16 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import { FunctionComponent } from "react";
+import type { FC } from "react";
 import useAllMembers from "../../api-facade/use-all-members";
-import { all_member_info, public_member_info } from "../../../prisma/types";
+import type { AllMembersRes } from "../../pages/api/all-members";
 import PageRoutes from "../../routing/page-routes";
 
-const AllMembers: FunctionComponent = () => {
+const AllMembers: FC = () => {
   const { allMembers, loading, refresh } = useAllMembers();
   const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id }));
 
-  const columns: ColumnType<public_member_info>[] = [
+  const columns: ColumnType<AllMembersRes[number]>[] = [
     {
       title: "First Name",
       dataIndex: ["account", "first_name"],

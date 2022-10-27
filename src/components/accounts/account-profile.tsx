@@ -2,7 +2,7 @@ import Empty from "antd/lib/empty";
 import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import { FunctionComponent, useState } from "react";
+import { FC, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
 import useAccount from "../../api-facade/use-account";
 import AccountDescription from "./account-description";
@@ -14,7 +14,7 @@ type Props = {
   id: number;
 };
 
-const AccountProfile: FunctionComponent<Props> = ({ id }) => {
+const AccountProfile: FC<Props> = ({ id }) => {
   const router = useRouter();
   const { account, loading, refresh } = useAccount(id);
   const [editMode, setEditMode] = useState(false);

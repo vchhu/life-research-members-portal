@@ -1,5 +1,5 @@
-import { FunctionComponent, PropsWithChildren, ReactElement, useContext } from "react";
-import { AccountCtx } from "../../context/account-ctx";
+import { FC, PropsWithChildren, ReactElement, useContext } from "react";
+import { AccountCtx } from "../../api-facade/account-ctx";
 import CenteredSpinner from "../loading/centered-spinner";
 import Authorizations from "./authorizations";
 
@@ -13,12 +13,7 @@ const notAuthorized = (
   <h1 style={{ textAlign: "center" }}>You are not authorized to view this page.</h1>
 );
 
-const PageAuthGuard: FunctionComponent<PropsWithChildren<Props>> = ({
-  auths,
-  id,
-  loadingIcon,
-  children,
-}) => {
+const PageAuthGuard: FC<PropsWithChildren<Props>> = ({ auths, id, loadingIcon, children }) => {
   if (!loadingIcon) loadingIcon = <CenteredSpinner />;
   const { localAccount, loading } = useContext(AccountCtx);
   if (loading) return loadingIcon;

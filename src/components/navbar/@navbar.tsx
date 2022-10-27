@@ -1,11 +1,11 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
-import { FunctionComponent } from "react";
+import type { FC } from "react";
 import LoginButton from "./login-button";
 import NavMenu from "./nav-menu";
 import AvatarMenu from "./avatar-menu";
 import HomeLogo from "./home-logo";
 
-const Navbar: FunctionComponent = () => {
+const Navbar: FC = () => {
   return (
     <div className="navbar">
       <HomeLogo />
