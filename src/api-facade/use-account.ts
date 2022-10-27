@@ -10,7 +10,7 @@ export default function useAccount(id: number) {
   async function fetchAccount(id: number) {
     try {
       setLoading(true);
-      const result = await fetch(ApiRoutes.account + id, { headers: await authHeader() });
+      const result = await fetch(ApiRoutes.account(id), { headers: await authHeader() });
       if (!result.ok) return console.error(await result.text());
       const account = await result.json();
       setAccount(account);
