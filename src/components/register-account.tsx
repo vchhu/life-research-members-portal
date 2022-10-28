@@ -1,36 +1,26 @@
 import { Button } from "antd";
 import Form from "antd/lib/form";
-import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
 import type { FC } from "react";
-import ApiRoutes from "../routing/api-routes";
-import authHeader from "../api-facade/headers/auth-header";
-import { contentTypeJsonHeader } from "../api-facade/headers/content-type-headers";
+import registerAccount from "../api-facade/register-account";
+import Checkbox from "antd/lib/checkbox/Checkbox";
+import { useForm } from "antd/lib/form/Form";
 
-type Data = { email: string };
+type Data = {
+  login_email: string;
+  confirm_email: string;
+  first_name: string;
+  last_name: string;
+  is_admin: boolean;
+};
+
+async function handleRegister({ first_name, last_name, login_email, is_admin }: Data) {
+  registerAccount({ first_name, last_name, login_email, is_admin });
+}
 
 const RegisterAccount: FC = () => {
+  // This hook is important for type checking the form
   const [form] = useForm<Data>();
-
-  async function registerAccount(data: Data) {
-    try {
-      const result = await fetch(ApiRoutes.registerAccount, {
-        method: "PUT",
-        headers: { ...(await authHeader()), ...contentTypeJsonHeader },
-        body: JSON.stringify({ login_email: data.email }),
-      });
-      if (!result.ok) {
-        const e = await result.text();
-        console.error(e);
-        alert(e);
-        return;
-      }
-      alert("Success! Account added: " + (await result.text()));
-    } catch (e: any) {
-      console.error(e);
-      alert(e);
-    }
-  }
 
   return (
     <div
@@ -39,30 +29,67 @@ const RegisterAccount: FC = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        paddingTop: "10vh",
+        paddingTop: "2vh",
       }}
     >
       <h1>Register Account</h1>
       <h2 style={{ marginBottom: 24 }}>This page will create an account for the given email.</h2>
       <Form
         form={form}
-        onFinish={registerAccount}
+        onFinish={handleRegister}
         style={{ width: "100%", maxWidth: "25rem" }}
         size="large"
         layout="vertical"
       >
         <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, type: "email", message: "Invalid Email" }]}
+          label="First Name"
+          name="first_name"
+          rules={[{ required: true, message: "Required" }]}
         >
           <Input />
+        </Form.Item>
+        <Form.Item
+          label="Last Name"
+          name="last_name"
+          rules={[{ required: true, message: "Required" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Email"
+          name="login_email"
+          rules={[
+            { required: true, message: "Required" },
+            { type: "email", message: "Invalid Email" },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Confirm Email"
+          name="confirm_email"
+          validateFirst={true}
+          rules={[
+            { required: true, message: "Required" },
+            { type: "email", message: "Invalid Email" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (getFieldValue("login_email") === value) return Promise.resolve();
+                return Promise.reject(new Error("Emails do not match"));
+              },
+            }),
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item name="is_admin" valuePropName="checked">
+          <Checkbox>Grant Admin Privileges</Checkbox>
         </Form.Item>
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
-            style={{ paddingLeft: 40, paddingRight: 40, marginTop: 30 }}
+            style={{ paddingLeft: 40, paddingRight: 40 }}
             size="large"
           >
             Register

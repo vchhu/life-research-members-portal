@@ -3,7 +3,7 @@ import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import { useRouter } from "next/router";
 import { FC, useContext } from "react";
-import { AccountCtx } from "../../api-facade/account-ctx";
+import { AccountCtx } from "../../api-facade/context/account-ctx";
 import PageRoutes from "../../routing/page-routes";
 import CardSkeleton from "../loading/card-skeleton";
 import MemberDescription from "./member-description";

@@ -1,22 +1,23 @@
-import type { RegisterMemberParams, RegisterMemberRes } from "../pages/api/register-member";
+import type { RegisterAccountParams, RegisterAccountRes } from "../pages/api/register-account";
 import ApiRoutes from "../routing/api-routes";
 import authHeader from "./headers/auth-header";
 import { contentTypeJsonHeader } from "./headers/content-type-headers";
 import Notification from "./notifications/notification";
 
-export default async function registerMember(
-  params: RegisterMemberParams
-): Promise<RegisterMemberRes | null> {
+export default async function registerAccount(
+  params: RegisterAccountParams
+): Promise<RegisterAccountRes | null> {
   const notification = new Notification();
   try {
-    notification.loading("Registering Member...");
-    const res = await fetch(ApiRoutes.registerMember, {
+    notification.loading("Registering Account...");
+    const res = await fetch(ApiRoutes.registerAccount, {
+      method: "PUT",
       headers: { ...(await authHeader()), ...contentTypeJsonHeader },
       body: JSON.stringify(params),
-      method: "PUT",
     });
     if (!res.ok) {
-      notification.error(await res.text());
+      const e = await res.text();
+      notification.error(e);
       return null;
     }
     notification.success();

@@ -1,7 +1,7 @@
 import Button from "antd/lib/button";
 import { FC, useContext, useState } from "react";
 import registerMember from "../../api-facade/register-member";
-import { AccountCtx } from "../../api-facade/account-ctx";
+import { AccountCtx } from "../../api-facade/context/account-ctx";
 import CardSkeleton from "../loading/card-skeleton";
 
 const MyProfileRegister: FC = () => {

@@ -8,11 +8,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import { msalInstance } from "../../auth-config";
-import ApiRoutes from "../routing/api-routes";
-import authHeader from "./headers/auth-header";
+import { msalInstance } from "../../../auth-config";
+import ApiRoutes from "../../routing/api-routes";
+import authHeader from "../headers/auth-header";
 import type { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
-import type { ActiveAccountRes } from "../pages/api/active-account";
+import type { ActiveAccountRes } from "../../pages/api/active-account";
 
 function handleResponse(response: AuthenticationResult | null) {
   if (!response) return;

@@ -4,7 +4,7 @@ import { MsalProvider } from "@azure/msal-react";
 import { msalInstance } from "../../auth-config";
 import Head from "next/head";
 import Navbar from "../components/navbar/@navbar";
-import { AccountCtxProvider } from "../api-facade/account-ctx";
+import { AccountCtxProvider } from "../api-facade/context/account-ctx";
 import { useRouter } from "next/router";
 import PageRoutes from "../routing/page-routes";
 

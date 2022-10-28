@@ -1,6 +1,6 @@
 import Button from "antd/lib/button";
 import { FC, useContext } from "react";
-import { AccountCtx } from "../../api-facade/account-ctx";
+import { AccountCtx } from "../../api-facade/context/account-ctx";
 
 const LogoutButton: FC = () => {
   const { logout } = useContext(AccountCtx);
