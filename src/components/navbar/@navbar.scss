@@ -5,13 +5,17 @@
   background-color: white;
   display: flex;
   align-items: center;
-  padding: 12px 24px;
+  padding: 12px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05), 0 1px 1px 0 rgba(0, 0, 0, 0.1);
 
   .logo,
   .avatar,
   .spacer {
     flex-shrink: 0;
+  }
+
+  .spacer {
+    width: 12px;
   }
 
   .login-button {
@@ -44,6 +48,16 @@
       font-size: 2rem;
       position: relative;
       top: 8px;
+    }
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .navbar {
+    padding: 12px 24px;
+
+    .spacer {
+      width: 24px;
     }
   }
 }

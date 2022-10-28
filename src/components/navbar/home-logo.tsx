@@ -8,7 +8,7 @@ const HomeLogo: FC = () => {
   return (
     <Link href={PageRoutes.home}>
       <a className="logo" style={{ lineHeight: 0 }}>
-        <Image src={logo} alt="logo" width="60rem" height="60rem" />
+        <Image src={logo} alt="logo" width="50rem" height="50rem" />
       </a>
     </Link>
   );

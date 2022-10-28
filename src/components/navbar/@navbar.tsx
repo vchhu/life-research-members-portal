@@ -4,14 +4,17 @@ import LoginButton from "./login-button";
 import NavMenu from "./nav-menu";
 import AvatarMenu from "./avatar-menu";
 import HomeLogo from "./home-logo";
+import LanguageButton from "./language-button";
 
 const Navbar: FC = () => {
   return (
     <div className="navbar">
       <HomeLogo />
-      <span className="spacer" style={{ width: 24 }}></span>
+      <span className="spacer"></span>
       <NavMenu />
-      <span className="spacer" style={{ width: 24 }}></span>
+      <span className="spacer"></span>
+      <LanguageButton />
+      <span className="spacer"></span>
       <UnauthenticatedTemplate>
         <LoginButton />
       </UnauthenticatedTemplate>

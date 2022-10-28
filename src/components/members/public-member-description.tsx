@@ -5,9 +5,9 @@ import type { FC } from "react";
 import type { PublicMemberInfo } from "../../api-facade/_types";
 import type { keyword } from "@prisma/client";
 import colorFromString from "../../utils/front-end/color-from-string";
-import formatName from "../../utils/front-end/format-name";
+import GetLanguage from "../../utils/front-end/get-language";
 import KeywordTag from "./keyword-tag";
-import { blue } from "@ant-design/colors";
+import { LanguageCtx } from "../../api-facade/context/language-ctx";
 
 const { useBreakpoint } = Grid;
 
@@ -50,12 +50,17 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       layout={screens.xs ? "vertical" : "horizontal"}
     >
       <Item label="About Me">{member.about_me}</Item>
-      <Item label="Faculty">{formatName(member.faculty)}</Item>
-      <Item label="Member Type">{formatName(member.member_type)}</Item>
+      <Item label="Faculty">
+        <GetLanguage obj={member.faculty} />
+      </Item>
+      <Item label="Member Type">
+        <GetLanguage obj={member.member_type} />
+      </Item>
       <Item label="Problems I Work On">
         {member.problem.map((p, i) => (
           <>
-            {`${i + 1}. ` + formatName(p)}
+            {`${i + 1}. `}
+            <GetLanguage obj={p} />
             <br />
           </>
         ))}

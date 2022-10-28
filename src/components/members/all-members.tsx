@@ -3,14 +3,15 @@ import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import type { FC } from "react";
 import useAllMembers from "../../api-facade/use-all-members";
-import type { AllMembersRes } from "../../pages/api/all-members";
+import type { PublicMemberInfo } from "../../api-facade/_types";
 import PageRoutes from "../../routing/page-routes";
+import KeywordTag from "./keyword-tag";
 
 const AllMembers: FC = () => {
   const { allMembers, loading, refresh } = useAllMembers();
   const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id }));
 
-  const columns: ColumnType<AllMembersRes[number]>[] = [
+  const columns: ColumnType<PublicMemberInfo>[] = [
     {
       title: "First Name",
       dataIndex: ["account", "first_name"],
@@ -22,19 +23,15 @@ const AllMembers: FC = () => {
       sorter: (a, b) => (a.account.last_name || "").localeCompare(b.account.last_name || ""),
     },
     {
-      title: "Email",
-      dataIndex: "work_email",
-      sorter: (a, b) => (a.work_email || "").localeCompare(b.work_email || ""),
-    },
-    {
-      title: "Faculty",
-      dataIndex: ["faculty", "name_en"],
-      sorter: (a, b) => (a.faculty?.name_en || "").localeCompare(b.faculty?.name_en || ""),
-    },
-    {
-      title: "Member Type",
-      dataIndex: ["member_type", "name_en"],
-      sorter: (a, b) => (a.member_type?.name_en || "").localeCompare(b.member_type?.name_en || ""),
+      title: "Tags",
+      dataIndex: "has_keyword",
+      render: (_, member) => (
+        <div className="tag-column">
+          {member.has_keyword.map((k) => (
+            <KeywordTag key={k.keyword.id} keyword={k.keyword} />
+          ))}
+        </div>
+      ),
     },
   ];
 
@@ -52,13 +49,14 @@ const AllMembers: FC = () => {
 
   return (
     <Table
+      size="small"
       columns={columns}
       dataSource={keyedMembers}
       loading={loading}
       title={header}
       pagination={false}
       showSorterTooltip={false}
-      sticky={{ offsetHeader: 80 }}
+      sticky={{ offsetHeader: 74 }}
       scroll={{ x: "max-content" }}
       rowClassName={(_, index) => "table-row " + (index % 2 === 0 ? "even" : "odd")}
       onRow={(member, _) => ({

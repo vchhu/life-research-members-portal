@@ -7,6 +7,7 @@ import Navbar from "../components/navbar/@navbar";
 import { AccountCtxProvider } from "../api-facade/context/account-ctx";
 import { useRouter } from "next/router";
 import PageRoutes from "../routing/page-routes";
+import { LanguageCtxProvider } from "../api-facade/context/language-ctx";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -29,12 +30,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>{title}</title>
       </Head>
       <MsalProvider instance={msalInstance}>
-        <AccountCtxProvider>
-          <Navbar />
-          <div className="next-page-container">
-            <Component {...pageProps} />
-          </div>
-        </AccountCtxProvider>
+        <LanguageCtxProvider>
+          <AccountCtxProvider>
+            <Navbar />
+            <div className="next-page-container">
+              <Component {...pageProps} />
+            </div>
+          </AccountCtxProvider>
+        </LanguageCtxProvider>
       </MsalProvider>
     </>
   );

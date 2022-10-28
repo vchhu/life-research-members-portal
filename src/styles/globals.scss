@@ -14,11 +14,18 @@ body {
 }
 
 .next-page-container {
-  padding: 12px 24px;
+  padding: 12px;
+}
+
+@media screen and (min-width: 600px) {
+  .next-page-container {
+    padding: 12px 24px;
+  }
 }
 
 .table-row {
   cursor: pointer;
+  height: 65px;
 
   &.even {
     background-color: var(--gray-2);
@@ -39,5 +46,16 @@ body {
   cursor: pointer;
   &:hover {
     filter: brightness(90%);
+  }
+}
+
+.tag-column {
+  max-width: 50vw;
+  min-width: 300px;
+}
+
+@media screen and (min-width: 1200px) {
+  .tag-column {
+    max-width: 70vw;
   }
 }
