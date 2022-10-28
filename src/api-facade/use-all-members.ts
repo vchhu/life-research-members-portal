@@ -14,7 +14,8 @@ export default function useAllMembers() {
       setLoading(true);
       const result = await fetch(ApiRoutes.allMembers);
       if (!result.ok) return console.error(await result.text());
-      const members = await result.json();
+      const members: AllMembersRes = await result.json();
+      members.sort((a, b) => a.account.first_name.localeCompare(b.account.first_name));
       setAllMembers(members);
       cachedMembers = members;
     } catch (e: any) {

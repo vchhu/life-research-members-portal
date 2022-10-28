@@ -7,8 +7,8 @@ import type { FC } from "react";
 import useMember from "../../api-facade/use-member";
 import PageRoutes from "../../routing/page-routes";
 import CardSkeleton from "../loading/card-skeleton";
-import MemberDescription from "../member-info/member-description";
-import MemberForm from "../member-info/member-form";
+import MemberDescription from "./member-description";
+import MemberForm from "./member-form";
 import AuthGuard from "../auth-guard/auth-guard";
 import Authorizations from "../auth-guard/authorizations";
 

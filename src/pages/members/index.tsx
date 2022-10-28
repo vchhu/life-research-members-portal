@@ -1,5 +1,5 @@
 import type { NextPage } from "next/types";
-import AllMembers from "../../components/member-info/all-members";
+import AllMembers from "../../components/members/all-members";
 
 const MembersPage: NextPage = () => {
   return <AllMembers />;

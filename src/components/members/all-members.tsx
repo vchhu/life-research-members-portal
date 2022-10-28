@@ -27,11 +27,6 @@ const AllMembers: FC = () => {
       sorter: (a, b) => (a.work_email || "").localeCompare(b.work_email || ""),
     },
     {
-      title: "Phone (Business)",
-      dataIndex: "work_phone",
-      sorter: (a, b) => (a.work_phone || "").localeCompare(b.work_phone || ""),
-    },
-    {
       title: "Faculty",
       dataIndex: ["faculty", "name_en"],
       sorter: (a, b) => (a.faculty?.name_en || "").localeCompare(b.faculty?.name_en || ""),
@@ -65,9 +60,10 @@ const AllMembers: FC = () => {
       showSorterTooltip={false}
       sticky={{ offsetHeader: 80 }}
       scroll={{ x: "max-content" }}
-      onRow={(record, _) => ({
-        onDoubleClick: (_) => {
-          window.open(PageRoutes.memberProfile(record.id));
+      rowClassName={(_, index) => "table-row " + (index % 2 === 0 ? "even" : "odd")}
+      onRow={(member, _) => ({
+        onClick: (_) => {
+          window.open(PageRoutes.memberProfile(member.id));
         },
       })}
     />

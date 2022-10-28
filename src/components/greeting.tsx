@@ -51,7 +51,7 @@ const Greeting: FC = () => {
 
   return (
     <div style={{ textAlign: "center", marginTop: "10vh" }}>
-      <h1>Welcome to the LIFE Research Insitute Member Directory!</h1>
+      <h1>Welcome to the LIFE Research Insitute Member Portal!</h1>
       <UnauthenticatedTemplate>
         <h2>If you are a member, please login.</h2>
         <h2>Otherwise, feel free to look around.</h2>

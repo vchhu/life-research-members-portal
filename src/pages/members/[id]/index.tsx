@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import type { NextPage } from "next/types";
-import MemberProfile from "../../../components/member-info/member-profile";
+import MemberProfile from "../../../components/members/member-profile";
 
 const MemberPage: NextPage = () => {
   const router = useRouter();

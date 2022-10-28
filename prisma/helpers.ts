@@ -1,14 +1,16 @@
 import type { Prisma } from "@prisma/client";
 
 // From: https://stackoverflow.com/a/54775885/12914833
-// Ensures there are no excess properties, which will cause errors
+// Ensures no invalid keys, which will cause runtime errors
 // Prisma relies on object literals to type return values of queries
-// So we need to let typescript infer the actual shape of the objects
-// Excess properties are normally allowed when passing objects to functions
-// But excess properties will cause runtime errors in Prisma and need to be caught here
-type NoExcessProperties<T, AllowedProps> = Exclude<keyof T, keyof AllowedProps> extends never
+// So we need to let typescript INFER the actual shape of the objects
+// However, this leaves the possibility of invalid keys
+// These will be considered excess properties and not typechecked
+type CheckKeysAreValid<T, ValidProps> = Exclude<keyof T, keyof ValidProps> extends never
   ? T
-  : never;
+  : "Invalid keys" | Exclude<keyof T, keyof ValidProps>;
+
+type t = typeof selectPublicMemberInfo & Prisma.memberSelect;
 
 const _includeAllMemberInfo = {
   account: true,
@@ -23,7 +25,7 @@ const _includeAllMemberInfo = {
   problem: true,
 } as const;
 
-export const includeAllMemberInfo: NoExcessProperties<
+export const includeAllMemberInfo: CheckKeysAreValid<
   typeof _includeAllMemberInfo,
   Prisma.memberInclude
 > = _includeAllMemberInfo;
@@ -32,7 +34,28 @@ const _includeAllAccountInfo = {
   member: { include: _includeAllMemberInfo } as const,
 } as const;
 
-export const includeAllAccountInfo: NoExcessProperties<
+export const includeAllAccountInfo: CheckKeysAreValid<
   typeof _includeAllAccountInfo,
   Prisma.accountInclude
 > = _includeAllAccountInfo;
+
+const _selectPublicMemberInfo = {
+  id: true,
+  account: { select: { first_name: true, last_name: true } },
+  is_active: true,
+  work_email: true,
+  work_phone: true,
+  website_link: true,
+  twitter_link: true,
+  linkedin_link: true,
+  cv_link: true,
+  faculty: true,
+  problem: true,
+  member_type: true,
+  has_keyword: { select: { keyword: true } },
+};
+
+export const selectPublicMemberInfo: CheckKeysAreValid<
+  typeof _selectPublicMemberInfo,
+  Prisma.memberSelect
+> = _selectPublicMemberInfo;

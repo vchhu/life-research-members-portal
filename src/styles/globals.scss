@@ -21,3 +21,21 @@ a {
 .next-page-container {
   padding: 12px 24px;
 }
+
+.table-row {
+  cursor: pointer;
+
+  &.even {
+    background-color: var(--gray-2);
+  }
+}
+
+// Override
+.ant-table-cell-row-hover.ant-table-cell-row-hover.ant-table-cell-row-hover.ant-table-cell-row-hover {
+  background-color: var(--blue-1);
+}
+
+// Override
+.ant-table-thead th.ant-table-column-has-sorters:hover {
+  background-color: var(--blue-1);
+}
