@@ -12,7 +12,7 @@ import { msalInstance } from "../../../auth-config";
 import ApiRoutes from "../../routing/api-routes";
 import authHeader from "../headers/auth-header";
 import type { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
-import type { ActiveAccountRes } from "../../pages/api/active-account";
+import type { AccountInfo } from "../_types";
 
 function handleResponse(response: AuthenticationResult | null) {
   if (!response) return;
@@ -25,25 +25,19 @@ msalInstance
   .catch((e: any) => console.error("Error after redirect:", e));
 
 export const AccountCtx = createContext<{
-  localAccount: ActiveAccountRes | null;
+  localAccount: AccountInfo | null;
   loading: boolean;
   refresh: () => void;
   logout: () => void;
-  setLocalAccount: Dispatch<SetStateAction<ActiveAccountRes | null>>;
-}>({
-  localAccount: null,
-  loading: false,
-  refresh: () => {},
-  logout: () => {},
-  setLocalAccount: () => {},
-});
+  setLocalAccount: Dispatch<SetStateAction<AccountInfo | null>>;
+}>(null as any);
 
 export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const { instance } = useMsal();
   const msAccount = instance.getActiveAccount();
   const msId = msAccount?.localAccountId;
 
-  const [localAccount, setLocalAccount] = useState<ActiveAccountRes | null>(null);
+  const [localAccount, setLocalAccount] = useState<AccountInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Gets the current user's account from the database

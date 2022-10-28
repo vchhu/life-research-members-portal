@@ -1,19 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { includeAllMemberInfo } from "../../../../prisma/helpers";
+import { includeAllMemberInfo, selectPublicMemberInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
 
-export type MemberRes = Awaited<ReturnType<typeof getMemberById>>;
+export type PublicMemberRes = Awaited<ReturnType<typeof getPublicMemberInfo>>;
 
-function getMemberById(id: number) {
+function getPublicMemberInfo(id: number) {
   return db.member.findUnique({
     where: { id },
-    include: includeAllMemberInfo,
+    select: selectPublicMemberInfo,
   });
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<MemberRes | string>
+  res: NextApiResponse<PublicMemberRes | string>
 ) {
   if (!req.query.id || typeof req.query.id !== "string")
     return res.status(400).send("Member ID is required.");
@@ -21,9 +21,7 @@ export default async function handler(
   try {
     const id = parseInt(req.query.id);
 
-    // TODO: filter what information is public / private
-
-    const member = await getMemberById(id);
+    const member = await getPublicMemberInfo(id);
     if (!member) return res.status(400).send("Member not found. ID: " + id);
 
     return res.status(200).send(member);

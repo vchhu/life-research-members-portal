@@ -5,7 +5,7 @@ import type { Prisma } from "@prisma/client";
 // Prisma relies on object literals to type return values of queries
 // So we need to let typescript INFER the actual shape of the objects
 // However, this leaves the possibility of invalid keys
-// These will be considered excess properties and not typechecked
+// These will normally be considered excess properties and pass typechecking
 type CheckKeysAreValid<T, ValidProps> = Exclude<keyof T, keyof ValidProps> extends never
   ? T
   : "Invalid keys" | Exclude<keyof T, keyof ValidProps>;
@@ -43,6 +43,7 @@ const _selectPublicMemberInfo = {
   id: true,
   account: { select: { first_name: true, last_name: true } },
   is_active: true,
+  about_me: true,
   work_email: true,
   work_phone: true,
   website_link: true,

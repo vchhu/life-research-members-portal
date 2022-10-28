@@ -1,4 +1,4 @@
-import { NextPage } from "next/types";
+import type { NextPage } from "next/types";
 import MyProfile from "../../components/members/my-profile";
 import PageAuthGuard from "../../components/auth-guard/page-auth-guard";
 import Authorizations from "../../components/auth-guard/authorizations";

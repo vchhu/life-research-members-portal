@@ -7,14 +7,14 @@ import authHeader from "../../api-facade/headers/auth-header";
 import { contentTypeJsonHeader } from "../../api-facade/headers/content-type-headers";
 import ApiRoutes from "../../routing/api-routes";
 import InputNumber from "antd/lib/input-number";
-import type { Member } from "../../api-facade/_types";
+import type { PublicMemberInfo } from "../../api-facade/_types";
 
 type Props = {
-  member: Member;
+  member: PublicMemberInfo;
   onSuccess?: () => void;
 };
 
-type Data = Partial<Member>;
+type Data = Partial<PublicMemberInfo>;
 
 const MemberForm: FC<Props> = ({ member, onSuccess }) => {
   const [form] = useForm<Data>();

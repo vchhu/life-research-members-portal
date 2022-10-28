@@ -3,14 +3,14 @@ import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import type { FC } from "react";
 import useAllAccounts from "../../api-facade/use-all-accounts";
-import type { AllAccountsRes } from "../../pages/api/all-accounts";
+import type { AccountRes } from "../../pages/api/account/[id]";
 import PageRoutes from "../../routing/page-routes";
 
 const AllAccounts: FC = () => {
   const { allAccounts, loading, refresh } = useAllAccounts();
   const keyedAccounts = allAccounts.map((m) => ({ ...m, key: m.id }));
 
-  const columns: ColumnType<AllAccountsRes[number]>[] = [
+  const columns: ColumnType<NonNullable<AccountRes>>[] = [
     {
       title: "Login Email",
       dataIndex: "login_email",

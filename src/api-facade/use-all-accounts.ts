@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import type { AllAccountsRes } from "../pages/api/all-accounts";
+import type { AccountRes } from "../pages/api/account/[id]";
 import ApiRoutes from "../routing/api-routes";
 import authHeader from "./headers/auth-header";
+import type { AccountInfo } from "./_types";
 
 let firstRender = true;
-let cachedAccounts: AllAccountsRes = [];
+let cachedAccounts: AccountInfo[] = [];
 
 export default function useAllAccounts() {
-  const [allAccounts, setAllAccounts] = useState<AllAccountsRes>(cachedAccounts);
+  const [allAccounts, setAllAccounts] = useState<AccountInfo[]>(cachedAccounts);
   const [loading, setLoading] = useState(false);
 
   async function fetchAllAccounts() {

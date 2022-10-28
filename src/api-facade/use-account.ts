@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import type { AccountRes } from "../pages/api/account/[id]";
 import ApiRoutes from "../routing/api-routes";
 import authHeader from "./headers/auth-header";
+import type { AccountInfo } from "./_types";
 
 export default function useAccount(id: number) {
-  const [account, setAccount] = useState<AccountRes | null>();
+  const [account, setAccount] = useState<AccountInfo | null>();
   const [loading, setLoading] = useState(true);
 
   async function fetchAccount(id: number) {

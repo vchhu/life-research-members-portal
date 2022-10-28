@@ -1,31 +1,19 @@
 import Button from "antd/lib/button";
-import { FC, useContext, useState } from "react";
+import { FC, useContext } from "react";
 import registerMember from "../../api-facade/register-member";
 import { AccountCtx } from "../../api-facade/context/account-ctx";
-import CardSkeleton from "../loading/card-skeleton";
 
 const MyProfileRegister: FC = () => {
   const { localAccount, setLocalAccount } = useContext(AccountCtx);
-  const [waiting, setWaiting] = useState(false);
 
   async function handleRegisterMember(account_id: number) {
-    try {
-      setWaiting(true);
-      const newMember = await registerMember({ account_id });
-      setLocalAccount((prev) => {
-        return prev && { ...prev, member: newMember };
-      });
-      alert("Success!");
-    } catch (e) {
-      console.error(e);
-      alert(e);
-    } finally {
-      setWaiting(false);
-    }
+    const newMember = await registerMember({ account_id });
+    setLocalAccount((prev) => {
+      return prev && { ...prev, member: newMember };
+    });
   }
 
   if (!localAccount) return null; // Auth guard should prevent this
-  if (waiting) return <CardSkeleton />;
 
   return (
     <div

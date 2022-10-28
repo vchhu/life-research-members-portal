@@ -2,21 +2,18 @@ import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import { useRouter } from "next/router";
-import { FC, useContext } from "react";
+import { FC, useContext, useState } from "react";
 import { AccountCtx } from "../../api-facade/context/account-ctx";
 import PageRoutes from "../../routing/page-routes";
 import CardSkeleton from "../loading/card-skeleton";
-import MemberDescription from "./member-description";
+import PublicMemberDescription from "./public-member-description";
 import MemberForm from "./member-form";
 import MyProfileRegister from "./my-profile-register";
 
-type Props = {
-  editMode?: boolean;
-};
-
-const MyProfile: FC<Props> = ({ editMode }) => {
+const MyProfile: FC = () => {
   const router = useRouter();
   const { localAccount, loading, refresh } = useContext(AccountCtx);
+  const [editMode, setEditMode] = useState(false);
 
   if (loading) return <CardSkeleton />;
   if (!localAccount) return null; // Auth guard should prevent this
@@ -32,7 +29,7 @@ const MyProfile: FC<Props> = ({ editMode }) => {
       size="large"
       type="primary"
       style={{ flexGrow: 1, maxWidth: "10rem" }}
-      onClick={() => router.push(PageRoutes.myProfileEdit)}
+      onClick={() => setEditMode(true)}
     >
       Edit
     </Button>
@@ -41,10 +38,9 @@ const MyProfile: FC<Props> = ({ editMode }) => {
   const cancelButton = (
     <Button
       size="large"
-      type="primary"
       danger
       style={{ flexGrow: 1, maxWidth: "10rem" }}
-      onClick={() => router.push(PageRoutes.myProfile)}
+      onClick={() => setEditMode(false)}
     >
       Cancel
     </Button>
@@ -83,7 +79,7 @@ const MyProfile: FC<Props> = ({ editMode }) => {
 
   return (
     <Card title={header} bodyStyle={{ padding: 0 }}>
-      <MemberDescription member={member} />
+      <PublicMemberDescription member={member} />
     </Card>
   );
 };

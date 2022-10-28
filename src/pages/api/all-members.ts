@@ -1,16 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { selectPublicMemberInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
+import type { PublicMemberRes } from "./member/[id]";
 
-export type AllMembersRes = Awaited<ReturnType<typeof allMembers>>;
-
-function allMembers() {
+function allMembers(): Promise<PublicMemberRes[]> {
   return db.member.findMany({
     select: selectPublicMemberInfo,
   });
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<AllMembersRes>) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<PublicMemberRes[]>
+) {
   try {
     return res.status(200).send(await allMembers());
   } catch (e: any) {

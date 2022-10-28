@@ -2,10 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
 import getAccountFromRequest from "../../utils/api/get-account-from-request";
+import type { AccountRes } from "./account/[id]";
 
-export type AllAccountsRes = Awaited<ReturnType<typeof getAllAccounts>>;
-
-function getAllAccounts() {
+function getAllAccounts(): Promise<AccountRes[]> {
   return db.account.findMany({
     include: includeAllAccountInfo,
   });
@@ -13,7 +12,7 @@ function getAllAccounts() {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<AllAccountsRes | string>
+  res: NextApiResponse<AccountRes[] | string>
 ) {
   try {
     const currentUser = await getAccountFromRequest(req, res);

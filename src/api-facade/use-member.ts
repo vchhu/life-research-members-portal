@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import ApiRoutes from "../routing/api-routes";
-import type { MemberRes } from "../pages/api/member/[id]";
+import type { PublicMemberRes } from "../pages/api/member/[id]";
 
 export default function useMember(id: number) {
-  const [member, setMember] = useState<MemberRes | null>();
+  const [member, setMember] = useState<PublicMemberRes | null>();
   const [loading, setLoading] = useState(true);
 
   async function fetchMember(id: number) {
