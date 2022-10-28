@@ -6,22 +6,24 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useContext } from "react";
 import { AccountCtx } from "../../api-facade/context/account-ctx";
+import { LanguageCtx } from "../../api-facade/context/language-ctx";
 import PageRoutes from "../../routing/page-routes";
 
 const NavMenu: FC = () => {
   const { localAccount, loading } = useContext(AccountCtx);
   const router = useRouter();
+  const { en } = useContext(LanguageCtx);
 
   // Everyone
-  const generalItems = [{ label: "Members", href: PageRoutes.allMembers }];
+  const generalItems = [{ label: en ? "Members" : "Membres", href: PageRoutes.allMembers }];
 
   // Registered Acounts
-  const registeredItems = [{ label: "My Profile", href: PageRoutes.myProfile }];
+  const registeredItems = [{ label: en ? "My Profile" : "Mon Profil", href: PageRoutes.myProfile }];
 
   // Admins
   const adminItems = [
-    { label: "Accounts", href: PageRoutes.allAccounts },
-    { label: "Register", href: PageRoutes.register },
+    { label: en ? "Accounts" : "Comptes", href: PageRoutes.allAccounts },
+    { label: en ? "Register" : "Enregistrer", href: PageRoutes.register },
   ];
 
   const items: { label: string; href: string }[] = generalItems;

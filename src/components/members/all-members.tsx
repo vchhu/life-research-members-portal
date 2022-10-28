@@ -1,44 +1,44 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import type { FC } from "react";
+import { FC, useContext } from "react";
+import { LanguageCtx } from "../../api-facade/context/language-ctx";
 import useAllMembers from "../../api-facade/use-all-members";
 import type { PublicMemberInfo } from "../../api-facade/_types";
 import PageRoutes from "../../routing/page-routes";
 import KeywordTag from "./keyword-tag";
 
 const AllMembers: FC = () => {
+  const { en } = useContext(LanguageCtx);
   const { allMembers, loading, refresh } = useAllMembers();
   const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id }));
 
   const columns: ColumnType<PublicMemberInfo>[] = [
     {
-      title: "First Name",
+      title: en ? "First Name" : "Prénom",
       dataIndex: ["account", "first_name"],
+      className: "first-name-column",
       sorter: (a, b) => (a.account.first_name || "").localeCompare(b.account.first_name || ""),
     },
     {
-      title: "Last Name",
+      title: en ? "Last Name" : "Nom de Famille",
       dataIndex: ["account", "last_name"],
+      className: "last-name-column",
       sorter: (a, b) => (a.account.last_name || "").localeCompare(b.account.last_name || ""),
     },
     {
-      title: "Tags",
+      title: en ? "Key Words" : "Mots Clés",
       dataIndex: "has_keyword",
-      render: (_, member) => (
-        <div className="tag-column">
-          {member.has_keyword.map((k) => (
-            <KeywordTag key={k.keyword.id} keyword={k.keyword} />
-          ))}
-        </div>
-      ),
+      className: "tag-column",
+      render: (_, member) =>
+        member.has_keyword.map((k) => <KeywordTag key={k.keyword.id} keyword={k.keyword} />),
     },
   ];
 
   const header = () => (
     <div style={{ display: "flex", alignItems: "center" }}>
       <Title level={1} style={{ margin: 0 }}>
-        All Members
+        {en ? "All Members" : "Tous les Membres"}
       </Title>
       <div style={{ flexGrow: 15 }}></div>
       <Button type="primary" onClick={refresh} size="large" style={{ flexGrow: 1 }}>
@@ -49,6 +49,7 @@ const AllMembers: FC = () => {
 
   return (
     <Table
+      className="all-members-table"
       size="small"
       columns={columns}
       dataSource={keyedMembers}

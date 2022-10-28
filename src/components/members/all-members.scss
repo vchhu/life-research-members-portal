@@ -1,0 +1,32 @@
+.all-members-table {
+  .tag-column {
+    max-width: 50vw;
+    min-width: 400px;
+  }
+  .first-name-column,
+  .last-name-column {
+    font-size: 0.7rem;
+    width: min-content;
+    max-width: 22vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: normal;
+  }
+}
+
+@media screen and (min-width: 700px) {
+  .all-members-table {
+    .first-name-column,
+    .last-name-column {
+      font-size: inherit;
+    }
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .all-members-table {
+    .tag-column {
+      max-width: 70vw;
+    }
+  }
+}
