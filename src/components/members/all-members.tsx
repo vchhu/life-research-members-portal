@@ -1,6 +1,7 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
+import { useRouter } from "next/router";
 import { FC, useContext } from "react";
 import { LanguageCtx } from "../../api-facade/context/language-ctx";
 import useAllMembers from "../../api-facade/use-all-members";
@@ -9,6 +10,7 @@ import PageRoutes from "../../routing/page-routes";
 import KeywordTag from "./keyword-tag";
 
 const AllMembers: FC = () => {
+  const router = useRouter();
   const { en } = useContext(LanguageCtx);
   const { allMembers, loading, refresh } = useAllMembers();
   const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id }));
@@ -62,7 +64,7 @@ const AllMembers: FC = () => {
       rowClassName={(_, index) => "table-row " + (index % 2 === 0 ? "even" : "odd")}
       onRow={(member, _) => ({
         onClick: (_) => {
-          window.open(PageRoutes.memberProfile(member.id));
+          router.push(PageRoutes.memberProfile(member.id));
         },
       })}
     />
