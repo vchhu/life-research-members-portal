@@ -2,10 +2,10 @@ import { Button } from "antd";
 import Form from "antd/lib/form";
 import Input from "antd/lib/input";
 import { FC, useContext } from "react";
-import registerAccount from "../api-facade/register-account";
+import registerAccount from "../services/register-account";
 import Checkbox from "antd/lib/checkbox/Checkbox";
 import { useForm } from "antd/lib/form/Form";
-import { LanguageCtx } from "../api-facade/context/language-ctx";
+import { LanguageCtx } from "../services/context/language-ctx";
 
 type Data = {
   login_email: string;

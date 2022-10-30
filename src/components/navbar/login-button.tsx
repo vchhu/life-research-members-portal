@@ -4,7 +4,7 @@ import Image from "next/image";
 import { FC, useContext } from "react";
 import { loginRequest, msalInstance } from "../../../auth-config";
 import msIcon from "../../../public/microsoft-logo.png";
-import { LanguageCtx } from "../../api-facade/context/language-ctx";
+import { LanguageCtx } from "../../services/context/language-ctx";
 
 function login() {
   msalInstance.loginRedirect(loginRequest).catch((e: any) => {

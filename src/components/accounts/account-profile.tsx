@@ -4,7 +4,7 @@ import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import { FC, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
-import useAccount from "../../api-facade/use-account";
+import useAccount from "../../services/use-account";
 import AccountDescription from "./account-description";
 import AccountForm from "./account-form";
 import { useRouter } from "next/router";

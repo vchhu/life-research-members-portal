@@ -23,4 +23,8 @@ export default class Notification {
       onClick: () => message.destroy(this.id),
     });
   }
+
+  close() {
+    message.destroy(this.id);
+  }
 }

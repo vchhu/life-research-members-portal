@@ -4,12 +4,18 @@ import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
 import { FC, useContext } from "react";
 import InputNumber from "antd/lib/input-number";
-import type { PrivateMemberInfo, PublicMemberInfo } from "../../api-facade/_types";
-import updateMember from "../../api-facade/update-member";
+import type { PrivateMemberInfo, PublicMemberInfo } from "../../services/_types";
+import updateMember from "../../services/update-member";
 import type { keyword } from "@prisma/client";
-import { LanguageCtx } from "../../api-facade/context/language-ctx";
+import { LanguageCtx } from "../../services/context/language-ctx";
 import Select from "antd/lib/select";
 import TextArea from "antd/lib/input/TextArea";
+import { FacultiesCtx } from "../../services/context/faculties-ctx";
+import { KeywordsCtx } from "../../services/context/keywords-ctx";
+import { MemberTypesCtx } from "../../services/context/member-types-ctx";
+import GetLanguage from "../../utils/front-end/get-language";
+
+const { Option } = Select;
 
 type Props = {
   member: PublicMemberInfo;
@@ -41,6 +47,9 @@ const MemberForm: FC<Props> = ({ member, onSuccess }) => {
   // This sets the return type of the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
+  const { memberTypes } = useContext(MemberTypesCtx);
+  const { faculties } = useContext(FacultiesCtx);
+  const { keywords } = useContext(KeywordsCtx);
 
   async function handleUpdate({
     first_name,
@@ -81,6 +90,7 @@ const MemberForm: FC<Props> = ({ member, onSuccess }) => {
     last_name: member.account.last_name,
     about_me: member.about_me || "",
     faculty_id: member.faculty?.id,
+    type_id: member.member_type?.id,
     work_email: member.work_email || "",
     work_phone: member.work_phone || "",
     website_link: member.website_link || "",
@@ -114,16 +124,28 @@ const MemberForm: FC<Props> = ({ member, onSuccess }) => {
         >
           <Input />
         </Form.Item>
-        {/* <Form.Item
+        <Form.Item
           className="member-type"
           label={en ? "Member Type" : "Type de Membre"}
           name="type_id"
         >
-          <Select />
+          <Select>
+            {memberTypes.map((f) => (
+              <Option key={f.id} value={f.id}>
+                <GetLanguage obj={f} />
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item className="faculty" label={en ? "Faculty" : "Faculté"} name="faculty_id">
-          <Select />
-        </Form.Item> */}
+          <Select>
+            {faculties.map((f) => (
+              <Option key={f.id} value={f.id}>
+                <GetLanguage obj={f} />
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
       </div>
       <div className="row">
         <Form.Item

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import type { NextPage } from "next/types";
 import { useContext, useEffect } from "react";
-import { AccountCtx } from "../../../api-facade/context/account-ctx";
+import { AccountCtx } from "../../../services/context/account-ctx";
 import CardSkeleton from "../../../components/loading/card-skeleton";
 import PageRoutes from "../../../routing/page-routes";
 

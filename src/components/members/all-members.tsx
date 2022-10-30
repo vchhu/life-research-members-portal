@@ -3,9 +3,9 @@ import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import { useRouter } from "next/router";
 import { FC, useContext } from "react";
-import { LanguageCtx } from "../../api-facade/context/language-ctx";
-import useAllMembers from "../../api-facade/use-all-members";
-import type { PublicMemberInfo } from "../../api-facade/_types";
+import { LanguageCtx } from "../../services/context/language-ctx";
+import useAllMembers from "../../services/use-all-members";
+import type { PublicMemberInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
 import KeywordTag from "./keyword-tag";
 

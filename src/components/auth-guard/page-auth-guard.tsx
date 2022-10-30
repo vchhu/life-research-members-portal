@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, ReactElement, useContext } from "react";
-import { AccountCtx } from "../../api-facade/context/account-ctx";
+import { AccountCtx } from "../../services/context/account-ctx";
 import CenteredSpinner from "../loading/centered-spinner";
 import Authorizations from "./authorizations";
 

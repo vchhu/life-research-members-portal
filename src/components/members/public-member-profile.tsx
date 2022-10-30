@@ -2,7 +2,7 @@ import Empty from "antd/lib/empty";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import type { FC } from "react";
-import usePublicMemberInfo from "../../api-facade/use-public-member-info";
+import usePublicMemberInfo from "../../services/use-public-member-info";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./public-member-description";
 

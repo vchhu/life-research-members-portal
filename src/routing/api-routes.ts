@@ -1,3 +1,4 @@
+// Make sure these start with forward slash '/' - indicates domain root
 const ApiRoutes = {
   allMembers: "/api/all-members",
   allAccounts: "/api/all-accounts",
@@ -13,6 +14,8 @@ const ApiRoutes = {
   registerMember: "/api/register-member",
   registerKeyword: "/api/register-keyword",
   allKeywords: "/api/all-keywords",
+  allFaculties: "/api/all-faculties",
+  allMemberTypes: "/api/all-member-types",
 };
 
 export default ApiRoutes;

@@ -3,17 +3,17 @@ import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import { useRouter } from "next/router";
 import { FC, useContext, useState } from "react";
-import { AccountCtx } from "../../api-facade/context/account-ctx";
+import { AccountCtx } from "../../services/context/account-ctx";
 import PageRoutes from "../../routing/page-routes";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./public-member-description";
 import MemberForm from "./member-form";
 import MyProfileRegister from "./my-profile-register";
-import { LanguageCtx } from "../../api-facade/context/language-ctx";
+import { LanguageCtx } from "../../services/context/language-ctx";
 
 const MyProfile: FC = () => {
   const { en } = useContext(LanguageCtx);
-  const { localAccount, setLocalAccount, loading, refresh } = useContext(AccountCtx);
+  const { localAccount, setLocalAccount, loading } = useContext(AccountCtx);
   const [editMode, setEditMode] = useState(false);
 
   if (loading) return <CardSkeleton />;
@@ -67,7 +67,6 @@ const MyProfile: FC = () => {
         <MemberForm
           member={member}
           onSuccess={(member) => {
-            refresh();
             setEditMode(false);
             setLocalAccount((prev) => {
               if (prev) return { ...prev, member };

@@ -13,6 +13,7 @@ import ApiRoutes from "../../routing/api-routes";
 import authHeader from "../headers/auth-header";
 import type { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
 import type { AccountInfo } from "../_types";
+import Notification from "../notifications/notification";
 
 function handleResponse(response: AuthenticationResult | null) {
   if (!response) return;
@@ -38,17 +39,20 @@ export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const msId = msAccount?.localAccountId;
 
   const [localAccount, setLocalAccount] = useState<AccountInfo | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Gets the current user's account from the database
   const fetchLocalAccount = async () => {
+    const notification = new Notification();
     try {
-      const accountRes = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
-      if (!accountRes.ok) return console.error(await accountRes.text());
-      const account = await accountRes.json();
-      setLocalAccount(account);
-    } catch (e) {
-      console.error(e);
+      setLoading(true);
+      notification.loading("Loading your account...");
+      const res = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
+      if (!res.ok) return notification.error(await res.text());
+      setLocalAccount(await res.json());
+      notification.close();
+    } catch (e: any) {
+      notification.error(e);
     } finally {
       setLoading(false);
     }
@@ -63,7 +67,6 @@ export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
       setLoading(false);
       return;
     }
-    setLoading(true);
     fetchLocalAccount();
   }, [msId, instance]);
 

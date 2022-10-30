@@ -1,9 +1,9 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import Spin from "antd/lib/spin";
 import { FC, useContext } from "react";
-import { AccountCtx } from "../api-facade/context/account-ctx";
+import { AccountCtx } from "../services/context/account-ctx";
 import { blue } from "@ant-design/colors";
-import { LanguageCtx } from "../api-facade/context/language-ctx";
+import { LanguageCtx } from "../services/context/language-ctx";
 
 const Greeting: FC = () => {
   const { instance } = useMsal();

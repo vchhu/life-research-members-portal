@@ -2,11 +2,11 @@ import Grid from "antd/lib/grid";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import { FC, useContext } from "react";
-import type { PublicMemberInfo } from "../../api-facade/_types";
+import type { PublicMemberInfo } from "../../services/_types";
 import GetLanguage from "../../utils/front-end/get-language";
 import KeywordTag from "./keyword-tag";
 import React from "react";
-import { LanguageCtx } from "../../api-facade/context/language-ctx";
+import { LanguageCtx } from "../../services/context/language-ctx";
 
 const { useBreakpoint } = Grid;
 

@@ -2,7 +2,7 @@ import type { member, problem } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllMemberInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
-import type { PrivateMemberInfo, ProblemInfo } from "../../../api-facade/_types";
+import type { PrivateMemberInfo, ProblemInfo } from "../../../services/_types";
 import getAccountFromRequest from "../../../utils/api/get-account-from-request";
 
 export type UpdateMemberParams = {

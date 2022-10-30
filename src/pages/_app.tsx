@@ -4,10 +4,11 @@ import { MsalProvider } from "@azure/msal-react";
 import { msalInstance } from "../../auth-config";
 import Head from "next/head";
 import Navbar from "../components/navbar/@navbar";
-import { AccountCtxProvider } from "../api-facade/context/account-ctx";
+import { AccountCtxProvider } from "../services/context/account-ctx";
 import { useRouter } from "next/router";
 import PageRoutes from "../routing/page-routes";
-import { LanguageCtxProvider } from "../api-facade/context/language-ctx";
+import { LanguageCtxProvider } from "../services/context/language-ctx";
+import AllContextProviders from "../services/context/_ctx-bundler";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -30,14 +31,12 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>{title}</title>
       </Head>
       <MsalProvider instance={msalInstance}>
-        <LanguageCtxProvider>
-          <AccountCtxProvider>
-            <Navbar />
-            <div className="next-page-container">
-              <Component {...pageProps} />
-            </div>
-          </AccountCtxProvider>
-        </LanguageCtxProvider>
+        <AllContextProviders>
+          <Navbar />
+          <div className="next-page-container">
+            <Component {...pageProps} />
+          </div>
+        </AllContextProviders>
       </MsalProvider>
     </>
   );

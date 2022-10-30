@@ -3,12 +3,12 @@ import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
 import type { FC } from "react";
-import authHeader from "../../api-facade/headers/auth-header";
-import { contentTypeJsonHeader } from "../../api-facade/headers/content-type-headers";
+import authHeader from "../../services/headers/auth-header";
+import { contentTypeJsonHeader } from "../../services/headers/content-type-headers";
 import ApiRoutes from "../../routing/api-routes";
 import Checkbox from "antd/lib/checkbox";
 import type { AccountRes } from "../../pages/api/account/[id]";
-import type { Account } from "../../api-facade/_types";
+import type { Account } from "../../services/_types";
 
 type Props = {
   account: Account;

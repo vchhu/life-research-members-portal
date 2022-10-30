@@ -5,8 +5,8 @@ import Spin from "antd/lib/spin";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useContext } from "react";
-import { AccountCtx } from "../../api-facade/context/account-ctx";
-import { LanguageCtx } from "../../api-facade/context/language-ctx";
+import { AccountCtx } from "../../services/context/account-ctx";
+import { LanguageCtx } from "../../services/context/language-ctx";
 import PageRoutes from "../../routing/page-routes";
 
 const NavMenu: FC = () => {

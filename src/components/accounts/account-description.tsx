@@ -2,7 +2,7 @@ import Grid from "antd/lib/grid";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import type { FC } from "react";
-import type { Account } from "../../api-facade/_types";
+import type { Account } from "../../services/_types";
 
 const { useBreakpoint } = Grid;
 

@@ -2,7 +2,7 @@ import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import type { FC } from "react";
-import useAllAccounts from "../../api-facade/use-all-accounts";
+import useAllAccounts from "../../services/use-all-accounts";
 import type { AccountRes } from "../../pages/api/account/[id]";
 import PageRoutes from "../../routing/page-routes";
 

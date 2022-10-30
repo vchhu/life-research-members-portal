@@ -6,8 +6,8 @@ import { FC, useContext, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./public-member-description";
 import MemberForm from "./member-form";
-import usePrivateMemberInfo from "../../api-facade/use-private-member-info";
-import { LanguageCtx } from "../../api-facade/context/language-ctx";
+import usePrivateMemberInfo from "../../services/use-private-member-info";
+import { LanguageCtx } from "../../services/context/language-ctx";
 
 type Props = {
   id: number;
@@ -15,7 +15,7 @@ type Props = {
 
 const MemberProfile: FC<Props> = ({ id }) => {
   const { en } = useContext(LanguageCtx);
-  const { member, setMember, loading, refresh } = usePrivateMemberInfo(id);
+  const { member, setMember, loading } = usePrivateMemberInfo(id);
   const [editMode, setEditMode] = useState(false);
 
   if (loading) return <CardSkeleton />;
@@ -67,7 +67,6 @@ const MemberProfile: FC<Props> = ({ id }) => {
         <MemberForm
           member={member}
           onSuccess={(member) => {
-            refresh();
             setEditMode(false);
             setMember(member);
           }}

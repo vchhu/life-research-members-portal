@@ -1,8 +1,8 @@
 import Button from "antd/lib/button";
 import { FC, useContext } from "react";
-import registerMember from "../../api-facade/register-member";
-import { AccountCtx } from "../../api-facade/context/account-ctx";
-import { LanguageCtx } from "../../api-facade/context/language-ctx";
+import registerMember from "../../services/register-member";
+import { AccountCtx } from "../../services/context/account-ctx";
+import { LanguageCtx } from "../../services/context/language-ctx";
 
 const MyProfileRegister: FC = () => {
   const { en } = useContext(LanguageCtx);
