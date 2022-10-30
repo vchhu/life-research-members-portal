@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { includeAllMemberInfo, selectPublicMemberInfo } from "../../../../prisma/helpers";
-import db from "../../../../prisma/prisma-client";
+import { selectPublicMemberInfo } from "../../../../../prisma/helpers";
+import db from "../../../../../prisma/prisma-client";
 
 export type PublicMemberRes = Awaited<ReturnType<typeof getPublicMemberInfo>>;
 

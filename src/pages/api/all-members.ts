@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { selectPublicMemberInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
-import type { PublicMemberRes } from "./member/[id]";
+import type { PublicMemberRes } from "./member/[id]/public";
 
 function allMembers(): Promise<PublicMemberRes[]> {
   return db.member.findMany({

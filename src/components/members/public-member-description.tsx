@@ -1,12 +1,11 @@
 import Grid from "antd/lib/grid";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
-import type { FC } from "react";
+import { FC, useContext } from "react";
 import type { PublicMemberInfo } from "../../api-facade/_types";
-import type { keyword } from "@prisma/client";
-import colorFromString from "../../utils/front-end/color-from-string";
 import GetLanguage from "../../utils/front-end/get-language";
 import KeywordTag from "./keyword-tag";
+import React from "react";
 import { LanguageCtx } from "../../api-facade/context/language-ctx";
 
 const { useBreakpoint } = Grid;
@@ -17,6 +16,7 @@ type Props = {
 
 const PublicMemberDescription: FC<Props> = ({ member }) => {
   const screens = useBreakpoint();
+  const { en } = useContext(LanguageCtx);
 
   // let address = "";
   // if (member.address) address += member.address;
@@ -37,10 +37,6 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
   //   address += member.postal_code;
   // }
 
-  function tagColor(k: keyword) {
-    return colorFromString((k.name_en || "") + (k.name_fr + ""));
-  }
-
   return (
     <Descriptions
       size="small"
@@ -49,23 +45,26 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       labelStyle={{ whiteSpace: "nowrap", width: "2rem" }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
-      <Item label="About Me">{member.about_me}</Item>
-      <Item label="Faculty">
+      <Item label={en ? "About Me" : "À Propos de Moi"}>{member.about_me}</Item>
+      <Item label={en ? "Faculty" : "Faculté"}>
         <GetLanguage obj={member.faculty} />
       </Item>
-      <Item label="Member Type">
+      <Item label={en ? "Member Type" : "Type de Membre"}>
         <GetLanguage obj={member.member_type} />
       </Item>
-      <Item label="Problems I Work On">
+      <Item
+        label={en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}
+        labelStyle={{ whiteSpace: "break-spaces" }}
+      >
         {member.problem.map((p, i) => (
-          <>
+          <React.Fragment key={i}>
             {`${i + 1}. `}
             <GetLanguage obj={p} />
             <br />
-          </>
+          </React.Fragment>
         ))}
       </Item>
-      <Item label="Keywords">
+      <Item label={en ? "Keywords" : "Mots Clés"}>
         {member.has_keyword.map((entry, i) => (
           <KeywordTag key={i} keyword={entry.keyword} />
         ))}
@@ -76,7 +75,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       <Item label="Phone">
         <a href={"tel:" + member.work_phone}>{member.work_phone}</a>
       </Item>
-      <Item label="Links">{null}</Item>
+      {/* <Item label={en ? "Links" : "Liens"}>{null}</Item> */}
     </Descriptions>
   );
 };

@@ -9,20 +9,17 @@ import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./public-member-description";
 import MemberForm from "./member-form";
 import MyProfileRegister from "./my-profile-register";
+import { LanguageCtx } from "../../api-facade/context/language-ctx";
 
 const MyProfile: FC = () => {
-  const router = useRouter();
-  const { localAccount, loading, refresh } = useContext(AccountCtx);
+  const { en } = useContext(LanguageCtx);
+  const { localAccount, setLocalAccount, loading, refresh } = useContext(AccountCtx);
   const [editMode, setEditMode] = useState(false);
 
   if (loading) return <CardSkeleton />;
   if (!localAccount) return null; // Auth guard should prevent this
   if (!localAccount.member) return <MyProfileRegister />;
-
   const member = localAccount.member;
-  let titleText = "";
-  if (!member.account.first_name || !member.account.last_name) titleText = "Member " + member.id;
-  else titleText = (member.account.first_name || "") + " " + (member.account.last_name || "");
 
   const editButton = (
     <Button
@@ -31,7 +28,7 @@ const MyProfile: FC = () => {
       style={{ flexGrow: 1, maxWidth: "10rem" }}
       onClick={() => setEditMode(true)}
     >
-      Edit
+      {en ? "Edit" : "Éditer"}
     </Button>
   );
 
@@ -42,7 +39,7 @@ const MyProfile: FC = () => {
       style={{ flexGrow: 1, maxWidth: "10rem" }}
       onClick={() => setEditMode(false)}
     >
-      Cancel
+      {en ? "Cancel" : "Annuler"}
     </Button>
   );
 
@@ -58,7 +55,7 @@ const MyProfile: FC = () => {
           whiteSpace: "break-spaces",
         }}
       >
-        {titleText}
+        {member.account.first_name + " " + member.account.last_name}
       </Title>
       {editMode ? cancelButton : editButton}
     </div>
@@ -69,9 +66,13 @@ const MyProfile: FC = () => {
       <Card title={header}>
         <MemberForm
           member={member}
-          onSuccess={() => {
+          onSuccess={(member) => {
             refresh();
-            router.push(PageRoutes.myProfile);
+            setEditMode(false);
+            setLocalAccount((prev) => {
+              if (prev) return { ...prev, member };
+              return prev;
+            });
           }}
         />
       </Card>

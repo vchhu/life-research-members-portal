@@ -2,39 +2,34 @@ import Empty from "antd/lib/empty";
 import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import { useRouter } from "next/router";
-import { FC, useState } from "react";
-import useMember from "../../api-facade/use-member";
-import PageRoutes from "../../routing/page-routes";
+import { FC, useContext, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./public-member-description";
 import MemberForm from "./member-form";
-import AuthGuard from "../auth-guard/auth-guard";
-import Authorizations from "../auth-guard/authorizations";
+import usePrivateMemberInfo from "../../api-facade/use-private-member-info";
+import { LanguageCtx } from "../../api-facade/context/language-ctx";
 
 type Props = {
   id: number;
 };
 
 const MemberProfile: FC<Props> = ({ id }) => {
-  const router = useRouter();
-  const { member, loading, refresh } = useMember(id);
+  const { en } = useContext(LanguageCtx);
+  const { member, setMember, loading, refresh } = usePrivateMemberInfo(id);
   const [editMode, setEditMode] = useState(false);
 
   if (loading) return <CardSkeleton />;
   if (!member) return <Empty />;
 
   const editButton = (
-    <AuthGuard auths={[Authorizations.admin, Authorizations.matchId]}>
-      <Button
-        size="large"
-        type="primary"
-        style={{ flexGrow: 1, maxWidth: "10rem" }}
-        onClick={() => setEditMode(true)}
-      >
-        Edit
-      </Button>
-    </AuthGuard>
+    <Button
+      size="large"
+      type="primary"
+      style={{ flexGrow: 1, maxWidth: "10rem" }}
+      onClick={() => setEditMode(true)}
+    >
+      {en ? "Edit" : "Éditer"}
+    </Button>
   );
 
   const cancelButton = (
@@ -44,7 +39,7 @@ const MemberProfile: FC<Props> = ({ id }) => {
       style={{ flexGrow: 1, maxWidth: "10rem" }}
       onClick={() => setEditMode(false)}
     >
-      Cancel
+      {en ? "Cancel" : "Annuler"}
     </Button>
   );
 
@@ -71,9 +66,10 @@ const MemberProfile: FC<Props> = ({ id }) => {
       <Card title={header}>
         <MemberForm
           member={member}
-          onSuccess={() => {
+          onSuccess={(member) => {
             refresh();
-            router.push(PageRoutes.memberProfile(id));
+            setEditMode(false);
+            setMember(member);
           }}
         />
       </Card>

@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import ApiRoutes from "../routing/api-routes";
-import type { PublicMemberRes } from "../pages/api/member/[id]";
+import authHeader from "./headers/auth-header";
+import type { PrivateMemberInfo } from "./_types";
 
-export default function useMember(id: number) {
-  const [member, setMember] = useState<PublicMemberRes | null>();
+export default function usePrivateMemberInfo(id: number) {
+  const [member, setMember] = useState<PrivateMemberInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
   async function fetchMember(id: number) {
     try {
       setLoading(true);
-      const result = await fetch(ApiRoutes.member(id));
+      const result = await fetch(ApiRoutes.privateMemberInfo(id), { headers: await authHeader() });
       if (!result.ok) return console.error(await result.text());
-      const member = await result.json();
-      setMember(member);
+      setMember(await result.json());
     } catch (e: any) {
       console.error(e);
     } finally {
@@ -28,5 +28,5 @@ export default function useMember(id: number) {
     fetchMember(id);
   }
 
-  return { member, loading, refresh };
+  return { member, setMember, loading, refresh };
 }
