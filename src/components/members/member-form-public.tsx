@@ -2,7 +2,7 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import React, { FC, Fragment, useContext } from "react";
+import React, { FC, Fragment, useContext, useEffect } from "react";
 import type { PrivateMemberInfo, ProblemInfo, PublicMemberInfo } from "../../services/_types";
 import updateMember from "../../services/update-member";
 import type { keyword, problem } from "@prisma/client";
@@ -10,7 +10,6 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 import Select from "antd/lib/select";
 import TextArea from "antd/lib/input/TextArea";
 import { FacultiesCtx } from "../../services/context/faculties-ctx";
-import { KeywordsCtx } from "../../services/context/keywords-ctx";
 import { MemberTypesCtx } from "../../services/context/member-types-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 import Divider from "antd/lib/divider";
@@ -34,7 +33,7 @@ type Data = {
   faculty_id?: number;
   type_id?: number;
   problems: ProblemInfo[];
-  keywords: keyword[];
+  keywords: Map<number, keyword>;
   work_email: string;
   work_phone: string;
   website_link: string;
@@ -49,10 +48,17 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
   const { en } = useContext(LanguageCtx);
   const { memberTypes } = useContext(MemberTypesCtx);
   const { faculties } = useContext(FacultiesCtx);
-  const { keywords } = useContext(KeywordsCtx);
+
+  useEffect(() => {
+    window.onbeforeunload = () => true;
+    return () => {
+      window.onbeforeunload = null;
+    };
+  }, []);
 
   async function handleUpdate(data: Data) {
     const { addProblems, deleteProblems } = diffProblems(data.problems);
+    const { addKeywords, deleteKeywords } = diffKeywords(data.keywords);
     const params: UpdateMemberParams = {
       first_name: data.first_name,
       last_name: data.last_name,
@@ -68,8 +74,8 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
       cv_link: data.cv_link,
       deleteProblems,
       addProblems,
-      // deleteKeywords,
-      // addKeywords,
+      deleteKeywords,
+      addKeywords,
     };
     const newInfo = await updateMember(member.id, params);
     if (newInfo && onSuccess) onSuccess(newInfo);
@@ -82,10 +88,6 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
       problems[i] = { name_en: problem?.name_en || "", name_fr: problem?.name_fr || "" };
     }
     return problems;
-  }
-
-  function getInitialKeywords() {
-    return member.has_keyword.map((k) => ({ ...k.keyword }));
   }
 
   function diffProblems(newProblems: ProblemInfo[]): {
@@ -105,6 +107,25 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
       }
     }
     return { addProblems, deleteProblems };
+  }
+
+  function getInitialKeywords() {
+    return new Map(member.has_keyword.map((k) => [k.keyword.id, k.keyword]));
+  }
+
+  function diffKeywords(newKeywords: Map<number, keyword>): {
+    deleteKeywords: number[];
+    addKeywords: number[];
+  } {
+    const oldIds = new Set<number>();
+    const newIds = new Set<number>();
+    const deleteKeywords: number[] = [];
+    const addKeywords: number[] = [];
+    for (const has_keyword of member.has_keyword) oldIds.add(has_keyword.keyword.id);
+    for (const keyword of newKeywords.values()) newIds.add(keyword.id);
+    for (const oldId of oldIds.values()) if (!newIds.has(oldId)) deleteKeywords.push(oldId);
+    for (const newId of newIds.values()) if (!oldIds.has(newId)) addKeywords.push(newId);
+    return { deleteKeywords, addKeywords };
   }
 
   const initialValues: Data = {
@@ -157,7 +178,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
           </Form.Item>
           <Form.Item label={en ? "Member Type" : "Type de Membre"} name="type_id">
             <Select>
-              <Option value={undefined}>{""}</Option>
+              <Option value="">{""}</Option>
               {memberTypes.map((f) => (
                 <Option key={f.id} value={f.id}>
                   <GetLanguage obj={f} />
@@ -168,7 +189,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
 
           <Form.Item className="faculty" label={en ? "Faculty" : "Faculté"} name="faculty_id">
             <Select>
-              <Option value={undefined}>{""}</Option>
+              <Option value="">{""}</Option>
               {faculties.map((f) => (
                 <Option key={f.id} value={f.id}>
                   <GetLanguage obj={f} />
@@ -207,11 +228,11 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
         </div>
 
         <span>{en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}</span>
+        <Divider />
         <Form.List name="problems">
           {(fields) =>
             fields.map((field) => (
               <Fragment key={field.key}>
-                <Divider />
                 <div className="row">
                   <Form.Item
                     name={[field.name, "name_en"]}
@@ -236,13 +257,14 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
                     <TextArea rows={1} spellCheck="false" />
                   </Form.Item>
                 </div>
+                <Divider />
               </Fragment>
             ))
           }
         </Form.List>
 
         <Form.Item label={en ? "Keywords" : "Mots Clés	"} name="keywords">
-          <KeywordListInput />
+          <KeywordListInput setError={(e) => form.setFields([{ name: "keywords", errors: [e] }])} />
         </Form.Item>
 
         <Form.Item style={{ marginBottom: 0 }}>

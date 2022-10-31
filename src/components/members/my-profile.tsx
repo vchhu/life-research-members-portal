@@ -35,7 +35,16 @@ const MyProfile: FC = () => {
       size="large"
       danger
       style={{ flexGrow: 1, maxWidth: "10rem" }}
-      onClick={() => setEditMode(false)}
+      onClick={() => {
+        if (
+          confirm(
+            en
+              ? "Are you sure? All unsaved changes will be lost."
+              : "Êtes-vous sûr ? Toutes les modifications non enregistrées seront perdues."
+          )
+        )
+          setEditMode(false);
+      }}
     >
       {en ? "Cancel" : "Annuler"}
     </Button>

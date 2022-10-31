@@ -17,10 +17,10 @@ export type UpdateMemberParams = {
   twitter_link: string;
   linkedin_link: string;
   cv_link: string;
-  deleteKeywords?: number[];
-  addKeywords?: number[];
   deleteProblems?: number[];
   addProblems?: ProblemInfo[];
+  deleteKeywords?: number[];
+  addKeywords?: number[];
 };
 
 function updateMember(
@@ -38,10 +38,10 @@ function updateMember(
     twitter_link,
     linkedin_link,
     cv_link,
-    deleteKeywords = [],
-    addKeywords = [],
     deleteProblems = [],
     addProblems = [],
+    deleteKeywords = [],
+    addKeywords = [],
   }: UpdateMemberParams
 ) {
   return db.member.update({
@@ -68,7 +68,7 @@ function updateMember(
         : undefined,
       has_keyword: {
         deleteMany: deleteKeywords.map((id) => ({ keyword_id: id })),
-        create: addKeywords.map((id) => ({ keyword_id: id })),
+        createMany: { data: addKeywords.map((id) => ({ keyword_id: id })) },
       },
       problem: {
         deleteMany: deleteProblems.map((id) => ({ id })),
