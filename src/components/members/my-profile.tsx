@@ -1,13 +1,11 @@
 import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import { useRouter } from "next/router";
 import { FC, useContext, useState } from "react";
 import { AccountCtx } from "../../services/context/account-ctx";
-import PageRoutes from "../../routing/page-routes";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./public-member-description";
-import MemberForm from "./member-form";
+import MemberFormPublic from "./member-form-public";
 import MyProfileRegister from "./my-profile-register";
 import { LanguageCtx } from "../../services/context/language-ctx";
 
@@ -64,7 +62,7 @@ const MyProfile: FC = () => {
   if (editMode)
     return (
       <Card title={header}>
-        <MemberForm
+        <MemberFormPublic
           member={member}
           onSuccess={(member) => {
             setEditMode(false);

@@ -1,4 +1,3 @@
-import type { member, problem } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllMemberInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
@@ -8,9 +7,10 @@ import getAccountFromRequest from "../../../utils/api/get-account-from-request";
 export type UpdateMemberParams = {
   first_name?: string;
   last_name?: string;
-  about_me: string;
-  faculty_id?: number;
-  type_id?: number;
+  about_me_en: string;
+  about_me_fr: string;
+  faculty_id?: number | null;
+  type_id?: number | null;
   work_email: string;
   work_phone: string;
   website_link: string;
@@ -28,7 +28,8 @@ function updateMember(
   {
     first_name,
     last_name,
-    about_me,
+    about_me_en,
+    about_me_fr,
     faculty_id,
     type_id,
     work_email,
@@ -47,15 +48,24 @@ function updateMember(
     where: { id },
     data: {
       account: { update: { first_name, last_name } },
-      about_me,
+      about_me_en,
+      about_me_fr,
       work_email,
       work_phone,
       website_link,
       twitter_link,
       linkedin_link,
       cv_link,
-      faculty: faculty_id ? { connect: { id: faculty_id } } : undefined,
-      member_type: type_id ? { connect: { id: type_id } } : undefined,
+      faculty: faculty_id
+        ? { connect: { id: faculty_id } }
+        : faculty_id === null
+        ? { disconnect: true }
+        : undefined,
+      member_type: type_id
+        ? { connect: { id: type_id } }
+        : type_id === null
+        ? { disconnect: true }
+        : undefined,
       has_keyword: {
         deleteMany: deleteKeywords.map((id) => ({ keyword_id: id })),
         create: addKeywords.map((id) => ({ keyword_id: id })),

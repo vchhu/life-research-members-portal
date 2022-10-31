@@ -45,7 +45,9 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       labelStyle={{ whiteSpace: "nowrap", width: "2rem" }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
-      <Item label={en ? "About Me" : "À Propos de Moi"}>{member.about_me}</Item>
+      <Item label={en ? "About Me" : "À Propos de Moi"} style={{ whiteSpace: "pre-wrap" }}>
+        {en ? member.about_me_en : member.about_me_fr}
+      </Item>
       <Item label={en ? "Faculty" : "Faculté"}>
         <GetLanguage obj={member.faculty} />
       </Item>

@@ -142,7 +142,8 @@ model member {
   type_id                    Int?
   work_email                 String?                      @db.NVarChar(255)
   work_phone                 String?                      @db.NVarChar(50)
-  about_me                   String?                      @db.NVarChar(Max)
+  about_me_fr                String?                      @db.NVarChar(Max)
+  about_me_en                String?                      @db.NVarChar(Max)
   website_link               String?                      @db.NVarChar(4000)
   twitter_link               String?                      @db.NVarChar(4000)
   linkedin_link              String?                      @db.NVarChar(4000)
@@ -208,7 +209,7 @@ model problem {
   member_id Int
   name_en   String? @db.NVarChar(4000)
   name_fr   String? @db.NVarChar(4000)
-  member    member  @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_problem_member_id")
+  member    member  @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_problem_member_id")
 }
 
 model promotion_strategy {
