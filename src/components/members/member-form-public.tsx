@@ -2,7 +2,7 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import React, { FC, Fragment, useContext, useEffect } from "react";
+import React, { FC, Fragment, useContext, useEffect, useState } from "react";
 import type { PrivateMemberInfo, ProblemInfo, PublicMemberInfo } from "../../services/_types";
 import updateMember from "../../services/update-member";
 import type { keyword, problem } from "@prisma/client";
@@ -16,7 +16,7 @@ import Divider from "antd/lib/divider";
 import type { UpdateMemberParams } from "../../pages/api/update-member/[id]";
 import Text from "antd/lib/typography/Text";
 import Title from "antd/lib/typography/Title";
-import KeywordListInput from "./keyword-list-input";
+import KeywordSelector from "../keywords/keyword-selector";
 
 const { Option } = Select;
 
@@ -48,6 +48,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
   const { en } = useContext(LanguageCtx);
   const { memberTypes } = useContext(MemberTypesCtx);
   const { faculties } = useContext(FacultiesCtx);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     window.onbeforeunload = () => true;
@@ -57,6 +58,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
   }, []);
 
   async function handleUpdate(data: Data) {
+    setLoading(true);
     const { addProblems, deleteProblems } = diffProblems(data.problems);
     const { addKeywords, deleteKeywords } = diffKeywords(data.keywords);
     const params: UpdateMemberParams = {
@@ -78,6 +80,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
       addKeywords,
     };
     const newInfo = await updateMember(member.id, params);
+    setLoading(false);
     if (newInfo && onSuccess) onSuccess(newInfo);
   }
 
@@ -211,6 +214,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
           </Form.Item>
         </div>
 
+        <Divider />
         <div className="row">
           <Form.Item
             label={en ? "About Me (English)" : "À Propos de Moi (Anglais)"}
@@ -227,7 +231,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
           </Form.Item>
         </div>
 
-        <span>{en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}</span>
+        <label>{en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}</label>
         <Divider />
         <Form.List name="problems">
           {(fields) =>
@@ -263,9 +267,12 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
           }
         </Form.List>
 
-        <Form.Item label={en ? "Keywords" : "Mots Clés	"} name="keywords">
-          <KeywordListInput setError={(e) => form.setFields([{ name: "keywords", errors: [e] }])} />
+        <label htmlFor="keywords">{en ? "Keywords" : "Mots Clés	"}</label>
+        <Divider />
+        <Form.Item name="keywords">
+          <KeywordSelector setError={(e) => form.setFields([{ name: "keywords", errors: [e] }])} />
         </Form.Item>
+        <Divider />
 
         <Form.Item style={{ marginBottom: 0 }}>
           <Button
@@ -273,6 +280,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
             htmlType="submit"
             style={{ paddingLeft: 40, paddingRight: 40 }}
             size="large"
+            loading={loading}
           >
             {en ? "Save Changes" : "Sauvegarder"}
           </Button>

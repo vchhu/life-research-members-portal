@@ -1,8 +1,10 @@
 @import "antd/dist/antd.css";
 @import "./antd-colors.scss";
-@import "../components/navbar/@navbar.scss";
-@import "../components/members/all-members.scss";
-@import "../components/members/member-form-public.scss";
+@import "./navbar.scss";
+@import "./all-members.scss";
+@import "./member-form-public.scss";
+@import "./keyword-selector.scss";
+@import "./keyword-tag.scss";
 
 html,
 body {
@@ -42,11 +44,4 @@ body {
 // Override
 .ant-table-thead th.ant-table-column-has-sorters:hover {
   background-color: var(--blue-1);
-}
-
-.keyword-tag {
-  cursor: pointer;
-  &:hover {
-    filter: brightness(90%);
-  }
 }

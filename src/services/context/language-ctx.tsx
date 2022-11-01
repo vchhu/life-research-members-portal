@@ -1,6 +1,7 @@
 import { createContext, FC, PropsWithChildren, useEffect, useState } from "react";
 
 const cacheKey = "preferred-language";
+export let en = true; // For use outside components
 
 export const LanguageCtx = createContext<{
   en: boolean;
@@ -9,18 +10,24 @@ export const LanguageCtx = createContext<{
 
 export const LanguageCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   // If english is false, french
-  const [en, setEnglish] = useState(true);
+  const [_en, setEnglish] = useState(true);
 
   useEffect(() => {
-    if (localStorage.getItem(cacheKey) === "false") setEnglish(false);
+    if (localStorage.getItem(cacheKey) === "false") {
+      en = false;
+      setEnglish(false);
+    }
   }, []);
 
   function toggleLanguage() {
     setEnglish((prev) => {
+      en = !prev;
       localStorage.setItem(cacheKey, String(!prev));
       return !prev;
     });
   }
 
-  return <LanguageCtx.Provider value={{ en, toggleLanguage }}>{children}</LanguageCtx.Provider>;
+  return (
+    <LanguageCtx.Provider value={{ en: _en, toggleLanguage }}>{children}</LanguageCtx.Provider>
+  );
 };

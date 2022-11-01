@@ -1,15 +1,16 @@
 import message from "antd/lib/message";
+import { en } from "../context/language-ctx";
 
 let counter = 1;
 
 export default class Notification {
   constructor(private id = counter++) {}
 
-  loading(content = "Loading...") {
+  loading(content = en ? "Loading..." : "Chargement...") {
     message.loading({ content, key: this.id, duration: 0 });
   }
 
-  success(content = "Success!") {
+  success(content = en ? "Success!" : "Succès !") {
     message.success({ content, key: this.id });
   }
 

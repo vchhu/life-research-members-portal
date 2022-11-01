@@ -7,7 +7,7 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 import useAllMembers from "../../services/use-all-members";
 import type { PublicMemberInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
-import KeywordTag from "./keyword-tag";
+import KeywordTag from "../keywords/keyword-tag";
 
 const AllMembers: FC = () => {
   const router = useRouter();

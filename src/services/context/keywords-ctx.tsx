@@ -1,11 +1,13 @@
 import type { keyword } from "@prisma/client";
-import { createContext, FC, PropsWithChildren, useEffect, useState } from "react";
+import { createContext, FC, PropsWithChildren, useContext, useEffect, useState } from "react";
 import ApiRoutes from "../../routing/api-routes";
 import Notification from "../notifications/notification";
+import { LanguageCtx } from "./language-ctx";
 
 export const KeywordsCtx = createContext<{
   keywords: keyword[];
   refresh: () => void;
+  add: (keyword: keyword) => void;
 }>(null as any);
 
 async function fetchAllKeywords(): Promise<keyword[]> {
@@ -22,20 +24,39 @@ async function fetchAllKeywords(): Promise<keyword[]> {
   }
 }
 
+function enSorter(a: keyword, b: keyword): number {
+  return (a.name_en || a.name_fr || "").localeCompare(b.name_en || b.name_fr || "");
+}
+
+function frSorter(a: keyword, b: keyword): number {
+  return (a.name_fr || a.name_en || "").localeCompare(b.name_fr || b.name_en || "");
+}
+
 export const KeywordsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const [keywords, setKeywords] = useState<keyword[]>([]);
+  const { en } = useContext(LanguageCtx);
 
   async function getKeywords() {
-    setKeywords(await fetchAllKeywords());
+    setKeywords((await fetchAllKeywords()).sort(en ? enSorter : frSorter));
   }
 
   useEffect(() => {
     getKeywords();
+    // Getting this warning because we check a state variable (en) but we do NOT want to refetch on change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setKeywords((prev) => prev.sort(en ? enSorter : frSorter));
+  }, [en]);
 
   function refresh() {
     getKeywords();
   }
 
-  return <KeywordsCtx.Provider value={{ keywords, refresh }}>{children}</KeywordsCtx.Provider>;
+  function add(keyword: keyword) {
+    setKeywords((prev) => [...prev, keyword].sort(en ? enSorter : frSorter));
+  }
+
+  return <KeywordsCtx.Provider value={{ keywords, refresh, add }}>{children}</KeywordsCtx.Provider>;
 };

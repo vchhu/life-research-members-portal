@@ -1,0 +1,36 @@
+.keyword-selector {
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 24px;
+
+    .autocomplete,
+    .create-new-button {
+      flex-grow: 1;
+      flex-basis: 240px;
+      margin-bottom: 8px;
+    }
+
+    .autocomplete {
+      flex-basis: 290px;
+      max-width: 420px;
+    }
+
+    .create-new-button {
+      flex-basis: 190px;
+      max-width: 190px;
+    }
+  }
+
+  .tag-viewport {
+    .ant-card-body {
+      padding-top: 4px;
+      padding-bottom: 4px;
+
+      .keyword-tag {
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+    }
+  }
+}

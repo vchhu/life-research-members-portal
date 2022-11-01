@@ -1,0 +1,7 @@
+.keyword-tag {
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(90%);
+  }
+}

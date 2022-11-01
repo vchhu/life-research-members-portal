@@ -39,7 +39,7 @@ export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const msId = msAccount?.localAccountId;
 
   const [localAccount, setLocalAccount] = useState<AccountInfo | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Start true so loading icons are served first
 
   // Gets the current user's account from the database
   const fetchLocalAccount = async () => {
