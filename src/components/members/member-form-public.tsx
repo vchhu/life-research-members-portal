@@ -270,7 +270,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
         <label htmlFor="keywords">{en ? "Keywords" : "Mots Clés	"}</label>
         <Divider />
         <Form.Item name="keywords">
-          <KeywordSelector setError={(e) => form.setFields([{ name: "keywords", errors: [e] }])} />
+          <KeywordSelector setErrors={(e) => form.setFields([{ name: "keywords", errors: e }])} />
         </Form.Item>
         <Divider />
 

@@ -7,7 +7,7 @@ import { LanguageCtx } from "./language-ctx";
 export const KeywordsCtx = createContext<{
   keywords: keyword[];
   refresh: () => void;
-  add: (keyword: keyword) => void;
+  set: (keyword: keyword) => void;
 }>(null as any);
 
 async function fetchAllKeywords(): Promise<keyword[]> {
@@ -42,7 +42,7 @@ export const KeywordsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     getKeywords();
-    // Getting this warning because we check a state variable (en) but we do NOT want to refetch on change
+    // Getting this warning because we check a state variable (en), but we do NOT want to refetch on change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,9 +54,13 @@ export const KeywordsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
     getKeywords();
   }
 
-  function add(keyword: keyword) {
-    setKeywords((prev) => [...prev, keyword].sort(en ? enSorter : frSorter));
+  function set(keyword: keyword) {
+    setKeywords((prev) => {
+      const curr = prev.filter((k) => k.id !== keyword.id);
+      curr.push(keyword);
+      return curr.sort(en ? enSorter : frSorter);
+    });
   }
 
-  return <KeywordsCtx.Provider value={{ keywords, refresh, add }}>{children}</KeywordsCtx.Provider>;
+  return <KeywordsCtx.Provider value={{ keywords, refresh, set }}>{children}</KeywordsCtx.Provider>;
 };

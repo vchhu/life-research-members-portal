@@ -11,6 +11,7 @@ const ApiRoutes = {
   updateAccount: (id: number) => "/api/update-account/" + id,
   deleteMember: (id: number) => "/api/delete-member/" + id,
   updateMember: (id: number) => "/api/update-member/" + id,
+  updateKeyword: (id: number) => "/api/update-keyword/" + id,
   registerMember: "/api/register-member",
   registerKeyword: "/api/register-keyword",
   allKeywords: "/api/all-keywords",
