@@ -9,6 +9,7 @@ import PublicMemberForm from "./public-member-form";
 import MyProfileRegister from "./my-profile-register";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import useConfirmUnsaved from "../../utils/front-end/use-confirm-unsaved";
+import type { PrivateMemberInfo } from "../../services/_types";
 
 const MyProfile: FC = () => {
   const { en } = useContext(LanguageCtx);
@@ -26,6 +27,15 @@ const MyProfile: FC = () => {
       setDirty(false);
       setEditMode(false);
     }
+  }
+
+  function onSuccess(updatedMember: PrivateMemberInfo) {
+    setDirty(false);
+    setEditMode(false);
+    setLocalAccount((prev) => {
+      if (prev) return { ...prev, member };
+      return prev;
+    });
   }
 
   const editButton = (
@@ -68,14 +78,8 @@ const MyProfile: FC = () => {
       <Card title={header}>
         <PublicMemberForm
           member={member}
-          setDirty={setDirty}
-          onSuccess={(member) => {
-            setEditMode(false);
-            setLocalAccount((prev) => {
-              if (prev) return { ...prev, member };
-              return prev;
-            });
-          }}
+          onValuesChange={() => setDirty(true)}
+          onSuccess={onSuccess}
         />
       </Card>
     );

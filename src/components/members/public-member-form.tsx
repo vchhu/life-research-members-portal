@@ -22,7 +22,7 @@ const { Option } = Select;
 
 type Props = {
   member: PublicMemberInfo;
-  setDirty: Dispatch<SetStateAction<boolean>>;
+  onValuesChange?: (changedValues: any, values: Data) => void;
   onSuccess?: (member: PrivateMemberInfo) => void;
 };
 
@@ -43,7 +43,7 @@ type Data = {
   cv_link: string;
 };
 
-const PublicMemberForm: FC<Props> = ({ member, setDirty, onSuccess }) => {
+const PublicMemberForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
   // This sets the return type of the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
@@ -157,7 +157,7 @@ const PublicMemberForm: FC<Props> = ({ member, setDirty, onSuccess }) => {
         initialValues={initialValues}
         layout="vertical"
         className="public-member-form"
-        onValuesChange={() => setDirty(true)}
+        onValuesChange={onValuesChange}
       >
         <div className="row">
           <Form.Item

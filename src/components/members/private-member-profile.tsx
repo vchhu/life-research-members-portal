@@ -30,6 +30,12 @@ const MemberProfile: FC<Props> = ({ id }) => {
     }
   }
 
+  function onSuccess(updatedMember: typeof member) {
+    setDirty(false);
+    setEditMode(false);
+    setMember(updatedMember);
+  }
+
   const editButton = (
     <Button
       size="large"
@@ -70,11 +76,8 @@ const MemberProfile: FC<Props> = ({ id }) => {
       <Card title={header}>
         <PublicMemberForm
           member={member}
-          setDirty={setDirty}
-          onSuccess={(member) => {
-            setEditMode(false);
-            setMember(member);
-          }}
+          onValuesChange={() => setDirty(true)}
+          onSuccess={onSuccess}
         />
       </Card>
     );
