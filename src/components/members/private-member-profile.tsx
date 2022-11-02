@@ -5,9 +5,10 @@ import Title from "antd/lib/typography/Title";
 import { FC, useContext, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./public-member-description";
-import MemberFormPublic from "./member-form-public";
+import PublicMemberForm from "./public-member-form";
 import usePrivateMemberInfo from "../../services/use-private-member-info";
 import { LanguageCtx } from "../../services/context/language-ctx";
+import useConfirmUnsaved from "../../utils/front-end/use-confirm-unsaved";
 
 type Props = {
   id: number;
@@ -17,9 +18,17 @@ const MemberProfile: FC<Props> = ({ id }) => {
   const { en } = useContext(LanguageCtx);
   const { member, setMember, loading } = usePrivateMemberInfo(id);
   const [editMode, setEditMode] = useState(false);
+  const { confirmUnsaved, setDirty } = useConfirmUnsaved();
 
   if (loading) return <CardSkeleton />;
   if (!member) return <Empty />;
+
+  function onCancel() {
+    if (confirmUnsaved()) {
+      setDirty(false);
+      setEditMode(false);
+    }
+  }
 
   const editButton = (
     <Button
@@ -33,21 +42,7 @@ const MemberProfile: FC<Props> = ({ id }) => {
   );
 
   const cancelButton = (
-    <Button
-      size="large"
-      danger
-      style={{ flexGrow: 1, maxWidth: "10rem" }}
-      onClick={() => {
-        if (
-          confirm(
-            en
-              ? "Are you sure? All unsaved changes will be lost."
-              : "Êtes-vous sûr ? Toutes les modifications non enregistrées seront perdues."
-          )
-        )
-          setEditMode(false);
-      }}
-    >
+    <Button size="large" danger style={{ flexGrow: 1, maxWidth: "10rem" }} onClick={onCancel}>
       {en ? "Cancel" : "Annuler"}
     </Button>
   );
@@ -73,8 +68,9 @@ const MemberProfile: FC<Props> = ({ id }) => {
   if (editMode)
     return (
       <Card title={header}>
-        <MemberFormPublic
+        <PublicMemberForm
           member={member}
+          setDirty={setDirty}
           onSuccess={(member) => {
             setEditMode(false);
             setMember(member);

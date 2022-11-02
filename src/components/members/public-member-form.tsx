@@ -2,7 +2,7 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import React, { FC, Fragment, useContext, useEffect, useState } from "react";
+import React, { Dispatch, FC, Fragment, SetStateAction, useContext, useState } from "react";
 import type { PrivateMemberInfo, ProblemInfo, PublicMemberInfo } from "../../services/_types";
 import updateMember from "../../services/update-member";
 import type { keyword, problem } from "@prisma/client";
@@ -22,6 +22,7 @@ const { Option } = Select;
 
 type Props = {
   member: PublicMemberInfo;
+  setDirty: Dispatch<SetStateAction<boolean>>;
   onSuccess?: (member: PrivateMemberInfo) => void;
 };
 
@@ -42,20 +43,13 @@ type Data = {
   cv_link: string;
 };
 
-const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
+const PublicMemberForm: FC<Props> = ({ member, setDirty, onSuccess }) => {
   // This sets the return type of the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
   const { memberTypes } = useContext(MemberTypesCtx);
   const { faculties } = useContext(FacultiesCtx);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    window.onbeforeunload = () => true;
-    return () => {
-      window.onbeforeunload = null;
-    };
-  }, []);
 
   async function handleUpdate(data: Data) {
     setLoading(true);
@@ -163,6 +157,7 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
         initialValues={initialValues}
         layout="vertical"
         className="public-member-form"
+        onValuesChange={() => setDirty(true)}
       >
         <div className="row">
           <Form.Item
@@ -290,4 +285,4 @@ const MemberFormPublic: FC<Props> = ({ member, onSuccess }) => {
   );
 };
 
-export default MemberFormPublic;
+export default PublicMemberForm;

@@ -5,19 +5,28 @@ import { FC, useContext, useState } from "react";
 import { AccountCtx } from "../../services/context/account-ctx";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./public-member-description";
-import MemberFormPublic from "./member-form-public";
+import PublicMemberForm from "./public-member-form";
 import MyProfileRegister from "./my-profile-register";
 import { LanguageCtx } from "../../services/context/language-ctx";
+import useConfirmUnsaved from "../../utils/front-end/use-confirm-unsaved";
 
 const MyProfile: FC = () => {
   const { en } = useContext(LanguageCtx);
   const { localAccount, setLocalAccount, loading } = useContext(AccountCtx);
   const [editMode, setEditMode] = useState(false);
+  const { confirmUnsaved, setDirty } = useConfirmUnsaved();
 
   if (loading) return <CardSkeleton />;
   if (!localAccount) return null; // Auth guard should prevent this
   if (!localAccount.member) return <MyProfileRegister />;
   const member = localAccount.member;
+
+  function onCancel() {
+    if (confirmUnsaved()) {
+      setDirty(false);
+      setEditMode(false);
+    }
+  }
 
   const editButton = (
     <Button
@@ -31,21 +40,7 @@ const MyProfile: FC = () => {
   );
 
   const cancelButton = (
-    <Button
-      size="large"
-      danger
-      style={{ flexGrow: 1, maxWidth: "10rem" }}
-      onClick={() => {
-        if (
-          confirm(
-            en
-              ? "Are you sure? All unsaved changes will be lost."
-              : "Êtes-vous sûr ? Toutes les modifications non enregistrées seront perdues."
-          )
-        )
-          setEditMode(false);
-      }}
-    >
+    <Button size="large" danger style={{ flexGrow: 1, maxWidth: "10rem" }} onClick={onCancel}>
       {en ? "Cancel" : "Annuler"}
     </Button>
   );
@@ -71,8 +66,9 @@ const MyProfile: FC = () => {
   if (editMode)
     return (
       <Card title={header}>
-        <MemberFormPublic
+        <PublicMemberForm
           member={member}
+          setDirty={setDirty}
           onSuccess={(member) => {
             setEditMode(false);
             setLocalAccount((prev) => {
