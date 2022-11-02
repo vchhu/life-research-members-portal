@@ -10,7 +10,11 @@ import usePrivateMemberInfo from "../../services/use-private-member-info";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import useConfirmUnsaved from "../../utils/front-end/use-confirm-unsaved";
 import Tabs from "antd/lib/tabs";
-import type { PrivateMemberInfo } from "../../services/_types";
+import type { MemberPrivateInfo } from "../../services/_types";
+import PrivateMemberDescription from "./member-private-description";
+import MemberInsightDescription from "./member-insight-description";
+import MemberPrivateForm from "./member-private-form";
+import MemberInsightForm from "./member-insight-form";
 
 type Props = {
   id: number;
@@ -32,7 +36,7 @@ const MemberProfile: FC<Props> = ({ id }) => {
     }
   }
 
-  function onSuccess(updatedMember: PrivateMemberInfo) {
+  function onSuccess(updatedMember: MemberPrivateInfo) {
     setDirty(false);
     setEditMode(false);
     setMember(updatedMember);
@@ -73,21 +77,63 @@ const MemberProfile: FC<Props> = ({ id }) => {
     </div>
   );
 
-  if (editMode)
-    return (
-      <Card title={header}>
+  const descriptions = [
+    {
+      label: en ? "Public" : "Public",
+      key: "public",
+      children: <PublicMemberDescription member={member} />,
+    },
+    {
+      label: en ? "Private" : "Privé",
+      key: "private",
+      children: <PrivateMemberDescription member={member} />,
+    },
+    {
+      label: en ? "Insight" : "Aperçu",
+      key: "insight",
+      children: <MemberInsightDescription member={member} />,
+    },
+  ];
+
+  const forms = [
+    {
+      label: en ? "Public" : "Public",
+      key: "public",
+      children: (
         <PublicMemberForm
           member={member}
           onValuesChange={() => setDirty(true)}
           onSuccess={onSuccess}
         />
-      </Card>
-    );
+      ),
+    },
+    {
+      label: en ? "Private" : "Privé",
+      key: "private",
+      children: (
+        <MemberPrivateForm
+          member={member}
+          onValuesChange={() => setDirty(true)}
+          onSuccess={onSuccess}
+        />
+      ),
+    },
+    {
+      label: en ? "Insight" : "Aperçu",
+      key: "insight",
+      children: (
+        <MemberInsightForm
+          member={member}
+          onValuesChange={() => setDirty(true)}
+          onSuccess={onSuccess}
+        />
+      ),
+    },
+  ];
 
   return (
-    <Card title={header} bodyStyle={{ padding: 0 }}>
-      <Tabs />
-      <PublicMemberDescription member={member} />
+    <Card title={header} bodyStyle={{ paddingTop: 0 }}>
+      <Tabs items={editMode ? forms : descriptions} />
     </Card>
   );
 };

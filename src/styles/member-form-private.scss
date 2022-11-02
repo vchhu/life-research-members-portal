@@ -1,0 +1,40 @@
+.private-member-form-container {
+  .ant-divider {
+    margin: 0;
+    margin-bottom: 12px;
+  }
+  .private-member-form {
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 24px;
+    }
+
+    .ant-form-item {
+      flex-grow: 0;
+    }
+
+    .address {
+      flex-basis: 284px;
+      max-width: 284px;
+    }
+
+    .city,
+    .province,
+    .country,
+    .mobile-phone,
+    .date-picker {
+      flex-basis: 130px;
+      max-width: 130px;
+    }
+
+    .postal-code {
+      flex-basis: 90px;
+      max-width: 90px;
+    }
+
+    .mobile-phone {
+      max-width: 200px;
+    }
+  }
+}

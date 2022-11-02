@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren, ReactElement, useContext } from "react";
 import { AccountCtx } from "../../services/context/account-ctx";
+import { LanguageCtx } from "../../services/context/language-ctx";
 import CenteredSpinner from "../loading/centered-spinner";
 import Authorizations from "./authorizations";
 
@@ -9,18 +10,28 @@ type Props = {
   loadingIcon?: ReactElement;
 };
 
-const notAuthorized = (
-  <h1 style={{ textAlign: "center" }}>You are not authorized to view this page.</h1>
-);
-
 const PageAuthGuard: FC<PropsWithChildren<Props>> = ({ auths, id, loadingIcon, children }) => {
-  if (!loadingIcon) loadingIcon = <CenteredSpinner />;
   const { localAccount, loading } = useContext(AccountCtx);
-  if (loading) return loadingIcon;
+  const { en } = useContext(LanguageCtx);
+
+  if (loading) return loadingIcon || <CenteredSpinner />;
+
+  const notAuthorized = (
+    <h1 style={{ textAlign: "center" }}>
+      {en
+        ? "You are not authorized to view this page."
+        : "Vous n'êtes pas autorisé à afficher cette page."}
+    </h1>
+  );
+
+  const c = <>{children}</>;
+
   if (!localAccount) return notAuthorized;
-  if (auths.includes(Authorizations.registered)) return <>{children}</>;
-  if (auths.includes(Authorizations.admin) && localAccount.is_admin) return <>{children}</>;
-  if (auths.includes(Authorizations.matchId) && localAccount.id === id) return <>{children}</>;
+  if (auths.includes(Authorizations.registered)) return c;
+  if (auths.includes(Authorizations.admin) && localAccount.is_admin) return c;
+  if (auths.includes(Authorizations.matchAccountId) && localAccount.id === id) return c;
+  if (!localAccount.member) return notAuthorized;
+  if (auths.includes(Authorizations.matchMemberId) && localAccount.member.id === id) return c;
   return notAuthorized;
 };
 

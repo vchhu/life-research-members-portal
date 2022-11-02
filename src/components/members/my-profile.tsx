@@ -9,7 +9,7 @@ import PublicMemberForm from "./member-public-form";
 import MyProfileRegister from "./my-profile-register";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import useConfirmUnsaved from "../../utils/front-end/use-confirm-unsaved";
-import type { PrivateMemberInfo } from "../../services/_types";
+import type { MemberPrivateInfo } from "../../services/_types";
 import Tabs from "antd/lib/tabs";
 import PrivateMemberDescription from "./member-private-description";
 import MemberInsightDescription from "./member-insight-description";
@@ -23,7 +23,7 @@ const MyProfile: FC = () => {
   const { localAccount, setLocalAccount, loading } = useContext(AccountCtx);
   const [editMode, setEditMode] = useState(false);
   const { confirmUnsaved, setDirty } = useConfirmUnsaved();
-
+  
   if (loading) return <CardSkeleton />;
   if (!localAccount) return null; // Auth guard should prevent this
   if (!localAccount.member) return <MyProfileRegister />;
@@ -36,7 +36,7 @@ const MyProfile: FC = () => {
     }
   }
 
-  function onSuccess(updatedMember: PrivateMemberInfo) {
+  function onSuccess(updatedMember: MemberPrivateInfo) {
     setDirty(false);
     setEditMode(false);
     setLocalAccount((prev) => {
@@ -74,7 +74,7 @@ const MyProfile: FC = () => {
           whiteSpace: "break-spaces",
         }}
       >
-        {member.account.first_name + " " + member.account.last_name}
+        {localAccount.first_name + " " + localAccount.last_name}
       </Title>
       {editMode ? cancelButton : editButton}
     </div>

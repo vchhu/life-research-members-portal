@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { includeAllMemberInfo } from "../../../../prisma/helpers";
-import db from "../../../../prisma/prisma-client";
-import type { PrivateMemberInfo, ProblemInfo } from "../../../services/_types";
-import getAccountFromRequest from "../../../utils/api/get-account-from-request";
+import { includeAllMemberInfo } from "../../../../../prisma/helpers";
+import db from "../../../../../prisma/prisma-client";
+import type { MemberPrivateInfo, ProblemInfo } from "../../../../services/_types";
+import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
+import type { PrivateMemberDBRes } from "../../member/[id]/private";
 
-export type UpdateMemberParams = {
+export type UpdateMemberPublicParams = {
   first_name?: string;
   last_name?: string;
   about_me_en: string;
@@ -42,7 +43,7 @@ function updateMember(
     addProblems = [],
     deleteKeywords = [],
     addKeywords = [],
-  }: UpdateMemberParams
+  }: UpdateMemberPublicParams
 ) {
   return db.member.update({
     where: { id },
@@ -81,14 +82,14 @@ function updateMember(
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PrivateMemberInfo | string>
+  res: NextApiResponse<PrivateMemberDBRes | string>
 ) {
   if (!req.query.id || typeof req.query.id !== "string")
     return res.status(400).send("Member ID is required.");
 
   try {
     const id = parseInt(req.query.id);
-    const params = req.body as UpdateMemberParams;
+    const params = req.body as UpdateMemberPublicParams;
 
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;

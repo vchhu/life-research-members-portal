@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { FC, useContext } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import useAllMembers from "../../services/use-all-members";
-import type { PublicMemberInfo } from "../../services/_types";
+import type { MemberPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
 import KeywordTag from "../keywords/keyword-tag";
 
@@ -15,7 +15,7 @@ const AllMembers: FC = () => {
   const { allMembers, loading, refresh } = useAllMembers();
   const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id }));
 
-  const columns: ColumnType<PublicMemberInfo>[] = [
+  const columns: ColumnType<MemberPublicInfo>[] = [
     {
       title: en ? "First Name" : "Prénom",
       dataIndex: ["account", "first_name"],

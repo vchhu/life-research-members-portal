@@ -3,8 +3,8 @@ import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
 import React, { FC, Fragment, useContext, useState } from "react";
-import type { PrivateMemberInfo, ProblemInfo, PublicMemberInfo } from "../../services/_types";
-import updateMember from "../../services/update-member";
+import type { MemberPrivateInfo, ProblemInfo, MemberPublicInfo } from "../../services/_types";
+import updateMemberPublic from "../../services/update-member-public";
 import type { keyword, problem } from "@prisma/client";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import Select from "antd/lib/select";
@@ -13,16 +13,16 @@ import { FacultiesCtx } from "../../services/context/faculties-ctx";
 import { MemberTypesCtx } from "../../services/context/member-types-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 import Divider from "antd/lib/divider";
-import type { UpdateMemberParams } from "../../pages/api/update-member/[id]";
+import type { UpdateMemberPublicParams } from "../../pages/api/update-member/[id]/public";
 import Text from "antd/lib/typography/Text";
 import KeywordSelector from "../keywords/keyword-selector";
 
 const { Option } = Select;
 
 type Props = {
-  member: PrivateMemberInfo;
+  member: MemberPrivateInfo;
   onValuesChange?: (changedValues: any, values: Data) => void;
-  onSuccess?: (member: PrivateMemberInfo) => void;
+  onSuccess?: (member: MemberPrivateInfo) => void;
 };
 
 type Data = {
@@ -54,7 +54,7 @@ const MemberInsightForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => 
     setLoading(true);
     const { addProblems, deleteProblems } = diffProblems(data.problems);
     const { addKeywords, deleteKeywords } = diffKeywords(data.keywords);
-    const params: UpdateMemberParams = {
+    const params: UpdateMemberPublicParams = {
       first_name: data.first_name,
       last_name: data.last_name,
       about_me_en: data.about_me_en,
@@ -72,7 +72,7 @@ const MemberInsightForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => 
       deleteKeywords,
       addKeywords,
     };
-    const newInfo = await updateMember(member.id, params);
+    const newInfo = await updateMemberPublic(member.id, params);
     setLoading(false);
     if (newInfo && onSuccess) onSuccess(newInfo);
   }

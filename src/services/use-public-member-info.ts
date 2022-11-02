@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import ApiRoutes from "../routing/api-routes";
-import type { PublicMemberInfo } from "./_types";
+import type { MemberPublicInfo } from "./_types";
 
 export default function usePublicMemberInfo(id: number) {
-  const [member, setMember] = useState<PublicMemberInfo | null>(null);
+  const [member, setMember] = useState<MemberPublicInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
   async function fetchMember(id: number) {

@@ -1,10 +1,11 @@
 import Empty from "antd/lib/empty";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import type { FC } from "react";
+import { FC, useContext } from "react";
 import usePublicMemberInfo from "../../services/use-public-member-info";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./member-public-description";
+import { LanguageCtx } from "../../services/context/language-ctx";
 
 type Props = {
   id: number;
@@ -12,9 +13,12 @@ type Props = {
 
 const PublicMemberProfile: FC<Props> = ({ id }) => {
   const { member, loading } = usePublicMemberInfo(id);
+  const { en } = useContext(LanguageCtx);
 
   if (loading) return <CardSkeleton />;
   if (!member) return <Empty />;
+  if (!member.is_active)
+    return <Title>{en ? "Member is inactive." : "Le membre est inactif."}</Title>;
 
   const header = (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -34,7 +38,7 @@ const PublicMemberProfile: FC<Props> = ({ id }) => {
   );
 
   return (
-    <Card title={header} bodyStyle={{ padding: 0 }}>
+    <Card title={header}>
       <PublicMemberDescription member={member} />
     </Card>
   );

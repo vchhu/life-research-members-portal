@@ -3,7 +3,16 @@ import { includeAllMemberInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
 
-export type PrivateMemberRes = Awaited<ReturnType<typeof getPrivateMemberInfo>>;
+export type PrivateMemberDBRes = Awaited<ReturnType<typeof getPrivateMemberInfo>>;
+
+// Dates will be stringified when sending response!
+export type PrivateMemberRes = Omit<
+  NonNullable<PrivateMemberDBRes>,
+  "date_joined" | "last_active"
+> & {
+  date_joined: string | null;
+  last_active: string | null;
+};
 
 function getPrivateMemberInfo(id: number) {
   return db.member.findUnique({
@@ -14,7 +23,7 @@ function getPrivateMemberInfo(id: number) {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PrivateMemberRes | string>
+  res: NextApiResponse<PrivateMemberDBRes | string>
 ) {
   if (!req.query.id || typeof req.query.id !== "string")
     return res.status(400).send("Member ID is required.");
@@ -25,7 +34,9 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    const authorized = currentAccount.is_admin || currentAccount.id === id;
+    const authorized =
+      currentAccount.is_admin || (currentAccount.member && currentAccount.member.id === id);
+
     if (!authorized)
       return res
         .status(401)

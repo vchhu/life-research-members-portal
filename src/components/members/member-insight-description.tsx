@@ -2,7 +2,7 @@ import Grid from "antd/lib/grid";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import { FC, useContext } from "react";
-import type { PrivateMemberInfo } from "../../services/_types";
+import type { MemberPrivateInfo } from "../../services/_types";
 import GetLanguage from "../../utils/front-end/get-language";
 import KeywordTag from "../keywords/keyword-tag";
 import React from "react";
@@ -11,7 +11,7 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 const { useBreakpoint } = Grid;
 
 type Props = {
-  member: PrivateMemberInfo;
+  member: MemberPrivateInfo;
 };
 
 const MemberInsightDescription: FC<Props> = ({ member }) => {

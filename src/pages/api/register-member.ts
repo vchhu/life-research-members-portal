@@ -3,20 +3,20 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllMemberInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
 import getAccountFromRequest from "../../utils/api/get-account-from-request";
+import type { PrivateMemberDBRes } from "./member/[id]/private";
 
 export type RegisterMemberParams = { account_id: number };
-export type RegisterMemberRes = Awaited<ReturnType<typeof registerMember>>;
 
 function registerMember(account_id: number) {
   return db.member.create({
-    data: { account_id },
+    data: { account_id, date_joined: new Date() },
     include: includeAllMemberInfo,
   });
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<RegisterMemberRes | string>
+  res: NextApiResponse<PrivateMemberDBRes | string>
 ) {
   const params: RegisterMemberParams = req.body;
   const { account_id } = params;

@@ -1,9 +1,16 @@
+import type { member } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../../prisma/helpers";
 import db from "../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../utils/api/get-account-from-request";
+import type { PrivateMemberRes } from "../member/[id]/private";
 
-export type AccountRes = Awaited<ReturnType<typeof getAccountById>>;
+export type AccountDBRes = Awaited<ReturnType<typeof getAccountById>>;
+
+// Dates in member will be stringified when sending response!
+export type AccountRes = Omit<NonNullable<AccountDBRes>, "member"> & {
+  member: PrivateMemberRes | null;
+};
 
 function getAccountById(id: number) {
   return db.account.findUnique({
@@ -14,7 +21,7 @@ function getAccountById(id: number) {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<AccountRes | string>
+  res: NextApiResponse<AccountDBRes | string>
 ) {
   if (!req.query.id || typeof req.query.id !== "string")
     return res.status(400).send("Account ID is required.");

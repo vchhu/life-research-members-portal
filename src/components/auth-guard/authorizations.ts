@@ -1,7 +1,8 @@
 enum Authorizations {
   admin = "admin",
   registered = "registered",
-  matchId = "match id",
+  matchAccountId = "match account id",
+  matchMemberId = "match member id",
 }
 
 export default Authorizations;
