@@ -1,15 +1,22 @@
 import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import { FC, useContext, useState } from "react";
+import React, { FC, ReactNode, useContext, useState } from "react";
 import { AccountCtx } from "../../services/context/account-ctx";
 import CardSkeleton from "../loading/card-skeleton";
-import PublicMemberDescription from "./public-member-description";
-import PublicMemberForm from "./public-member-form";
+import PublicMemberDescription from "./member-public-description";
+import PublicMemberForm from "./member-public-form";
 import MyProfileRegister from "./my-profile-register";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import useConfirmUnsaved from "../../utils/front-end/use-confirm-unsaved";
 import type { PrivateMemberInfo } from "../../services/_types";
+import Tabs from "antd/lib/tabs";
+import PrivateMemberDescription from "./member-private-description";
+import MemberInsightDescription from "./member-insight-description";
+import MemberPrivateForm from "./member-private-form";
+import MemberInsightForm from "./member-insight-form";
+
+type Tab = { label: string; key: string; children: ReactNode };
 
 const MyProfile: FC = () => {
   const { en } = useContext(LanguageCtx);
@@ -33,7 +40,7 @@ const MyProfile: FC = () => {
     setDirty(false);
     setEditMode(false);
     setLocalAccount((prev) => {
-      if (prev) return { ...prev, member };
+      if (prev) return { ...prev, member: updatedMember };
       return prev;
     });
   }
@@ -73,20 +80,63 @@ const MyProfile: FC = () => {
     </div>
   );
 
-  if (editMode)
-    return (
-      <Card title={header}>
+  const descriptions = [
+    {
+      label: en ? "Public" : "Public",
+      key: "public",
+      children: <PublicMemberDescription member={member} />,
+    },
+    {
+      label: en ? "Private" : "Privé",
+      key: "private",
+      children: <PrivateMemberDescription member={member} />,
+    },
+    {
+      label: en ? "Insight" : "Aperçu",
+      key: "insight",
+      children: <MemberInsightDescription member={member} />,
+    },
+  ];
+
+  const forms = [
+    {
+      label: en ? "Public" : "Public",
+      key: "public",
+      children: (
         <PublicMemberForm
           member={member}
           onValuesChange={() => setDirty(true)}
           onSuccess={onSuccess}
         />
-      </Card>
-    );
+      ),
+    },
+    {
+      label: en ? "Private" : "Privé",
+      key: "private",
+      children: (
+        <MemberPrivateForm
+          member={member}
+          onValuesChange={() => setDirty(true)}
+          onSuccess={onSuccess}
+        />
+      ),
+    },
+    {
+      label: en ? "Insight" : "Aperçu",
+      key: "insight",
+      children: (
+        <MemberInsightForm
+          member={member}
+          onValuesChange={() => setDirty(true)}
+          onSuccess={onSuccess}
+        />
+      ),
+    },
+  ];
 
   return (
-    <Card title={header} bodyStyle={{ padding: 0 }}>
-      <PublicMemberDescription member={member} />
+    <Card title={header} bodyStyle={{ paddingTop: 0 }}>
+      <Tabs items={editMode ? forms : descriptions} />
     </Card>
   );
 };

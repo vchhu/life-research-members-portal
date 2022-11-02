@@ -18,25 +18,6 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
   const screens = useBreakpoint();
   const { en } = useContext(LanguageCtx);
 
-  // let address = "";
-  // if (member.address) address += member.address;
-  // if (member.city) {
-  //   if (address) address += ", ";
-  //   address += member.city;
-  // }
-  // if (member.province) {
-  //   if (address) address += ", ";
-  //   address += member.province;
-  // }
-  // if (member.country) {
-  //   if (address) address += ", ";
-  //   address += member.country;
-  // }
-  // if (member.postal_code) {
-  //   if (address) address += ", ";
-  //   address += member.postal_code;
-  // }
-
   return (
     <Descriptions
       size="small"

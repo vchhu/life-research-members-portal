@@ -2,7 +2,7 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import React, { Dispatch, FC, Fragment, SetStateAction, useContext, useState } from "react";
+import React, { FC, Fragment, useContext, useState } from "react";
 import type { PrivateMemberInfo, ProblemInfo, PublicMemberInfo } from "../../services/_types";
 import updateMember from "../../services/update-member";
 import type { keyword, problem } from "@prisma/client";
@@ -15,13 +15,12 @@ import GetLanguage from "../../utils/front-end/get-language";
 import Divider from "antd/lib/divider";
 import type { UpdateMemberParams } from "../../pages/api/update-member/[id]";
 import Text from "antd/lib/typography/Text";
-import Title from "antd/lib/typography/Title";
 import KeywordSelector from "../keywords/keyword-selector";
 
 const { Option } = Select;
 
 type Props = {
-  member: PublicMemberInfo;
+  member: PrivateMemberInfo;
   onValuesChange?: (changedValues: any, values: Data) => void;
   onSuccess?: (member: PrivateMemberInfo) => void;
 };
@@ -43,7 +42,7 @@ type Data = {
   cv_link: string;
 };
 
-const PublicMemberForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
+const MemberInsightForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
   // This sets the return type of the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
@@ -144,7 +143,6 @@ const PublicMemberForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
 
   return (
     <div className="public-member-form-container">
-      <Title level={4}>{en ? "Public Information" : "Information Publique"}</Title>
       <Text strong>
         {en
           ? "You are encouraged to provide both languages where applicable, but it is not required."
@@ -285,4 +283,4 @@ const PublicMemberForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
   );
 };
 
-export default PublicMemberForm;
+export default MemberInsightForm;

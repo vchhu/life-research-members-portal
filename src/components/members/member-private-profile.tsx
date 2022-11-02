@@ -4,11 +4,13 @@ import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import { FC, useContext, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
-import PublicMemberDescription from "./public-member-description";
-import PublicMemberForm from "./public-member-form";
+import PublicMemberDescription from "./member-public-description";
+import PublicMemberForm from "./member-public-form";
 import usePrivateMemberInfo from "../../services/use-private-member-info";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import useConfirmUnsaved from "../../utils/front-end/use-confirm-unsaved";
+import Tabs from "antd/lib/tabs";
+import type { PrivateMemberInfo } from "../../services/_types";
 
 type Props = {
   id: number;
@@ -30,7 +32,7 @@ const MemberProfile: FC<Props> = ({ id }) => {
     }
   }
 
-  function onSuccess(updatedMember: typeof member) {
+  function onSuccess(updatedMember: PrivateMemberInfo) {
     setDirty(false);
     setEditMode(false);
     setMember(updatedMember);
@@ -84,6 +86,7 @@ const MemberProfile: FC<Props> = ({ id }) => {
 
   return (
     <Card title={header} bodyStyle={{ padding: 0 }}>
+      <Tabs />
       <PublicMemberDescription member={member} />
     </Card>
   );

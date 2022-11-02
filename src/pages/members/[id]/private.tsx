@@ -3,7 +3,7 @@ import type { NextPage } from "next/types";
 import Authorizations from "../../../components/auth-guard/authorizations";
 import PageAuthGuard from "../../../components/auth-guard/page-auth-guard";
 import CardSkeleton from "../../../components/loading/card-skeleton";
-import PrivateMemberProfile from "../../../components/members/private-member-profile";
+import PrivateMemberProfile from "../../../components/members/member-private-profile";
 
 const PrivateMemberPage: NextPage = () => {
   const router = useRouter();

@@ -4,7 +4,7 @@ import Title from "antd/lib/typography/Title";
 import type { FC } from "react";
 import usePublicMemberInfo from "../../services/use-public-member-info";
 import CardSkeleton from "../loading/card-skeleton";
-import PublicMemberDescription from "./public-member-description";
+import PublicMemberDescription from "./member-public-description";
 
 type Props = {
   id: number;
