@@ -19,9 +19,7 @@ const PrivateMemberPage: NextPage = () => {
 
     const id = parseInt(idString);
 
-    const ownsProfile = localAccount?.member && localAccount.member.id === id;
-    const authorized = localAccount?.is_admin || ownsProfile;
-    if (authorized) {
+    if (localAccount?.is_admin) {
       router.replace(PageRoutes.privateMemberProfile(id));
       return;
     }

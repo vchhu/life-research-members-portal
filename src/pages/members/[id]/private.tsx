@@ -11,11 +11,7 @@ const PrivateMemberPage: NextPage = () => {
   if (!(typeof idString === "string")) return null;
   const id = parseInt(idString);
   return (
-    <PageAuthGuard
-      auths={[Authorizations.admin, Authorizations.matchMemberId]}
-      id={id}
-      loadingIcon={<CardSkeleton />}
-    >
+    <PageAuthGuard auths={[Authorizations.admin]} loadingIcon={<CardSkeleton />}>
       <PrivateMemberProfile id={id} />
     </PageAuthGuard>
   );
