@@ -74,8 +74,8 @@ model has_keyword {
 }
 
 model insight {
-  id               Int       @id(map: "PK_insight") @unique(map: "UK_insight_member_id") @default(autoincrement())
-  member_id        Int
+  id               Int       @id(map: "PK_insight") @default(autoincrement())
+  member_id        Int       @unique(map: "UK_insight_member_id")
   interview_date   DateTime? @db.Date
   about_member     String?   @db.NVarChar(Max)
   about_promotions String?   @db.NVarChar(Max)
@@ -165,7 +165,7 @@ model member {
   desired_partnership        desired_partnership?
   desired_promotion_strategy desired_promotion_strategy[]
   has_keyword                has_keyword[]
-  insight                    insight[]
+  insight                    insight?
   problem                    problem[]
 }
 

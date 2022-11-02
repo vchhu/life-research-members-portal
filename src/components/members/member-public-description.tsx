@@ -23,7 +23,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       size="small"
       bordered
       column={1}
-      labelStyle={{ whiteSpace: "nowrap", width: "2rem" }}
+      labelStyle={{ whiteSpace: "nowrap", width: 0 }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
       <Item label={en ? "About Me" : "À Propos de Moi"} style={{ whiteSpace: "break-spaces" }}>

@@ -3,8 +3,6 @@ import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import { FC, useContext } from "react";
 import type { MemberPrivateInfo } from "../../services/_types";
-import GetLanguage from "../../utils/front-end/get-language";
-import KeywordTag from "../keywords/keyword-tag";
 import React from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 
@@ -17,48 +15,31 @@ type Props = {
 const MemberInsightDescription: FC<Props> = ({ member }) => {
   const screens = useBreakpoint();
   const { en } = useContext(LanguageCtx);
+  const insight = member.insight;
 
   return (
     <Descriptions
       size="small"
       bordered
       column={1}
-      labelStyle={{ whiteSpace: "nowrap", width: "2rem" }}
+      labelStyle={{ whiteSpace: "break-spaces", width: "8rem" }}
+      contentStyle={{ whiteSpace: "break-spaces" }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
-      <Item label={en ? "About Me" : "À Propos de Moi"} style={{ whiteSpace: "break-spaces" }}>
-        {en ? member.about_me_en : member.about_me_fr}
+      <Item label={en ? "Interview Date" : "Date de l'entretien"}>
+        {insight?.interview_date?.split("T")[0] || ""}
       </Item>
-      <Item label={en ? "Faculty" : "Faculté"}>
-        <GetLanguage obj={member.faculty} />
+      <Item label={en ? "About Member" : "À propos du membre"}>{insight?.about_member}</Item>
+      <Item label={en ? "About Promotions" : "À propos des promotions"}>
+        {insight?.about_promotions}
       </Item>
-      <Item label={en ? "Member Type" : "Type de Membre"}>
-        <GetLanguage obj={member.member_type} />
+      <Item label={en ? "Dream" : "Rêver"}>{insight?.dream}</Item>
+
+      <Item label={en ? "How the institute can help" : "Comment l'institut peut vous aider"}>
+        {insight?.how_can_we_help}
       </Item>
-      <Item
-        label={en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}
-        labelStyle={{ whiteSpace: "break-spaces" }}
-      >
-        {member.problem.map((p, i) => (
-          <React.Fragment key={i}>
-            {`${i + 1}. `}
-            <GetLanguage obj={p} />
-            <br />
-          </React.Fragment>
-        ))}
-      </Item>
-      <Item label={en ? "Keywords" : "Mots Clés"}>
-        {member.has_keyword.map((entry, i) => (
-          <KeywordTag key={i} keyword={entry.keyword} />
-        ))}
-      </Item>
-      <Item label="Email">
-        <a href={"mailto:" + member.work_email}>{member.work_email}</a>
-      </Item>
-      <Item label="Phone">
-        <a href={"tel:" + member.work_phone}>{member.work_phone}</a>
-      </Item>
-      {/* <Item label={en ? "Links" : "Liens"}>{null}</Item> */}
+      <Item label={en ? "Admin Notes" : "Notes d'administration"}>{insight?.admin_notes}</Item>
+      <Item label={en ? "Other Notes" : "Autres notes"}>{insight?.other_notes}</Item>
     </Descriptions>
   );
 };

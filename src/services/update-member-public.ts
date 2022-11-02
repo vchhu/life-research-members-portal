@@ -6,7 +6,6 @@ import { contentTypeJsonHeader } from "./headers/content-type-headers";
 import Notification from "./notifications/notification";
 import type { MemberPrivateInfo } from "./_types";
 
-/** Attempts to update a member, will throw an error if status code is not 200 */
 export default async function updateMemberPublic(
   id: number,
   params: UpdateMemberPublicParams

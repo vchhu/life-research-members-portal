@@ -145,8 +145,8 @@ const PublicMemberForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
     <div className="public-member-form-container">
       <Text strong>
         {en
-          ? "You are encouraged to provide both languages where applicable, but it is not required."
-          : "Vous êtes encouragé à fournir les deux langues, le cas échéant, mais ce n'est pas obligatoire."}
+          ? "Let everyone know what you do! You are encouraged to provide both languages where applicable, but it is not required."
+          : "Faites savoir à tout le monde ce que vous faites ! Vous êtes encouragé à fournir les deux langues, le cas échéant, mais ce n'est pas obligatoire."}
       </Text>
       <Divider />
       <Form

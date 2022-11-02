@@ -12,8 +12,8 @@ import type { UpdateMemberPrivateParams } from "../../pages/api/update-member/[i
 import updateMemberPrivate from "../../services/update-member-private";
 import DatePicker from "antd/lib/date-picker";
 import moment, { Moment } from "moment";
-import Checkbox from "antd/lib/checkbox";
 import { red } from "@ant-design/colors";
+import Switch from "antd/lib/switch";
 
 const { Option } = Select;
 
@@ -39,6 +39,7 @@ const MemberPrivateForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => 
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(member.is_active);
 
   async function handleUpdate(data: Data) {
     setLoading(true);
@@ -58,6 +59,11 @@ const MemberPrivateForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => 
     const newInfo = await updateMemberPrivate(member.id, params);
     setLoading(false);
     if (newInfo && onSuccess) onSuccess(newInfo);
+  }
+
+  function onChange(changed: any, data: Data) {
+    if (status !== data.is_active) setStatus(data.is_active);
+    onValuesChange?.(changed, data);
   }
 
   const initialValues: Data = {
@@ -85,21 +91,33 @@ const MemberPrivateForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => 
         initialValues={initialValues}
         layout="vertical"
         className="private-member-form"
-        onValuesChange={onValuesChange}
+        onValuesChange={onChange}
       >
-        <div style={{ margin: "24px 0" }}>
-          <label>
-            {en ? "I am an active member" : "Je suis un membre actif"}
-            <Form.Item name="is_active" valuePropName="checked" noStyle>
-              <Checkbox style={{ margin: "0 16px" }} />
-            </Form.Item>
-          </label>
-          <Text style={{ color: red[5] }}>
-            {en
-              ? "Unchecking will hide your public profile"
-              : "Décocher cachera votre profil public"}
-          </Text>
-        </div>
+        <Form.Item
+          name="is_active"
+          valuePropName="checked"
+          label={
+            status
+              ? en
+                ? "Status: Active"
+                : "Statut : Actif"
+              : en
+              ? "Status: Inactive"
+              : "Statut : Inactif"
+          }
+          help={
+            <Text style={{ color: red[5] }}>
+              {status
+                ? ""
+                : en
+                ? "Your public profile will be hidden"
+                : "Votre profil public sera caché"}
+            </Text>
+          }
+        >
+          <Switch />
+        </Form.Item>
+
         <div className="row">
           <Form.Item label={en ? "Address" : "Adresse"} name="address" className="address">
             <Input />

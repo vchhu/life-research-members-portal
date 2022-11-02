@@ -1,3 +1,4 @@
+import type { insight } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllMemberInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
@@ -8,10 +9,11 @@ export type PrivateMemberDBRes = Awaited<ReturnType<typeof getPrivateMemberInfo>
 // Dates will be stringified when sending response!
 export type PrivateMemberRes = Omit<
   NonNullable<PrivateMemberDBRes>,
-  "date_joined" | "last_active"
+  "date_joined" | "last_active" | "insight"
 > & {
   date_joined: string | null;
   last_active: string | null;
+  insight: (Omit<insight, "interview_date"> & { interview_date: string | null }) | null;
 };
 
 function getPrivateMemberInfo(id: number) {

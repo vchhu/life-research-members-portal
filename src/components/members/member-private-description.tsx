@@ -40,16 +40,9 @@ const PrivateMemberDescription: FC<Props> = ({ member }) => {
       size="small"
       bordered
       column={1}
-      labelStyle={{ whiteSpace: "nowrap", width: "2rem" }}
+      labelStyle={{ whiteSpace: "nowrap", width: 0 }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
-      <Item label={en ? "Address" : "Adresse"} style={{ whiteSpace: "break-spaces" }}>
-        {address}
-      </Item>
-      <Item label={en ? "Mobile Phone" : "Téléphone mobile"}>{member.mobile_phone}</Item>
-      <Item label={en ? "Date Joined" : "Date d'inscription"}>
-        {member.date_joined?.split("T")[0]}
-      </Item>
       <Item label={en ? "Active" : "Active"}>
         {member.is_active
           ? en
@@ -57,6 +50,13 @@ const PrivateMemberDescription: FC<Props> = ({ member }) => {
             : "Oui"
           : (en ? "No, Last Active: " : "Non, Dernier Actif: ") + member.last_active?.split("T")[0]}
       </Item>
+      <Item label={en ? "Date Joined" : "Date d'inscription"}>
+        {member.date_joined?.split("T")[0]}
+      </Item>
+      <Item label={en ? "Mobile Phone" : "Téléphone mobile"}>
+        <a href={"tel:" + member.mobile_phone}>{member.mobile_phone}</a>
+      </Item>
+      <Item label={en ? "Address" : "Adresse"}>{address}</Item>
     </Descriptions>
   );
 };
