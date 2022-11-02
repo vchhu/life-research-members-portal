@@ -2,12 +2,12 @@ import Grid from "antd/lib/grid";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import type { FC } from "react";
-import type { Account } from "../../services/_types";
+import type { AccountRes } from "../../pages/api/account/[id]";
 
 const { useBreakpoint } = Grid;
 
 type Props = {
-  account: Account;
+  account: AccountRes;
 };
 
 const AccountDescription: FC<Props> = ({ account }) => {

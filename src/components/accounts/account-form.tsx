@@ -8,10 +8,9 @@ import { contentTypeJsonHeader } from "../../services/headers/content-type-heade
 import ApiRoutes from "../../routing/api-routes";
 import Checkbox from "antd/lib/checkbox";
 import type { AccountRes } from "../../pages/api/account/[id]";
-import type { Account } from "../../services/_types";
 
 type Props = {
-  account: Account;
+  account: AccountRes;
   onSuccess?: () => void;
   onDelete?: () => void;
 };
