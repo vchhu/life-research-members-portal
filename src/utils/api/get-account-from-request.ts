@@ -3,6 +3,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
+import type { AccountDBRes, AccountRes } from "../../pages/api/account/[id]";
 
 type MsAccountInfo = {
   id: string;
@@ -15,7 +16,7 @@ function getMicrosoftAccount(authorization: string) {
   return fetch("https://graph.microsoft.com/v1.0/me", { headers: { authorization } });
 }
 
-function getAccountFromDatabase(userId: MsAccountInfo) {
+function getAccountFromDatabase(userId: MsAccountInfo): Promise<AccountDBRes> {
   return db.account.findFirst({
     where: { OR: [{ microsoft_id: userId.id }, { login_email: userId.userPrincipalName }] },
     include: includeAllAccountInfo,
@@ -26,18 +27,21 @@ function getAccountFromDatabase(userId: MsAccountInfo) {
  * Attempts to retrieve user identification using access token in request header.
  * On a failure, sends the appropriate response and returns undefined.
  */
-export default async function getAccountFromRequest(req: NextApiRequest, res: NextApiResponse) {
+export default async function getAccountFromRequest(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<AccountDBRes | null> {
   try {
     if (!req.headers.authorization) {
       res.status(401).send("No Authorization Header");
-      return;
+      return null;
     }
 
     // Attempt to get user id from ms graph
     const msAccountRes = await getMicrosoftAccount(req.headers.authorization);
     if (!msAccountRes.ok) {
       res.status(msAccountRes.status).send(await msAccountRes.text());
-      return;
+      return null;
     }
 
     // Get registered user in database
@@ -53,7 +57,7 @@ export default async function getAccountFromRequest(req: NextApiRequest, res: Ne
             " Microsoft ID: " +
             msAccountInfo.id
         );
-      return;
+      return null;
     }
 
     // Keep account info synchronized
@@ -71,5 +75,6 @@ export default async function getAccountFromRequest(req: NextApiRequest, res: Ne
     return account;
   } catch (e: any) {
     console.error({ e, message: e.message }); // prisma error messages are getters
+    return null;
   }
 }

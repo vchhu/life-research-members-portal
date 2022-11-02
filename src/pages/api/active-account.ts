@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getAccountFromRequest from "../../utils/api/get-account-from-request";
-import type { AccountRes } from "./account/[id]";
+import type { AccountDBRes } from "./account/[id]";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<AccountRes>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<AccountDBRes>) {
   try {
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
