@@ -1,7 +1,6 @@
 import type { FC, PropsWithChildren } from "react";
 import { AccountCtxProvider } from "./account-ctx";
 import { FacultiesCtxProvider } from "./faculties-ctx";
-import { KeywordsCtxProvider } from "./keywords-ctx";
 import { LanguageCtxProvider } from "./language-ctx";
 import { MemberTypesCtxProvider } from "./member-types-ctx";
 
@@ -11,7 +10,6 @@ const AllContextProviders: FC<PropsWithChildren> = [
   LanguageCtxProvider,
   MemberTypesCtxProvider,
   FacultiesCtxProvider,
-  KeywordsCtxProvider,
 ].reduceRight((Accumulator, Parent) => {
   const Provider: FC<PropsWithChildren> = ({ children }) => (
     <Parent>

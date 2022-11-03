@@ -8,7 +8,6 @@ import { FC, useState, useContext } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { KeywordInfo } from "../../services/_types";
 import type { keyword } from "@prisma/client";
-import { KeywordsCtx } from "../../services/context/keywords-ctx";
 import Title from "antd/lib/typography/Title";
 import Text from "antd/lib/typography/Text";
 import { red } from "@ant-design/colors";
@@ -18,14 +17,14 @@ import KeywordPreview from "./keyword-preview";
 
 type Props = {
   keyword: keyword;
+  allKeywords: keyword[];
   open: boolean;
   onSuccess: (keyword: keyword) => void;
   onCancel: () => void;
 };
 
-const EditKeywordModal: FC<Props> = ({ keyword, open, onSuccess, onCancel }) => {
+const EditKeywordModal: FC<Props> = ({ keyword, allKeywords, open, onSuccess, onCancel }) => {
   const { en } = useContext(LanguageCtx);
-  const { keywords, set } = useContext(KeywordsCtx);
   const [loading, setLoading] = useState(false);
   const [form] = useForm<KeywordInfo>();
   const [preview, setPreview] = useState<keyword>(keyword);
@@ -41,10 +40,7 @@ const EditKeywordModal: FC<Props> = ({ keyword, open, onSuccess, onCancel }) => 
       name_en: info.name_en || "",
       name_fr: info.name_fr || "",
     });
-    if (updatedKeyword) {
-      set(updatedKeyword);
-      onSuccess(updatedKeyword);
-    }
+    if (updatedKeyword) onSuccess(updatedKeyword);
     setLoading(false);
   }
 
@@ -83,7 +79,7 @@ const EditKeywordModal: FC<Props> = ({ keyword, open, onSuccess, onCancel }) => 
             {
               validator(_, value?: string) {
                 if (
-                  !keywords.find(
+                  !allKeywords.find(
                     (k) =>
                       k.name_en &&
                       value &&
@@ -116,7 +112,7 @@ const EditKeywordModal: FC<Props> = ({ keyword, open, onSuccess, onCancel }) => 
             () => ({
               validator(_, value?: string) {
                 if (
-                  !keywords.find(
+                  !allKeywords.find(
                     (k) =>
                       k.name_fr &&
                       value &&

@@ -9,26 +9,26 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 import type { KeywordInfo } from "../../services/_types";
 import type { keyword } from "@prisma/client";
 import registerKeyword from "../../services/register-keyword";
-import { KeywordsCtx } from "../../services/context/keywords-ctx";
 import Title from "antd/lib/typography/Title";
 import Text from "antd/lib/typography/Text";
 import KeywordPreview from "./keyword-preview";
 
 type Props = {
   open: boolean;
+  allKeywords: keyword[];
   initialValue?: KeywordInfo;
-  onSuccess?: (keyword: keyword) => void;
-  onCancel?: () => void;
+  onSuccess: (keyword: keyword) => void;
+  onCancel: () => void;
 };
 
 const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
   open,
+  allKeywords,
   initialValue,
   onSuccess,
   onCancel,
 }) => {
   const { en } = useContext(LanguageCtx);
-  const { keywords, set } = useContext(KeywordsCtx);
   const [loading, setLoading] = useState(false);
   const [form] = useForm<KeywordInfo>();
   const [preview, setPreview] = useState<keyword>({
@@ -66,10 +66,7 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
       name_en: info.name_en || "",
       name_fr: info.name_fr || "",
     });
-    if (newKeyword) {
-      set(newKeyword);
-      onSuccess?.(newKeyword);
-    }
+    if (newKeyword) onSuccess(newKeyword);
     setLoading(false);
   }
 
@@ -108,7 +105,7 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
             {
               validator(_, value?: string) {
                 if (
-                  !keywords.find(
+                  !allKeywords.find(
                     (k) => k.name_en && value && k.name_en.toLowerCase() === value.toLowerCase()
                   )
                 )
@@ -137,7 +134,7 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
             () => ({
               validator(_, value?: string) {
                 if (
-                  !keywords.find(
+                  !allKeywords.find(
                     (k) => k.name_fr && value && k.name_fr.toLowerCase() === value.toLowerCase()
                   )
                 )

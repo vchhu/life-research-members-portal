@@ -6,8 +6,8 @@ import AutoComplete from "antd/lib/auto-complete";
 import Button from "antd/lib/button/button";
 import Card from "antd/lib/card";
 import { FC, useContext, useEffect, useRef, useState } from "react";
-import { KeywordsCtx } from "../../services/context/keywords-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
+import useAllKeywords from "../../services/use-all-keywords";
 import type { KeywordInfo } from "../../services/_types";
 import KeywordTag from "./keyword-tag";
 import NewKeywordModal from "./new-keyword-modal";
@@ -27,7 +27,7 @@ const KeywordSelector: FC<Props> = ({
   onChange,
   setErrors,
 }) => {
-  const { keywords } = useContext(KeywordsCtx);
+  const { keywords, set } = useAllKeywords();
   const { en } = useContext(LanguageCtx);
 
   const [selectedValue, setSelectedValue] = useState("");
@@ -41,13 +41,22 @@ const KeywordSelector: FC<Props> = ({
     );
   }, [searchValue, en]);
 
-  const options = keywords
-    .map((k) => ({
-      label: en ? k.name_en || k.name_fr || "" : k.name_fr || k.name_en || "",
-      value: en ? k.name_en || k.name_fr || "" : k.name_fr || k.name_en || "",
-      keyword: k,
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+  function getOption(k: keyword) {
+    let labelAndValue = "";
+    if (en) {
+      if (k.name_en) labelAndValue += k.name_en;
+      if (k.name_en && k.name_fr) labelAndValue += " / ";
+      if (k.name_fr) labelAndValue += k.name_fr;
+    }
+    if (!en) {
+      if (k.name_fr) labelAndValue += k.name_fr;
+      if (k.name_fr && k.name_en) labelAndValue += " / ";
+      if (k.name_en) labelAndValue += k.name_en;
+    }
+    return { label: labelAndValue, value: labelAndValue, keyword: k };
+  }
+
+  const options = keywords.map((k) => getOption(k)).sort((a, b) => a.label.localeCompare(b.label));
 
   function clearState() {
     setSelectedValue("");
@@ -64,10 +73,11 @@ const KeywordSelector: FC<Props> = ({
     setModalOpen(true);
   }
 
-  function onCreate(keyword: keyword) {
+  function onCreate(newKeyword: keyword) {
     setModalOpen(false);
+    set(newKeyword);
     clearState();
-    addToList(keyword);
+    addToList(newKeyword);
   }
 
   function onCancelCreate() {
@@ -86,6 +96,7 @@ const KeywordSelector: FC<Props> = ({
   }
 
   function onEdit(updatedKeyword: keyword) {
+    set(updatedKeyword);
     onChange?.(new Map(value).set(updatedKeyword.id, updatedKeyword));
   }
 
@@ -119,7 +130,7 @@ const KeywordSelector: FC<Props> = ({
             <KeywordTag
               key={k.id}
               keyword={k}
-              editable
+              editProps={{ editable: true, allKeywords: keywords }}
               deletable
               onDelete={onDelete}
               onEdit={onEdit}
@@ -130,6 +141,7 @@ const KeywordSelector: FC<Props> = ({
 
       <NewKeywordModal
         open={modalOpen}
+        allKeywords={keywords}
         onSuccess={onCreate}
         onCancel={onCancelCreate}
         initialValue={modalInitialValue}

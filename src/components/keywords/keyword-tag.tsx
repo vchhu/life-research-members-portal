@@ -11,17 +11,19 @@ import EditKeywordModal from "./edit-keyword-modal";
 type Props = {
   keyword: keyword;
   onClick?: () => void;
-  editable?: boolean;
+  /** If editable, provide all keywords to check for duplicates */
+  editProps?: { editable: true; allKeywords: keyword[] } | { editable: false };
   deletable?: boolean;
   onDelete?: (id: number) => void;
   onEdit?: (keyword: keyword) => void;
   oppositeLanguage?: boolean;
   style?: CSSProperties;
 };
+
 const KeywordTag: FC<Props> = ({
   keyword: k,
   onClick = () => {},
-  editable = false,
+  editProps = { editable: false },
   deletable = false,
   onDelete = () => {},
   onEdit = () => {},
@@ -40,18 +42,19 @@ const KeywordTag: FC<Props> = ({
       <Tag
         className="keyword-tag"
         color={colorFromString((k.name_en || "") + (k.name_fr || ""))}
-        onClick={editable ? () => setModalOpen(true) : onClick}
+        onClick={editProps.editable ? () => setModalOpen(true) : onClick}
         closable={deletable}
         closeIcon={<CloseOutlined onClick={() => onDelete(k.id)} />}
-        icon={editable ? <EditOutlined /> : null}
+        icon={editProps.editable ? <EditOutlined /> : null}
         style={style}
       >
         {oppositeLanguage ? <GetOppositeLanguage obj={k} /> : <GetLanguage obj={k} />}
       </Tag>
-      {editable ? (
+      {editProps.editable ? (
         <EditKeywordModal
           open={modalOpen}
           keyword={k}
+          allKeywords={editProps.allKeywords}
           onSuccess={onEditSuccess}
           onCancel={() => setModalOpen(false)}
         />

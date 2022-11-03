@@ -1,14 +1,8 @@
 import type { keyword } from "@prisma/client";
-import { createContext, FC, PropsWithChildren, useContext, useEffect, useState } from "react";
-import ApiRoutes from "../../routing/api-routes";
-import Notification from "../notifications/notification";
-import { LanguageCtx } from "./language-ctx";
-
-export const KeywordsCtx = createContext<{
-  keywords: keyword[];
-  refresh: () => void;
-  set: (keyword: keyword) => void;
-}>(null as any);
+import { useContext, useEffect, useState } from "react";
+import ApiRoutes from "../routing/api-routes";
+import Notification from "./notifications/notification";
+import { LanguageCtx } from "./context/language-ctx";
 
 async function fetchAllKeywords(): Promise<keyword[]> {
   try {
@@ -32,7 +26,7 @@ function frSorter(a: keyword, b: keyword): number {
   return (a.name_fr || a.name_en || "").localeCompare(b.name_fr || b.name_en || "");
 }
 
-export const KeywordsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
+export default function useAllKeywords() {
   const [keywords, setKeywords] = useState<keyword[]>([]);
   const { en } = useContext(LanguageCtx);
 
@@ -61,6 +55,5 @@ export const KeywordsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
       return curr.sort(en ? enSorter : frSorter);
     });
   }
-
-  return <KeywordsCtx.Provider value={{ keywords, refresh, set }}>{children}</KeywordsCtx.Provider>;
-};
+  return { keywords, refresh, set };
+}
