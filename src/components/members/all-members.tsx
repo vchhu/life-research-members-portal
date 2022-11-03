@@ -44,7 +44,7 @@ const AllMembers: FC = () => {
       </Title>
       <div style={{ flexGrow: 15 }}></div>
       <Button type="primary" onClick={refresh} size="large" style={{ flexGrow: 1 }}>
-        Refresh
+        {en ? "Refresh" : "Rafraîchir"}
       </Button>
     </div>
   );
