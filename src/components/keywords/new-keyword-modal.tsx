@@ -34,15 +34,31 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
   const [preview, setPreview] = useState<keyword>({
     name_en: "",
     name_fr: "",
-    id: 0,
+    id: 0, // Tags require an id
     ...initialValue,
   });
 
-  // Using the initialValues property doesn't work properly since the modal does not get destroyed on close
-  // Also need to check that form is connected before setting values
+  // Using the initialValues form property only updates on the first open, hence we need this effect
   useEffect(() => {
-    if (initialValue && form.getFieldsValue()) form.setFieldsValue(initialValue);
-  }, [initialValue, form]);
+    if (open && initialValue) {
+      // need to check that form is connected before setting values
+      if (form.getFieldsValue()) form.setFieldsValue(initialValue);
+      refreshPreview(initialValue);
+    }
+    // Modals are not destroyed on close, hence state needs to be cleared
+    if (!open) {
+      form.setFieldsValue({ name_en: "", name_fr: "" });
+      refreshPreview({ name_en: "", name_fr: "" });
+    }
+  }, [initialValue, form, open]);
+
+  function refreshPreview(info: KeywordInfo) {
+    setPreview({
+      name_en: info.name_en,
+      name_fr: info.name_fr,
+      id: 0, // Tags require an id
+    });
+  }
 
   async function handleCreate(info: KeywordInfo) {
     setLoading(true);
@@ -74,7 +90,7 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
         form={form}
         layout="vertical"
         onFinish={handleCreate}
-        onValuesChange={(changes) => setPreview((prev) => ({ ...prev, ...changes }))}
+        onValuesChange={(changes, info) => refreshPreview(info)}
       >
         <Form.Item
           label={en ? "English" : "Anglais"}

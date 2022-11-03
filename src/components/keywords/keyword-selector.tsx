@@ -49,7 +49,13 @@ const KeywordSelector: FC<Props> = ({
     }))
     .sort((a, b) => a.label.localeCompare(b.label));
 
+  function clearState() {
+    setSelectedValue("");
+    setSearchValue("");
+  }
+
   function onSelect(optionValue: string, option: typeof options[number]) {
+    clearState();
     addToList(option.keyword);
   }
 
@@ -60,11 +66,15 @@ const KeywordSelector: FC<Props> = ({
 
   function onCreate(keyword: keyword) {
     setModalOpen(false);
+    clearState();
     addToList(keyword);
   }
 
+  function onCancelCreate() {
+    setModalOpen(false);
+  }
+
   function addToList(keyword: keyword) {
-    setSelectedValue("");
     if (!value.has(keyword.id) && value.size >= max) return setErrors?.([`Maximum ${max}`]);
     onChange?.(new Map(value).set(keyword.id, keyword));
   }
@@ -93,7 +103,7 @@ const KeywordSelector: FC<Props> = ({
             filterOption
             notFoundContent={en ? "No Matches" : "Pas de Correspondance"}
             onSelect={onSelect}
-            onSearch={(v) => setSearchValue(v)}
+            onSearch={setSearchValue}
           />
           <Button
             className="create-new-button"
@@ -121,7 +131,7 @@ const KeywordSelector: FC<Props> = ({
       <NewKeywordModal
         open={modalOpen}
         onSuccess={onCreate}
-        onCancel={() => setModalOpen(false)}
+        onCancel={onCancelCreate}
         initialValue={modalInitialValue}
       />
     </>
