@@ -2,13 +2,14 @@ import Empty from "antd/lib/empty";
 import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
 import useAccount from "../../services/use-account";
 import AccountDescription from "./account-description";
 import AccountForm from "./account-form";
 import { useRouter } from "next/router";
 import PageRoutes from "../../routing/page-routes";
+import { LanguageCtx } from "../../services/context/language-ctx";
 
 type Props = {
   id: number;
@@ -16,6 +17,7 @@ type Props = {
 
 const AccountProfile: FC<Props> = ({ id }) => {
   const router = useRouter();
+  const { en } = useContext(LanguageCtx);
   const { account, loading, refresh } = useAccount(id);
   const [editMode, setEditMode] = useState(false);
 
@@ -29,7 +31,7 @@ const AccountProfile: FC<Props> = ({ id }) => {
       style={{ flexGrow: 1, maxWidth: "10rem" }}
       onClick={() => setEditMode(true)}
     >
-      Edit
+      {en ? "Edit" : "Éditer"}
     </Button>
   );
 
@@ -40,7 +42,7 @@ const AccountProfile: FC<Props> = ({ id }) => {
       style={{ flexGrow: 1, maxWidth: "10rem" }}
       onClick={() => setEditMode(false)}
     >
-      Cancel
+      {en ? "Cancel" : "Annuler"}
     </Button>
   );
 
@@ -56,33 +58,28 @@ const AccountProfile: FC<Props> = ({ id }) => {
           whiteSpace: "break-spaces",
         }}
       >
-        {"Account " + account.id}
+        {account.first_name + " " + account.last_name}
       </Title>
       {editMode ? cancelButton : editButton}
     </div>
   );
 
-  if (editMode)
-    return (
-      <Card title={header} bodyStyle={{ paddingBottom: 0 }}>
-        <AccountForm
-          account={account}
-          onSuccess={() => {
-            refresh();
-            setEditMode(false);
-          }}
-          onDelete={() => {
-            router.push(PageRoutes.allAccounts);
-          }}
-        />
-      </Card>
-    );
+  const accountDescription = <AccountDescription account={account} />;
 
-  return (
-    <Card title={header} bodyStyle={{ padding: 0 }}>
-      <AccountDescription account={account} />
-    </Card>
+  const accountForm = (
+    <AccountForm
+      account={account}
+      onSuccess={() => {
+        refresh();
+        setEditMode(false);
+      }}
+      onDelete={() => {
+        router.push(PageRoutes.allAccounts);
+      }}
+    />
   );
+
+  return <Card title={header}>{editMode ? accountForm : accountDescription}</Card>;
 };
 
 export default AccountProfile;

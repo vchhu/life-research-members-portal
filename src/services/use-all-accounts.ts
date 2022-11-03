@@ -16,9 +16,10 @@ export default function useAllAccounts() {
       setLoading(true);
       const result = await fetch(ApiRoutes.allAccounts, { headers: await authHeader() });
       if (!result.ok) return console.error(await result.text());
-      const members = await result.json();
-      setAllAccounts(members);
-      cachedAccounts = members;
+      const accounts: AccountInfo[] = await result.json();
+      accounts.sort((a, b) => a.first_name.localeCompare(b.first_name));
+      setAllAccounts(accounts);
+      cachedAccounts = accounts;
     } catch (e: any) {
       console.error(e);
     } finally {

@@ -34,7 +34,7 @@ const RegisterAccount: FC = () => {
         paddingTop: "2vh",
       }}
     >
-      <h1>Register Account</h1>
+      <h1>{en ? "Register Account" : "Enregistrer un Compte"}</h1>
       <h2 style={{ marginBottom: 24 }}>
         {en
           ? "This page will create an account for the given email."
@@ -48,21 +48,21 @@ const RegisterAccount: FC = () => {
         layout="vertical"
       >
         <Form.Item
-          label="First Name"
+          label={en ? "First Name" : "Prénom"}
           name="first_name"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label="Last Name"
+          label={en ? "Last Name" : "Nom de Famille"}
           name="last_name"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label="Email"
+          label={en ? "Email" : "Email"}
           name="login_email"
           rules={[
             { required: true, message: en ? "Required" : "Requis" },
@@ -72,7 +72,7 @@ const RegisterAccount: FC = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label="Confirm Email"
+          label={en ? "Confirm Email" : "Confirmer Email"}
           name="confirm_email"
           validateFirst={true}
           rules={[
@@ -91,7 +91,9 @@ const RegisterAccount: FC = () => {
           <Input />
         </Form.Item>
         <Form.Item name="is_admin" valuePropName="checked">
-          <Checkbox>Grant Admin Privileges</Checkbox>
+          <Checkbox>
+            {en ? "Grant Admin Privileges" : "Accorder des privilèges d'administrateur"}
+          </Checkbox>
         </Form.Item>
         <Form.Item>
           <Button

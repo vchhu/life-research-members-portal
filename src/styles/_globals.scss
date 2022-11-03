@@ -2,6 +2,7 @@
 @import "./antd-colors.scss";
 @import "./navbar.scss";
 @import "./all-members.scss";
+@import "./all-accounts.scss";
 @import "./member-form-public.scss";
 @import "./member-form-private.scss";
 @import "./member-form-insight.scss";
@@ -26,15 +27,6 @@ body {
 @media screen and (min-width: 600px) {
   .next-page-container {
     padding: 12px 24px;
-  }
-}
-
-.table-row {
-  cursor: pointer;
-  height: 65px;
-
-  &.even {
-    background-color: var(--gray-2);
   }
 }
 

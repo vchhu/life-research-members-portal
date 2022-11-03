@@ -1,8 +1,11 @@
 import Grid from "antd/lib/grid";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
-import type { FC } from "react";
+import { FC, useContext } from "react";
 import type { AccountRes } from "../../pages/api/account/[id]";
+import { LanguageCtx } from "../../services/context/language-ctx";
+import PageRoutes from "../../routing/page-routes";
+import Link from "next/link";
 
 const { useBreakpoint } = Grid;
 
@@ -12,6 +15,13 @@ type Props = {
 
 const AccountDescription: FC<Props> = ({ account }) => {
   const screens = useBreakpoint();
+  const { en } = useContext(LanguageCtx);
+
+  const memberLink = (
+    <Link href={account.member?.id ? PageRoutes.memberProfile(account.member.id) : PageRoutes._404}>
+      {en ? "Yes" : "Oui"}
+    </Link>
+  );
 
   return (
     <Descriptions
@@ -21,10 +31,13 @@ const AccountDescription: FC<Props> = ({ account }) => {
       labelStyle={{ whiteSpace: "nowrap", width: "2rem" }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
-      <Item label="Login Email">{account.login_email}</Item>
-      <Item label="Microsoft ID">{account.microsoft_id}</Item>
-      <Item label="Admin">{account.is_admin ? "Yes" : "No"}</Item>
-      <Item label="Member">{account.member ? "Yes" : "No"}</Item>
+      <Item label={en ? "Login Email" : "Compte Email"}>{account.login_email}</Item>
+      <Item label={en ? "Admin" : "Admin"}>
+        {account.is_admin ? (en ? "Yes" : "Oui") : en ? "No" : "Non"}
+      </Item>
+      <Item label={en ? "Member" : "Membre"}>
+        {account.member ? memberLink : en ? "No" : "Non"}
+      </Item>
     </Descriptions>
   );
 };

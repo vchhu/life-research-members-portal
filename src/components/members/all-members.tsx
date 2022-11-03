@@ -13,7 +13,7 @@ const AllMembers: FC = () => {
   const router = useRouter();
   const { en } = useContext(LanguageCtx);
   const { allMembers, loading, refresh } = useAllMembers();
-  const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id }));
+  const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id })).filter((m) => m.is_active);
 
   const columns: ColumnType<MemberPublicInfo>[] = [
     {

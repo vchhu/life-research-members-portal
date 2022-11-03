@@ -2,12 +2,13 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import type { FC } from "react";
+import { FC, useContext } from "react";
 import authHeader from "../../services/headers/auth-header";
 import { contentTypeJsonHeader } from "../../services/headers/content-type-headers";
 import ApiRoutes from "../../routing/api-routes";
 import Checkbox from "antd/lib/checkbox";
 import type { AccountRes } from "../../pages/api/account/[id]";
+import { LanguageCtx } from "../../services/context/language-ctx";
 
 type Props = {
   account: AccountRes;
@@ -18,6 +19,7 @@ type Props = {
 type Data = Partial<AccountRes>;
 
 const AccountForm: FC<Props> = ({ account, onSuccess, onDelete }) => {
+  const { en } = useContext(LanguageCtx);
   const [form] = useForm<Data>();
 
   async function updateAccount(data: Data) {
@@ -65,15 +67,15 @@ const AccountForm: FC<Props> = ({ account, onSuccess, onDelete }) => {
 
   return (
     <Form form={form} onFinish={updateAccount} initialValues={account}>
-      <Form.Item label="Login Email" name="login_email">
+      <Form.Item label={en ? "Login Email" : "Compte Email"} name="login_email">
         <Input />
       </Form.Item>
 
-      <Form.Item label="Microsoft ID" name="microsoft_id">
-        <Input />
-      </Form.Item>
-
-      <Form.Item label="Admin Privileges" name="is_admin" valuePropName="checked">
+      <Form.Item
+        label={en ? "Admin Privileges" : "Privilèges d'Administrateur"}
+        name="is_admin"
+        valuePropName="checked"
+      >
         <Checkbox />
       </Form.Item>
 
@@ -85,7 +87,7 @@ const AccountForm: FC<Props> = ({ account, onSuccess, onDelete }) => {
             style={{ paddingLeft: 40, paddingRight: 40, marginBottom: 24 }}
             size="large"
           >
-            Save Changes
+            {en ? "Save Changes" : "Sauvegarder"}
           </Button>
         </Form.Item>
         <span style={{ flexGrow: 1 }}></span>
@@ -96,7 +98,7 @@ const AccountForm: FC<Props> = ({ account, onSuccess, onDelete }) => {
           size="large"
           onClick={deleteAccount}
         >
-          Delete Account
+          {en ? "Delete Account" : "Supprimer le Compte"}
         </Button>
       </div>
     </Form>

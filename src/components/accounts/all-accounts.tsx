@@ -1,52 +1,77 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import type { FC } from "react";
+import { FC, useContext } from "react";
 import useAllAccounts from "../../services/use-all-accounts";
 import type { AccountRes } from "../../pages/api/account/[id]";
 import PageRoutes from "../../routing/page-routes";
+import { useRouter } from "next/router";
+import { LanguageCtx } from "../../services/context/language-ctx";
 
 const AllAccounts: FC = () => {
+  const router = useRouter();
+  const { en } = useContext(LanguageCtx);
   const { allAccounts, loading, refresh } = useAllAccounts();
   const keyedAccounts = allAccounts.map((m) => ({ ...m, key: m.id }));
 
-  const columns: ColumnType<NonNullable<AccountRes>>[] = [
+  const columns: ColumnType<AccountRes>[] = [
     {
-      title: "Login Email",
-      dataIndex: "login_email",
-      sorter: (a, b) => (a.login_email || "").localeCompare(b.login_email || ""),
-    },
-    {
-      title: "Admin",
-      dataIndex: "is_admin",
-      width: "6rem",
-      render: (text, record, index) => {
-        return record.is_admin ? "Yes" : "No";
-      },
-      sorter: (a, b) => (a.is_admin ? 1 : 0) - (b.is_admin ? 1 : 0),
-    },
-    {
-      title: "First Name",
+      title: en ? "First Name" : "Prénom",
       dataIndex: "first_name",
       sorter: (a, b) => (a.first_name || "").localeCompare(b.first_name || ""),
     },
     {
-      title: "Last Name",
+      title: en ? "Last Name" : "Nom de Famille",
       dataIndex: "last_name",
       sorter: (a, b) => (a.last_name || "").localeCompare(b.last_name || ""),
     },
     {
-      title: "Contact Email",
+      title: en ? "Login Email" : "Compte Email",
+      dataIndex: "login_email",
+      sorter: (a, b) => (a.login_email || "").localeCompare(b.login_email || ""),
+    },
+    {
+      title: en ? "Admin" : "Admin",
+      dataIndex: "is_admin",
+      width: "6rem",
+      render: (text, record, index) => {
+        return record.is_admin ? (en ? "Yes" : "Oui") : en ? "No" : "Non";
+      },
+      sorter: (a, b) => (a.is_admin ? 0 : 1) - (b.is_admin ? 0 : 1),
+    },
+    {
+      title: en ? "Member" : "Membre",
+      dataIndex: "member",
+      width: "6rem",
+      render: (text, record, index) => {
+        return record.member ? (en ? "Yes" : "Oui") : en ? "No" : "Non";
+      },
+      sorter: (a, b) => (a.member ? 0 : 1) - (b.member ? 0 : 1),
+    },
+    {
+      title: en ? "Active" : "Actif",
+      dataIndex: ["member", "is_active"],
+      width: "6rem",
+      render: (text, record, index) => {
+        if (!record.member) return "";
+        return record.member.is_active ? (en ? "Yes" : "Oui") : en ? "No" : "Non";
+      },
+      sorter: (a, b) =>
+        (a.member ? (a.member.is_active ? 0 : 1) : 2) -
+        (b.member ? (b.member.is_active ? 0 : 1) : 2),
+    },
+    {
+      title: en ? "Work Email" : "Email de Travail",
       dataIndex: ["member", "work_email"],
       sorter: (a, b) => (a.member?.work_email || "").localeCompare(b.member?.work_email || ""),
     },
     {
-      title: "Phone (Business)",
+      title: en ? "Work Phone" : "Téléphone de Travail",
       dataIndex: ["member", "work_phone"],
       sorter: (a, b) => (a.member?.work_phone || "").localeCompare(b.member?.work_phone || ""),
     },
     {
-      title: "Phone (Mobile)",
+      title: en ? "Mobile Phone" : "Téléphone Mobile",
       dataIndex: ["member", "mobile_phone"],
       sorter: (a, b) => (a.member?.mobile_phone || "").localeCompare(b.member?.mobile_phone || ""),
     },
@@ -55,28 +80,31 @@ const AllAccounts: FC = () => {
   const header = () => (
     <div style={{ display: "flex", alignItems: "center" }}>
       <Title level={1} style={{ margin: 0 }}>
-        All Accounts
+        {en ? "All Accounts" : "Tous les comptes"}
       </Title>
       <div style={{ flexGrow: 15 }}></div>
       <Button type="primary" onClick={refresh} size="large" style={{ flexGrow: 1 }}>
-        Refresh
+        {en ? "Refresh" : "Rafraîchir"}
       </Button>
     </div>
   );
 
   return (
     <Table
+      className="all-accounts-table"
+      size="small"
       columns={columns}
       dataSource={keyedAccounts}
       loading={loading}
       title={header}
       pagination={false}
       showSorterTooltip={false}
-      sticky={{ offsetHeader: 80 }}
+      sticky={{ offsetHeader: 74 }}
       scroll={{ x: "max-content" }}
+      rowClassName={(_, index) => "table-row " + (index % 2 === 0 ? "even" : "odd")}
       onRow={(record, _) => ({
-        onDoubleClick: (_) => {
-          window.open(PageRoutes.accountProfile(record.id));
+        onClick: (_) => {
+          router.push(PageRoutes.accountProfile(record.id));
         },
       })}
     />

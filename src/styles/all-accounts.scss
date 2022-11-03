@@ -1,17 +1,12 @@
-.all-members-table {
+.all-accounts-table {
   .table-row {
     cursor: pointer;
-    height: 65px;
 
     &.even {
       background-color: var(--gray-2);
     }
   }
 
-  .tag-column {
-    max-width: 50vw;
-    min-width: 400px;
-  }
   .first-name-column,
   .last-name-column {
     font-size: 0.7rem;
@@ -24,18 +19,10 @@
 }
 
 @media screen and (min-width: 700px) {
-  .all-members-table {
+  .all-accounts-table {
     .first-name-column,
     .last-name-column {
       font-size: inherit;
-    }
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .all-members-table {
-    .tag-column {
-      max-width: 70vw;
     }
   }
 }
