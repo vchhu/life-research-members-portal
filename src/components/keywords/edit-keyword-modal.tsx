@@ -29,10 +29,14 @@ const EditKeywordModal: FC<Props> = ({ keyword, allKeywords, open, onSuccess, on
   const [form] = useForm<KeywordInfo>();
   const [preview, setPreview] = useState<keyword>(keyword);
 
+  // Using the initialValues form property only updates on the first open, hence we need this effect
   useEffect(() => {
-    setPreview(keyword);
-    if (form.getFieldsValue()) form.setFieldsValue(keyword);
-  }, [keyword, form]);
+    if (open) {
+      // need to check that form is connected before setting values
+      if (form.getFieldsValue()) form.setFieldsValue(keyword);
+      setPreview(keyword);
+    }
+  }, [keyword, form, open]);
 
   async function handleUpdate(info: KeywordInfo) {
     setLoading(true);
@@ -92,6 +96,7 @@ const EditKeywordModal: FC<Props> = ({ keyword, allKeywords, open, onSuccess, on
               },
             },
           ]}
+          dependencies={["name_fr"]}
         >
           <Input />
         </Form.Item>
@@ -125,6 +130,7 @@ const EditKeywordModal: FC<Props> = ({ keyword, allKeywords, open, onSuccess, on
               },
             }),
           ]}
+          dependencies={["name_en"]}
         >
           <Input />
         </Form.Item>

@@ -87,6 +87,7 @@ const RegisterAccount: FC = () => {
               },
             }),
           ]}
+          dependencies={["login_email"]}
         >
           <Input />
         </Form.Item>

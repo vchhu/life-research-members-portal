@@ -48,6 +48,10 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
     // Modals are not destroyed on close, hence state needs to be cleared
     if (!open) {
       form.setFieldsValue({ name_en: "", name_fr: "" });
+      form.setFields([
+        { name: "name_en", errors: undefined },
+        { name: "name_fr", errors: undefined },
+      ]);
       refreshPreview({ name_en: "", name_fr: "" });
     }
   }, [initialValue, form, open]);
@@ -114,6 +118,7 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
               },
             },
           ]}
+          dependencies={["name_fr"]}
         >
           <Input />
         </Form.Item>
@@ -143,6 +148,7 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
               },
             }),
           ]}
+          dependencies={["name_en"]}
         >
           <Input />
         </Form.Item>
