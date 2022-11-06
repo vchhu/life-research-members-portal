@@ -18,7 +18,12 @@ function getMicrosoftAccount(authorization: string) {
 
 function getAccountFromDatabase(userId: MsAccountInfo): Promise<AccountDBRes> {
   return db.account.findFirst({
-    where: { OR: [{ microsoft_id: userId.id }, { login_email: userId.userPrincipalName }] },
+    where: {
+      OR: [
+        { microsoft_id: userId.id },
+        { login_email: userId.userPrincipalName.toLocaleLowerCase() },
+      ],
+    },
     include: includeAllAccountInfo,
   });
 }

@@ -13,7 +13,7 @@ export type RegisterAccountRes = Awaited<ReturnType<typeof registerAccount>>;
 
 function registerAccount({ login_email, first_name, last_name, is_admin }: RegisterAccountParams) {
   return db.account.create({
-    data: { login_email, is_admin, first_name, last_name },
+    data: { login_email: login_email.toLocaleLowerCase(), is_admin, first_name, last_name },
   });
 }
 

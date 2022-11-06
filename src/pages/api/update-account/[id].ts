@@ -8,6 +8,8 @@ export type UpdateAccountParams = Partial<account>;
 export type UpdateAccountRes = Awaited<ReturnType<typeof updateAccount>>;
 
 function updateAccount(id: number, accountInfo: UpdateAccountParams) {
+  if (accountInfo.login_email)
+    accountInfo.login_email = accountInfo.login_email.toLocaleLowerCase();
   return db.account.update({
     where: { id },
     data: accountInfo,
