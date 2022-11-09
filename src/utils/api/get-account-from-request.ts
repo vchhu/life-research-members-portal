@@ -72,7 +72,10 @@ export default async function getAccountFromRequest(
     ) {
       account = await db.account.update({
         where: { id: account.id },
-        data: { microsoft_id: msAccountInfo.id, login_email: msAccountInfo.userPrincipalName },
+        data: {
+          microsoft_id: msAccountInfo.id,
+          login_email: msAccountInfo.userPrincipalName.toLocaleLowerCase(),
+        },
         include: includeAllAccountInfo,
       });
     }
@@ -80,6 +83,7 @@ export default async function getAccountFromRequest(
     return account;
   } catch (e: any) {
     console.error({ e, message: e.message }); // prisma error messages are getters
+    res.status(500).send({ e, message: e.message });
     return null;
   }
 }

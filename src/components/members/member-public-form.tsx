@@ -2,7 +2,7 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import React, { FC, Fragment, useContext, useState } from "react";
+import React, { FC, Fragment, useCallback, useContext, useEffect, useState } from "react";
 import type { MemberPrivateInfo, ProblemInfo, MemberPublicInfo } from "../../services/_types";
 import updateMemberPublic from "../../services/update-member-public";
 import type { keyword, problem } from "@prisma/client";
@@ -16,13 +16,14 @@ import Divider from "antd/lib/divider";
 import type { UpdateMemberPublicParams } from "../../pages/api/update-member/[id]/public";
 import Text from "antd/lib/typography/Text";
 import KeywordSelector from "../keywords/keyword-selector";
+import Notification from "../../services/notifications/notification";
+import { SaveChangesCtx, useResetDirtyOnUnmount } from "../../services/context/save-changes-ctx";
 
 const { Option } = Select;
 
 type Props = {
   member: MemberPublicInfo;
-  onValuesChange?: (changedValues: any, values: Data) => void;
-  onSuccess?: (member: MemberPrivateInfo) => void;
+  onSuccess: (member: MemberPrivateInfo) => void;
 };
 
 type Data = {
@@ -42,40 +43,102 @@ type Data = {
   cv_link: string;
 };
 
-const PublicMemberForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
-  // This sets the return type of the form
+const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
   const { memberTypes } = useContext(MemberTypesCtx);
   const { faculties } = useContext(FacultiesCtx);
   const [loading, setLoading] = useState(false);
+  const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
+  useResetDirtyOnUnmount();
 
-  async function handleUpdate(data: Data) {
-    setLoading(true);
-    const { addProblems, deleteProblems } = diffProblems(data.problems);
-    const { addKeywords, deleteKeywords } = diffKeywords(data.keywords);
-    const params: UpdateMemberPublicParams = {
-      first_name: data.first_name,
-      last_name: data.last_name,
-      about_me_en: data.about_me_en,
-      about_me_fr: data.about_me_fr,
-      faculty_id: data.faculty_id || null,
-      type_id: data.type_id || null,
-      work_email: data.work_email,
-      work_phone: data.work_phone,
-      website_link: data.website_link,
-      twitter_link: data.twitter_link,
-      linkedin_link: data.linkedin_link,
-      cv_link: data.cv_link,
-      deleteProblems,
-      addProblems,
-      deleteKeywords,
-      addKeywords,
-    };
-    const newInfo = await updateMemberPublic(member.id, params);
-    setLoading(false);
-    if (newInfo && onSuccess) onSuccess(newInfo);
-  }
+  const diffProblems = useCallback(
+    (
+      newProblems: ProblemInfo[]
+    ): {
+      addProblems: ProblemInfo[];
+      deleteProblems: number[];
+    } => {
+      const oldProblems = member.problem;
+      const addProblems = [];
+      const deleteProblems = [];
+      for (const [i, newP] of newProblems.entries()) {
+        const oldP = oldProblems[i] as problem | undefined;
+        const different = oldP?.name_en !== newP.name_en || oldP?.name_fr !== newP.name_fr;
+        const hasName = newP.name_en || newP.name_fr;
+        if (different) {
+          if (oldP) deleteProblems.push(oldP.id);
+          if (hasName) addProblems.push(newP);
+        }
+      }
+      return { addProblems, deleteProblems };
+    },
+    [member.problem]
+  );
+
+  const diffKeywords = useCallback(
+    (
+      newKeywords: Map<number, keyword>
+    ): {
+      deleteKeywords: number[];
+      addKeywords: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deleteKeywords: number[] = [];
+      const addKeywords: number[] = [];
+      for (const has_keyword of member.has_keyword) oldIds.add(has_keyword.keyword.id);
+      for (const keyword of newKeywords.values()) newIds.add(keyword.id);
+      for (const oldId of oldIds.values()) if (!newIds.has(oldId)) deleteKeywords.push(oldId);
+      for (const newId of newIds.values()) if (!oldIds.has(newId)) addKeywords.push(newId);
+      return { deleteKeywords, addKeywords };
+    },
+    [member.has_keyword]
+  );
+
+  const submit = useCallback(
+    async (data?: Data): Promise<boolean> => {
+      if (!dirty) {
+        new Notification().warning(en ? "No Changes" : "Aucun changement");
+        return true;
+      }
+      setLoading(true);
+      if (!data) data = form.getFieldsValue();
+      const { addProblems, deleteProblems } = diffProblems(data.problems);
+      const { addKeywords, deleteKeywords } = diffKeywords(data.keywords);
+      const params: UpdateMemberPublicParams = {
+        first_name: data.first_name,
+        last_name: data.last_name,
+        about_me_en: data.about_me_en,
+        about_me_fr: data.about_me_fr,
+        faculty_id: data.faculty_id || null,
+        type_id: data.type_id || null,
+        work_email: data.work_email,
+        work_phone: data.work_phone,
+        website_link: data.website_link,
+        twitter_link: data.twitter_link,
+        linkedin_link: data.linkedin_link,
+        cv_link: data.cv_link,
+        deleteProblems,
+        addProblems,
+        deleteKeywords,
+        addKeywords,
+      };
+      const newInfo = await updateMemberPublic(member.id, params);
+      setLoading(false);
+      if (newInfo) {
+        setDirty(false);
+        onSuccess(newInfo);
+      }
+      return !!newInfo;
+    },
+    [form, onSuccess, diffKeywords, diffProblems, member.id, dirty, en, setDirty]
+  );
+
+  /** Pass submit function to context */
+  useEffect(() => {
+    setSubmit(() => submit);
+  }, [setSubmit, submit]);
 
   function getInitialProblems() {
     const problems: ProblemInfo[] = [];
@@ -86,42 +149,8 @@ const PublicMemberForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
     return problems;
   }
 
-  function diffProblems(newProblems: ProblemInfo[]): {
-    addProblems: ProblemInfo[];
-    deleteProblems: number[];
-  } {
-    const oldProblems = member.problem;
-    const addProblems = [];
-    const deleteProblems = [];
-    for (const [i, newP] of newProblems.entries()) {
-      const oldP = oldProblems[i] as problem | undefined;
-      const different = oldP?.name_en !== newP.name_en || oldP?.name_fr !== newP.name_fr;
-      const hasName = newP.name_en || newP.name_fr;
-      if (different) {
-        if (oldP) deleteProblems.push(oldP.id);
-        if (hasName) addProblems.push(newP);
-      }
-    }
-    return { addProblems, deleteProblems };
-  }
-
   function getInitialKeywords() {
     return new Map(member.has_keyword.map((k) => [k.keyword.id, k.keyword]));
-  }
-
-  function diffKeywords(newKeywords: Map<number, keyword>): {
-    deleteKeywords: number[];
-    addKeywords: number[];
-  } {
-    const oldIds = new Set<number>();
-    const newIds = new Set<number>();
-    const deleteKeywords: number[] = [];
-    const addKeywords: number[] = [];
-    for (const has_keyword of member.has_keyword) oldIds.add(has_keyword.keyword.id);
-    for (const keyword of newKeywords.values()) newIds.add(keyword.id);
-    for (const oldId of oldIds.values()) if (!newIds.has(oldId)) deleteKeywords.push(oldId);
-    for (const newId of newIds.values()) if (!oldIds.has(newId)) addKeywords.push(newId);
-    return { deleteKeywords, addKeywords };
   }
 
   const initialValues: Data = {
@@ -151,11 +180,11 @@ const PublicMemberForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
       <Divider />
       <Form
         form={form}
-        onFinish={handleUpdate}
+        onFinish={submit}
         initialValues={initialValues}
         layout="vertical"
         className="public-member-form"
-        onValuesChange={onValuesChange}
+        onValuesChange={() => setDirty(true)}
       >
         <div className="row">
           <Form.Item

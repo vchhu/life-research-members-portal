@@ -1,13 +1,10 @@
 import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
-import React, { FC, useContext, useState } from "react";
-import type { MemberPrivateInfo, ProblemInfo, MemberPublicInfo } from "../../services/_types";
+import React, { FC, useCallback, useContext, useEffect, useState } from "react";
+import type { MemberPrivateInfo } from "../../services/_types";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import Select from "antd/lib/select";
 import TextArea from "antd/lib/input/TextArea";
-import { FacultiesCtx } from "../../services/context/faculties-ctx";
-import { MemberTypesCtx } from "../../services/context/member-types-ctx";
 import Divider from "antd/lib/divider";
 import Text from "antd/lib/typography/Text";
 import type { Moment } from "moment";
@@ -15,13 +12,12 @@ import type { UpdateMemberInsightParams } from "../../pages/api/update-member/[i
 import updateMemberInsight from "../../services/update-member-insight";
 import moment from "moment";
 import DatePicker from "antd/lib/date-picker";
-
-const { Option } = Select;
+import Notification from "../../services/notifications/notification";
+import { SaveChangesCtx, useResetDirtyOnUnmount } from "../../services/context/save-changes-ctx";
 
 type Props = {
   member: MemberPrivateInfo;
-  onValuesChange?: (changedValues: any, values: Data) => void;
-  onSuccess?: (member: MemberPrivateInfo) => void;
+  onSuccess: (member: MemberPrivateInfo) => void;
 };
 
 type Data = {
@@ -34,30 +30,47 @@ type Data = {
   other_notes: string;
 };
 
-const MemberInsightForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
+const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
   // This sets the return type of the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
-  const { memberTypes } = useContext(MemberTypesCtx);
-  const { faculties } = useContext(FacultiesCtx);
   const [loading, setLoading] = useState(false);
+  const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
+  useResetDirtyOnUnmount();
   const insight = member.insight;
 
-  async function handleUpdate(data: Data) {
-    setLoading(true);
-    const params: UpdateMemberInsightParams = {
-      interview_date: data.interview_date?.toISOString() || null,
-      about_member: data.about_member,
-      about_promotions: data.about_promotions,
-      dream: data.dream,
-      how_can_we_help: data.how_can_we_help,
-      admin_notes: data.admin_notes,
-      other_notes: data.other_notes,
-    };
-    const newInfo = await updateMemberInsight(member.id, params);
-    setLoading(false);
-    if (newInfo && onSuccess) onSuccess(newInfo);
-  }
+  const submit = useCallback(
+    async (data?: Data): Promise<boolean> => {
+      if (!dirty) {
+        new Notification().warning(en ? "No Changes" : "Aucun changement");
+        return true;
+      }
+      setLoading(true);
+      if (!data) data = form.getFieldsValue();
+      const params: UpdateMemberInsightParams = {
+        interview_date: data.interview_date?.toISOString() || null,
+        about_member: data.about_member,
+        about_promotions: data.about_promotions,
+        dream: data.dream,
+        how_can_we_help: data.how_can_we_help,
+        admin_notes: data.admin_notes,
+        other_notes: data.other_notes,
+      };
+      const newInfo = await updateMemberInsight(member.id, params);
+      setLoading(false);
+      if (newInfo) {
+        setDirty(false);
+        onSuccess(newInfo);
+      }
+      return !!newInfo;
+    },
+    [dirty, form, member.id, en, setDirty, onSuccess]
+  );
+
+  /** Pass submit function to parent */
+  useEffect(() => {
+    setSubmit(() => submit);
+  }, [setSubmit, submit]);
 
   const initialValues: Data = {
     interview_date: insight?.interview_date ? moment(insight.interview_date) : null,
@@ -79,11 +92,11 @@ const MemberInsightForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => 
       <Divider />
       <Form
         form={form}
-        onFinish={handleUpdate}
+        onFinish={submit}
         initialValues={initialValues}
         layout="vertical"
         className="member-insight-form"
-        onValuesChange={onValuesChange}
+        onValuesChange={() => setDirty(true)}
       >
         <Form.Item label={en ? "Interview Date" : "Date de l'entretien"} name="interview_date">
           <DatePicker />

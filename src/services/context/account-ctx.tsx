@@ -8,7 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { msalInstance } from "../../../auth-config";
+import { loginRequest, msalInstance } from "../../../auth-config";
 import ApiRoutes from "../../routing/api-routes";
 import authHeader from "../headers/auth-header";
 import type { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
@@ -29,6 +29,7 @@ export const AccountCtx = createContext<{
   localAccount: AccountInfo | null;
   loading: boolean;
   refresh: () => void;
+  login: () => void;
   logout: () => void;
   setLocalAccount: Dispatch<SetStateAction<AccountInfo | null>>;
 }>(null as any);
@@ -70,7 +71,13 @@ export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
     fetchLocalAccount();
   }, [msId, instance]);
 
-  const logout = () => {
+  function login() {
+    instance.loginRedirect(loginRequest).catch((e: any) => {
+      console.error(e);
+    });
+  }
+
+  function logout() {
     const onRedirectNavigate = () => {
       setLocalAccount(null);
       instance.setActiveAccount(null);
@@ -80,11 +87,11 @@ export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
     instance.logoutRedirect({ onRedirectNavigate }).catch((e: any) => {
       console.error(e);
     });
-  };
+  }
 
   return (
     <AccountCtx.Provider
-      value={{ localAccount, loading, logout, refresh: fetchLocalAccount, setLocalAccount }}
+      value={{ localAccount, loading, login, logout, refresh: fetchLocalAccount, setLocalAccount }}
     >
       {children}
     </AccountCtx.Provider>

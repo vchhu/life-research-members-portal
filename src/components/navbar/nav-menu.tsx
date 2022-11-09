@@ -2,12 +2,12 @@ import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
 import Menu from "antd/lib/menu";
 import type { MenuItemType } from "antd/lib/menu/hooks/useItems";
 import Spin from "antd/lib/spin";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useContext } from "react";
 import { AccountCtx } from "../../services/context/account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import PageRoutes from "../../routing/page-routes";
+import SafeLink from "../link/safe-link";
 
 const NavMenu: FC = () => {
   const { localAccount, loading } = useContext(AccountCtx);
@@ -34,22 +34,14 @@ const NavMenu: FC = () => {
 
   const menuItems: MenuItemType[] = items.map((it) => {
     return {
-      label: (
-        <Link href={it.href}>
-          <a>{it.label}</a>
-        </Link>
-      ),
+      label: <SafeLink href={it.href}>{it.label}</SafeLink>,
       key: it.label,
     };
   });
 
   if (loading) menuItems.push({ label: <Spin />, key: "loading" });
 
-  // Highlights the right menu item when navigating by url
-  function getSelectedKey() {
-    const item = items.find((it) => router.pathname.startsWith(it.href));
-    return item ? [item.label] : [];
-  }
+  const activeItem = items.find((it) => router.pathname.startsWith(it.href));
 
   return (
     <div className="nav-menu">
@@ -58,7 +50,8 @@ const NavMenu: FC = () => {
         mode="horizontal"
         overflowedIndicator={<MenuOutlined className="collapsed-icon" />}
         style={{ fontSize: "inherit" }}
-        selectedKeys={getSelectedKey()}
+        selectedKeys={activeItem ? [activeItem.label] : []}
+        activeKey={activeItem?.label}
       />
     </div>
   );

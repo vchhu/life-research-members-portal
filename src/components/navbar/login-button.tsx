@@ -1,18 +1,12 @@
 import Button from "antd/lib/button";
-import Typography from "antd/lib/typography";
 import Image from "next/image";
 import { FC, useContext } from "react";
-import { loginRequest, msalInstance } from "../../../auth-config";
 import msIcon from "../../../public/microsoft-logo.png";
+import { AccountCtx } from "../../services/context/account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 
-function login() {
-  msalInstance.loginRedirect(loginRequest).catch((e: any) => {
-    console.error(e);
-  });
-}
-
 const LoginButton: FC = () => {
+  const { login } = useContext(AccountCtx);
   const { en } = useContext(LanguageCtx);
   return (
     <Button type="primary" onClick={login} className="login-button">

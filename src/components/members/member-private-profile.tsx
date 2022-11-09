@@ -2,19 +2,23 @@ import Empty from "antd/lib/empty";
 import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import { FC, useContext, useState } from "react";
+import { FC, ReactNode, useCallback, useContext, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./member-public-description";
 import PublicMemberForm from "./member-public-form";
 import usePrivateMemberInfo from "../../services/use-private-member-info";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import useConfirmUnsaved from "../../utils/front-end/use-confirm-unsaved";
 import Tabs from "antd/lib/tabs";
 import type { MemberPrivateInfo } from "../../services/_types";
 import PrivateMemberDescription from "./member-private-description";
 import MemberInsightDescription from "./member-insight-description";
 import MemberPrivateForm from "./member-private-form";
 import MemberInsightForm from "./member-insight-form";
+import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
+
+type Tab = { label: string; key: string; children: ReactNode };
+
+const keys = { public: "public", private: "private", insight: "insight" };
 
 type Props = {
   id: number;
@@ -24,22 +28,26 @@ const MemberProfile: FC<Props> = ({ id }) => {
   const { en } = useContext(LanguageCtx);
   const { member, setMember, loading } = usePrivateMemberInfo(id);
   const [editMode, setEditMode] = useState(false);
-  const { confirmUnsaved, setDirty } = useConfirmUnsaved();
+  const [activeTabKey, setActiveTabKey] = useState(keys.public);
+  const { saveChangesPrompt } = useContext(SaveChangesCtx);
+
+  /** After saving changes via submit button - dependency of form's submit */
+  const onSuccess = useCallback(
+    (updatedMember: MemberPrivateInfo) => setMember(updatedMember),
+    [setMember]
+  );
 
   if (loading) return <CardSkeleton />;
   if (!member) return <Empty />;
 
+  /** When clicking cancel - prompt to save changes if dirty */
   function onCancel() {
-    if (confirmUnsaved()) {
-      setDirty(false);
-      setEditMode(false);
-    }
+    saveChangesPrompt({ onSuccessOrDiscard: () => setEditMode(false) });
   }
 
-  function onSuccess(updatedMember: MemberPrivateInfo) {
-    setDirty(false);
-    setEditMode(false);
-    setMember(updatedMember);
+  /** When changing tabs - prompt to save changes if dirty */
+  async function onChange(key: string) {
+    saveChangesPrompt({ onSuccessOrDiscard: () => setActiveTabKey(key) });
   }
 
   const editButton = (
@@ -77,63 +85,52 @@ const MemberProfile: FC<Props> = ({ id }) => {
     </div>
   );
 
-  const descriptions = [
+  const descriptions: Tab[] = [
     {
       label: en ? "Public" : "Public",
-      key: "public",
+      key: keys.public,
       children: <PublicMemberDescription member={member} />,
     },
     {
       label: en ? "Private" : "Privé",
-      key: "private",
+      key: keys.private,
       children: <PrivateMemberDescription member={member} />,
     },
     {
       label: en ? "Insight" : "Aperçu",
-      key: "insight",
+      key: keys.insight,
       children: <MemberInsightDescription member={member} />,
     },
   ];
 
-  const forms = [
+  const forms: Tab[] = [
     {
       label: en ? "Public" : "Public",
-      key: "public",
-      children: (
-        <PublicMemberForm
-          member={member}
-          onValuesChange={() => setDirty(true)}
-          onSuccess={onSuccess}
-        />
-      ),
+      key: keys.public,
+      children: <PublicMemberForm member={member} onSuccess={onSuccess} />,
     },
     {
       label: en ? "Private" : "Privé",
-      key: "private",
-      children: (
-        <MemberPrivateForm
-          member={member}
-          onValuesChange={() => setDirty(true)}
-          onSuccess={onSuccess}
-        />
-      ),
+      key: keys.private,
+      children: <MemberPrivateForm member={member} onSuccess={onSuccess} />,
     },
     {
       label: en ? "Insight" : "Aperçu",
-      key: "insight",
-      children: (
-        <MemberInsightForm
-          member={member}
-          onValuesChange={() => setDirty(true)}
-          onSuccess={onSuccess}
-        />
-      ),
+      key: keys.insight,
+      children: <MemberInsightForm member={member} onSuccess={onSuccess} />,
     },
   ];
 
   return (
     <Card title={header} bodyStyle={{ paddingTop: 0 }}>
-      <Tabs items={editMode ? forms : descriptions} />
+      <Tabs
+        items={editMode ? forms : descriptions}
+        activeKey={activeTabKey}
+        onChange={onChange}
+        // Very important to destroy inactive forms,
+        // so they register their submit function to the save changes context when navigated back
+        destroyInactiveTabPane
+      />
     </Card>
   );
 };

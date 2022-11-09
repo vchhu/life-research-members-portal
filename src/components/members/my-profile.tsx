@@ -1,48 +1,62 @@
 import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import React, { FC, ReactNode, useContext, useState } from "react";
+import React, { FC, ReactNode, useCallback, useContext, useState } from "react";
 import { AccountCtx } from "../../services/context/account-ctx";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./member-public-description";
 import PublicMemberForm from "./member-public-form";
 import MyProfileRegister from "./my-profile-register";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import useConfirmUnsaved from "../../utils/front-end/use-confirm-unsaved";
 import type { MemberPrivateInfo } from "../../services/_types";
 import Tabs from "antd/lib/tabs";
 import PrivateMemberDescription from "./member-private-description";
 import MemberInsightDescription from "./member-insight-description";
 import MemberPrivateForm from "./member-private-form";
 import MemberInsightForm from "./member-insight-form";
+import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
 
 type Tab = { label: string; key: string; children: ReactNode };
+
+const keys = { public: "public", private: "private", insight: "insight" };
 
 const MyProfile: FC = () => {
   const { en } = useContext(LanguageCtx);
   const { localAccount, setLocalAccount, loading } = useContext(AccountCtx);
   const [editMode, setEditMode] = useState(false);
-  const { confirmUnsaved, setDirty } = useConfirmUnsaved();
-  
+  const [activeTabKey, setActiveTabKey] = useState(keys.public);
+  const { saveChangesPrompt } = useContext(SaveChangesCtx);
+
+  /** After saving changes via submit button - dependency of form's submit */
+  const onSuccess = useCallback(
+    (updatedMember: MemberPrivateInfo) => {
+      setLocalAccount((prev) => {
+        if (prev)
+          return {
+            ...prev,
+            member: updatedMember,
+            first_name: updatedMember.account.first_name,
+            last_name: updatedMember.account.last_name,
+          };
+        return prev;
+      });
+    },
+    [setLocalAccount]
+  );
+
   if (loading) return <CardSkeleton />;
   if (!localAccount) return null; // Auth guard should prevent this
   if (!localAccount.member) return <MyProfileRegister />;
   const member = localAccount.member;
 
+  /** When clicking cancel - prompt to save changes if dirty */
   function onCancel() {
-    if (confirmUnsaved()) {
-      setDirty(false);
-      setEditMode(false);
-    }
+    saveChangesPrompt({ onSuccessOrDiscard: () => setEditMode(false) });
   }
 
-  function onSuccess(updatedMember: MemberPrivateInfo) {
-    setDirty(false);
-    setEditMode(false);
-    setLocalAccount((prev) => {
-      if (prev) return { ...prev, member: updatedMember };
-      return prev;
-    });
+  /** When changing tabs - prompt to save changes if dirty */
+  async function onChange(key: string) {
+    saveChangesPrompt({ onSuccessOrDiscard: () => setActiveTabKey(key) });
   }
 
   const editButton = (
@@ -80,63 +94,52 @@ const MyProfile: FC = () => {
     </div>
   );
 
-  const descriptions = [
+  const descriptions: Tab[] = [
     {
       label: en ? "Public" : "Public",
-      key: "public",
+      key: keys.public,
       children: <PublicMemberDescription member={member} />,
     },
     {
       label: en ? "Private" : "Privé",
-      key: "private",
+      key: keys.private,
       children: <PrivateMemberDescription member={member} />,
     },
     {
       label: en ? "Insight" : "Aperçu",
-      key: "insight",
+      key: keys.insight,
       children: <MemberInsightDescription member={member} />,
     },
   ];
 
-  const forms = [
+  const forms: Tab[] = [
     {
       label: en ? "Public" : "Public",
-      key: "public",
-      children: (
-        <PublicMemberForm
-          member={member}
-          onValuesChange={() => setDirty(true)}
-          onSuccess={onSuccess}
-        />
-      ),
+      key: keys.public,
+      children: <PublicMemberForm member={member} onSuccess={onSuccess} />,
     },
     {
       label: en ? "Private" : "Privé",
-      key: "private",
-      children: (
-        <MemberPrivateForm
-          member={member}
-          onValuesChange={() => setDirty(true)}
-          onSuccess={onSuccess}
-        />
-      ),
+      key: keys.private,
+      children: <MemberPrivateForm member={member} onSuccess={onSuccess} />,
     },
     {
       label: en ? "Insight" : "Aperçu",
-      key: "insight",
-      children: (
-        <MemberInsightForm
-          member={member}
-          onValuesChange={() => setDirty(true)}
-          onSuccess={onSuccess}
-        />
-      ),
+      key: keys.insight,
+      children: <MemberInsightForm member={member} onSuccess={onSuccess} />,
     },
   ];
 
   return (
     <Card title={header} bodyStyle={{ paddingTop: 0 }}>
-      <Tabs items={editMode ? forms : descriptions} />
+      <Tabs
+        items={editMode ? forms : descriptions}
+        activeKey={activeTabKey}
+        onChange={onChange}
+        // Very important to destroy inactive forms,
+        // so they register their submit function to the save changes context when navigated back
+        destroyInactiveTabPane
+      />
     </Card>
   );
 };

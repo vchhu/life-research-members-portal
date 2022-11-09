@@ -2,10 +2,9 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useCallback, useContext, useEffect, useState } from "react";
 import type { MemberPrivateInfo } from "../../services/_types";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import Select from "antd/lib/select";
 import Divider from "antd/lib/divider";
 import Text from "antd/lib/typography/Text";
 import type { UpdateMemberPrivateParams } from "../../pages/api/update-member/[id]/private";
@@ -14,13 +13,12 @@ import DatePicker from "antd/lib/date-picker";
 import moment, { Moment } from "moment";
 import { red } from "@ant-design/colors";
 import Switch from "antd/lib/switch";
-
-const { Option } = Select;
+import Notification from "../../services/notifications/notification";
+import { SaveChangesCtx, useResetDirtyOnUnmount } from "../../services/context/save-changes-ctx";
 
 type Props = {
   member: MemberPrivateInfo;
-  onValuesChange?: (changedValues: any, values: Data) => void;
-  onSuccess?: (member: MemberPrivateInfo) => void;
+  onSuccess: (member: MemberPrivateInfo) => void;
 };
 
 type Data = {
@@ -34,36 +32,55 @@ type Data = {
   is_active: boolean;
 };
 
-const MemberPrivateForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => {
+const MemberPrivateForm: FC<Props> = ({ member, onSuccess }) => {
   // This sets the return type of the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(member.is_active);
+  const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
+  useResetDirtyOnUnmount();
 
-  async function handleUpdate(data: Data) {
-    setLoading(true);
-    const activate = !member.is_active && data.is_active;
-    const deactivate = member.is_active && !data.is_active;
-    const params: UpdateMemberPrivateParams = {
-      address: data.address,
-      city: data.city,
-      province: data.province,
-      country: data.country,
-      postal_code: data.postal_code,
-      mobile_phone: data.mobile_phone,
-      date_joined: data.date_joined?.toISOString() || null,
-      activate,
-      deactivate,
-    };
-    const newInfo = await updateMemberPrivate(member.id, params);
-    setLoading(false);
-    if (newInfo && onSuccess) onSuccess(newInfo);
-  }
+  const submit = useCallback(
+    async (data?: Data): Promise<boolean> => {
+      if (!dirty) {
+        new Notification().warning(en ? "No Changes" : "Aucun changement");
+        return true;
+      }
+      setLoading(true);
+      if (!data) data = form.getFieldsValue();
+      const activate = !member.is_active && data.is_active;
+      const deactivate = member.is_active && !data.is_active;
+      const params: UpdateMemberPrivateParams = {
+        address: data.address,
+        city: data.city,
+        province: data.province,
+        country: data.country,
+        postal_code: data.postal_code,
+        mobile_phone: data.mobile_phone,
+        date_joined: data.date_joined?.toISOString() || null,
+        activate,
+        deactivate,
+      };
+      const newInfo = await updateMemberPrivate(member.id, params);
+      setLoading(false);
+      if (newInfo) {
+        setDirty(false);
+        onSuccess(newInfo);
+      }
+      return !!newInfo;
+    },
+    [dirty, en, member.id, member.is_active, onSuccess, setDirty, form]
+  );
+
+  /** Pass submit function to parent */
+  useEffect(() => {
+    setSubmit(() => submit);
+  }, [setSubmit, submit]);
 
   function onChange(changed: any, data: Data) {
+    setDirty(true);
     if (status !== data.is_active) setStatus(data.is_active);
-    onValuesChange?.(changed, data);
   }
 
   const initialValues: Data = {
@@ -87,7 +104,7 @@ const MemberPrivateForm: FC<Props> = ({ member, onValuesChange, onSuccess }) => 
       <Divider />
       <Form
         form={form}
-        onFinish={handleUpdate}
+        onFinish={submit}
         initialValues={initialValues}
         layout="vertical"
         className="private-member-form"

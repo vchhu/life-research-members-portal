@@ -25,6 +25,10 @@ export default class Notification {
     });
   }
 
+  warning(content: string) {
+    message.warning({ content, key: this.id });
+  }
+
   close() {
     message.destroy(this.id);
   }
