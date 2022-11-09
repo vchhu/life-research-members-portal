@@ -10,7 +10,6 @@ async function fetchAllKeywords(): Promise<keyword[]> {
     if (!res.ok) throw await res.text();
     return await res.json();
   } catch (e: any) {
-    console.error(e);
     new Notification().error(e);
     return [];
   }

@@ -16,11 +16,7 @@ export default async function registerAccount(
       headers: { ...(await authHeader()), ...contentTypeJsonHeader },
       body: JSON.stringify(params),
     });
-    if (!res.ok) {
-      const e = await res.text();
-      notification.error(e);
-      return null;
-    }
+    if (!res.ok) throw await res.text();
     notification.success();
     return await res.json();
   } catch (e: any) {

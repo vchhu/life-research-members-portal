@@ -18,10 +18,7 @@ export default async function updateKeyword(
       headers: { ...(await authHeader()), ...contentTypeJsonHeader },
       body: JSON.stringify(params),
     });
-    if (!res.ok) {
-      notification.error(await res.text());
-      return null;
-    }
+    if (!res.ok) throw await res.text();
     notification.success();
     return await res.json();
   } catch (e: any) {

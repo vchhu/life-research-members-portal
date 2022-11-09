@@ -23,7 +23,6 @@ export const AllMembersCtxProvider: FC<PropsWithChildren> = ({ children }) => {
       members.sort((a, b) => a.account.first_name.localeCompare(b.account.first_name));
       setAllMembers(members);
     } catch (e: any) {
-      console.error(e);
       new Notification().error(e);
     }
   }

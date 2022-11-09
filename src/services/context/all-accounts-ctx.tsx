@@ -26,7 +26,6 @@ export const AllAccountsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
       accounts.sort((a, b) => a.first_name.localeCompare(b.first_name));
       setAllAccounts(accounts);
     } catch (e: any) {
-      console.error(e);
       new Notification().error(e);
     }
   }

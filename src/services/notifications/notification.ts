@@ -22,6 +22,7 @@ export default class Notification {
     });
   }
 
+  /** Notifies user of error and logs error to console */
   error(content: string) {
     console.error(content);
     message.error({

@@ -51,7 +51,6 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
       if (!res.ok) throw await res.text();
       setLocalAccount(await res.json());
     } catch (e: any) {
-      console.error(e);
       new Notification().error(e);
     }
   }

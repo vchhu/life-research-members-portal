@@ -11,10 +11,7 @@ export const FacultiesCtx = createContext<{
 async function fetchAllFaculties(): Promise<faculty[]> {
   try {
     const res = await fetch(ApiRoutes.allFaculties);
-    if (!res.ok) {
-      new Notification().error(await res.text());
-      return [];
-    }
+    if (!res.ok) throw await res.text();
     return await res.json();
   } catch (e: any) {
     new Notification().error(e);
