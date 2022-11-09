@@ -1,8 +1,8 @@
 import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import React, { FC, ReactNode, useCallback, useContext, useState } from "react";
-import { AccountCtx } from "../../services/context/account-ctx";
+import React, { FC, ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./member-public-description";
 import PublicMemberForm from "./member-public-form";
@@ -22,10 +22,15 @@ const keys = { public: "public", private: "private", insight: "insight" };
 
 const MyProfile: FC = () => {
   const { en } = useContext(LanguageCtx);
-  const { localAccount, setLocalAccount, loading } = useContext(AccountCtx);
+  const { localAccount, setLocalAccount, loading, refresh } = useContext(ActiveAccountCtx);
   const [editMode, setEditMode] = useState(false);
   const [activeTabKey, setActiveTabKey] = useState(keys.public);
   const { saveChangesPrompt } = useContext(SaveChangesCtx);
+
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** After saving changes via submit button - dependency of form's submit */
   const onSuccess = useCallback(

@@ -1,14 +1,14 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import Spin from "antd/lib/spin";
 import { FC, useContext } from "react";
-import { AccountCtx } from "../services/context/account-ctx";
+import { ActiveAccountCtx } from "../services/context/active-account-ctx";
 import { blue } from "@ant-design/colors";
 import { LanguageCtx } from "../services/context/language-ctx";
 
 const Greeting: FC = () => {
   const { instance } = useMsal();
   const name = instance.getActiveAccount()?.name?.split(" ")[0];
-  const { localAccount, loading } = useContext(AccountCtx);
+  const { localAccount, loading } = useContext(ActiveAccountCtx);
   const { en } = useContext(LanguageCtx);
 
   const adminGreeting = (

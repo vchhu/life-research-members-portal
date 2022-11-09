@@ -6,8 +6,8 @@ import AutoComplete from "antd/lib/auto-complete";
 import Button from "antd/lib/button/button";
 import Card from "antd/lib/card";
 import { FC, useContext, useEffect, useRef, useState } from "react";
+import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import useAllKeywords from "../../services/use-all-keywords";
 import type { KeywordInfo } from "../../services/_types";
 import KeywordTag from "./keyword-tag";
 import NewKeywordModal from "./new-keyword-modal";
@@ -27,13 +27,18 @@ const KeywordSelector: FC<Props> = ({
   onChange,
   setErrors,
 }) => {
-  const { keywords, set } = useAllKeywords();
+  const { keywords, refresh: refreshKeywords, set } = useContext(AllKeywordsCtx);
   const { en } = useContext(LanguageCtx);
 
   const [selectedValue, setSelectedValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInitialValue, setModalInitialValue] = useState<KeywordInfo>();
+
+  useEffect(() => {
+    refreshKeywords();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setModalInitialValue(

@@ -4,13 +4,13 @@ import type { MenuItemType } from "antd/lib/menu/hooks/useItems";
 import Spin from "antd/lib/spin";
 import { useRouter } from "next/router";
 import { FC, useContext } from "react";
-import { AccountCtx } from "../../services/context/account-ctx";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import PageRoutes from "../../routing/page-routes";
 import SafeLink from "../link/safe-link";
 
 const NavMenu: FC = () => {
-  const { localAccount, loading } = useContext(AccountCtx);
+  const { localAccount, loading } = useContext(ActiveAccountCtx);
   const router = useRouter();
   const { en } = useContext(LanguageCtx);
 

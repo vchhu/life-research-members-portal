@@ -25,37 +25,34 @@ msalInstance
   .then(handleResponse)
   .catch((e: any) => console.error("Error after redirect:", e));
 
-export const AccountCtx = createContext<{
+export const ActiveAccountCtx = createContext<{
   localAccount: AccountInfo | null;
   loading: boolean;
   refresh: () => void;
+  refreshing: boolean;
   login: () => void;
   logout: () => void;
   setLocalAccount: Dispatch<SetStateAction<AccountInfo | null>>;
 }>(null as any);
 
-export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
+export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const { instance } = useMsal();
   const msAccount = instance.getActiveAccount();
   const msId = msAccount?.localAccountId;
 
   const [localAccount, setLocalAccount] = useState<AccountInfo | null>(null);
   const [loading, setLoading] = useState(true); // Start true so loading icons are served first
+  const [refreshing, setRefreshing] = useState(false);
 
   // Gets the current user's account from the database
   const fetchLocalAccount = async () => {
-    const notification = new Notification();
     try {
-      setLoading(true);
-      notification.loading("Loading your account...");
       const res = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
-      if (!res.ok) return notification.error(await res.text());
+      if (!res.ok) throw await res.text();
       setLocalAccount(await res.json());
-      notification.close();
     } catch (e: any) {
-      notification.error(e);
-    } finally {
-      setLoading(false);
+      console.error(e);
+      new Notification().error(e);
     }
   };
 
@@ -68,8 +65,29 @@ export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
       setLoading(false);
       return;
     }
-    fetchLocalAccount();
+    async function firstLoad() {
+      const notification = new Notification("bottom-right");
+      notification.loading("Loading your account...");
+      await fetchLocalAccount();
+      setLoading(false);
+      notification.close();
+    }
+    firstLoad();
   }, [msId, instance]);
+
+  async function refresh() {
+    if (!instance.getActiveAccount()) {
+      setLocalAccount(null);
+      return;
+    }
+    if (loading || refreshing) return;
+    const notification = new Notification("bottom-right");
+    setRefreshing(true);
+    notification.loading("Refreshing...");
+    await fetchLocalAccount();
+    setRefreshing(false);
+    notification.close();
+  }
 
   function login() {
     instance.loginRedirect(loginRequest).catch((e: any) => {
@@ -90,10 +108,10 @@ export const AccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   return (
-    <AccountCtx.Provider
-      value={{ localAccount, loading, login, logout, refresh: fetchLocalAccount, setLocalAccount }}
+    <ActiveAccountCtx.Provider
+      value={{ localAccount, loading, login, logout, refresh, refreshing, setLocalAccount }}
     >
       {children}
-    </AccountCtx.Provider>
+    </ActiveAccountCtx.Provider>
   );
 };

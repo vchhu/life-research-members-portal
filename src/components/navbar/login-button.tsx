@@ -2,11 +2,11 @@ import Button from "antd/lib/button";
 import Image from "next/image";
 import { FC, useContext } from "react";
 import msIcon from "../../../public/microsoft-logo.png";
-import { AccountCtx } from "../../services/context/account-ctx";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 
 const LoginButton: FC = () => {
-  const { login } = useContext(AccountCtx);
+  const { login } = useContext(ActiveAccountCtx);
   const { en } = useContext(LanguageCtx);
   return (
     <Button type="primary" onClick={login} className="login-button">

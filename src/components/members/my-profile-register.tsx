@@ -1,12 +1,12 @@
 import Button from "antd/lib/button";
 import { FC, useContext } from "react";
 import registerMember from "../../services/register-member";
-import { AccountCtx } from "../../services/context/account-ctx";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 
 const MyProfileRegister: FC = () => {
   const { en } = useContext(LanguageCtx);
-  const { localAccount, setLocalAccount } = useContext(AccountCtx);
+  const { localAccount, setLocalAccount } = useContext(ActiveAccountCtx);
 
   async function handleRegisterMember(account_id: number) {
     const newMember = await registerMember({ account_id });

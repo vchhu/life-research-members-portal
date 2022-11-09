@@ -2,18 +2,23 @@ import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import { useRouter } from "next/router";
-import { FC, useContext } from "react";
+import { FC, useContext, useEffect } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import useAllMembers from "../../services/use-all-members";
 import type { MemberPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
 import KeywordTag from "../keywords/keyword-tag";
+import { AllMembersCtx } from "../../services/context/all-members-ctx";
 
 const AllMembers: FC = () => {
   const router = useRouter();
   const { en } = useContext(LanguageCtx);
-  const { allMembers, loading, refresh } = useAllMembers();
+  const { allMembers, loading, refresh } = useContext(AllMembersCtx);
   const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id })).filter((m) => m.is_active);
+
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const columns: ColumnType<MemberPublicInfo>[] = [
     {

@@ -1,18 +1,23 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import { FC, useContext } from "react";
-import useAllAccounts from "../../services/use-all-accounts";
+import { FC, useContext, useEffect } from "react";
 import type { AccountRes } from "../../pages/api/account/[id]";
 import PageRoutes from "../../routing/page-routes";
 import { useRouter } from "next/router";
 import { LanguageCtx } from "../../services/context/language-ctx";
+import { AllAccountsCtx } from "../../services/context/all-accounts-ctx";
 
 const AllAccounts: FC = () => {
   const router = useRouter();
   const { en } = useContext(LanguageCtx);
-  const { allAccounts, loading, refresh } = useAllAccounts();
+  const { allAccounts, loading, refresh } = useContext(AllAccountsCtx);
   const keyedAccounts = allAccounts.map((m) => ({ ...m, key: m.id }));
+
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const columns: ColumnType<AccountRes>[] = [
     {

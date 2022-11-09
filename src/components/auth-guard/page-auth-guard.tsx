@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, ReactElement, useContext } from "react";
-import { AccountCtx } from "../../services/context/account-ctx";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import CenteredSpinner from "../loading/centered-spinner";
 import Authorizations from "./authorizations";
@@ -11,7 +11,7 @@ type Props = {
 };
 
 const PageAuthGuard: FC<PropsWithChildren<Props>> = ({ auths, id, loadingIcon, children }) => {
-  const { localAccount, loading } = useContext(AccountCtx);
+  const { localAccount, loading } = useContext(ActiveAccountCtx);
   const { en } = useContext(LanguageCtx);
 
   if (loading) return loadingIcon || <CenteredSpinner />;

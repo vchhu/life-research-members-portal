@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import type { NextPage } from "next/types";
 import { useContext, useEffect } from "react";
-import { AccountCtx } from "../../../services/context/account-ctx";
+import { ActiveAccountCtx } from "../../../services/context/active-account-ctx";
 import CardSkeleton from "../../../components/loading/card-skeleton";
 import PageRoutes from "../../../routing/page-routes";
 
 const PrivateMemberPage: NextPage = () => {
   const router = useRouter();
-  const { localAccount, loading } = useContext(AccountCtx);
+  const { localAccount, loading } = useContext(ActiveAccountCtx);
   const { id: idString } = router.query;
 
   useEffect(() => {

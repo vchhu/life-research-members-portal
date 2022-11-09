@@ -1,18 +1,16 @@
 import type { keyword } from "@prisma/client";
-import { useContext, useEffect, useState } from "react";
-import ApiRoutes from "../routing/api-routes";
-import Notification from "./notifications/notification";
-import { LanguageCtx } from "./context/language-ctx";
+import { createContext, FC, PropsWithChildren, useContext, useEffect, useState } from "react";
+import ApiRoutes from "../../routing/api-routes";
+import Notification from "../notifications/notification";
+import { LanguageCtx } from "./language-ctx";
 
 async function fetchAllKeywords(): Promise<keyword[]> {
   try {
     const res = await fetch(ApiRoutes.allKeywords);
-    if (!res.ok) {
-      new Notification().error(await res.text());
-      return [];
-    }
+    if (!res.ok) throw await res.text();
     return await res.json();
   } catch (e: any) {
+    console.error(e);
     new Notification().error(e);
     return [];
   }
@@ -26,7 +24,13 @@ function frSorter(a: keyword, b: keyword): number {
   return (a.name_fr || a.name_en || "").localeCompare(b.name_fr || b.name_en || "");
 }
 
-export default function useAllKeywords() {
+export const AllKeywordsCtx = createContext<{
+  keywords: keyword[];
+  refresh: () => void;
+  set: (keyword: keyword) => void;
+}>(null as any);
+
+export const AllKeywordsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const [keywords, setKeywords] = useState<keyword[]>([]);
   const { en } = useContext(LanguageCtx);
 
@@ -36,7 +40,6 @@ export default function useAllKeywords() {
 
   useEffect(() => {
     getKeywords();
-    // Getting this warning because we check a state variable (en), but we do NOT want to refetch on change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -55,5 +58,8 @@ export default function useAllKeywords() {
       return curr.sort(en ? enSorter : frSorter);
     });
   }
-  return { keywords, refresh, set };
-}
+
+  return (
+    <AllKeywordsCtx.Provider value={{ keywords, refresh, set }}>{children}</AllKeywordsCtx.Provider>
+  );
+};
