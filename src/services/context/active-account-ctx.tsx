@@ -45,7 +45,7 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
   const [refreshing, setRefreshing] = useState(false);
 
   // Gets the current user's account from the database
-  const fetchLocalAccount = async () => {
+  async function fetchLocalAccount() {
     try {
       const res = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
       if (!res.ok) throw await res.text();
@@ -54,7 +54,7 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
       console.error(e);
       new Notification().error(e);
     }
-  };
+  }
 
   // Using msAccount as a dependency creates an infinite loop,
   // since a new object is generated from local storage each time.

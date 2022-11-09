@@ -15,14 +15,15 @@ type Data = {
   is_admin: boolean;
 };
 
-async function handleRegister({ first_name, last_name, login_email, is_admin }: Data) {
-  registerAccount({ first_name, last_name, login_email, is_admin });
-}
-
 const RegisterAccount: FC = () => {
   // This hook is important for type checking the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
+
+  async function handleRegister({ first_name, last_name, login_email, is_admin }: Data) {
+    const res = await registerAccount({ first_name, last_name, login_email, is_admin });
+    if (res) form.resetFields();
+  }
 
   return (
     <div

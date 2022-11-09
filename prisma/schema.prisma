@@ -8,12 +8,13 @@ datasource db {
 }
 
 model account {
-  id           Int     @id(map: "PK_account") @default(autoincrement())
-  login_email  String  @unique(map: "UK_login_email") @db.NVarChar(255)
-  microsoft_id String? @db.NVarChar(255)
-  first_name   String  @db.NVarChar(255)
-  last_name    String  @db.NVarChar(255)
-  is_admin     Boolean @default(false, map: "DF_account_is_admin")
+  id           Int       @id(map: "PK_account") @default(autoincrement())
+  login_email  String    @unique(map: "UK_login_email") @db.NVarChar(255)
+  microsoft_id String?   @db.NVarChar(255)
+  first_name   String    @db.NVarChar(255)
+  last_name    String    @db.NVarChar(255)
+  is_admin     Boolean   @default(false, map: "DF_account_is_admin")
+  last_login   DateTime? @db.Date
   member       member?
 }
 

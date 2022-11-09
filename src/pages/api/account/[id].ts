@@ -6,9 +6,10 @@ import type { PrivateMemberRes } from "../member/[id]/private";
 
 export type AccountDBRes = Awaited<ReturnType<typeof getAccountById>>;
 
-// Dates in member will be stringified when sending response!
-export type AccountRes = Omit<NonNullable<AccountDBRes>, "member"> & {
+// Dates will be stringified when sending response!
+export type AccountRes = Omit<NonNullable<AccountDBRes>, "member" | "last_login"> & {
   member: PrivateMemberRes | null;
+  last_login: string;
 };
 
 function getAccountById(id: number) {
