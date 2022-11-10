@@ -66,7 +66,7 @@ const AccountProfile: FC<Props> = ({ id }) => {
 
   const lastLoginItem = (
     <Item label={en ? "Last Login" : "Dernière connexion"}>
-      {account.last_login ||
+      {account.last_login?.split("T")[0] ||
         (en ? "This account has never signed in" : "Ce compte ne s'est jamais connecté")}
     </Item>
   );
@@ -147,8 +147,8 @@ const AccountProfile: FC<Props> = ({ id }) => {
           alignItems: "center",
         }}
       >
-        {loginItem}
         {lastLoginItem}
+        {loginItem}
         {adminItem}
         {memberItem}
       </Descriptions>

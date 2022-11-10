@@ -7,12 +7,15 @@ import { Dispatch, FC, SetStateAction, useContext, useState } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { AccountInfo } from "../../services/_types";
 import updateAccountEmail from "../../services/update-account-email";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
+import Notification from "../../services/notifications/notification";
 
 type Data = { login_email: string; confirm_email: string };
 type Props = { account: AccountInfo; setAccount: Dispatch<SetStateAction<AccountInfo | null>> };
 
 const UpdateEmailButton: FC<Props> = ({ account, setAccount }) => {
   const { en } = useContext(LanguageCtx);
+  const { localAccount } = useContext(ActiveAccountCtx);
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = useForm<Data>();
 
@@ -24,9 +27,19 @@ const UpdateEmailButton: FC<Props> = ({ account, setAccount }) => {
     }
   }
 
+  function openModal() {
+    if (account.id === localAccount?.id)
+      return new Notification().warning(
+        en
+          ? "Admins may not edit their own email. This prevents corrupting your own account."
+          : "Les administrateurs ne peuvent pas modifier leur propre e-mail. Cela évite de corrompre votre propre compte."
+      );
+    setModalOpen(true);
+  }
+
   return (
     <>
-      <Button ghost type="primary" onClick={() => setModalOpen(true)}>
+      <Button ghost type="primary" onClick={openModal}>
         {en ? "Change Email" : "Changer l'e-mail"}
       </Button>
       <Modal

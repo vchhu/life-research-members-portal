@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getAccountFromRequest from "../../utils/api/get-account-from-request";
-import type { AccountDBRes } from "./account/[id]";
+import getAccountFromRequest from "../../../utils/api/get-account-from-request";
+import type { AccountDBRes } from "../account/[id]";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<AccountDBRes>) {
   try {

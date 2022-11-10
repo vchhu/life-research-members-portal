@@ -44,10 +44,23 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
   const [loading, setLoading] = useState(true); // Start true so loading icons are served first
   const [refreshing, setRefreshing] = useState(false);
 
-  // Gets the current user's account from the database
+  /** Gets the current user's account from the database */
   async function fetchLocalAccount() {
     try {
       const res = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
+      if (!res.ok) throw await res.text();
+      setLocalAccount(await res.json());
+    } catch (e: any) {
+      new Notification().error(e);
+    }
+  }
+
+  /** Update last login on first load */
+  async function fetchAccountUpdateLastLogin() {
+    try {
+      const res = await fetch(ApiRoutes.activeAccountUpdateLastLogin, {
+        headers: await authHeader(),
+      });
       if (!res.ok) throw await res.text();
       setLocalAccount(await res.json());
     } catch (e: any) {
@@ -67,7 +80,7 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
     async function firstLoad() {
       const notification = new Notification("bottom-right");
       notification.loading("Loading your account...");
-      await fetchLocalAccount();
+      await fetchAccountUpdateLastLogin();
       setLoading(false);
       notification.close();
     }

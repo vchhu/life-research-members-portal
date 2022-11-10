@@ -4,6 +4,7 @@ const ApiRoutes = {
   allAccounts: "/api/all-accounts",
   registerAccount: "/api/register-account",
   activeAccount: "/api/active-account",
+  activeAccountUpdateLastLogin: "/api/active-account/update-last-login",
   account: (id: number) => "/api/account/" + id,
   publicMemberInfo: (id: number) => "/api/member/" + id + "/public",
   privateMemberInfo: (id: number) => "/api/member/" + id + "/private",
@@ -22,6 +23,6 @@ const ApiRoutes = {
   allKeywords: "/api/all-keywords",
   allFaculties: "/api/all-faculties",
   allMemberTypes: "/api/all-member-types",
-};
+} as const;
 
 export default ApiRoutes;

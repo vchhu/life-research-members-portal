@@ -34,12 +34,12 @@ export default async function handler(
     if (!currentAccount.is_admin)
       return res.status(401).send("You are not authorized to edit account information.");
 
-    const updated = await updateAccountEmail(id, params);
-
     if (currentAccount.id === id)
       return res
         .status(401)
         .send("Admins may not edit their own email. This prevents corrupting your own account.");
+
+    const updated = await updateAccountEmail(id, params);
 
     return res.status(200).send(updated);
   } catch (e: any) {

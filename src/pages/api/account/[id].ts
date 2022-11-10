@@ -9,7 +9,7 @@ export type AccountDBRes = Awaited<ReturnType<typeof getAccountById>>;
 // Dates will be stringified when sending response!
 export type AccountRes = Omit<NonNullable<AccountDBRes>, "member" | "last_login"> & {
   member: PrivateMemberRes | null;
-  last_login: string;
+  last_login: string | null;
 };
 
 function getAccountById(id: number) {

@@ -11,6 +11,8 @@ import Text from "antd/lib/typography/Text";
 import deleteAccount from "../../services/delete-account";
 import { useRouter } from "next/router";
 import PageRoutes from "../../routing/page-routes";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
+import Notification from "../../services/notifications/notification";
 
 type Data = { confirmation: string };
 type Props = {
@@ -21,6 +23,7 @@ type Props = {
 
 const DeleteAccountButton: FC<Props> = ({ account, setAccount, style }) => {
   const { en } = useContext(LanguageCtx);
+  const { localAccount } = useContext(ActiveAccountCtx);
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = useForm<Data>();
@@ -35,9 +38,19 @@ const DeleteAccountButton: FC<Props> = ({ account, setAccount, style }) => {
     }
   }
 
+  function openModal() {
+    if (account.id === localAccount?.id)
+      return new Notification().warning(
+        en
+          ? "Admins may not delete themselves. This ensures there is always at least one admin."
+          : "Les administrateurs ne peuvent pas se supprimer eux-mêmes. Cela garantit qu'il y a toujours au moins un administrateur."
+      );
+    setModalOpen(true);
+  }
+
   return (
     <>
-      <Button danger type="primary" size="large" onClick={() => setModalOpen(true)} style={style}>
+      <Button danger type="primary" size="large" onClick={openModal} style={style}>
         {en ? "Delete Account" : "Supprimer le Compte"}
       </Button>
       <Modal

@@ -15,7 +15,7 @@ export const AllAccountsCtx = createContext<{
 export const AllAccountsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const { localAccount } = useContext(ActiveAccountCtx);
   const [allAccounts, setAllAccounts] = useState<AccountInfo[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   async function fetchAllAccounts() {
