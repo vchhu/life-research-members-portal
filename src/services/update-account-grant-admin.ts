@@ -8,7 +8,7 @@ export default async function updateAccountGrantAdmin(id: number): Promise<Accou
   const notification = new Notification();
   try {
     notification.loading(
-      en ? "Granting admin permission..." : "Mise à jour de l'e-mail du compte..."
+      en ? "Granting admin privileges..." : "Attribution des privilèges d'administrateur..."
     );
     const res = await fetch(ApiRoutes.updateAccountGrantAdmin(id), {
       headers: await authHeader(),

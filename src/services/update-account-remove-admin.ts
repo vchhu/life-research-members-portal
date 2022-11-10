@@ -8,7 +8,7 @@ export default async function updateAccountRemoveAdmin(id: number): Promise<Acco
   const notification = new Notification();
   try {
     notification.loading(
-      en ? "Removing admin permission..." : "Suppression de l'autorisation d'administrateur..."
+      en ? "Removing admin privileges..." : "Suppression des privilèges d'administrateur..."
     );
     const res = await fetch(ApiRoutes.updateAccountRemoveAdmin(id), {
       headers: await authHeader(),
