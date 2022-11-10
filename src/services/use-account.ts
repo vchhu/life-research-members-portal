@@ -4,7 +4,7 @@ import authHeader from "./headers/auth-header";
 import type { AccountInfo } from "./_types";
 
 export default function useAccount(id: number) {
-  const [account, setAccount] = useState<AccountInfo | null>();
+  const [account, setAccount] = useState<AccountInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
   async function fetchAccount(id: number) {

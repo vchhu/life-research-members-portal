@@ -41,14 +41,14 @@ const MemberPrivateForm: FC<Props> = ({ member, onSuccess }) => {
   const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
   useResetDirtyOnUnmount();
 
-  const submit = useCallback(
-    async (data?: Data): Promise<boolean> => {
+  /** Submits validated data */
+  const submitValidated = useCallback(
+    async (data: Data): Promise<boolean> => {
       if (!dirty) {
         new Notification().warning(en ? "No Changes" : "Aucun changement");
         return true;
       }
       setLoading(true);
-      if (!data) data = form.getFieldsValue();
       const activate = !member.is_active && data.is_active;
       const deactivate = member.is_active && !data.is_active;
       const params: UpdateMemberPrivateParams = {
@@ -70,13 +70,23 @@ const MemberPrivateForm: FC<Props> = ({ member, onSuccess }) => {
       }
       return !!newInfo;
     },
-    [dirty, en, member.id, member.is_active, onSuccess, setDirty, form]
+    [dirty, en, member.id, member.is_active, onSuccess, setDirty]
   );
 
-  /** Pass submit function to parent */
+  /** When called from context - need to validate manually */
+  const validateAndSubmit = useCallback(async () => {
+    try {
+      return submitValidated(await form.validateFields());
+    } catch (e: any) {
+      new Notification().warning(en ? "A field is invalid!" : "Un champ est invalide !");
+      return false;
+    }
+  }, [en, form, submitValidated]);
+
+  /** Pass submit function to context */
   useEffect(() => {
-    setSubmit(() => submit);
-  }, [setSubmit, submit]);
+    setSubmit(() => validateAndSubmit);
+  }, [setSubmit, validateAndSubmit]);
 
   function onChange(changed: any, data: Data) {
     setDirty(true);
@@ -104,7 +114,7 @@ const MemberPrivateForm: FC<Props> = ({ member, onSuccess }) => {
       <Divider />
       <Form
         form={form}
-        onFinish={submit}
+        onFinish={submitValidated}
         initialValues={initialValues}
         layout="vertical"
         className="private-member-form"

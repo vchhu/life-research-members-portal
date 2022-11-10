@@ -96,14 +96,14 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
     [member.has_keyword]
   );
 
-  const submit = useCallback(
-    async (data?: Data): Promise<boolean> => {
+  /** Submits validated data */
+  const submitValidated = useCallback(
+    async (data: Data): Promise<boolean> => {
       if (!dirty) {
         new Notification().warning(en ? "No Changes" : "Aucun changement");
         return true;
       }
       setLoading(true);
-      if (!data) data = form.getFieldsValue();
       const { addProblems, deleteProblems } = diffProblems(data.problems);
       const { addKeywords, deleteKeywords } = diffKeywords(data.keywords);
       const params: UpdateMemberPublicParams = {
@@ -132,13 +132,23 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
       }
       return !!newInfo;
     },
-    [form, onSuccess, diffKeywords, diffProblems, member.id, dirty, en, setDirty]
+    [onSuccess, diffKeywords, diffProblems, member.id, dirty, en, setDirty]
   );
+
+  /** When called from context - need to validate manually */
+  const validateAndSubmit = useCallback(async () => {
+    try {
+      return submitValidated(await form.validateFields());
+    } catch (e: any) {
+      new Notification().warning(en ? "A field is invalid!" : "Un champ est invalide !");
+      return false;
+    }
+  }, [en, form, submitValidated]);
 
   /** Pass submit function to context */
   useEffect(() => {
-    setSubmit(() => submit);
-  }, [setSubmit, submit]);
+    setSubmit(() => validateAndSubmit);
+  }, [setSubmit, validateAndSubmit]);
 
   function getInitialProblems() {
     const problems: ProblemInfo[] = [];
@@ -180,7 +190,7 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
       <Divider />
       <Form
         form={form}
-        onFinish={submit}
+        onFinish={submitValidated}
         initialValues={initialValues}
         layout="vertical"
         className="public-member-form"

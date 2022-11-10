@@ -39,14 +39,14 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
   useResetDirtyOnUnmount();
   const insight = member.insight;
 
-  const submit = useCallback(
-    async (data?: Data): Promise<boolean> => {
+  /** Submits validated data */
+  const submitValidated = useCallback(
+    async (data: Data): Promise<boolean> => {
       if (!dirty) {
         new Notification().warning(en ? "No Changes" : "Aucun changement");
         return true;
       }
       setLoading(true);
-      if (!data) data = form.getFieldsValue();
       const params: UpdateMemberInsightParams = {
         interview_date: data.interview_date?.toISOString() || null,
         about_member: data.about_member,
@@ -64,13 +64,23 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
       }
       return !!newInfo;
     },
-    [dirty, form, member.id, en, setDirty, onSuccess]
+    [dirty, member.id, en, setDirty, onSuccess]
   );
+
+  /** When called from context - need to validate manually */
+  const validateAndSubmit = useCallback(async () => {
+    try {
+      return submitValidated(await form.validateFields());
+    } catch (e: any) {
+      new Notification().warning(en ? "A field is invalid!" : "Un champ est invalide !");
+      return false;
+    }
+  }, [en, form, submitValidated]);
 
   /** Pass submit function to parent */
   useEffect(() => {
-    setSubmit(() => submit);
-  }, [setSubmit, submit]);
+    setSubmit(() => validateAndSubmit);
+  }, [setSubmit, validateAndSubmit]);
 
   const initialValues: Data = {
     interview_date: insight?.interview_date ? moment(insight.interview_date) : null,
@@ -92,7 +102,7 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
       <Divider />
       <Form
         form={form}
-        onFinish={submit}
+        onFinish={submitValidated}
         initialValues={initialValues}
         layout="vertical"
         className="member-insight-form"

@@ -4,7 +4,6 @@ import Title from "antd/lib/typography/Title";
 import { FC, useContext, useEffect } from "react";
 import CardSkeleton from "../loading/card-skeleton";
 import useAccount from "../../services/use-account";
-import { useRouter } from "next/router";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import Descriptions from "antd/lib/descriptions";
 import CheckCircleTwoTone from "@ant-design/icons/lib/icons/CheckCircleTwoTone";
@@ -14,11 +13,13 @@ import { red } from "@ant-design/colors";
 import SafeLink from "../link/safe-link";
 import PageRoutes from "../../routing/page-routes";
 import Text from "antd/lib/typography/Text";
-import updateAccountGrantAdmin from "../../services/update-account-grant-admin";
-import updateAccountRemoveAdmin from "../../services/update-account-remove-admin";
-import updateAccountDeleteMember from "../../services/update-account-delete-member";
-import deleteAccount from "../../services/delete-account";
-import updateAccountRegisterMember from "../../services/update-account-register-member";
+import UpdateNameButton from "./update-name-button";
+import UpdateEmailButton from "./update-email-button";
+import RemoveAdminButton from "./remove-admin-button";
+import GrantAdminButton from "./grant-admin-button";
+import DeleteMemberButton from "./delete-member-button";
+import RegisterMemberButton from "./register-member-button";
+import DeleteAccountButton from "./delete-account-button";
 
 const { Item } = Descriptions;
 
@@ -27,7 +28,6 @@ type Props = {
 };
 
 const AccountProfile: FC<Props> = ({ id }) => {
-  const router = useRouter();
   const { en } = useContext(LanguageCtx);
   const { account, setAccount, loading, refresh } = useAccount(id);
 
@@ -38,35 +38,6 @@ const AccountProfile: FC<Props> = ({ id }) => {
 
   if (loading) return <CardSkeleton />;
   if (!account) return <Empty />;
-
-  async function handleChangeName() {}
-
-  async function handleChangeEmail() {}
-
-  async function handleGrantAdmin() {
-    const res = await updateAccountGrantAdmin(id);
-    if (res) setAccount(res);
-  }
-
-  async function handleRemoveAdmin() {
-    const res = await updateAccountRemoveAdmin(id);
-    if (res) setAccount(res);
-  }
-
-  async function handleDeleteMember() {
-    const res = await updateAccountDeleteMember(id);
-    if (res) setAccount(res);
-  }
-
-  async function handleRegisterMember() {
-    const res = await updateAccountRegisterMember(id);
-    if (res) setAccount(res);
-  }
-
-  async function handleDeleteAccount() {
-    const res = await deleteAccount(id);
-    if (res) router.replace(PageRoutes.allAccounts);
-  }
 
   const header = (
     <div
@@ -82,18 +53,14 @@ const AccountProfile: FC<Props> = ({ id }) => {
       <Title level={2} style={{ display: "inline-block", margin: 0 }}>
         {account.first_name + " " + account.last_name}
       </Title>
-      <Button ghost type="primary" onClick={handleChangeName}>
-        {en ? "Change Name" : "Changer de nom"}
-      </Button>
+      <UpdateNameButton account={account} setAccount={setAccount} />
     </div>
   );
 
   const loginItem = (
     <Item label={<>{en ? "Login Email" : "Compte email"}</>}>
-      {account.login_email}
-      <Button ghost type="primary" onClick={handleChangeEmail}>
-        {en ? "Change Email" : "Changer l'e-mail"}
-      </Button>
+      <a href={"mailto:" + account.login_email}>{account.login_email}</a>
+      <UpdateEmailButton account={account} setAccount={setAccount} />
     </Item>
   );
 
@@ -119,9 +86,7 @@ const AccountProfile: FC<Props> = ({ id }) => {
               ? "This account has administrative privileges"
               : "Ce compte a des privilèges administratifs"}
           </Text>
-          <Button danger type="primary" onClick={handleRemoveAdmin}>
-            {en ? "Remove admin privileges" : "Supprimer privilèges d'admin"}
-          </Button>
+          <RemoveAdminButton account={account} setAccount={setAccount} />
         </>
       ) : (
         <>
@@ -131,16 +96,14 @@ const AccountProfile: FC<Props> = ({ id }) => {
               ? "This account does not have administrative privileges"
               : "Ce compte n'a pas de privilèges administratifs"}
           </Text>
-          <Button type="primary" onClick={handleGrantAdmin}>
-            {en ? "Grant admin privileges" : "Accorder privilèges d'admin"}
-          </Button>
+          <GrantAdminButton account={account} setAccount={setAccount} />
         </>
       )}
     </Item>
   );
 
   const memberItem = (
-    <Item label={en ? "Member" : "Membre"}>
+    <Item label={en ? "Member Information" : "Informations sur les membres"}>
       {account.member ? (
         <>
           <Text>
@@ -154,9 +117,7 @@ const AccountProfile: FC<Props> = ({ id }) => {
               {en ? "Go to member profile" : "Accéder au profil du membre"}
             </SafeLink>
           </Button>
-          <Button danger type="primary" onClick={handleDeleteMember}>
-            {en ? "Delete member info" : "Supprimer informations membre"}
-          </Button>
+          <DeleteMemberButton account={account} setAccount={setAccount} />
         </>
       ) : (
         <>
@@ -166,26 +127,10 @@ const AccountProfile: FC<Props> = ({ id }) => {
               ? "This account is not registered as a member"
               : "Ce compte n'est pas enregistré en tant que membre"}
           </Text>
-          <Button ghost type="primary" onClick={handleRegisterMember}>
-            {en ? "Register as member" : "Inscrivez en tant que membre"}
-          </Button>
+          <RegisterMemberButton account={account} setAccount={setAccount} />
         </>
       )}
     </Item>
-  );
-
-  const deleteAccountButton = (
-    <div>
-      <Button
-        danger
-        type="primary"
-        size="large"
-        onClick={handleDeleteAccount}
-        style={{ marginLeft: "auto", display: "block" }}
-      >
-        {en ? "Delete Account" : "Supprimer le Compte"}
-      </Button>
-    </div>
   );
 
   return (
@@ -193,7 +138,7 @@ const AccountProfile: FC<Props> = ({ id }) => {
       <Descriptions
         layout="vertical"
         bordered
-        column={{ xs: 1, sm: 2 }}
+        column={1}
         contentStyle={{
           display: "flex",
           columnGap: 16,
@@ -208,7 +153,11 @@ const AccountProfile: FC<Props> = ({ id }) => {
         {memberItem}
       </Descriptions>
       <div style={{ display: "block", height: 24 }}></div>
-      {deleteAccountButton}
+      <DeleteAccountButton
+        account={account}
+        setAccount={setAccount}
+        style={{ marginLeft: "auto", display: "block" }}
+      />
     </Card>
   );
 };

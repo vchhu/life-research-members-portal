@@ -1,10 +1,10 @@
-import type { AccountRes } from "../pages/api/account/[id]";
 import ApiRoutes from "../routing/api-routes";
 import { en } from "./context/language-ctx";
 import authHeader from "./headers/auth-header";
 import Notification from "./notifications/notification";
+import type { AccountInfo } from "./_types";
 
-export default async function updateAccountRemoveAdmin(id: number): Promise<AccountRes | null> {
+export default async function updateAccountRemoveAdmin(id: number): Promise<AccountInfo | null> {
   const notification = new Notification();
   try {
     notification.loading(

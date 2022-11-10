@@ -11,7 +11,6 @@ const PrivateMemberPage: NextPage = () => {
   const { id: idString } = router.query;
 
   useEffect(() => {
-    console.log(idString);
     if (!(typeof idString === "string")) {
       return;
     }
