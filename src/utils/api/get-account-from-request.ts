@@ -82,8 +82,8 @@ export default async function getAccountFromRequest(
 
     return account;
   } catch (e: any) {
-    console.error({ e, message: e.message }); // prisma error messages are getters
-    res.status(500).send({ e, message: e.message });
+    console.error({ ...e, message: e.message }); // prisma error messages are getters
+    res.status(500).send({ ...e, message: e.message });
     return null;
   }
 }

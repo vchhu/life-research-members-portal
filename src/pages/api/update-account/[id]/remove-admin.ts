@@ -1,12 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { includeAllAccountInfo } from "../../../../prisma/helpers";
-import db from "../../../../prisma/prisma-client";
-import getAccountFromRequest from "../../../utils/api/get-account-from-request";
-import type { AccountDBRes } from "../account/[id]";
+import { includeAllAccountInfo } from "../../../../../prisma/helpers";
+import db from "../../../../../prisma/prisma-client";
+import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
+import type { AccountDBRes } from "../../account/[id]";
 
-function deleteAccount(id: number): Promise<AccountDBRes> {
-  return db.account.delete({
+function updateAccountRemoveAdmin(id: number): Promise<AccountDBRes> {
+  return db.account.update({
     where: { id },
+    data: { is_admin: false },
     include: includeAllAccountInfo,
   });
 }
@@ -25,16 +26,18 @@ export default async function handler(
     if (!currentAccount) return;
 
     if (!currentAccount.is_admin)
-      return res.status(401).send("You are not authorized to delete accounts.");
+      return res.status(401).send("You are not authorized to remove admin permission.");
 
     if (currentAccount.id === id)
       return res
         .status(401)
-        .send("Admins may not delete themselves. This ensures there is always at least one admin.");
+        .send(
+          "Admins may not remove their own admin permission. This ensures there is always at least one admin."
+        );
 
-    const account = await deleteAccount(id);
+    const updated = await updateAccountRemoveAdmin(id);
 
-    return res.status(200).send(account);
+    return res.status(200).send(updated);
   } catch (e: any) {
     return res.status(500).send({ ...e, message: e.message }); // prisma error messages are getters
   }

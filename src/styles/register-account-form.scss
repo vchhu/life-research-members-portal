@@ -1,0 +1,12 @@
+.register-account-form {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2vh;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+  }
+}

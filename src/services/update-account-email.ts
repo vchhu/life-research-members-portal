@@ -1,21 +1,22 @@
-import type { RegisterMemberParams } from "../pages/api/register-member";
+import type { AccountRes } from "../pages/api/account/[id]";
+import type { UpdateAccountEmailParams } from "../pages/api/update-account/[id]/email";
 import ApiRoutes from "../routing/api-routes";
 import { en } from "./context/language-ctx";
 import authHeader from "./headers/auth-header";
 import { contentTypeJsonHeader } from "./headers/content-type-headers";
 import Notification from "./notifications/notification";
-import type { MemberPrivateInfo } from "./_types";
 
-export default async function registerMember(
-  params: RegisterMemberParams
-): Promise<MemberPrivateInfo | null> {
+export default async function updateAccountEmail(
+  id: number,
+  params: UpdateAccountEmailParams
+): Promise<AccountRes | null> {
   const notification = new Notification();
   try {
-    notification.loading(en ? "Registering Member..." : "Enregistrer Membre...");
-    const res = await fetch(ApiRoutes.registerMember, {
+    notification.loading(en ? "Updating account email..." : "Mise à jour de l'e-mail du compte...");
+    const res = await fetch(ApiRoutes.updateAccountEmail(id), {
       headers: { ...(await authHeader()), ...contentTypeJsonHeader },
+      method: "PATCH",
       body: JSON.stringify(params),
-      method: "PUT",
     });
     if (!res.ok) throw await res.text();
     notification.success();

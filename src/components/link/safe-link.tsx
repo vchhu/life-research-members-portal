@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, MouseEvent, PropsWithChildren, useContext } from "react";
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
@@ -18,9 +19,9 @@ const SafeLink: FC<PropsWithChildren<Props>> = ({ href, children }) => {
   }
 
   return (
-    <a href={href} onClick={handleNav}>
-      {children}
-    </a>
+    <Link href={href}>
+      <a onClick={handleNav}>{children}</a>
+    </Link>
   );
 };
 

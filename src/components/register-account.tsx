@@ -13,6 +13,7 @@ type Data = {
   first_name: string;
   last_name: string;
   is_admin: boolean;
+  is_member: boolean;
 };
 
 const RegisterAccount: FC = () => {
@@ -20,21 +21,13 @@ const RegisterAccount: FC = () => {
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
 
-  async function handleRegister({ first_name, last_name, login_email, is_admin }: Data) {
-    const res = await registerAccount({ first_name, last_name, login_email, is_admin });
+  async function handleRegister({ first_name, last_name, login_email, is_admin, is_member }: Data) {
+    const res = await registerAccount({ first_name, last_name, login_email, is_admin, is_member });
     if (res) form.resetFields();
   }
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingTop: "2vh",
-      }}
-    >
+    <div className="register-account-form">
       <h1>{en ? "Register Account" : "Enregistrer un Compte"}</h1>
       <h2 style={{ marginBottom: 24 }}>
         {en
@@ -92,11 +85,18 @@ const RegisterAccount: FC = () => {
         >
           <Input />
         </Form.Item>
-        <Form.Item name="is_admin" valuePropName="checked">
-          <Checkbox>
-            {en ? "Grant Admin Privileges" : "Accorder des privilèges d'administrateur"}
-          </Checkbox>
-        </Form.Item>
+
+        <div className="row">
+          <Form.Item name="is_member" valuePropName="checked" initialValue={true}>
+            <Checkbox>{en ? "Register as Member" : "Inscrivez-vous en tant que membre"}</Checkbox>
+          </Form.Item>
+          <Form.Item name="is_admin" valuePropName="checked">
+            <Checkbox>
+              {en ? "Grant Admin Privileges" : "Accorder des privilèges d'administrateur"}
+            </Checkbox>
+          </Form.Item>
+        </div>
+
         <Form.Item>
           <Button
             type="primary"

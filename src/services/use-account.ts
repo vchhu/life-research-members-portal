@@ -29,5 +29,5 @@ export default function useAccount(id: number) {
     fetchAccount(id);
   }
 
-  return { account, loading, refresh };
+  return { account, setAccount, loading, refresh };
 }

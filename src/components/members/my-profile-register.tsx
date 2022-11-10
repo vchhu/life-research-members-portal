@@ -1,6 +1,6 @@
 import Button from "antd/lib/button";
 import { FC, useContext } from "react";
-import registerMember from "../../services/register-member";
+import updateAccountRegisterMember from "../../services/update-account-register-member";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 
@@ -8,14 +8,13 @@ const MyProfileRegister: FC = () => {
   const { en } = useContext(LanguageCtx);
   const { localAccount, setLocalAccount } = useContext(ActiveAccountCtx);
 
-  async function handleRegisterMember(account_id: number) {
-    const newMember = await registerMember({ account_id });
-    setLocalAccount((prev) => {
-      return prev && { ...prev, member: newMember };
-    });
-  }
-
   if (!localAccount) return null; // Auth guard should prevent this
+
+  async function handleRegisterMember() {
+    if (!localAccount) return;
+    const res = await updateAccountRegisterMember(localAccount.id);
+    setLocalAccount(res);
+  }
 
   return (
     <div
@@ -36,7 +35,7 @@ const MyProfileRegister: FC = () => {
         type="primary"
         size="large"
         style={{ marginTop: 18 }}
-        onClick={() => handleRegisterMember(localAccount.id)}
+        onClick={() => handleRegisterMember()}
       >
         {en ? "Register as Member" : "Inscrivez-vous en tant que membre"}
       </Button>

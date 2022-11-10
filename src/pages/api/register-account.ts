@@ -8,12 +8,19 @@ export type RegisterAccountParams = {
   first_name: string;
   last_name: string;
   is_admin?: boolean;
+  is_member?: boolean;
 };
 export type RegisterAccountRes = Awaited<ReturnType<typeof registerAccount>>;
 
-function registerAccount({ login_email, first_name, last_name, is_admin }: RegisterAccountParams) {
+function registerAccount(params: RegisterAccountParams) {
   return db.account.create({
-    data: { login_email: login_email.toLocaleLowerCase(), is_admin, first_name, last_name },
+    data: {
+      login_email: params.login_email.toLocaleLowerCase(),
+      is_admin: params.is_admin,
+      first_name: params.first_name,
+      last_name: params.last_name,
+      member: params.is_member ? { create: { date_joined: new Date() } } : undefined,
+    },
   });
 }
 
