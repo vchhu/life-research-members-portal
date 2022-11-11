@@ -61,9 +61,9 @@ const MemberProfile: FC<Props> = ({ id }) => {
     </Button>
   );
 
-  const cancelButton = (
+  const doneButton = (
     <Button size="large" danger style={{ flexGrow: 1, maxWidth: "10rem" }} onClick={onCancel}>
-      {en ? "Cancel" : "Annuler"}
+      {en ? "Done" : "Fini"}
     </Button>
   );
 
@@ -81,7 +81,7 @@ const MemberProfile: FC<Props> = ({ id }) => {
       >
         {member.account.first_name + " " + member.account.last_name}
       </Title>
-      {editMode ? cancelButton : editButton}
+      {editMode ? doneButton : editButton}
     </div>
   );
 

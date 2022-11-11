@@ -6,8 +6,6 @@ import { blue } from "@ant-design/colors";
 import { LanguageCtx } from "../services/context/language-ctx";
 
 const Greeting: FC = () => {
-  const { instance } = useMsal();
-  const name = instance.getActiveAccount()?.name?.split(" ")[0];
   const { localAccount, loading } = useContext(ActiveAccountCtx);
   const { en } = useContext(LanguageCtx);
 
@@ -78,6 +76,11 @@ const Greeting: FC = () => {
     if (!localAccount) return notRegistered;
     return (
       <>
+        <h1>
+          {en
+            ? `Good to see you ${localAccount.first_name}.`
+            : `C'est bon de te voir ${localAccount.first_name}.`}
+        </h1>
         {localAccount?.member ? memberGreeting : noMemberInfo}
         {localAccount.is_admin ? adminGreeting : null}
       </>
@@ -92,10 +95,7 @@ const Greeting: FC = () => {
           : "Bienvenue sur le Portail des Membres du LIFE Research Institute !"}
       </h1>
       <UnauthenticatedTemplate>{unauthenticatedGreeting}</UnauthenticatedTemplate>
-      <AuthenticatedTemplate>
-        <h1>{en ? `Good to see you ${name}.` : `C'est bon de te voir ${name}.`}</h1>
-        {greeting()}
-      </AuthenticatedTemplate>
+      <AuthenticatedTemplate>{greeting()}</AuthenticatedTemplate>
     </div>
   );
 };

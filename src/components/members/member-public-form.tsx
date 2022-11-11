@@ -41,6 +41,8 @@ type Data = {
   twitter_link: string;
   linkedin_link: string;
   cv_link: string;
+  facebook_link: string;
+  tiktok_link: string;
 };
 
 const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
@@ -119,6 +121,8 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
         twitter_link: data.twitter_link,
         linkedin_link: data.linkedin_link,
         cv_link: data.cv_link,
+        facebook_link: data.facebook_link,
+        tiktok_link: data.tiktok_link,
         deleteProblems,
         addProblems,
         deleteKeywords,
@@ -176,6 +180,8 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
     twitter_link: member.twitter_link || "",
     linkedin_link: member.linkedin_link || "",
     cv_link: member.cv_link || "",
+    facebook_link: member.facebook_link || "",
+    tiktok_link: member.tiktok_link || "",
     problems: getInitialProblems(),
     keywords: getInitialKeywords(),
   };
@@ -263,7 +269,9 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
           </Form.Item>
         </div>
 
-        <label>{en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}</label>
+        <label htmlFor="problems">
+          {en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}
+        </label>
         <Divider />
         <Form.List name="problems">
           {(fields) =>
@@ -299,12 +307,64 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
           }
         </Form.List>
 
-        <label htmlFor="keywords">{en ? "Keywords" : "Mots Clés	"}</label>
+        <label htmlFor="keywords">{en ? "Keywords" : "Mots Clés"}</label>
         <Divider />
         <Form.Item name="keywords">
           <KeywordSelector setErrors={(e) => form.setFields([{ name: "keywords", errors: e }])} />
         </Form.Item>
         <Divider />
+
+        <label>{en ? "External Links" : "Liens externes"}</label>
+        <Divider />
+        <div className="row">
+          <Form.Item
+            label={en ? "Your CV" : "Votre CV"}
+            name="cv_link"
+            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label={en ? "Personal Website" : "Site Web personnel"}
+            name="website_link"
+            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="LinkedIn"
+            name="linkedin_link"
+            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Twitter"
+            name="twitter_link"
+            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Facebook"
+            name="facebook_link"
+            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="TikTok"
+            name="tiktok_link"
+            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+          >
+            <Input />
+          </Form.Item>
+        </div>
 
         <Form.Item style={{ marginBottom: 0 }}>
           <Button

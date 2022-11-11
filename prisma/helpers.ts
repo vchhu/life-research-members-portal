@@ -51,6 +51,8 @@ const _selectPublicMemberInfo = {
   twitter_link: true,
   linkedin_link: true,
   cv_link: true,
+  facebook_link: true,
+  tiktok_link: true,
   faculty: true,
   problem: true,
   member_type: true,

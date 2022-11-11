@@ -75,9 +75,9 @@ const MyProfile: FC = () => {
     </Button>
   );
 
-  const cancelButton = (
+  const doneButton = (
     <Button size="large" danger style={{ flexGrow: 1, maxWidth: "10rem" }} onClick={onCancel}>
-      {en ? "Cancel" : "Annuler"}
+      {en ? "Done" : "Fini"}
     </Button>
   );
 
@@ -95,7 +95,7 @@ const MyProfile: FC = () => {
       >
         {localAccount.first_name + " " + localAccount.last_name}
       </Title>
-      {editMode ? cancelButton : editButton}
+      {editMode ? doneButton : editButton}
     </div>
   );
 

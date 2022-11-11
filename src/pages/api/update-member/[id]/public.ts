@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllMemberInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
-import type { MemberPrivateInfo, ProblemInfo } from "../../../../services/_types";
+import type { ProblemInfo } from "../../../../services/_types";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
 import type { PrivateMemberDBRes } from "../../member/[id]/private";
 
@@ -12,12 +12,14 @@ export type UpdateMemberPublicParams = {
   about_me_fr: string;
   faculty_id?: number | null;
   type_id?: number | null;
-  work_email: string;
-  work_phone: string;
-  website_link: string;
-  twitter_link: string;
-  linkedin_link: string;
-  cv_link: string;
+  work_email?: string;
+  work_phone?: string;
+  website_link?: string;
+  twitter_link?: string;
+  linkedin_link?: string;
+  cv_link?: string;
+  facebook_link?: string;
+  tiktok_link?: string;
   deleteProblems?: number[];
   addProblems?: ProblemInfo[];
   deleteKeywords?: number[];
@@ -39,6 +41,8 @@ function updateMember(
     twitter_link,
     linkedin_link,
     cv_link,
+    facebook_link,
+    tiktok_link,
     deleteProblems = [],
     addProblems = [],
     deleteKeywords = [],
@@ -57,6 +61,8 @@ function updateMember(
       twitter_link,
       linkedin_link,
       cv_link,
+      facebook_link,
+      tiktok_link,
       faculty: faculty_id
         ? { connect: { id: faculty_id } }
         : faculty_id === null
