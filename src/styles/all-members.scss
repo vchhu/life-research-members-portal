@@ -4,6 +4,12 @@
     background: inherit;
   }
 
+  // Override
+  .ant-table-row-expand-icon-cell,
+  .ant-table-expand-icon-col {
+    width: 36px !important;
+  }
+
   .table-row,
   .expanded-table-row {
     height: 65px;
@@ -16,7 +22,7 @@
   .table-row:hover {
     background-color: var(--blue-1);
 
-    & + .expanded-table-row {
+    + .expanded-table-row {
       background-color: var(--blue-1);
     }
   }
@@ -25,12 +31,34 @@
     max-width: 50vw;
     min-width: 400px;
   }
+
   .name-column {
-    width: min-content;
-    max-width: 30vw;
+    min-width: 120px;
+    max-width: 12vw;
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: normal;
+  }
+
+  .name-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 6px;
+
+    > input {
+      min-width: 0;
+      max-width: 120px;
+    }
+    > input::placeholder {
+      color: black;
+    }
+
+    > .sort-caret {
+      display: flex;
+      justify-content: center;
+      flex-grow: 1;
+    }
   }
 
   .problems-container {

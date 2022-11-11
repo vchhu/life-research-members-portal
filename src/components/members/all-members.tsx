@@ -1,8 +1,7 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import { useRouter } from "next/router";
-import { FC, Fragment, useContext, useEffect, useState } from "react";
+import { FC, Fragment, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { MemberPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
@@ -12,37 +11,86 @@ import GetLanguage from "../../utils/front-end/get-language";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import SafeLink from "../link/safe-link";
+import Input from "antd/lib/input";
+import CaretDownOutlined from "@ant-design/icons/lib/icons/CaretDownOutlined";
+import CaretUpOutlined from "@ant-design/icons/lib/icons/CaretUpOutlined";
+
+function ascendingSorter(a: { name: string }, b: { name: string }) {
+  return a.name.localeCompare(b.name);
+}
+
+function descendingSorter(a: { name: string }, b: { name: string }) {
+  return b.name.localeCompare(a.name);
+}
+
+function getName(member: MemberPublicInfo) {
+  return member.account.first_name + " " + member.account.last_name;
+}
+
+function filterFn(m: { name: string; is_active: boolean }, nameFilter: string) {
+  return (
+    m.is_active && (!nameFilter || removeDiacritics(m.name).includes(removeDiacritics(nameFilter)))
+  );
+}
+
+// From https://www.davidbcalhoun.com/2019/matching-accented-strings-in-javascript/
+function removeDiacritics(str: string) {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase();
+}
 
 const AllMembers: FC = () => {
-  const router = useRouter();
   const { en } = useContext(LanguageCtx);
   const { allMembers, loading, refresh } = useContext(AllMembersCtx);
-  const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id })).filter((m) => m.is_active);
-
-  const [nameSortOrder, setNameSortOrder] = useState<"ascend" | "descend">("ascend");
-  function toggleNameSortOrder() {
-    if (nameSortOrder === "ascend") setNameSortOrder("descend");
-    if (nameSortOrder === "descend") setNameSortOrder("ascend");
-  }
 
   useEffect(() => {
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function getName(member: MemberPublicInfo) {
-    return member.account.first_name + " " + member.account.last_name;
+  const [sortAscending, setSortAscending] = useState(true);
+  const sortFn = sortAscending ? ascendingSorter : descendingSorter;
+  function toggleSort() {
+    setSortAscending((prev) => !prev);
   }
 
-  const columns: ColumnType<MemberPublicInfo>[] = [
+  const [nameFilter, setNameFilter] = useState("");
+
+  const sortedFilteredMembers = useMemo(
+    () =>
+      allMembers
+        .map((m) => ({ ...m, key: m.id, name: getName(m) }))
+        .filter((m) => filterFn(m, nameFilter))
+        .sort(sortFn),
+    [allMembers, nameFilter, sortFn]
+  );
+
+  const nameHeader = (
+    <div className="name-column-header">
+      <Input
+        placeholder={en ? "Name" : "Nom"}
+        value={nameFilter}
+        onChange={(e) => setNameFilter(e.target.value)}
+      />
+      <div
+        onClick={toggleSort}
+        style={{ display: "flex", cursor: "pointer", height: 32, alignItems: "center" }}
+        className="sort-caret"
+      >
+        {sortAscending ? <CaretDownOutlined /> : <CaretUpOutlined />}
+      </div>
+    </div>
+  );
+
+  const columns: ColumnType<typeof sortedFilteredMembers[number]>[] = [
     {
-      title: <div onClick={toggleNameSortOrder}>{en ? "Name" : "Nom"}</div>,
-      key: "name",
+      title: nameHeader,
+      dataIndex: "name",
       className: "name-column",
-      sorter: (a, b) => getName(a).localeCompare(getName(b)),
-      sortOrder: nameSortOrder,
-      render: (_, member) => (
-        <SafeLink href={PageRoutes.memberProfile(member.id)}>{getName(member)}</SafeLink>
+      render: (value, member) => (
+        <SafeLink href={PageRoutes.memberProfile(member.id)}>{value}</SafeLink>
       ),
     },
     {
@@ -85,13 +133,13 @@ const AllMembers: FC = () => {
       className="all-members-table"
       size="small"
       columns={columns}
-      dataSource={keyedMembers}
+      dataSource={sortedFilteredMembers}
       loading={loading}
       title={header}
       pagination={false}
       showSorterTooltip={false}
       sticky={{ offsetHeader: 74 }}
-      scroll={{ x: "max-content" }}
+      scroll={{ x: true }}
       rowClassName={(_, index) => "table-row " + (index % 2 === 0 ? "even" : "odd")}
       expandable={{
         expandedRowRender,
