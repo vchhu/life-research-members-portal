@@ -1,10 +1,23 @@
 .all-members-table {
-  .table-row {
-    cursor: pointer;
+  // Override
+  .ant-table-column-sort {
+    background: inherit;
+  }
+
+  .table-row,
+  .expanded-table-row {
     height: 65px;
 
-    &.even {
-      background-color: var(--gray-2);
+    &.odd {
+      background-color: var(--gray-3);
+    }
+  }
+
+  .table-row:hover {
+    background-color: var(--blue-1);
+
+    & + .expanded-table-row {
+      background-color: var(--blue-1);
     }
   }
 
@@ -12,23 +25,18 @@
     max-width: 50vw;
     min-width: 400px;
   }
-  .first-name-column,
-  .last-name-column {
-    font-size: 0.7rem;
+  .name-column {
     width: min-content;
-    max-width: 22vw;
+    max-width: 30vw;
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: normal;
   }
-}
 
-@media screen and (min-width: 700px) {
-  .all-members-table {
-    .first-name-column,
-    .last-name-column {
-      font-size: inherit;
-    }
+  .problems-container {
+    padding-left: 48px;
+    padding-right: 20px;
+    max-width: 90vw;
   }
 }
 
@@ -36,6 +44,14 @@
   .all-members-table {
     .tag-column {
       max-width: 70vw;
+    }
+  }
+}
+
+@media screen and (min-width: 1600px) {
+  .all-members-table {
+    .tag-column {
+      max-width: 80vw;
     }
   }
 }

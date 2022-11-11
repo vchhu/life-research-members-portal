@@ -2,12 +2,16 @@ import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import { useRouter } from "next/router";
-import { FC, useContext, useEffect } from "react";
+import { FC, Fragment, useContext, useEffect, useState } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { MemberPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
 import KeywordTag from "../keywords/keyword-tag";
 import { AllMembersCtx } from "../../services/context/all-members-ctx";
+import GetLanguage from "../../utils/front-end/get-language";
+import Descriptions from "antd/lib/descriptions";
+import Item from "antd/lib/descriptions/Item";
+import SafeLink from "../link/safe-link";
 
 const AllMembers: FC = () => {
   const router = useRouter();
@@ -15,23 +19,31 @@ const AllMembers: FC = () => {
   const { allMembers, loading, refresh } = useContext(AllMembersCtx);
   const keyedMembers = allMembers.map((m) => ({ ...m, key: m.id })).filter((m) => m.is_active);
 
+  const [nameSortOrder, setNameSortOrder] = useState<"ascend" | "descend">("ascend");
+  function toggleNameSortOrder() {
+    if (nameSortOrder === "ascend") setNameSortOrder("descend");
+    if (nameSortOrder === "descend") setNameSortOrder("ascend");
+  }
+
   useEffect(() => {
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function getName(member: MemberPublicInfo) {
+    return member.account.first_name + " " + member.account.last_name;
+  }
+
   const columns: ColumnType<MemberPublicInfo>[] = [
     {
-      title: en ? "First Name" : "Prénom",
-      dataIndex: ["account", "first_name"],
-      className: "first-name-column",
-      sorter: (a, b) => (a.account.first_name || "").localeCompare(b.account.first_name || ""),
-    },
-    {
-      title: en ? "Last Name" : "Nom de Famille",
-      dataIndex: ["account", "last_name"],
-      className: "last-name-column",
-      sorter: (a, b) => (a.account.last_name || "").localeCompare(b.account.last_name || ""),
+      title: <div onClick={toggleNameSortOrder}>{en ? "Name" : "Nom"}</div>,
+      key: "name",
+      className: "name-column",
+      sorter: (a, b) => getName(a).localeCompare(getName(b)),
+      sortOrder: nameSortOrder,
+      render: (_, member) => (
+        <SafeLink href={PageRoutes.memberProfile(member.id)}>{getName(member)}</SafeLink>
+      ),
     },
     {
       title: en ? "Key Words" : "Mots Clés",
@@ -54,6 +66,20 @@ const AllMembers: FC = () => {
     </div>
   );
 
+  const expandedRowRender = (member: MemberPublicInfo) => (
+    <Descriptions size="small" layout="vertical" className="problems-container">
+      <Item label={en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}>
+        {member.problem.map((p, i) => (
+          <Fragment key={i}>
+            {`${i + 1}. `}
+            <GetLanguage obj={p} />
+            <br />
+          </Fragment>
+        ))}
+      </Item>
+    </Descriptions>
+  );
+
   return (
     <Table
       className="all-members-table"
@@ -67,11 +93,11 @@ const AllMembers: FC = () => {
       sticky={{ offsetHeader: 74 }}
       scroll={{ x: "max-content" }}
       rowClassName={(_, index) => "table-row " + (index % 2 === 0 ? "even" : "odd")}
-      onRow={(member, _) => ({
-        onClick: (_) => {
-          router.push(PageRoutes.memberProfile(member.id));
-        },
-      })}
+      expandable={{
+        expandedRowRender,
+        expandedRowClassName: (_, index) =>
+          "expanded-table-row " + (index % 2 === 0 ? "even" : "odd"),
+      }}
     />
   );
 };

@@ -8,13 +8,14 @@ import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import CheckCircleTwoTone from "@ant-design/icons/lib/icons/CheckCircleTwoTone";
 import Spin from "antd/lib/spin";
+import LoginButton from "./login-button";
 
 const AvatarMenu: FC = () => {
   const { en } = useContext(LanguageCtx);
   const { localAccount, loading } = useContext(ActiveAccountCtx);
 
   if (loading) return <Spin />;
-  if (!localAccount) return null;
+  if (!localAccount) return <LoginButton />; // Fallback in case of error
 
   const avatarLabel = localAccount.first_name[0] + localAccount.last_name[0];
   const name = localAccount.first_name + " " + localAccount.last_name;

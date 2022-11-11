@@ -2,9 +2,13 @@
   .table-row {
     cursor: pointer;
 
-    &.even {
-      background-color: var(--gray-2);
+    &.odd {
+      background-color: var(--gray-3);
     }
+  }
+
+  .table-row.table-row:hover {
+    background-color: var(--blue-1);
   }
 
   .first-name-column,

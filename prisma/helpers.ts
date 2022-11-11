@@ -8,7 +8,7 @@ import type { Prisma } from "@prisma/client";
 // These will normally be considered excess properties and pass typechecking
 type CheckKeysAreValid<T, ValidProps> = Exclude<keyof T, keyof ValidProps> extends never
   ? T
-  : "Invalid keys" | Exclude<keyof T, keyof ValidProps>;
+  : "Invalid keys" | Exclude<keyof T, keyof ValidProps>; // Hacky error message
 
 type t = typeof selectPublicMemberInfo & Prisma.memberSelect;
 
@@ -57,7 +57,7 @@ const _selectPublicMemberInfo = {
   problem: true,
   member_type: true,
   has_keyword: { select: { keyword: true } },
-};
+} as const;
 
 export const selectPublicMemberInfo: CheckKeysAreValid<
   typeof _selectPublicMemberInfo,
