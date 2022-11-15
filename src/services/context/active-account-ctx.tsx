@@ -44,8 +44,22 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
   const [loading, setLoading] = useState(true); // Start true so loading icons are served first
   const [refreshing, setRefreshing] = useState(false);
 
+  /** Checks if getting the auth header throws an error - which we assume means the session expired
+   * The authHeader function will notify the user
+   */
+  async function isSessionExpired(): Promise<boolean> {
+    let sessionExpired = false;
+    try {
+      await authHeader();
+    } catch (_) {
+      sessionExpired = true;
+    }
+    return sessionExpired;
+  }
+
   /** Gets the current user's account from the database */
   async function fetchLocalAccount() {
+    if (await isSessionExpired()) return;
     try {
       const res = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
       if (!res.ok) throw await res.text();
@@ -57,6 +71,7 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
 
   /** Update last login on first load */
   async function fetchAccountUpdateLastLogin() {
+    if (await isSessionExpired()) return;
     try {
       const res = await fetch(ApiRoutes.activeAccountUpdateLastLogin, {
         headers: await authHeader(),
@@ -85,6 +100,7 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
       notification.close();
     }
     firstLoad();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [msId, instance]);
 
   async function refresh() {
