@@ -15,15 +15,19 @@ import type { AuthenticationResult } from "@azure/msal-common/dist/response/Auth
 import type { AccountInfo } from "../_types";
 import Notification from "../notifications/notification";
 
+// See https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-spa-acquire-token?tabs=javascript2
 function handleResponse(response: AuthenticationResult | null) {
   if (!response) return;
   msalInstance.setActiveAccount(response.account);
 }
 
-msalInstance
-  .handleRedirectPromise()
-  .then(handleResponse)
-  .catch((e: any) => console.error("Error after redirect:", e));
+/** Await this promise to make sure active account is loaded on redirecting from login screen*/
+async function onRedirect() {
+  return msalInstance
+    .handleRedirectPromise()
+    .then(handleResponse)
+    .catch((e: any) => console.error("Error after redirect:", e));
+}
 
 export const ActiveAccountCtx = createContext<{
   localAccount: AccountInfo | null;
@@ -37,8 +41,6 @@ export const ActiveAccountCtx = createContext<{
 
 export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const { instance } = useMsal();
-  const msAccount = instance.getActiveAccount();
-  const msId = msAccount?.localAccountId;
 
   const [localAccount, setLocalAccount] = useState<AccountInfo | null>(null);
   const [loading, setLoading] = useState(true); // Start true so loading icons are served first
@@ -48,7 +50,7 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
   async function fetchLocalAccount() {
     try {
       const authHeader = await getAuthHeader();
-      if (!authHeader) return;
+      if (!authHeader) return setLocalAccount(null);
       const res = await fetch(ApiRoutes.activeAccount, { headers: authHeader });
       if (!res.ok) throw await res.text();
       setLocalAccount(await res.json());
@@ -61,7 +63,7 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
   async function fetchAccountUpdateLastLogin() {
     try {
       const authHeader = await getAuthHeader();
-      if (!authHeader) return;
+      if (!authHeader) return setLocalAccount(null);
       const res = await fetch(ApiRoutes.activeAccountUpdateLastLogin, {
         headers: authHeader,
       });
@@ -72,16 +74,10 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
     }
   }
 
-  // Using msAccount as a dependency creates an infinite loop,
-  // since a new object is generated from local storage each time.
-  // So don't do it! Use the id to see if user changed.
   useEffect(() => {
-    if (!instance.getActiveAccount()) {
-      setLocalAccount(null);
-      setLoading(false);
-      return;
-    }
     async function firstLoad() {
+      await onRedirect();
+      if (!instance.getActiveAccount()) return setLoading(false);
       const notification = new Notification("bottom-right");
       notification.loading("Loading your account...");
       await fetchAccountUpdateLastLogin();
@@ -89,14 +85,9 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
       notification.close();
     }
     firstLoad();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [msId, instance]);
+  }, [instance]);
 
   async function refresh() {
-    if (!instance.getActiveAccount()) {
-      setLocalAccount(null);
-      return;
-    }
     if (loading || refreshing) return;
     const notification = new Notification("bottom-right");
     setRefreshing(true);
@@ -116,7 +107,7 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
     const onRedirectNavigate = () => {
       setLocalAccount(null);
       instance.setActiveAccount(null);
-      return false;
+      return false; // returning false stops redirect
     };
 
     instance.logoutRedirect({ onRedirectNavigate }).catch((e: any) => {

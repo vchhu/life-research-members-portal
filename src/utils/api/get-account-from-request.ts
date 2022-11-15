@@ -56,11 +56,8 @@ export default async function getAccountFromRequest(
       res
         .status(401)
         .send(
-          "This account is not registered, please contact an administrator and provide the following information." +
-            " Microsoft Email: " +
-            msAccountInfo.userPrincipalName +
-            " Microsoft ID: " +
-            msAccountInfo.id
+          "This account is not registered, please ask an administrator to register the following email: " +
+            msAccountInfo.userPrincipalName
         );
       return null;
     }

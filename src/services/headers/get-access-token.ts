@@ -4,16 +4,13 @@ import Notification from "../notifications/notification";
 
 // See https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/token-lifetimes.md
 
-export default function getAccessToken(): Promise<string | null> {
+export default async function getAccessToken(): Promise<string | null> {
+  const account = msalInstance.getActiveAccount();
+  if (!account) return null;
   return msalInstance
-    .acquireTokenSilent({
-      scopes,
-      account: msalInstance.getActiveAccount() || undefined,
-    })
+    .acquireTokenSilent({ scopes, account })
     .then((res) => res.accessToken)
-    .catch(() => {
-      // We've already been here before - don't show the error again
-      if (!msalInstance.getActiveAccount()) return null;
+    .catch((e: any) => {
       // Just assume any error means session has expired
       new Notification().error(
         en
