@@ -1,17 +1,20 @@
 import ApiRoutes from "../routing/api-routes";
 import { en } from "./context/language-ctx";
-import authHeader from "./headers/auth-header";
+import getAuthHeader from "./headers/auth-header";
 import Notification from "./notifications/notification";
 import type { AccountInfo } from "./_types";
 
 export default async function updateAccountRemoveAdmin(id: number): Promise<AccountInfo | null> {
+  const authHeader = await getAuthHeader();
+  if (!authHeader) return null;
+
   const notification = new Notification();
   try {
     notification.loading(
       en ? "Removing admin privileges..." : "Suppression des privilèges d'administrateur..."
     );
     const res = await fetch(ApiRoutes.updateAccountRemoveAdmin(id), {
-      headers: await authHeader(),
+      headers: authHeader,
       method: "PATCH",
     });
     if (!res.ok) throw await res.text();

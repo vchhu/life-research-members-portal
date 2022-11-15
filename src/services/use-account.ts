@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ApiRoutes from "../routing/api-routes";
-import authHeader from "./headers/auth-header";
+import getAuthHeader from "./headers/auth-header";
 import type { AccountInfo } from "./_types";
 
 export default function useAccount(id: number) {
@@ -9,8 +9,10 @@ export default function useAccount(id: number) {
 
   async function fetchAccount(id: number) {
     try {
+      const authHeader = await getAuthHeader();
+      if (!authHeader) return;
       setLoading(true);
-      const result = await fetch(ApiRoutes.account(id), { headers: await authHeader() });
+      const result = await fetch(ApiRoutes.account(id), { headers: authHeader });
       if (!result.ok) return console.error(await result.text());
       const account = await result.json();
       setAccount(account);

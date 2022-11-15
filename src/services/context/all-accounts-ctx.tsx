@@ -1,6 +1,6 @@
 import { createContext, FC, PropsWithChildren, useContext, useEffect, useState } from "react";
 import ApiRoutes from "../../routing/api-routes";
-import authHeader from "../headers/auth-header";
+import getAuthHeader from "../headers/auth-header";
 import Notification from "../notifications/notification";
 import type { AccountInfo } from "../_types";
 import { ActiveAccountCtx } from "./active-account-ctx";
@@ -20,7 +20,9 @@ export const AllAccountsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
 
   async function fetchAllAccounts() {
     try {
-      const result = await fetch(ApiRoutes.allAccounts, { headers: await authHeader() });
+      const authHeader = await getAuthHeader();
+      if (!authHeader) return;
+      const result = await fetch(ApiRoutes.allAccounts, { headers: authHeader });
       if (!result.ok) throw await result.text();
       const accounts: AccountInfo[] = await result.json();
       accounts.sort((a, b) => a.first_name.localeCompare(b.first_name));

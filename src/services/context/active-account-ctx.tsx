@@ -10,7 +10,7 @@ import {
 } from "react";
 import { loginRequest, msalInstance } from "../../../auth-config";
 import ApiRoutes from "../../routing/api-routes";
-import authHeader from "../headers/auth-header";
+import getAuthHeader from "../headers/auth-header";
 import type { AuthenticationResult } from "@azure/msal-common/dist/response/AuthenticationResult";
 import type { AccountInfo } from "../_types";
 import Notification from "../notifications/notification";
@@ -44,24 +44,12 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
   const [loading, setLoading] = useState(true); // Start true so loading icons are served first
   const [refreshing, setRefreshing] = useState(false);
 
-  /** Checks if getting the auth header throws an error - which we assume means the session expired
-   * The authHeader function will notify the user
-   */
-  async function isSessionExpired(): Promise<boolean> {
-    let sessionExpired = false;
-    try {
-      await authHeader();
-    } catch (_) {
-      sessionExpired = true;
-    }
-    return sessionExpired;
-  }
-
   /** Gets the current user's account from the database */
   async function fetchLocalAccount() {
-    if (await isSessionExpired()) return;
     try {
-      const res = await fetch(ApiRoutes.activeAccount, { headers: await authHeader() });
+      const authHeader = await getAuthHeader();
+      if (!authHeader) return;
+      const res = await fetch(ApiRoutes.activeAccount, { headers: authHeader });
       if (!res.ok) throw await res.text();
       setLocalAccount(await res.json());
     } catch (e: any) {
@@ -71,10 +59,11 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
 
   /** Update last login on first load */
   async function fetchAccountUpdateLastLogin() {
-    if (await isSessionExpired()) return;
     try {
+      const authHeader = await getAuthHeader();
+      if (!authHeader) return;
       const res = await fetch(ApiRoutes.activeAccountUpdateLastLogin, {
-        headers: await authHeader(),
+        headers: authHeader,
       });
       if (!res.ok) throw await res.text();
       setLocalAccount(await res.json());

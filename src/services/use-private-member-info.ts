@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ApiRoutes from "../routing/api-routes";
-import authHeader from "./headers/auth-header";
+import getAuthHeader from "./headers/auth-header";
 import type { MemberPrivateInfo } from "./_types";
 
 export default function usePrivateMemberInfo(id: number) {
@@ -9,8 +9,10 @@ export default function usePrivateMemberInfo(id: number) {
 
   async function fetchMember(id: number) {
     try {
+      const authHeader = await getAuthHeader();
+      if (!authHeader) return;
       setLoading(true);
-      const res = await fetch(ApiRoutes.privateMemberInfo(id), { headers: await authHeader() });
+      const res = await fetch(ApiRoutes.privateMemberInfo(id), { headers: authHeader });
       if (!res.ok) return console.error(await res.text());
       setMember(await res.json());
     } catch (e: any) {

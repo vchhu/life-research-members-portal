@@ -2,7 +2,7 @@
 
 import getAccessToken from "./get-access-token";
 
-export default async function authHeader() {
+export default async function getAuthHeader() {
   const accessToken = await getAccessToken();
-  return { authorization: "Bearer " + accessToken };
+  return accessToken ? { authorization: "Bearer " + accessToken } : null;
 }

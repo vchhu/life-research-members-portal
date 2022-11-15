@@ -1,7 +1,7 @@
 import type { UpdateMemberInsightParams } from "../pages/api/update-member/[id]/insight";
 import ApiRoutes from "../routing/api-routes";
 import { en } from "./context/language-ctx";
-import authHeader from "./headers/auth-header";
+import getAuthHeader from "./headers/auth-header";
 import { contentTypeJsonHeader } from "./headers/content-type-headers";
 import Notification from "./notifications/notification";
 import type { MemberPrivateInfo } from "./_types";
@@ -10,6 +10,9 @@ export default async function updateMemberInsight(
   id: number,
   params: UpdateMemberInsightParams
 ): Promise<MemberPrivateInfo | null> {
+  const authHeader = await getAuthHeader();
+  if (!authHeader) return null;
+
   const notification = new Notification();
   try {
     notification.loading(
@@ -17,7 +20,7 @@ export default async function updateMemberInsight(
     );
     const res = await fetch(ApiRoutes.updateMemberInsight(id), {
       method: "PATCH",
-      headers: { ...(await authHeader()), ...contentTypeJsonHeader },
+      headers: { ...authHeader, ...contentTypeJsonHeader },
       body: JSON.stringify(params),
     });
     if (!res.ok) throw await res.text();
