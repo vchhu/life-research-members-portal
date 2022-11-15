@@ -1,5 +1,5 @@
 import { msalInstance, scopes } from "../../../auth-config";
-import { InteractionRequiredAuthError } from "@azure/msal-common";
+import { en } from "../context/language-ctx";
 import Notification from "../notifications/notification";
 
 // See https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/token-lifetimes.md
@@ -13,7 +13,11 @@ export default function getAccessToken() {
     .then((res) => res.accessToken)
     .catch(() => {
       // Just assume any error means session has expired
-      new Notification().error("Your session has expired, please login again.");
+      new Notification().error(
+        en
+          ? "Your session has expired, please login again."
+          : "Votre session a expiré, veuillez vous reconnecter."
+      );
       msalInstance.setActiveAccount(null);
     });
 }
