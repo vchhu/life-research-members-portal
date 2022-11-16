@@ -26,8 +26,10 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register members.");
+    const authorized = currentUser.is_admin || currentUser.id === id;
+
+    if (!authorized)
+      return res.status(401).send("You are not authorized to register this account as a member.");
 
     const updated = await registerMember(id);
 
