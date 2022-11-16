@@ -113,35 +113,35 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
         </Form.Item>
         <div className="row">
           <Form.Item label={en ? "About Member" : "À propos du membre"} name="about_member">
-            <TextArea />
+            <TextArea spellCheck="false" />
           </Form.Item>
 
           <Form.Item
             label={en ? "About Promotions" : "À propos des promotions"}
             name="about_promotions"
           >
-            <TextArea />
+            <TextArea spellCheck="false" />
           </Form.Item>
         </div>
         <div className="row">
           <Form.Item label={en ? "Dream" : "Rêver"} name="dream">
-            <TextArea />
+            <TextArea spellCheck="false" />
           </Form.Item>
 
           <Form.Item
             label={en ? "How the institute can help" : "Comment l'institut peut vous aider"}
             name="how_can_we_help"
           >
-            <TextArea />
+            <TextArea spellCheck="false" />
           </Form.Item>
         </div>
         <div className="row">
           <Form.Item label={en ? "Admin Notes" : "Notes d'administration"} name="admin_notes">
-            <TextArea />
+            <TextArea spellCheck="false" />
           </Form.Item>
 
           <Form.Item label={en ? "Other Notes" : "Autres notes"} name="other_notes">
-            <TextArea />
+            <TextArea spellCheck="false" />
           </Form.Item>
         </div>
         <Form.Item style={{ marginBottom: 0 }}>
