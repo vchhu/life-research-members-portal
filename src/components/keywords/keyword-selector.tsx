@@ -5,7 +5,7 @@ import type { keyword } from "@prisma/client";
 import AutoComplete from "antd/lib/auto-complete";
 import Button from "antd/lib/button/button";
 import Card from "antd/lib/card";
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { KeywordInfo } from "../../services/_types";
@@ -13,7 +13,7 @@ import KeywordTag from "./keyword-tag";
 import NewKeywordModal from "./new-keyword-modal";
 
 type Props = {
-  id?: string;
+  id?: string; // For connecting a label - antd form will pass this in
   value?: Map<number, keyword>;
   onChange?: (value: Map<number, keyword>) => void;
   setErrors?: (e: string[] | undefined) => void;
@@ -24,8 +24,8 @@ const KeywordSelector: FC<Props> = ({
   id = "",
   value = new Map<number, keyword>(),
   max = 10,
-  onChange,
-  setErrors,
+  onChange = () => {},
+  setErrors = () => {},
 }) => {
   const { keywords, refresh: refreshKeywords, set } = useContext(AllKeywordsCtx);
   const { en } = useContext(LanguageCtx);
@@ -95,14 +95,15 @@ const KeywordSelector: FC<Props> = ({
   }
 
   function onDelete(id: number) {
-    value.delete(id);
-    onChange?.(new Map(value));
-    setErrors?.(undefined);
+    const next = new Map(value);
+    next.delete(id);
+    onChange(next);
+    setErrors(undefined);
   }
 
   function onEdit(updatedKeyword: keyword) {
     set(updatedKeyword);
-    onChange?.(new Map(value).set(updatedKeyword.id, updatedKeyword));
+    onChange(new Map(value).set(updatedKeyword.id, updatedKeyword));
   }
 
   return (
@@ -135,7 +136,7 @@ const KeywordSelector: FC<Props> = ({
             <KeywordTag
               key={k.id}
               keyword={k}
-              editProps={{ editable: true, allKeywords: keywords }}
+              editable
               deletable
               onDelete={onDelete}
               onEdit={onEdit}

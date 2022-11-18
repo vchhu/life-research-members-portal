@@ -3,17 +3,19 @@ import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import type { keyword } from "@prisma/client";
 import Tag from "antd/lib/tag";
 import { CSSProperties, FC, useState } from "react";
+import PageRoutes from "../../routing/page-routes";
 import colorFromString from "../../utils/front-end/color-from-string";
 import GetLanguage from "../../utils/front-end/get-language";
 import GetOppositeLanguage from "../../utils/front-end/get-opposite-language";
+import SafeLink from "../link/safe-link";
 import EditKeywordModal from "./edit-keyword-modal";
 
 type Props = {
   keyword: keyword;
-  onClick?: () => void;
-  /** If editable, provide all keywords to check for duplicates */
-  editProps?: { editable: true; allKeywords: keyword[] } | { editable: false };
+  linked?: boolean;
+  editable?: boolean;
   deletable?: boolean;
+  onClick?: (k: keyword) => void;
   onDelete?: (id: number) => void;
   onEdit?: (keyword: keyword) => void;
   oppositeLanguage?: boolean;
@@ -22,9 +24,10 @@ type Props = {
 
 const KeywordTag: FC<Props> = ({
   keyword: k,
-  onClick = () => {},
-  editProps = { editable: false },
+  linked = false,
+  editable = false,
   deletable = false,
+  onClick = () => {},
   onDelete = () => {},
   onEdit = () => {},
   oppositeLanguage = false,
@@ -37,24 +40,32 @@ const KeywordTag: FC<Props> = ({
     onEdit(keyword);
   }
 
+  const text = oppositeLanguage ? <GetOppositeLanguage obj={k} /> : <GetLanguage obj={k} />;
+  const content = linked ? (
+    <SafeLink href={{ pathname: PageRoutes.allMembers, query: { keywords: [k.id] } }}>
+      {text}
+    </SafeLink>
+  ) : (
+    text
+  );
+
   return (
     <>
       <Tag
         className="keyword-tag"
         color={colorFromString((k.name_en || "") + (k.name_fr || ""))}
-        onClick={editProps.editable ? () => setModalOpen(true) : onClick}
+        onClick={editable ? () => setModalOpen(true) : () => onClick(k)}
         closable={deletable}
         closeIcon={<CloseOutlined onClick={() => onDelete(k.id)} />}
-        icon={editProps.editable ? <EditOutlined /> : null}
+        icon={editable ? <EditOutlined /> : null}
         style={style}
       >
-        {oppositeLanguage ? <GetOppositeLanguage obj={k} /> : <GetLanguage obj={k} />}
+        {content}
       </Tag>
-      {editProps.editable ? (
+      {editable ? (
         <EditKeywordModal
           open={modalOpen}
           keyword={k}
-          allKeywords={editProps.allKeywords}
           onSuccess={onEditSuccess}
           onCancel={() => setModalOpen(false)}
         />

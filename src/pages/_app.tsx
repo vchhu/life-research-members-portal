@@ -12,12 +12,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   function getSuffix() {
     const path = router.pathname;
-    // Order matters!
     if (path.startsWith(PageRoutes.allAccounts)) return "Accounts";
     if (path.startsWith(PageRoutes.allMembers)) return "Members";
     if (path.startsWith(PageRoutes.register)) return "Register";
     if (path.startsWith(PageRoutes.myProfile)) return "My Profile";
-    if (path.startsWith(PageRoutes.home)) return "Home";
+    if (path === PageRoutes.home) return "Home";
     return "";
   }
   let suffix = getSuffix();

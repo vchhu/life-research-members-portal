@@ -25,16 +25,20 @@ function frSorter(a: keyword, b: keyword): number {
 
 export const AllKeywordsCtx = createContext<{
   keywords: keyword[];
+  keywordMap: Map<number, keyword>;
   refresh: () => void;
   set: (keyword: keyword) => void;
 }>(null as any);
 
 export const AllKeywordsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const [keywords, setKeywords] = useState<keyword[]>([]);
+  const [keywordMap, setKeywordMap] = useState(new Map<number, keyword>());
   const { en } = useContext(LanguageCtx);
 
   async function getKeywords() {
-    setKeywords((await fetchAllKeywords()).sort(en ? enSorter : frSorter));
+    const keywords = await fetchAllKeywords();
+    setKeywords(keywords.sort(en ? enSorter : frSorter));
+    setKeywordMap(new Map(keywords.map((k) => [k.id, k])));
   }
 
   useEffect(() => {
@@ -59,6 +63,8 @@ export const AllKeywordsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   return (
-    <AllKeywordsCtx.Provider value={{ keywords, refresh, set }}>{children}</AllKeywordsCtx.Provider>
+    <AllKeywordsCtx.Provider value={{ keywords, keywordMap, refresh, set }}>
+      {children}
+    </AllKeywordsCtx.Provider>
   );
 };

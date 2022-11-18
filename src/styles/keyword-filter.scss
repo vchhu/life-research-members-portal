@@ -1,0 +1,17 @@
+.keyword-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 1px;
+
+  .autocomplete {
+    flex-basis: 420px;
+
+    margin-right: 10px;
+  }
+
+  // Override
+  .ant-select-selection-placeholder {
+    color: var(--gray-7);
+  }
+}

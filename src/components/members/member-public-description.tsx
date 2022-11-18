@@ -55,7 +55,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       </Item>
       <Item label={en ? "Keywords" : "Mots Clés"}>
         {member.has_keyword.map((entry, i) => (
-          <KeywordTag key={i} keyword={entry.keyword} />
+          <KeywordTag key={i} keyword={entry.keyword} linked />
         ))}
       </Item>
       <Item label="Email">

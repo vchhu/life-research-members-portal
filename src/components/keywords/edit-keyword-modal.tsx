@@ -14,17 +14,18 @@ import { red } from "@ant-design/colors";
 import updateKeyword from "../../services/update-keyword";
 import { useEffect } from "react";
 import KeywordPreview from "./keyword-preview";
+import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
 
 type Props = {
   keyword: keyword;
-  allKeywords: keyword[];
   open: boolean;
   onSuccess: (keyword: keyword) => void;
   onCancel: () => void;
 };
 
-const EditKeywordModal: FC<Props> = ({ keyword, allKeywords, open, onSuccess, onCancel }) => {
+const EditKeywordModal: FC<Props> = ({ keyword, open, onSuccess, onCancel }) => {
   const { en } = useContext(LanguageCtx);
+  const { keywords: allKeywords } = useContext(AllKeywordsCtx);
   const [loading, setLoading] = useState(false);
   const [form] = useForm<KeywordInfo>();
   const [preview, setPreview] = useState<keyword>(keyword);

@@ -46,15 +46,16 @@
     align-items: center;
     column-gap: 6px;
 
-    > input {
+    input {
       min-width: 0;
       max-width: 120px;
-    }
-    > input::placeholder {
-      color: black;
+
+      &::placeholder {
+        color: black;
+      }
     }
 
-    > .sort-caret {
+    .sort-caret {
       display: flex;
       justify-content: center;
       flex-grow: 1;

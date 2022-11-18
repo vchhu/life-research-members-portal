@@ -1,7 +1,7 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import { FC, Fragment, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { FC, Fragment, useContext, useEffect, useMemo, useState } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { MemberPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
@@ -14,6 +14,11 @@ import SafeLink from "../link/safe-link";
 import Input from "antd/lib/input";
 import CaretDownOutlined from "@ant-design/icons/lib/icons/CaretDownOutlined";
 import CaretUpOutlined from "@ant-design/icons/lib/icons/CaretUpOutlined";
+import { useRouter } from "next/router";
+import Form from "antd/lib/form";
+import type { keyword } from "@prisma/client";
+import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
+import KeywordFilter from "../keywords/keyword-filter";
 
 function ascendingSorter(a: { name: string }, b: { name: string }) {
   return a.name.localeCompare(b.name);
@@ -27,9 +32,15 @@ function getName(member: MemberPublicInfo) {
   return member.account.first_name + " " + member.account.last_name;
 }
 
-function filterFn(m: { name: string; is_active: boolean }, nameFilter: string) {
+function filterFn(
+  m: MemberPublicInfo & { name: string },
+  nameFilter: string,
+  keywordFilter: Map<number, keyword>
+): boolean {
   return (
-    m.is_active && (!nameFilter || removeDiacritics(m.name).includes(removeDiacritics(nameFilter)))
+    m.is_active &&
+    (!nameFilter || removeDiacritics(m.name).includes(removeDiacritics(nameFilter))) &&
+    (keywordFilter.size === 0 || m.has_keyword.some(({ keyword }) => keywordFilter.has(keyword.id)))
   );
 }
 
@@ -43,12 +54,50 @@ function removeDiacritics(str: string) {
 
 const AllMembers: FC = () => {
   const { en } = useContext(LanguageCtx);
-  const { allMembers, loading, refresh } = useContext(AllMembersCtx);
+  const { allMembers, loading, refresh: refreshMembers } = useContext(AllMembersCtx);
+  const { keywordMap, refresh: refreshKeywords } = useContext(AllKeywordsCtx);
+  const router = useRouter();
 
   useEffect(() => {
-    refresh();
+    refreshMembers();
+    refreshKeywords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function refreshAndClearFilters() {
+    handleKeywordFilterChange(new Map());
+    setNameFilter("");
+    refreshMembers();
+  }
+
+  const [keywordFilter, setKeywordFilter] = useState(new Map<number, keyword>());
+
+  // Use query params for th keyword filter - for bookmarking, back button etc.
+  function handleKeywordFilterChange(next: Map<number, keyword>) {
+    router.push({ query: { ...router.query, keywords: Array.from(next.keys()) } });
+  }
+
+  // Update keyword filter on query params change
+  useEffect(() => {
+    const keywordsQuery = router.query.keywords;
+    if (!keywordsQuery) return setKeywordFilter(new Map());
+    setKeywordFilter(() => {
+      const next = new Map();
+      if (typeof keywordsQuery === "string") {
+        const k = keywordMap.get(parseInt(keywordsQuery));
+        if (k) next.set(k.id, k);
+      } else
+        for (const keyword of keywordsQuery) {
+          const k = keywordMap.get(parseInt(keyword));
+          if (k) next.set(k.id, k);
+        }
+      return next;
+    });
+  }, [keywordMap, router.query.keywords]);
+
+  function addKeyword(k: keyword) {
+    handleKeywordFilterChange(new Map(keywordFilter).set(k.id, k));
+  }
 
   const [sortAscending, setSortAscending] = useState(true);
   const sortFn = sortAscending ? ascendingSorter : descendingSorter;
@@ -62,18 +111,20 @@ const AllMembers: FC = () => {
     () =>
       allMembers
         .map((m) => ({ ...m, key: m.id, name: getName(m) }))
-        .filter((m) => filterFn(m, nameFilter))
+        .filter((m) => filterFn(m, nameFilter, keywordFilter))
         .sort(sortFn),
-    [allMembers, nameFilter, sortFn]
+    [allMembers, keywordFilter, nameFilter, sortFn]
   );
 
   const nameHeader = (
     <div className="name-column-header">
-      <Input
-        placeholder={en ? "Name" : "Nom"}
-        value={nameFilter}
-        onChange={(e) => setNameFilter(e.target.value)}
-      />
+      <Form>
+        <Input
+          placeholder={en ? "Name..." : "Nom..."}
+          value={nameFilter}
+          onChange={(e) => setNameFilter(e.target.value)}
+        />
+      </Form>
       <div
         onClick={toggleSort}
         style={{ display: "flex", cursor: "pointer", height: 32, alignItems: "center" }}
@@ -81,6 +132,14 @@ const AllMembers: FC = () => {
       >
         {sortAscending ? <CaretDownOutlined /> : <CaretUpOutlined />}
       </div>
+    </div>
+  );
+
+  const keywordHeader = (
+    <div className="keyword-column-header">
+      <Form>
+        <KeywordFilter value={keywordFilter} onChange={handleKeywordFilterChange} />
+      </Form>
     </div>
   );
 
@@ -94,11 +153,13 @@ const AllMembers: FC = () => {
       ),
     },
     {
-      title: en ? "Key Words" : "Mots Clés",
+      title: keywordHeader,
       dataIndex: "has_keyword",
       className: "tag-column",
       render: (_, member) =>
-        member.has_keyword.map((k) => <KeywordTag key={k.keyword.id} keyword={k.keyword} />),
+        member.has_keyword.map((k) => (
+          <KeywordTag key={k.keyword.id} keyword={k.keyword} onClick={addKeyword} />
+        )),
     },
   ];
 
@@ -108,7 +169,7 @@ const AllMembers: FC = () => {
         {en ? "All Members" : "Tous les Membres"}
       </Title>
       <div style={{ flexGrow: 15 }}></div>
-      <Button type="primary" onClick={refresh} size="large" style={{ flexGrow: 1 }}>
+      <Button type="primary" onClick={refreshAndClearFilters} size="large" style={{ flexGrow: 1 }}>
         {en ? "Refresh" : "Rafraîchir"}
       </Button>
     </div>
