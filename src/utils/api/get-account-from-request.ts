@@ -3,7 +3,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
-import type { AccountDBRes, AccountRes } from "../../pages/api/account/[id]";
+import type { AccountDBRes } from "../../pages/api/account/[id]";
 
 type MsAccountInfo = {
   id: string;

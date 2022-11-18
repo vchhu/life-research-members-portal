@@ -12,12 +12,16 @@ export default async function getAccessToken(): Promise<string | null> {
     .then((res) => res.accessToken)
     .catch((e: any) => {
       // Just assume any error means session has expired
-      new Notification().error(
+      console.warn(e);
+      new Notification().warning(
         en
           ? "Your session has expired, please login again."
           : "Votre session a expiré, veuillez vous reconnecter."
       );
-      msalInstance.setActiveAccount(null);
+      // Log them out to clear the cache and active user
+      msalInstance
+        .logoutRedirect({ onRedirectNavigate: () => false })
+        .catch((e: any) => new Notification().error(e));
       return null;
     });
 }
