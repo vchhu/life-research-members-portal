@@ -52,6 +52,7 @@ const NavMenu: FC = () => {
         style={{ fontSize: "inherit" }}
         selectedKeys={activeItem ? [activeItem.label] : []}
         activeKey={activeItem?.label}
+        getPopupContainer={() => document.querySelector(".navbar") || document.body}
       />
     </div>
   );

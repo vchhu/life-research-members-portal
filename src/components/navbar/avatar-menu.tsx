@@ -61,7 +61,10 @@ const AvatarMenu: FC = () => {
   );
 
   return (
-    <Dropdown overlay={dropdown}>
+    <Dropdown
+      overlay={dropdown}
+      getPopupContainer={() => document.querySelector(".navbar") || document.body}
+    >
       <div className="avatar">{avatarLabel}</div>
     </Dropdown>
   );
