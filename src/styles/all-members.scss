@@ -1,4 +1,14 @@
 .all-members-table {
+  // Make new stacking context so popups go under navbar
+  position: relative;
+  z-index: 0;
+
+  .filters {
+    .keyword-filter .ant-select-selector {
+      width: 100%;
+    }
+  }
+
   // Override
   .ant-table-column-sort {
     background: inherit;
@@ -38,28 +48,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: normal;
-  }
-
-  .name-column-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    column-gap: 6px;
-
-    input {
-      min-width: 0;
-      max-width: 120px;
-
-      &::placeholder {
-        color: black;
-      }
-    }
-
-    .sort-caret {
-      display: flex;
-      justify-content: center;
-      flex-grow: 1;
-    }
   }
 
   .problems-container {

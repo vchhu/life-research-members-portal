@@ -1,22 +1,28 @@
 // See https://ant.design/components/form/#components-form-demo-customized-form-controls
 
 import type { keyword } from "@prisma/client";
-import AutoComplete from "antd/lib/auto-complete";
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import Select, { SelectProps } from "antd/lib/select";
+import { FC, useContext, useEffect, useState } from "react";
 import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
+import blurActiveElement from "../../utils/front-end/blur-active-element";
+import removeDiacritics from "../../utils/front-end/remove-diacritics";
 import KeywordTag from "./keyword-tag";
 
 type Props = {
-  value?: Map<number, keyword>;
-  onChange?: (value: Map<number, keyword>) => void;
+  value?: Set<number>;
+  onChange?: (value: Set<number>) => void;
+  getPopupContainer?: SelectProps["getPopupContainer"];
 };
 
-const KeywordFilter: FC<Props> = ({ value = new Map<number, keyword>(), onChange = () => {} }) => {
-  const { keywords, refresh: refreshKeywords } = useContext(AllKeywordsCtx);
+const KeywordFilter: FC<Props> = ({
+  value = new Set<number>(),
+  onChange = () => {},
+  getPopupContainer,
+}) => {
+  const { keywords, keywordMap, refresh: refreshKeywords } = useContext(AllKeywordsCtx);
   const { en } = useContext(LanguageCtx);
-
-  const [selectedValue, setSelectedValue] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     refreshKeywords();
@@ -35,50 +41,60 @@ const KeywordFilter: FC<Props> = ({ value = new Map<number, keyword>(), onChange
       if (k.name_fr && k.name_en) labelAndValue += " / ";
       if (k.name_en) labelAndValue += k.name_en;
     }
-    return { label: labelAndValue, value: labelAndValue, keyword: k };
+    return { label: labelAndValue, value: k.id };
   }
 
   const options = keywords.map((k) => getOption(k)).sort((a, b) => a.label.localeCompare(b.label));
 
-  function onSelect(optionValue: string, option: typeof options[number]) {
-    setSelectedValue("");
-    addToList(option.keyword);
-  }
-
-  function addToList(keyword: keyword) {
-    onChange(new Map(value).set(keyword.id, keyword));
+  function onSelect(id: number) {
+    value.add(id);
+    onChange(value);
   }
 
   function onDelete(id: number) {
-    const next = new Map(value);
-    next.delete(id);
-    onChange(next);
+    value.delete(id);
+    onChange(value);
+  }
+
+  function onClear() {
+    onChange(new Set());
+  }
+
+  function filterOption(input: string, option?: typeof options[number]): boolean {
+    if (!option) return false;
+    return removeDiacritics(option.label).includes(input);
   }
 
   return (
-    <>
-      <div className="keyword-filter">
-        <AutoComplete
-          className="autocomplete"
-          placeholder={en ? "Keywords..." : "Mots-clés..."}
-          options={options}
-          value={selectedValue}
-          onChange={setSelectedValue}
-          filterOption
-          notFoundContent={en ? "No Matches" : "Pas de Correspondance"}
-          onSelect={onSelect}
+    <Select
+      className="keyword-filter"
+      mode="multiple"
+      open={open}
+      onFocus={() => setOpen(true)}
+      onBlur={() => setOpen(false)}
+      onInputKeyDown={(e) => {
+        if (e.key === "Escape") blurActiveElement();
+      }}
+      options={options}
+      value={Array.from(value.values())}
+      onSelect={onSelect}
+      onDeselect={onDelete}
+      getPopupContainer={getPopupContainer}
+      filterOption={filterOption}
+      allowClear
+      onClear={onClear}
+      tagRender={({ value }) => (
+        <KeywordTag
+          keyword={keywordMap.get(value)!}
+          deletable
+          onDelete={onDelete}
+          onClick={(k, e) => {
+            e.stopPropagation(); // stop the dropdown from opening / closing on delete
+            onDelete(k.id);
+          }}
         />
-        {Array.from(value.values()).map((k) => (
-          <KeywordTag
-            key={k.id}
-            keyword={k}
-            deletable
-            onDelete={onDelete}
-            onClick={(k) => onDelete(k.id)}
-          />
-        ))}
-      </div>
-    </>
+      )}
+    ></Select>
   );
 };
 

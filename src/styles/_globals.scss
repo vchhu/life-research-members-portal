@@ -51,3 +51,8 @@ td.ant-table-cell.ant-table-cell.ant-table-cell.ant-table-cell {
 .ant-table-thead th.ant-table-column-has-sorters:hover {
   background-color: var(--blue-1);
 }
+
+// Make it so text isn't highlighted when clicking headers
+th.ant-table-cell {
+  user-select: none;
+}

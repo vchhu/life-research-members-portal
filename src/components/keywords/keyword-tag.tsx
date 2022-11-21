@@ -15,7 +15,7 @@ type Props = {
   linked?: boolean;
   editable?: boolean;
   deletable?: boolean;
-  onClick?: (k: keyword) => void;
+  onClick?: (k: keyword, e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
   onDelete?: (id: number) => void;
   onEdit?: (keyword: keyword) => void;
   oppositeLanguage?: boolean;
@@ -54,7 +54,7 @@ const KeywordTag: FC<Props> = ({
       <Tag
         className="keyword-tag"
         color={colorFromString((k.name_en || "") + (k.name_fr || ""))}
-        onClick={editable ? () => setModalOpen(true) : () => onClick(k)}
+        onClick={editable ? () => setModalOpen(true) : (e) => onClick(k, e)}
         closable={deletable}
         closeIcon={<CloseOutlined onClick={() => onDelete(k.id)} />}
         icon={editable ? <EditOutlined /> : null}
