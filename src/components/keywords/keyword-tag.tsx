@@ -15,7 +15,7 @@ type Props = {
   linked?: boolean;
   editable?: boolean;
   deletable?: boolean;
-  onClick?: (k: keyword, e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
+  onClick?: (k: keyword) => void;
   onDelete?: (id: number) => void;
   onEdit?: (keyword: keyword) => void;
   oppositeLanguage?: boolean;
@@ -27,13 +27,16 @@ const KeywordTag: FC<Props> = ({
   linked = false,
   editable = false,
   deletable = false,
-  onClick = () => {},
+  onClick,
   onDelete = () => {},
   onEdit = () => {},
   oppositeLanguage = false,
   style,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+
+  const classList = ["keyword-tag"];
+  if (linked || editable || onClick) classList.push("cursor-pointer");
 
   function onEditSuccess(keyword: keyword) {
     setModalOpen(false);
@@ -49,14 +52,25 @@ const KeywordTag: FC<Props> = ({
     text
   );
 
+  const closeIcon = (
+    <CloseOutlined
+      // This is to stop dropdowns from toggling on close
+      onMouseDown={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    />
+  );
+
   return (
     <>
       <Tag
-        className="keyword-tag"
+        className={classList.join(" ")}
         color={colorFromString((k.name_en || "") + (k.name_fr || ""))}
-        onClick={editable ? () => setModalOpen(true) : (e) => onClick(k, e)}
+        onClick={editable ? () => setModalOpen(true) : () => onClick?.(k)}
         closable={deletable}
-        closeIcon={<CloseOutlined onClick={() => onDelete(k.id)} />}
+        onClose={() => onDelete(k.id)}
+        closeIcon={closeIcon}
         icon={editable ? <EditOutlined /> : null}
         style={style}
       >

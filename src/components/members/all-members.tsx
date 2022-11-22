@@ -1,7 +1,7 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import { FC, Fragment, useContext, useEffect, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { MemberPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
@@ -11,17 +11,17 @@ import GetLanguage from "../../utils/front-end/get-language";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import SafeLink from "../link/safe-link";
-import Input from "antd/lib/input";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import Form from "antd/lib/form";
 import type { keyword } from "@prisma/client";
-import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
-import KeywordFilter from "../keywords/keyword-filter";
+import KeywordFilter from "../filters/keyword-filter";
 import blurActiveElement from "../../utils/front-end/blur-active-element";
-import { Checkbox, Select } from "antd";
-import { FacultiesCtx } from "../../services/context/faculties-ctx";
-import { MemberTypesCtx } from "../../services/context/member-types-ctx";
-import removeDiacritics from "../../utils/front-end/remove-diacritics";
+import { Checkbox } from "antd";
+import MemberTypeFilter from "../filters/member-type-filter";
+import FacultyFilter from "../filters/faculty-filter";
+import MemberNameFilter from "../filters/member-name-filter";
+import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
+import type { ParsedUrlQueryInput } from "querystring";
 
 function nameSorter(a: { name: string }, b: { name: string }) {
   return a.name.localeCompare(b.name);
@@ -33,79 +33,210 @@ function getName(member: MemberPublicInfo) {
 
 function filterFn(
   m: MemberPublicInfo & { name: string },
-  nameFilter: string,
-  keywordFilter: Set<number>
+  filters: {
+    nameFilter: Set<number>;
+    facultyFilter: Set<number>;
+    memberTypeFilter: Set<number>;
+    keywordFilter: Set<number>;
+  }
 ): boolean {
-  return (
-    m.is_active &&
-    (!nameFilter || removeDiacritics(m.name).includes(removeDiacritics(nameFilter))) &&
-    (keywordFilter.size === 0 || m.has_keyword.some(({ keyword }) => keywordFilter.has(keyword.id)))
+  if (!m.is_active) return false;
+  const { nameFilter, facultyFilter, memberTypeFilter, keywordFilter } = filters;
+  if (nameFilter.size > 0 && !nameFilter.has(m.id)) return false;
+  if (facultyFilter.size > 0) {
+    if (!m.faculty && !facultyFilter.has(0)) return false; // id 0 is for null
+    if (m.faculty && !facultyFilter.has(m.faculty.id)) return false;
+  }
+  if (memberTypeFilter.size > 0) {
+    if (!m.member_type && !memberTypeFilter.has(0)) return false; // id 0 is for null
+    if (m.member_type && !memberTypeFilter.has(m.member_type.id)) return false;
+  }
+  if (keywordFilter.size > 0) {
+    if (!m.has_keyword.some(({ keyword }) => keywordFilter.has(keyword.id))) return false;
+  }
+  return true;
+}
+
+// Use query params for filters - for bookmarking, back button etc.
+const queryKeys = {
+  showFaculty: "showFaculty",
+  showMemberType: "showMemberType",
+  showKeywords: "showKeywords",
+  memberIds: "memberIds",
+  faculties: "faculties",
+  memberTypes: "memberTypes",
+  keywords: "keywords",
+} as const;
+
+// Don't want to change url if query is default value
+const defaultQueries = {
+  showFaculty: false,
+  showMemberType: false,
+  showKeywords: true,
+} as const;
+
+function handleShowFacultyChange(value: boolean) {
+  const query: ParsedUrlQueryInput = { ...Router.query, [queryKeys.showFaculty]: value };
+  if (value === defaultQueries.showFaculty) delete query[queryKeys.showFaculty];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
+function handleShowMemberTypeChange(value: boolean) {
+  const query: ParsedUrlQueryInput = { ...Router.query, [queryKeys.showMemberType]: value };
+  if (value === defaultQueries.showMemberType) delete query[queryKeys.showMemberType];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
+function handleShowKeywordsChange(value: boolean) {
+  const query: ParsedUrlQueryInput = { ...Router.query, [queryKeys.showKeywords]: value };
+  if (value === defaultQueries.showKeywords) delete query[queryKeys.showKeywords];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
+function handleNameFilterChange(next: Set<number>) {
+  Router.push(
+    { query: { ...Router.query, [queryKeys.memberIds]: Array.from(next.keys()) } },
+    undefined,
+    { scroll: false }
   );
+}
+
+function handleFacultyFilterChange(next: Set<number>) {
+  Router.push(
+    { query: { ...Router.query, [queryKeys.faculties]: Array.from(next.keys()) } },
+    undefined,
+    { scroll: false }
+  );
+}
+
+function handleMemberTypeFilterChange(next: Set<number>) {
+  Router.push(
+    { query: { ...Router.query, [queryKeys.memberTypes]: Array.from(next.keys()) } },
+    undefined,
+    { scroll: false }
+  );
+}
+
+function handleKeywordFilterChange(next: Set<number>) {
+  Router.push(
+    { query: { ...Router.query, [queryKeys.keywords]: Array.from(next.keys()) } },
+    undefined,
+    { scroll: false }
+  );
+}
+
+function clearQueries() {
+  Router.push({ query: null }, undefined, { scroll: false });
+}
+
+function getIdsFromQueryParams(key: string): Set<number> {
+  const res = new Set<number>();
+  const query = Router.query[key];
+  if (!query) return res;
+  if (typeof query === "string") {
+    const id = parseInt(query);
+    if (!isNaN(id)) res.add(id);
+  } else {
+    for (const keyword of query) {
+      const id = parseInt(keyword);
+      if (!isNaN(id)) res.add(id);
+    }
+  }
+  return res;
+}
+
+function getPopupContainer(): HTMLElement {
+  return document.querySelector(".all-members-table .filters") || document.body;
 }
 
 const AllMembers: FC = () => {
   const { en } = useContext(LanguageCtx);
   const { allMembers, loading, refresh: refreshMembers } = useContext(AllMembersCtx);
-  const { keywords, keywordMap, refresh: refreshKeywords } = useContext(AllKeywordsCtx);
-  const { faculties } = useContext(FacultiesCtx);
-  const { memberTypes } = useContext(MemberTypesCtx);
-  const router = useRouter();
-
-  const [showKeywords, setShowKeywords] = useState(true);
-  const [showFaculty, setShowFaculty] = useState(false);
-  const [showMemberType, setShowMemberType] = useState(false);
-
-  const [nameFilter, setNameFilter] = useState("");
-  const [keywordFilter, setKeywordFilter] = useState(new Set<number>());
+  const { refresh: refreshKeywords } = useContext(AllKeywordsCtx);
 
   useEffect(() => {
     refreshMembers();
+    refreshKeywords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function refreshAndClearFilters() {
-    handleKeywordFilterChange(new Set());
-    setNameFilter("");
-    refreshMembers();
-  }
+  const [showFaculty, setShowFaculty] = useState<boolean>(defaultQueries.showFaculty);
+  const [showMemberType, setShowMemberType] = useState<boolean>(defaultQueries.showMemberType);
+  const [showKeywords, setShowKeywords] = useState<boolean>(defaultQueries.showKeywords);
 
-  // Use query params for the keyword filter - for bookmarking, back button etc.
-  function handleKeywordFilterChange(next: Set<number>) {
-    router.push({ query: { ...router.query, keywords: Array.from(next.keys()) } });
-  }
+  const [nameFilter, setNameFilter] = useState(new Set<number>());
+  const [facultyFilter, setFacultyFilter] = useState(new Set<number>());
+  const [memberTypeFilter, setMemberTypeFilter] = useState(new Set<number>());
+  const [keywordFilter, setKeywordFilter] = useState(new Set<number>());
 
-  // Update keyword filter on query params change
+  const router = useRouter();
+  const showFacultyQuery = router.query[queryKeys.showFaculty];
+  const showMemberTypeQuery = router.query[queryKeys.showMemberType];
+  const showKeywordsQuery = router.query[queryKeys.showKeywords];
+  const memberIdsQuery = router.query[queryKeys.memberIds];
+  const facultiesQuery = router.query[queryKeys.faculties];
+  const memberTypesQuery = router.query[queryKeys.memberTypes];
+  const keywordsQuery = router.query[queryKeys.keywords];
+
   useEffect(() => {
-    const keywordsQuery = router.query.keywords;
-    if (!keywordsQuery) return setKeywordFilter(new Set<number>());
-    setKeywordFilter(() => {
-      const next = new Set<number>();
-      if (typeof keywordsQuery === "string") {
-        const id = parseInt(keywordsQuery);
-        if (!isNaN(id)) next.add(id);
-      } else
-        for (const keyword of keywordsQuery) {
-          const id = parseInt(keyword);
-          if (!isNaN(id)) next.add(id);
-        }
-      return next;
-    });
-  }, [keywordMap, router.query.keywords]);
+    if (!showFacultyQuery) setShowFaculty(defaultQueries.showFaculty);
+    if (showFacultyQuery === "true") setShowFaculty(true);
+    if (showFacultyQuery === "false") setShowFaculty(false);
+  }, [showFacultyQuery]);
 
-  function addKeyword(k: keyword) {
-    handleKeywordFilterChange(new Set(keywordFilter).add(k.id));
+  useEffect(() => {
+    if (!showMemberTypeQuery) setShowMemberType(defaultQueries.showMemberType);
+    if (showMemberTypeQuery === "true") setShowMemberType(true);
+    if (showMemberTypeQuery === "false") setShowMemberType(false);
+  }, [showMemberTypeQuery]);
+
+  useEffect(() => {
+    if (!showKeywordsQuery) setShowKeywords(defaultQueries.showKeywords);
+    if (showKeywordsQuery === "true") setShowKeywords(true);
+    if (showKeywordsQuery === "false") setShowKeywords(false);
+  }, [showKeywordsQuery]);
+
+  useEffect(() => {
+    setNameFilter(getIdsFromQueryParams(queryKeys.memberIds));
+  }, [memberIdsQuery]);
+
+  useEffect(() => {
+    setFacultyFilter(getIdsFromQueryParams(queryKeys.faculties));
+  }, [facultiesQuery]);
+
+  useEffect(() => {
+    setMemberTypeFilter(getIdsFromQueryParams(queryKeys.memberTypes));
+  }, [memberTypesQuery]);
+
+  useEffect(() => {
+    setKeywordFilter(getIdsFromQueryParams(queryKeys.keywords));
+  }, [keywordsQuery]);
+
+  function refreshAndClearFilters() {
+    clearQueries();
+    refreshMembers();
+    refreshKeywords();
   }
+
+  const addKeyword = useCallback(
+    (k: keyword) => {
+      handleKeywordFilterChange(new Set(keywordFilter).add(k.id));
+    },
+    [keywordFilter]
+  );
 
   const filteredMembers = useMemo(
     () =>
       allMembers
         .map((m) => ({ ...m, key: m.id, name: getName(m) }))
-        .filter((m) => filterFn(m, nameFilter, keywordFilter)),
-    [allMembers, keywordFilter, nameFilter]
+        .filter((m) => filterFn(m, { nameFilter, facultyFilter, memberTypeFilter, keywordFilter })),
+    [allMembers, facultyFilter, keywordFilter, memberTypeFilter, nameFilter]
   );
 
-  const columns: ColumnType<typeof filteredMembers[number]>[] = [
-    {
+  type MemberColumnType = ColumnType<typeof filteredMembers[number]>;
+
+  const nameColumn: MemberColumnType = useMemo(
+    () => ({
       title: en ? "Name" : "Nom",
       dataIndex: "name",
       className: "name-column",
@@ -113,31 +244,36 @@ const AllMembers: FC = () => {
       render: (value, member) => (
         <SafeLink href={PageRoutes.memberProfile(member.id)}>{value}</SafeLink>
       ),
-    },
-  ];
+    }),
+    [en]
+  );
 
-  if (showFaculty)
-    columns.push({
+  const facultyColumn: MemberColumnType = useMemo(
+    () => ({
       title: en ? "Faculty" : "Faculté",
       dataIndex: ["faculty", en ? "name_en" : "name_fr"],
       className: "faculty-column",
       sorter: en
         ? (a, b) => (a.faculty?.name_en || "").localeCompare(b.faculty?.name_en || "")
         : (a, b) => (a.faculty?.name_fr || "").localeCompare(b.faculty?.name_fr || ""),
-    });
+    }),
+    [en]
+  );
 
-  if (showMemberType)
-    columns.push({
+  const memberTypeColumn: MemberColumnType = useMemo(
+    () => ({
       title: en ? "Member Type" : "Type de membre",
       dataIndex: ["member_type", en ? "name_en" : "name_fr"],
       className: "type-column",
       sorter: en
         ? (a, b) => (a.member_type?.name_en || "").localeCompare(b.member_type?.name_en || "")
         : (a, b) => (a.member_type?.name_fr || "").localeCompare(b.member_type?.name_fr || ""),
-    });
+    }),
+    [en]
+  );
 
-  if (showKeywords)
-    columns.push({
+  const keywordsColumn: MemberColumnType = useMemo(
+    () => ({
       title: en ? "Keywords" : "Mots-clés",
       dataIndex: "has_keyword",
       className: "tag-column",
@@ -145,74 +281,81 @@ const AllMembers: FC = () => {
         member.has_keyword.map((k) => (
           <KeywordTag key={k.keyword.id} keyword={k.keyword} onClick={addKeyword} />
         )),
-    });
+    }),
+    [addKeyword, en]
+  );
+
+  const columns: MemberColumnType[] = [nameColumn];
+  if (showFaculty) columns.push(facultyColumn);
+  if (showMemberType) columns.push(memberTypeColumn);
+  if (showKeywords) columns.push(keywordsColumn);
 
   const filters = (
-    <Form onFinish={blurActiveElement} className="filters">
-      <Form.Item label={en ? "Show" : "Afficher"}>
-        <Checkbox checked={showFaculty} onChange={(e) => setShowFaculty(e.target.checked)}>
-          {en ? "Faculty" : "Faculté"}
-        </Checkbox>
-        <Checkbox checked={showMemberType} onChange={(e) => setShowMemberType(e.target.checked)}>
-          {en ? "Member Type" : "Type de membre"}
-        </Checkbox>
-        <Checkbox checked={showKeywords} onChange={(e) => setShowKeywords(e.target.checked)}>
-          {en ? "Keywords" : "Mots-clés"}
-        </Checkbox>
-      </Form.Item>
+    <Form onFinish={blurActiveElement} className="filters" labelAlign="left">
       <Form.Item label={en ? "Filter by name" : "Filtrer par nom"} htmlFor="name-filter">
-        <Input
-          className="name-filter"
+        <MemberNameFilter
           id="name-filter"
           value={nameFilter}
-          onChange={(e) => setNameFilter(e.target.value)}
+          onChange={handleNameFilterChange}
+          getPopupContainer={getPopupContainer}
         />
       </Form.Item>
-      <Form.Item label={en ? "Filter by faculty" : "Filtrer par faculté"}>
-        <Select
-          mode="multiple"
-          style={{ width: "100%" }}
-          getPopupContainer={() =>
-            document.querySelector(".all-members-table .filters") || document.body
-          }
-          showSearch={false}
-          showArrow
-        >
-          <Select.Option value={0}>{en ? "Empty" : "Vide"}</Select.Option>
-          {faculties.map((f) => (
-            <Select.Option key={f.id} value={f.id}>
-              <GetLanguage obj={f} />
-            </Select.Option>
-          ))}
-        </Select>
+      <Form.Item label={en ? "Filter by faculty" : "Filtrer par faculté"} htmlFor="faculty-filter">
+        <FacultyFilter
+          id="faculty-filter"
+          value={facultyFilter}
+          onChange={handleFacultyFilterChange}
+          getPopupContainer={getPopupContainer}
+        />
       </Form.Item>
-      <Form.Item label={en ? "Filter by member type" : "Filtrer par type de membre"}></Form.Item>
-      <Form.Item label={en ? "Filter by keywords" : "Filtrer par mots-clés"}>
+      <Form.Item label={en ? "Filter by type" : "Filtrer par type"} htmlFor="member-type-filter">
+        <MemberTypeFilter
+          id="member-type-filter"
+          value={memberTypeFilter}
+          onChange={handleMemberTypeFilterChange}
+          getPopupContainer={getPopupContainer}
+        />
+      </Form.Item>
+      <Form.Item
+        label={en ? "Filter by keywords" : "Filtrer par mots-clés"}
+        htmlFor="keyword-filter"
+      >
         <KeywordFilter
+          id="keyword-filter"
           value={keywordFilter}
           onChange={handleKeywordFilterChange}
-          getPopupContainer={() =>
-            document.querySelector(".all-members-table .filters") || document.body
-          }
+          getPopupContainer={getPopupContainer}
         />
       </Form.Item>
+      <label htmlFor="show-column-checkboxes">
+        {en ? "Show Columns:" : "Afficher les colonnes:"}
+      </label>
+      <span className="show-column-checkboxes" id="show-column-checkboxes">
+        <Checkbox checked={showFaculty} onChange={(e) => handleShowFacultyChange(e.target.checked)}>
+          {en ? "Show Faculty" : "Afficher la faculté"}
+        </Checkbox>
+        <Checkbox
+          checked={showMemberType}
+          onChange={(e) => handleShowMemberTypeChange(e.target.checked)}
+        >
+          {en ? "Show Member Type" : "Afficher le type de membre"}
+        </Checkbox>
+        <Checkbox
+          checked={showKeywords}
+          onChange={(e) => handleShowKeywordsChange(e.target.checked)}
+        >
+          {en ? "Show Keywords" : "Afficher les mots-clés"}
+        </Checkbox>
+      </span>
     </Form>
   );
 
   const Header = () => (
     <>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Title level={1} style={{ margin: 0 }}>
-          {en ? "All Members" : "Tous les Membres"}
-        </Title>
-        <div style={{ flexGrow: 15 }}></div>
-        <Button
-          type="primary"
-          onClick={refreshAndClearFilters}
-          size="large"
-          style={{ flexGrow: 1 }}
-        >
-          {en ? "Refresh" : "Rafraîchir"}
+      <div className="header-title-row">
+        <Title level={1}>{en ? "All Members" : "Tous les Membres"}</Title>
+        <Button type="primary" onClick={refreshAndClearFilters} size="large">
+          {en ? "Reset" : "Réinitialiser"}
         </Button>
       </div>
       {filters}
