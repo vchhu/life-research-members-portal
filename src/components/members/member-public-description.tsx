@@ -13,6 +13,8 @@ import SafeLink from "../link/safe-link";
 import TikTokIcon from "../icons/tiktok-icon";
 import CvIcon from "../icons/cv-icon";
 import WebsiteIcon from "../icons/website-icon";
+import MemberTypeLink from "../link/member-type-link";
+import FacultyLink from "../link/faculty-link";
 
 const { useBreakpoint } = Grid;
 
@@ -36,10 +38,10 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
         {en ? member.about_me_en : member.about_me_fr}
       </Item>
       <Item label={en ? "Faculty" : "Faculté"}>
-        <GetLanguage obj={member.faculty} />
+        <FacultyLink faculty={member.faculty} />
       </Item>
       <Item label={en ? "Member Type" : "Type de Membre"}>
-        <GetLanguage obj={member.member_type} />
+        <MemberTypeLink member_type={member.member_type} />
       </Item>
       <Item
         label={en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}
