@@ -69,7 +69,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       <Item label={en ? "Links" : "Liens"}>
         <>
           {member.cv_link ? (
-            <SafeLink href={member.cv_link}>
+            <SafeLink href={member.cv_link} external>
               <Tag icon={<CvIcon />} color="#002766">
                 CV
               </Tag>
@@ -77,7 +77,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
           ) : null}
 
           {member.website_link ? (
-            <SafeLink href={member.website_link}>
+            <SafeLink href={member.website_link} external>
               <Tag icon={<WebsiteIcon />} color="#002766">
                 Website
               </Tag>
@@ -85,7 +85,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
           ) : null}
 
           {member.linkedin_link ? (
-            <SafeLink href={member.linkedin_link}>
+            <SafeLink href={member.linkedin_link} external>
               <Tag icon={<LinkedinOutlined />} color="#0a66c2">
                 LinkedIn
               </Tag>
@@ -93,7 +93,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
           ) : null}
 
           {member.facebook_link ? (
-            <SafeLink href={member.facebook_link}>
+            <SafeLink href={member.facebook_link} external>
               <Tag icon={<FacebookOutlined />} color="#4267B2">
                 Facebook
               </Tag>
@@ -101,7 +101,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
           ) : null}
 
           {member.twitter_link ? (
-            <SafeLink href={member.twitter_link}>
+            <SafeLink href={member.twitter_link} external>
               <Tag icon={<TwitterOutlined />} color="#1da1f2">
                 Twitter
               </Tag>
@@ -109,7 +109,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
           ) : null}
 
           {member.tiktok_link ? (
-            <SafeLink href={member.tiktok_link}>
+            <SafeLink href={member.tiktok_link} external>
               <Tag icon={<TikTokIcon />} color="#0D0D0D">
                 TikTok
               </Tag>
