@@ -8,4 +8,10 @@
       filter: brightness(90%);
     }
   }
+
+  // Override
+  a,
+  a:hover {
+    color: inherit;
+  }
 }
