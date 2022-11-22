@@ -291,7 +291,7 @@ const AllMembers: FC = () => {
   if (showKeywords) columns.push(keywordsColumn);
 
   const filters = (
-    <Form onFinish={blurActiveElement} className="filters" labelAlign="left">
+    <Form onFinish={blurActiveElement} className="filters" labelAlign="left" size="small">
       <Form.Item label={en ? "Filter by name" : "Filtrer par nom"} htmlFor="name-filter">
         <MemberNameFilter
           id="name-filter"
