@@ -58,7 +58,7 @@ function filterFn(
 }
 
 // Use query params for filters - for bookmarking, back button etc.
-const queryKeys = {
+export const queryKeys = {
   showFaculty: "showFaculty",
   showMemberType: "showMemberType",
   showKeywords: "showKeywords",

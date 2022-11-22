@@ -8,6 +8,7 @@ import colorFromString from "../../utils/front-end/color-from-string";
 import GetLanguage from "../../utils/front-end/get-language";
 import GetOppositeLanguage from "../../utils/front-end/get-opposite-language";
 import SafeLink from "../link/safe-link";
+import { queryKeys } from "../members/all-members";
 import EditKeywordModal from "./edit-keyword-modal";
 
 type Props = {
@@ -45,7 +46,7 @@ const KeywordTag: FC<Props> = ({
 
   const text = oppositeLanguage ? <GetOppositeLanguage obj={k} /> : <GetLanguage obj={k} />;
   const content = linked ? (
-    <SafeLink href={{ pathname: PageRoutes.allMembers, query: { keywords: [k.id] } }}>
+    <SafeLink href={{ pathname: PageRoutes.allMembers, query: { [queryKeys.keywords]: k.id } }}>
       {text}
     </SafeLink>
   ) : (
