@@ -19,7 +19,8 @@ export const AllMembersCtxProvider: FC<PropsWithChildren> = ({ children }) => {
     try {
       const result = await fetch(ApiRoutes.allMembers);
       if (!result.ok) throw await result.text();
-      const members: MemberPublicInfo[] = await result.json();
+      let members: MemberPublicInfo[] = await result.json();
+      members = members.filter((m) => m.is_active);
       members.sort((a, b) => a.account.first_name.localeCompare(b.account.first_name));
       setAllMembers(members);
     } catch (e: any) {

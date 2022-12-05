@@ -40,7 +40,6 @@ function filterFn(
     keywordFilter: Set<number>;
   }
 ): boolean {
-  if (!m.is_active) return false;
   const { nameFilter, facultyFilter, memberTypeFilter, keywordFilter } = filters;
   if (nameFilter.size > 0 && !nameFilter.has(m.id)) return false;
   if (facultyFilter.size > 0) {
