@@ -23,10 +23,12 @@ export default class Notification {
   }
 
   /** Notifies user of error and logs error to console */
-  error(content: string) {
-    console.error(content);
+  error(error: any) {
+    console.error(error);
+    // Due to Firefox throwing TypeErrors on aborted network requests, we don't show TypeErrors to the user
+    if (error instanceof TypeError) return;
     message.error({
-      content: "Error: " + content,
+      content: "Error: " + error,
       key: this.id,
       duration: 0,
       style: { ...this.style, cursor: "pointer" },
