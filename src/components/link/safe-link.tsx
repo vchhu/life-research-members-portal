@@ -10,18 +10,21 @@ const SafeLink: FC<PropsWithChildren<Props>> = ({ href, external, children }) =>
   const { saveChangesPrompt } = useContext(SaveChangesCtx);
   const router = useRouter();
 
+  const missingProtocol = external && !href.startsWith("http://") && !href.startsWith("https://");
+  const externalUrl = external ? (missingProtocol ? "https://" + href : href) : "";
+
   function handleNav(e: MouseEvent) {
     e.preventDefault();
     saveChangesPrompt({
       onSuccessOrDiscard: () => {
-        if (external) window.location.href = "//" + href;
+        if (external) window.location.href = externalUrl;
         else router.push(href);
       },
     });
   }
 
   return external ? (
-    <a href={"//" + href} onClick={handleNav}>
+    <a href={externalUrl} onClick={handleNav}>
       {children}
     </a>
   ) : (
