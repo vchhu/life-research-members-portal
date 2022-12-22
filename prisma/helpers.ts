@@ -10,8 +10,6 @@ type CheckKeysAreValid<T, ValidProps> = Exclude<keyof T, keyof ValidProps> exten
   ? T
   : "Invalid keys" | Exclude<keyof T, keyof ValidProps>; // Hacky error message
 
-type t = typeof selectPublicMemberInfo & Prisma.memberSelect;
-
 const _includeAllMemberInfo = {
   account: true,
   faculty: true,
