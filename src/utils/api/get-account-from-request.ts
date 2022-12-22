@@ -30,7 +30,7 @@ function getAccountFromDatabase(userId: MsAccountInfo): Promise<AccountDBRes> {
 
 /**
  * Attempts to retrieve user identification using access token in request header.
- * On a failure, sends the appropriate response and returns undefined.
+ * On a failure, sends the appropriate response and returns null.
  */
 export default async function getAccountFromRequest(
   req: NextApiRequest,
