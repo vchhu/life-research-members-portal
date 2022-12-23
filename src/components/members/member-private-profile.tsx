@@ -12,7 +12,7 @@ import Tabs from "antd/lib/tabs";
 import type { MemberPrivateInfo } from "../../services/_types";
 import PrivateMemberDescription from "./member-private-description";
 import MemberInsightDescription from "./member-insight-description";
-import MemberPrivateForm from "./member-private-form";
+import PrivateMemberForm from "./member-private-form";
 import MemberInsightForm from "./member-insight-form";
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
 
@@ -24,7 +24,7 @@ type Props = {
   id: number;
 };
 
-const MemberProfile: FC<Props> = ({ id }) => {
+const PrivateMemberProfile: FC<Props> = ({ id }) => {
   const { en } = useContext(LanguageCtx);
   const { member, setMember, loading } = usePrivateMemberInfo(id);
   const [editMode, setEditMode] = useState(false);
@@ -112,7 +112,7 @@ const MemberProfile: FC<Props> = ({ id }) => {
     {
       label: en ? "Private" : "Privé",
       key: keys.private,
-      children: <MemberPrivateForm member={member} onSuccess={onSuccess} />,
+      children: <PrivateMemberForm member={member} onSuccess={onSuccess} />,
     },
     {
       label: en ? "Insight" : "Aperçu",
@@ -135,4 +135,4 @@ const MemberProfile: FC<Props> = ({ id }) => {
   );
 };
 
-export default MemberProfile;
+export default PrivateMemberProfile;

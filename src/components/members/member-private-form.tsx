@@ -32,7 +32,7 @@ type Data = {
   is_active: boolean;
 };
 
-const MemberPrivateForm: FC<Props> = ({ member, onSuccess }) => {
+const PrivateMemberForm: FC<Props> = ({ member, onSuccess }) => {
   // This sets the return type of the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
@@ -197,4 +197,4 @@ const MemberPrivateForm: FC<Props> = ({ member, onSuccess }) => {
   );
 };
 
-export default MemberPrivateForm;
+export default PrivateMemberForm;
