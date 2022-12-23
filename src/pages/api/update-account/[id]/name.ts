@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
-import type { AccountDBRes, AccountRes } from "../../account/[id]";
+import type { AccountDBRes } from "../../account/[id]";
 
 export type UpdateAccountNameParams = { first_name?: string; last_name?: string };
 
