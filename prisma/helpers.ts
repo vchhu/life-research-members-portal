@@ -14,7 +14,7 @@ const _includeAllMemberInfo = {
   account: true,
   faculty: true,
   member_type: true,
-  current_partnership: { include: { organization: true } },
+  partnership_member_org: { include: { organization: true } },
   current_promotion_strategy: { include: { promotion_strategy: true } },
   desired_partnership: true,
   desired_promotion_strategy: { include: { promotion_strategy: true } },

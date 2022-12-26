@@ -18,16 +18,6 @@ model account {
   member       member?
 }
 
-model current_partnership {
-  member_id       Int
-  organization_id Int
-  description     String?      @db.NVarChar(Max)
-  member          member       @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_current_partnership_member_id")
-  organization    organization @relation(fields: [organization_id], references: [id], onDelete: Cascade, map: "FK_current_partnership_organization_id")
-
-  @@id([member_id, organization_id], map: "PK_current_partnership")
-}
-
 model current_promotion_strategy {
   member_id             Int
   promotion_strategy_id Int
@@ -163,12 +153,12 @@ model member {
   account                    account                      @relation(fields: [account_id], references: [id], onDelete: Cascade, map: "FK_member_account_id")
   faculty                    faculty?                     @relation(fields: [faculty_id], references: [id], map: "FK_member_faculty_id")
   member_type                member_type?                 @relation(fields: [type_id], references: [id], map: "FK_member_type_id")
-  current_partnership        current_partnership[]
   current_promotion_strategy current_promotion_strategy[]
   desired_partnership        desired_partnership?
   desired_promotion_strategy desired_promotion_strategy[]
   has_keyword                has_keyword[]
   insight                    insight?
+  partnership_member_org     partnership_member_org[]
   problem                    problem[]
 }
 
@@ -196,15 +186,15 @@ model org_type {
 }
 
 model organization {
-  id                  Int                   @id(map: "PK_organization") @default(autoincrement())
-  name_en             String?               @db.NVarChar(255)
-  name_fr             String?               @db.NVarChar(255)
-  scope_id            Int
-  type_id             Int
-  description         String?               @db.NVarChar(4000)
-  org_scope           org_scope             @relation(fields: [scope_id], references: [id], onUpdate: NoAction, map: "FK_organization_scope_id")
-  org_type            org_type              @relation(fields: [type_id], references: [id], onUpdate: NoAction, map: "FK_organization_type_id")
-  current_partnership current_partnership[]
+  id                     Int                      @id(map: "PK_organization") @default(autoincrement())
+  name_en                String?                  @db.NVarChar(255)
+  name_fr                String?                  @db.NVarChar(255)
+  scope_id               Int?
+  type_id                Int?
+  description            String?                  @db.NVarChar(4000)
+  org_scope              org_scope?               @relation(fields: [scope_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_organization_scope_id")
+  org_type               org_type?                @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_organization_type_id")
+  partnership_member_org partnership_member_org[]
 }
 
 model problem {
@@ -221,4 +211,14 @@ model promotion_strategy {
   name_fr                    String?                      @db.NVarChar(255)
   current_promotion_strategy current_promotion_strategy[]
   desired_promotion_strategy desired_promotion_strategy[]
+}
+
+model partnership_member_org {
+  member_id       Int
+  organization_id Int
+  description     String?      @db.NVarChar(Max)
+  member          member       @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_current_partnership_member_id")
+  organization    organization @relation(fields: [organization_id], references: [id], onDelete: Cascade, map: "FK_current_partnership_organization_id")
+
+  @@id([member_id, organization_id], map: "PK_current_partnership")
 }
