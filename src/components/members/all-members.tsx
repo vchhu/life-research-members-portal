@@ -1,7 +1,15 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import { FC, Fragment, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  FC,
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { MemberPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
@@ -40,7 +48,8 @@ function filterFn(
     keywordFilter: Set<number>;
   }
 ): boolean {
-  const { nameFilter, facultyFilter, memberTypeFilter, keywordFilter } = filters;
+  const { nameFilter, facultyFilter, memberTypeFilter, keywordFilter } =
+    filters;
   if (nameFilter.size > 0 && !nameFilter.has(m.id)) return false;
   if (facultyFilter.size > 0) {
     if (!m.faculty && !facultyFilter.has(0)) return false; // id 0 is for null
@@ -51,7 +60,8 @@ function filterFn(
     if (m.member_type && !memberTypeFilter.has(m.member_type.id)) return false;
   }
   if (keywordFilter.size > 0) {
-    if (!m.has_keyword.some(({ keyword }) => keywordFilter.has(keyword.id))) return false;
+    if (!m.has_keyword.some(({ keyword }) => keywordFilter.has(keyword.id)))
+      return false;
   }
   return true;
 }
@@ -75,26 +85,42 @@ const defaultQueries = {
 } as const;
 
 function handleShowFacultyChange(value: boolean) {
-  const query: ParsedUrlQueryInput = { ...Router.query, [queryKeys.showFaculty]: value };
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showFaculty]: value,
+  };
   if (value === defaultQueries.showFaculty) delete query[queryKeys.showFaculty];
   Router.push({ query }, undefined, { scroll: false });
 }
 
 function handleShowMemberTypeChange(value: boolean) {
-  const query: ParsedUrlQueryInput = { ...Router.query, [queryKeys.showMemberType]: value };
-  if (value === defaultQueries.showMemberType) delete query[queryKeys.showMemberType];
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showMemberType]: value,
+  };
+  if (value === defaultQueries.showMemberType)
+    delete query[queryKeys.showMemberType];
   Router.push({ query }, undefined, { scroll: false });
 }
 
 function handleShowKeywordsChange(value: boolean) {
-  const query: ParsedUrlQueryInput = { ...Router.query, [queryKeys.showKeywords]: value };
-  if (value === defaultQueries.showKeywords) delete query[queryKeys.showKeywords];
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showKeywords]: value,
+  };
+  if (value === defaultQueries.showKeywords)
+    delete query[queryKeys.showKeywords];
   Router.push({ query }, undefined, { scroll: false });
 }
 
 function handleNameFilterChange(next: Set<number>) {
   Router.push(
-    { query: { ...Router.query, [queryKeys.memberIds]: Array.from(next.keys()) } },
+    {
+      query: {
+        ...Router.query,
+        [queryKeys.memberIds]: Array.from(next.keys()),
+      },
+    },
     undefined,
     { scroll: false }
   );
@@ -102,7 +128,12 @@ function handleNameFilterChange(next: Set<number>) {
 
 function handleFacultyFilterChange(next: Set<number>) {
   Router.push(
-    { query: { ...Router.query, [queryKeys.faculties]: Array.from(next.keys()) } },
+    {
+      query: {
+        ...Router.query,
+        [queryKeys.faculties]: Array.from(next.keys()),
+      },
+    },
     undefined,
     { scroll: false }
   );
@@ -110,7 +141,12 @@ function handleFacultyFilterChange(next: Set<number>) {
 
 function handleMemberTypeFilterChange(next: Set<number>) {
   Router.push(
-    { query: { ...Router.query, [queryKeys.memberTypes]: Array.from(next.keys()) } },
+    {
+      query: {
+        ...Router.query,
+        [queryKeys.memberTypes]: Array.from(next.keys()),
+      },
+    },
     undefined,
     { scroll: false }
   );
@@ -118,7 +154,9 @@ function handleMemberTypeFilterChange(next: Set<number>) {
 
 function handleKeywordFilterChange(next: Set<number>) {
   Router.push(
-    { query: { ...Router.query, [queryKeys.keywords]: Array.from(next.keys()) } },
+    {
+      query: { ...Router.query, [queryKeys.keywords]: Array.from(next.keys()) },
+    },
     undefined,
     { scroll: false }
   );
@@ -150,7 +188,11 @@ function getPopupContainer(): HTMLElement {
 
 const AllMembers: FC = () => {
   const { en } = useContext(LanguageCtx);
-  const { allMembers, loading, refresh: refreshMembers } = useContext(AllMembersCtx);
+  const {
+    allMembers,
+    loading,
+    refresh: refreshMembers,
+  } = useContext(AllMembersCtx);
   const { refresh: refreshKeywords } = useContext(AllKeywordsCtx);
 
   useEffect(() => {
@@ -159,9 +201,15 @@ const AllMembers: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [showFaculty, setShowFaculty] = useState<boolean>(defaultQueries.showFaculty);
-  const [showMemberType, setShowMemberType] = useState<boolean>(defaultQueries.showMemberType);
-  const [showKeywords, setShowKeywords] = useState<boolean>(defaultQueries.showKeywords);
+  const [showFaculty, setShowFaculty] = useState<boolean>(
+    defaultQueries.showFaculty
+  );
+  const [showMemberType, setShowMemberType] = useState<boolean>(
+    defaultQueries.showMemberType
+  );
+  const [showKeywords, setShowKeywords] = useState<boolean>(
+    defaultQueries.showKeywords
+  );
 
   const [nameFilter, setNameFilter] = useState(new Set<number>());
   const [facultyFilter, setFacultyFilter] = useState(new Set<number>());
@@ -228,7 +276,14 @@ const AllMembers: FC = () => {
     () =>
       allMembers
         .map((m) => ({ ...m, key: m.id, name: getName(m) }))
-        .filter((m) => filterFn(m, { nameFilter, facultyFilter, memberTypeFilter, keywordFilter })),
+        .filter((m) =>
+          filterFn(m, {
+            nameFilter,
+            facultyFilter,
+            memberTypeFilter,
+            keywordFilter,
+          })
+        ),
     [allMembers, facultyFilter, keywordFilter, memberTypeFilter, nameFilter]
   );
 
@@ -253,8 +308,10 @@ const AllMembers: FC = () => {
       dataIndex: ["faculty", en ? "name_en" : "name_fr"],
       className: "faculty-column",
       sorter: en
-        ? (a, b) => (a.faculty?.name_en || "").localeCompare(b.faculty?.name_en || "")
-        : (a, b) => (a.faculty?.name_fr || "").localeCompare(b.faculty?.name_fr || ""),
+        ? (a, b) =>
+            (a.faculty?.name_en || "").localeCompare(b.faculty?.name_en || "")
+        : (a, b) =>
+            (a.faculty?.name_fr || "").localeCompare(b.faculty?.name_fr || ""),
     }),
     [en]
   );
@@ -265,8 +322,14 @@ const AllMembers: FC = () => {
       dataIndex: ["member_type", en ? "name_en" : "name_fr"],
       className: "type-column",
       sorter: en
-        ? (a, b) => (a.member_type?.name_en || "").localeCompare(b.member_type?.name_en || "")
-        : (a, b) => (a.member_type?.name_fr || "").localeCompare(b.member_type?.name_fr || ""),
+        ? (a, b) =>
+            (a.member_type?.name_en || "").localeCompare(
+              b.member_type?.name_en || ""
+            )
+        : (a, b) =>
+            (a.member_type?.name_fr || "").localeCompare(
+              b.member_type?.name_fr || ""
+            ),
     }),
     [en]
   );
@@ -278,7 +341,11 @@ const AllMembers: FC = () => {
       className: "tag-column",
       render: (_, member) =>
         member.has_keyword.map((k) => (
-          <KeywordTag key={k.keyword.id} keyword={k.keyword} onClick={addKeyword} />
+          <KeywordTag
+            key={k.keyword.id}
+            keyword={k.keyword}
+            onClick={addKeyword}
+          />
         )),
     }),
     [addKeyword, en]
@@ -290,8 +357,16 @@ const AllMembers: FC = () => {
   if (showKeywords) columns.push(keywordsColumn);
 
   const filters = (
-    <Form onFinish={blurActiveElement} className="filters" labelAlign="left" size="small">
-      <Form.Item label={en ? "Filter by name" : "Filtrer par nom"} htmlFor="name-filter">
+    <Form
+      onFinish={blurActiveElement}
+      className="filters"
+      labelAlign="left"
+      size="small"
+    >
+      <Form.Item
+        label={en ? "Filter by name" : "Filtrer par nom"}
+        htmlFor="name-filter"
+      >
         <MemberNameFilter
           id="name-filter"
           value={nameFilter}
@@ -299,7 +374,10 @@ const AllMembers: FC = () => {
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>
-      <Form.Item label={en ? "Filter by faculty" : "Filtrer par faculté"} htmlFor="faculty-filter">
+      <Form.Item
+        label={en ? "Filter by faculty" : "Filtrer par faculté"}
+        htmlFor="faculty-filter"
+      >
         <FacultyFilter
           id="faculty-filter"
           value={facultyFilter}
@@ -307,7 +385,10 @@ const AllMembers: FC = () => {
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>
-      <Form.Item label={en ? "Filter by type" : "Filtrer par type"} htmlFor="member-type-filter">
+      <Form.Item
+        label={en ? "Filter by type" : "Filtrer par type"}
+        htmlFor="member-type-filter"
+      >
         <MemberTypeFilter
           id="member-type-filter"
           value={memberTypeFilter}
@@ -330,7 +411,10 @@ const AllMembers: FC = () => {
         {en ? "Show Columns:" : "Afficher les colonnes:"}
       </label>
       <span className="show-column-checkboxes" id="show-column-checkboxes">
-        <Checkbox checked={showFaculty} onChange={(e) => handleShowFacultyChange(e.target.checked)}>
+        <Checkbox
+          checked={showFaculty}
+          onChange={(e) => handleShowFacultyChange(e.target.checked)}
+        >
           {en ? "Show Faculty" : "Afficher la faculté"}
         </Checkbox>
         <Checkbox
@@ -363,7 +447,11 @@ const AllMembers: FC = () => {
 
   const expandedRowRender = (member: MemberPublicInfo) => (
     <Descriptions size="small" layout="vertical" className="problems-container">
-      <Item label={en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"}>
+      <Item
+        label={
+          en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"
+        }
+      >
         {member.problem.map((p, i) => (
           <Fragment key={i}>
             {`${i + 1}. `}
@@ -388,7 +476,9 @@ const AllMembers: FC = () => {
       showSorterTooltip={false}
       sticky={{ offsetHeader: 74 }}
       scroll={{ x: true }}
-      rowClassName={(_, index) => "table-row " + (index % 2 === 0 ? "even" : "odd")}
+      rowClassName={(_, index) =>
+        "table-row " + (index % 2 === 0 ? "even" : "odd")
+      }
       expandable={{
         expandedRowRender,
         expandedRowClassName: (_, index) =>

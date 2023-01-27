@@ -13,6 +13,8 @@ const Greeting: FC = () => {
     <h2 style={{ color: blue[6] }}>
       {en ? "You are an administrator, congrats!" : "Vous êtes administrateur, félicitations !"}
     </h2>
+    
+
   );
 
   const noMemberInfo = (

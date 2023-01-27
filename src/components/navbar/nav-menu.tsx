@@ -24,6 +24,8 @@ const NavMenu: FC = () => {
   const adminItems = [
     { label: en ? "Accounts" : "Comptes", href: PageRoutes.allAccounts },
     { label: en ? "Register" : "Enregistrer", href: PageRoutes.register },
+    { label:en? "Partnerships": "Partenariats", href: PageRoutes.partnerships},
+    
   ];
 
   const items: { label: string; href: string }[] = generalItems;
