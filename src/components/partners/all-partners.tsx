@@ -162,14 +162,12 @@ const AllPartners: FC = () => {
   const Header = () => (
     <>
       <div className="header-title-row">
-        <Title level={1}>
-          {en ? "All Partnerships" : "Tous les partnariats"}
-        </Title>
+        <Title level={1}>{en ? "All Partners" : "Tous les partenairs"}</Title>
         <Button type="primary" size="large">
           {en ? "Reset the filter" : "Réinitialiser le filtre"}
         </Button>{" "}
         <Button type="primary" size="large">
-          {en ? "Add a new partnerships" : "Ajouter un nouveau partenariat"}
+          {en ? "Add a new partner" : "Ajouter un nouveau partenair"}
         </Button>
       </div>
       {filters}
