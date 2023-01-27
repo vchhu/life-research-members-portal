@@ -3,10 +3,8 @@ import { useContext } from "react";
 import AllPartners from "../../components/partners/all-partners";
 import { LanguageCtx } from "../../services/context/language-ctx";
 
-const Product: NextPage = () => {
-  const { en } = useContext(LanguageCtx);
-
+const PartnersPage: NextPage = () => {
   return <AllPartners />;
 };
 
-export default Product;
+export default PartnersPage;

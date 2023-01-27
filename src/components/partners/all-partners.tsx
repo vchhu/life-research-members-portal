@@ -6,7 +6,7 @@ import { Button, Checkbox, Select, Table } from "antd";
 import Title from "antd/lib/typography/Title";
 import Form from "antd/lib/form";
 
-const AllPartnership: FC = () => {
+const AllPartners: FC = () => {
   const { en } = useContext(LanguageCtx);
 
   //##################   SIMPLE DATA TO REPLACE  #######################/
@@ -199,4 +199,4 @@ const AllPartnership: FC = () => {
   );
 };
 
-export default AllPartnership;
+export default AllPartners;

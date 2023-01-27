@@ -6,7 +6,7 @@ const PageRoutes = {
   privateMemberProfile: (id: number) => "/members/" + id + "/private",
   myProfile: "/my-profile",
   allAccounts: "/accounts",
-  partnerships: "/partnerships",
+  partners: "/partners",
   products: "/products",
   accountProfile: (id: number) => "/accounts/" + id,
   register: "/register",

@@ -29,8 +29,8 @@ const NavMenu: FC = () => {
     { label: en ? "Accounts" : "Comptes", href: PageRoutes.allAccounts },
     { label: en ? "Register" : "Enregistrer", href: PageRoutes.register },
     {
-      label: en ? "Partnerships" : "Partenariats",
-      href: PageRoutes.partnerships,
+      label: en ? "Partners" : "Partenairs",
+      href: PageRoutes.partners,
     },
     { label: en ? "Products" : "Produits", href: PageRoutes.products },
   ];
