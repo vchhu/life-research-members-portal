@@ -15,17 +15,24 @@ const NavMenu: FC = () => {
   const { en } = useContext(LanguageCtx);
 
   // Everyone
-  const generalItems = [{ label: en ? "Members" : "Membres", href: PageRoutes.allMembers }];
+  const generalItems = [
+    { label: en ? "Members" : "Membres", href: PageRoutes.allMembers },
+  ];
 
   // Registered Acounts
-  const registeredItems = [{ label: en ? "My Profile" : "Mon Profil", href: PageRoutes.myProfile }];
+  const registeredItems = [
+    { label: en ? "My Profile" : "Mon Profil", href: PageRoutes.myProfile },
+  ];
 
   // Admins
   const adminItems = [
     { label: en ? "Accounts" : "Comptes", href: PageRoutes.allAccounts },
     { label: en ? "Register" : "Enregistrer", href: PageRoutes.register },
-    { label:en? "Partnerships": "Partenariats", href: PageRoutes.partnerships},
-    
+    {
+      label: en ? "Partnerships" : "Partenariats",
+      href: PageRoutes.partnerships,
+    },
+    { label: en ? "Products" : "Produits", href: PageRoutes.products },
   ];
 
   const items: { label: string; href: string }[] = generalItems;
@@ -54,7 +61,9 @@ const NavMenu: FC = () => {
         style={{ fontSize: "inherit" }}
         selectedKeys={activeItem ? [activeItem.label] : []}
         activeKey={activeItem?.label}
-        getPopupContainer={() => document.querySelector(".navbar") || document.body}
+        getPopupContainer={() =>
+          document.querySelector(".navbar") || document.body
+        }
       />
     </div>
   );
