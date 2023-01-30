@@ -160,6 +160,7 @@ model member {
   insight                    insight?
   partnership_member_org     partnership_member_org[]
   problem                    problem[]
+  product_member_author      product_member_author[]
 }
 
 model member_type {
@@ -195,6 +196,7 @@ model organization {
   org_scope              org_scope?               @relation(fields: [scope_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_organization_scope_id")
   org_type               org_type?                @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_organization_type_id")
   partnership_member_org partnership_member_org[]
+  product_partnership    product_partnership[]
 }
 
 model problem {
@@ -221,4 +223,97 @@ model partnership_member_org {
   organization    organization @relation(fields: [organization_id], references: [id], onDelete: Cascade, map: "FK_current_partnership_organization_id")
 
   @@id([member_id, organization_id], map: "PK_current_partnership")
+}
+
+model all_author {
+  id         Int      @id(map: "PK_all_author") @default(autoincrement())
+  first_name String?  @db.NVarChar(255)
+  last_name  String?  @db.NVarChar(255)
+  product    product?
+}
+
+model product {
+  id                    Int                     @id(map: "PK_product") @default(autoincrement())
+  title_en              String?                 @db.NVarChar(500)
+  title_fr              String?                 @db.NVarChar(500)
+  date                  DateTime?               @db.Date
+  doi                   String?                 @db.NVarChar(100)
+  on_going              Boolean?
+  peer_reviewed         Boolean?
+  all_author_id         Int?
+  product_type_id       Int
+  note                  String?                 @db.NVarChar(2000)
+  all_author            all_author              @relation(fields: [id], references: [id], onUpdate: NoAction, map: "FK_product_all_author")
+  product_type          product_type            @relation(fields: [id], references: [id], onUpdate: NoAction, map: "FK_product_product_type")
+  product_member_author product_member_author[]
+  product_partnership   product_partnership[]
+  product_target        product_target[]
+  product_topic         product_topic[]
+}
+
+model product_member_author {
+  member_id  Int
+  product_id Int
+  member     member  @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_product_member_author_author_id")
+  product    product @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_product_member_author_product_id")
+
+  @@id([member_id, product_id], map: "PK_product_member_author")
+}
+
+model product_partnership {
+  organization_id Int
+  product_id      Int
+  organization    organization @relation(fields: [organization_id], references: [id], onUpdate: NoAction, map: "FK_product_partnership_ong")
+  product         product      @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_partnership_product")
+
+  @@id([organization_id, product_id], map: "PK_product_partnership")
+}
+
+model product_target {
+  target_id          Int
+  product_id         Int
+  product            product            @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_target_product_id")
+  target_stakeholder target_stakeholder @relation(fields: [target_id], references: [id], onUpdate: NoAction, map: "FK_product_target_target_id")
+
+  @@id([target_id, product_id], map: "PK_product_target")
+}
+
+model product_topic {
+  topic_id   Int
+  product_id Int
+  product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_product_id")
+  topic      topic   @relation(fields: [topic_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_topic_id")
+
+  @@id([topic_id, product_id], map: "PK_product_topic")
+}
+
+model product_type {
+  id      Int      @id(map: "PK_product_type") @default(autoincrement())
+  name_en String?  @db.NVarChar(200)
+  name_fr String?  @db.NVarChar(200)
+  product product?
+}
+
+model sysdiagrams {
+  name         String @db.NVarChar(128)
+  principal_id Int
+  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B611EDB903A") @default(autoincrement())
+  version      Int?
+  definition   Bytes?
+
+  @@unique([principal_id, name], map: "UK_principal_name")
+}
+
+model target_stakeholder {
+  id             Int              @id(map: "PK_target_stakeholder") @default(autoincrement())
+  name_fr        String?          @db.NVarChar(300)
+  name_en        String?          @db.NVarChar(300)
+  product_target product_target[]
+}
+
+model topic {
+  id            Int             @id(map: "PK_topic") @default(autoincrement())
+  name_fr       String?         @db.NVarChar(300)
+  name_en       String?         @db.NVarChar(300)
+  product_topic product_topic[]
 }
