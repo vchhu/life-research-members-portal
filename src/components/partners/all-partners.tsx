@@ -52,7 +52,17 @@ const AllPartners: FC = () => {
       key: "name",
     },
     {
-      title: en ? "Affiliate Members" : "Membres affiliés",
+      title: en ? "Scope" : "Étendue",
+      dataIndex: "scope",
+      key: "scope",
+    },
+    {
+      title: en ? "Type" : "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: en ? "Affiliate members" : "Membres affiliés",
       dataIndex: "members",
       key: "members",
     },
@@ -62,18 +72,24 @@ const AllPartners: FC = () => {
     {
       key: "1",
       name: "Global Tech Inc.",
+      scope: en ? "International" : "International",
+      type: en ? "NGO" : "ONG",
       members:
         "Rachel Davis, Joshua Anderson, Sarah Wilson, Nicholas Thompson, Anthony Martinez   ",
     },
     {
       key: "2",
       name: "Green Energy Solutions LLC",
+      scope: en ? "Provencial" : "Provincial",
+      type: en ? "Industry" : "Industrie",
       members:
         "Jenna Smith, Michael Johnson, Emily Brown, David Garcia, Rebecca Perez",
     },
     {
       key: "3",
       name: "Infinite Ideas Inc.",
+      scope: en ? "National" : "National",
+      type: en ? "Other" : "Autre",
       members:
         "Amanda Perez, Matthew Taylor, James Rodriguez, Benjamin Baker, Jennifer White",
     },
@@ -152,8 +168,14 @@ const AllPartners: FC = () => {
         {en ? "Show Columns:" : "Afficher les colonnes:"}
       </label>
       <span className="show-column-checkboxes" id="show-column-checkboxes">
-        <Checkbox>
-          {en ? "Show affiliate Members" : "Afficher les membres affiliés"}
+        <Checkbox defaultChecked>
+          {en ? "Show affiliate members" : "Afficher les membres affiliés"}
+        </Checkbox>
+        <Checkbox defaultChecked>
+          {en ? "Show scope" : "Afficher les membres affiliés"}
+        </Checkbox>
+        <Checkbox defaultChecked>
+          {en ? "Show type" : "Afficher les membres affiliés"}
         </Checkbox>
       </span>
     </Form>

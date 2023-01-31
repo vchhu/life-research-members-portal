@@ -21,8 +21,20 @@ const RegisterAccount: FC = () => {
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
 
-  async function handleRegister({ first_name, last_name, login_email, is_admin, is_member }: Data) {
-    const res = await registerAccount({ first_name, last_name, login_email, is_admin, is_member });
+  async function handleRegister({
+    first_name,
+    last_name,
+    login_email,
+    is_admin,
+    is_member,
+  }: Data) {
+    const res = await registerAccount({
+      first_name,
+      last_name,
+      login_email,
+      is_admin,
+      is_member,
+    });
     if (res) form.resetFields();
   }
 
@@ -74,9 +86,12 @@ const RegisterAccount: FC = () => {
             { type: "email", message: en ? "Invalid Email" : "Email invalide" },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (getFieldValue("login_email") === value) return Promise.resolve();
+                if (getFieldValue("login_email") === value)
+                  return Promise.resolve();
                 return Promise.reject(
-                  new Error(en ? "Emails do not match" : "Emails ne correspondent pas")
+                  new Error(
+                    en ? "Emails do not match" : "Emails ne correspondent pas"
+                  )
                 );
               },
             }),
@@ -87,12 +102,20 @@ const RegisterAccount: FC = () => {
         </Form.Item>
 
         <div className="row">
-          <Form.Item name="is_member" valuePropName="checked" initialValue={true}>
-            <Checkbox>{en ? "Register as Member" : "Inscrivez-vous en tant que membre"}</Checkbox>
+          <Form.Item
+            name="is_member"
+            valuePropName="checked"
+            initialValue={true}
+          >
+            <Checkbox>
+              {en ? "Register as Member" : "Inscrivez-vous en tant que membre"}
+            </Checkbox>
           </Form.Item>
           <Form.Item name="is_admin" valuePropName="checked">
             <Checkbox>
-              {en ? "Grant Admin Privileges" : "Accorder des privilèges d'administrateur"}
+              {en
+                ? "Grant Admin Privileges"
+                : "Accorder des privilèges d'administrateur"}
             </Checkbox>
           </Form.Item>
         </div>

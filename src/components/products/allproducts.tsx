@@ -24,21 +24,23 @@ const AllProducts: FC = () => {
   };
 
   const nameOptions = [
-    { value: "product1", label: "Product 1" },
-    { value: "product2", label: "Product 2" },
-    { value: "product3", label: "Product 3" },
+    { value: "product1", label: "The Art of War" },
+    { value: "product2", label: "To Kill a Mockingbird" },
+    { value: "product3", label: "The Human Form: A Study in Sculpture" },
   ];
 
   const typeOptions = [
-    { value: "type1", label: "Type 1" },
-    { value: "type2", label: "Type 2" },
-    { value: "type3", label: "Type 3" },
+    { value: "type1", label: "Pub_Books" },
+    { value: "type2", label: "Artistic or Museum Exhibitions" },
+    { value: "type3", label: "Art_Visual Artwork" },
   ];
 
   const authorOptions = [
-    { value: "author1", label: "Author 1" },
-    { value: "author2", label: "Author 2" },
-    { value: "author3", label: "Author 3" },
+    { value: "author1", label: "Sun Tzu" },
+    { value: "author2", label: "Harper Lee" },
+    { value: "author3", label: "Dr. Ali Hassan" },
+    { value: "author3", label: "John Smith" },
+    { value: "author3", label: "Jane Doe" },
   ];
 
   const columns = [
@@ -96,7 +98,7 @@ const AllProducts: FC = () => {
   const filters = (
     <Form className="filters" labelAlign="left" size="small">
       <Form.Item
-        label={en ? "Filter by name" : "Filtrer par nom"}
+        label={en ? "Filter by title" : "Filtrer par titre"}
         htmlFor="name-filter"
       >
         <Select
