@@ -17,6 +17,11 @@ const NavMenu: FC = () => {
   // Everyone
   const generalItems = [
     { label: en ? "Members" : "Membres", href: PageRoutes.allMembers },
+    {
+      label: en ? "Partners" : "Partenairs",
+      href: PageRoutes.partners,
+    },
+    { label: en ? "Products" : "Produits", href: PageRoutes.products },
   ];
 
   // Registered Acounts
