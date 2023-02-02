@@ -10,6 +10,7 @@ const PageRoutes = {
   products: "/products",
   accountProfile: (id: number) => "/accounts/" + id,
   register: "/register",
+  registerpartner: "/partner/register",
   _404: "/404",
 } as const;
 

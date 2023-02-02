@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import type { FC } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import { useContext } from "react";
 import { Button, Checkbox, Select, Table } from "antd";
 import Title from "antd/lib/typography/Title";
 import Form from "antd/lib/form";
+import RegisterPartner from "./register-partner";
 
 const AllPartners: FC = () => {
   const { en } = useContext(LanguageCtx);

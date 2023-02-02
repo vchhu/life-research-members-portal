@@ -45,7 +45,7 @@ const AllProducts: FC = () => {
 
   const columns = [
     {
-      title: "Product Name",
+      title: "Product Title",
       dataIndex: "name",
       key: "name",
     },
@@ -140,6 +140,12 @@ const AllProducts: FC = () => {
       <span className="show-column-checkboxes" id="show-column-checkboxes">
         <Checkbox>
           {en ? "Show affiliate Members" : "Afficher les membres affiliés"}
+        </Checkbox>
+        <Checkbox defaultChecked>
+          {en ? "Show  Type" : "afficher le type"}
+        </Checkbox>
+        <Checkbox defaultChecked>
+          {en ? "Show  Author" : "afficher l'auteur"}
         </Checkbox>
       </span>
     </Form>

@@ -1,0 +1,49 @@
+import Empty from "antd/lib/empty";
+import Card from "antd/lib/card/Card";
+import Title from "antd/lib/typography/Title";
+import { FC, useContext } from "react";
+import usePublicMemberInfo from "../../services/use-public-member-info";
+import CardSkeleton from "../loading/card-skeleton";
+import PublicProductDescription from "./product-public-description";
+import { LanguageCtx } from "../../services/context/language-ctx";
+
+type Props = {
+  id: number;
+};
+
+const PublicProductProfile: FC<Props> = ({ id }) => {
+  const { member, loading } = usePublicMemberInfo(id);
+  const { en } = useContext(LanguageCtx);
+
+  if (loading) return <CardSkeleton />;
+  if (!member) return <Empty />;
+  if (!member.is_active)
+    return (
+      <Title>{en ? "Member is inactive." : "Le membre est inactif."}</Title>
+    );
+
+  const header = (
+    <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <Title
+        level={2}
+        style={{
+          margin: 0,
+          minWidth: 0,
+          marginRight: "auto",
+          paddingRight: 16,
+          whiteSpace: "break-spaces",
+        }}
+      >
+        {member.account.first_name + " " + member.account.last_name}
+      </Title>
+    </div>
+  );
+
+  return (
+    <Card title={header}>
+      <PublicProductDescription member={member} />
+    </Card>
+  );
+};
+
+export default PublicProductProfile;

@@ -26,7 +26,7 @@ type Props = {
   member: MemberPublicInfo;
 };
 
-const PublicMemberDescription: FC<Props> = ({ member }) => {
+const PublicProductDescription: FC<Props> = ({ member }) => {
   const screens = useBreakpoint();
   const { en } = useContext(LanguageCtx);
 
@@ -130,4 +130,4 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
   );
 };
 
-export default PublicMemberDescription;
+export default PublicProductDescription;
