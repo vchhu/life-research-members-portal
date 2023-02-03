@@ -82,7 +82,7 @@ const AllPartners: FC = () => {
     {
       key: "2",
       name: "Green Energy Solutions LLC",
-      scope: en ? "Provencial" : "Provincial",
+      scope: en ? "Provincial" : "Provincial",
       type: en ? "Industry" : "Industrie",
       members:
         "Jenna Smith, Michael Johnson, Emily Brown, David Garcia, Rebecca Perez",
