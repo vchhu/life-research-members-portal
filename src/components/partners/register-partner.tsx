@@ -1,10 +1,17 @@
 import { Button } from "antd";
+import Select from "antd/lib/select";
 import Form from "antd/lib/form";
 import Input from "antd/lib/input";
-import { FC, useContext } from "react";
+import React, { FC, useContext } from "react";
 import { useForm } from "antd/lib/form/Form";
 import registerPartner from "../../services/register-partner";
 import { LanguageCtx } from "../../services/context/language-ctx";
+import { OrgTypesCtx } from "../../services/context/org-types-ctx";
+//import { OrgScopeCtx } from "../../services/context/org-scopes-ctx";
+import { FacultiesCtx } from "../../services/context/faculties-ctx";
+import GetLanguage from "../../utils/front-end/get-language";
+
+const { Option } = Select;
 
 type Data = {
   name_en: string;
@@ -17,6 +24,9 @@ type Data = {
 const RegisterPartner: FC = () => {
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
+  //const { orgTypes } = useContext(OrgTypesCtx);
+  const { faculties } = useContext(FacultiesCtx);
+  //const { orgScopes } = useContext(OrgScopeCtx);
 
   async function handleRegister({
     name_en,
@@ -66,13 +76,21 @@ const RegisterPartner: FC = () => {
         >
           <Input type="number" />
         </Form.Item>
+
         <Form.Item
-          label={en ? "Type ID" : "ID de Type"}
+          label={en ? "Organization Type" : "Type de l'organisation"}
           name="type_id"
-          rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
-          <Input type="number" />
+          <Select>
+            <Option value="">{""}</Option>
+            {faculties.map((f) => (
+              <Option key={f.id} value={f.id}>
+                <GetLanguage obj={f} />
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
+
         <Form.Item
           label={en ? "Description" : "Description"}
           name="description"

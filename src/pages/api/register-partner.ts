@@ -39,11 +39,11 @@ if (isNaN(scope_id)) return res.status(400).send("scope_id is required.");
 if (isNaN(scope_id)) return res.status(400).send("type_id is required.");
 
   try {
-/* const currentUser = await getAccountFromRequest(req, res);
+const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
     if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register accounts."); */
+      return res.status(401).send("You are not authorized to register accounts."); 
 
     const newPartner = await registerPartner(params);
 

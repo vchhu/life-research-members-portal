@@ -1,5 +1,12 @@
 import type { member_type } from "@prisma/client";
-import { createContext, FC, PropsWithChildren, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  FC,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import ApiRoutes from "../../routing/api-routes";
 import Notification from "../notifications/notification";
 import { LanguageCtx } from "./language-ctx";
@@ -33,7 +40,9 @@ export const MemberTypesCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const { en } = useContext(LanguageCtx);
 
   async function getMemberTypes() {
-    setMemberTypes((await fetchAllMemberTypes()).sort(en ? enSorter : frSorter));
+    setMemberTypes(
+      (await fetchAllMemberTypes()).sort(en ? enSorter : frSorter)
+    );
   }
 
   useEffect(() => {
@@ -50,6 +59,8 @@ export const MemberTypesCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   return (
-    <MemberTypesCtx.Provider value={{ memberTypes, refresh }}>{children}</MemberTypesCtx.Provider>
+    <MemberTypesCtx.Provider value={{ memberTypes, refresh }}>
+      {children}
+    </MemberTypesCtx.Provider>
   );
 };

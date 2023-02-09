@@ -24,6 +24,8 @@ const ApiRoutes = {
   allKeywords: "/api/all-keywords",
   allFaculties: "/api/all-faculties",
   allMemberTypes: "/api/all-member-types",
+  allOrgTypes: "/api/all-org-types",
+  allOrgScopes: "/api/all-org-scopes",
 } as const;
 
 export default ApiRoutes;

@@ -172,16 +172,16 @@ model member_type {
 
 model org_scope {
   id                  Int                   @id(map: "PK_org_scope") @default(autoincrement())
-  name_en             String?               @db.NVarChar(255)
-  name_fr             String?               @db.NVarChar(255)
+  name_en             String                @db.NVarChar(255)
+  name_fr             String                @db.NVarChar(255)
   desired_partnership desired_partnership[]
   organization        organization[]
 }
 
 model org_type {
   id                  Int                   @id(map: "PK_org_type") @default(autoincrement())
-  name_en             String?               @db.NVarChar(255)
-  name_fr             String?               @db.NVarChar(255)
+  name_en             String                @db.NVarChar(255)
+  name_fr             String                @db.NVarChar(255)
   desired_partnership desired_partnership[]
   organization        organization[]
 }
@@ -292,16 +292,6 @@ model product_type {
   name_en String?  @db.NVarChar(200)
   name_fr String?  @db.NVarChar(200)
   product product?
-}
-
-model sysdiagrams {
-  name         String @db.NVarChar(128)
-  principal_id Int
-  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B613A49C1CF") @default(autoincrement())
-  version      Int?
-  definition   Bytes?
-
-  @@unique([principal_id, name], map: "UK_principal_name")
 }
 
 model target_stakeholder {
