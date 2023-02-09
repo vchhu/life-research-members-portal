@@ -18,6 +18,13 @@ model account {
   member       member?
 }
 
+model all_author {
+  id         Int      @id(map: "PK_all_author") @default(autoincrement())
+  first_name String?  @db.NVarChar(255)
+  last_name  String?  @db.NVarChar(255)
+  product    product?
+}
+
 model current_promotion_strategy {
   member_id             Int
   promotion_strategy_id Int
@@ -150,14 +157,14 @@ model member {
   date_joined                DateTime?                    @db.Date
   is_active                  Boolean                      @default(true, map: "DF_member_is_active")
   last_active                DateTime?                    @db.Date
-  account                    account                      @relation(fields: [account_id], references: [id], onDelete: Cascade, map: "FK_member_account_id")
-  faculty                    faculty?                     @relation(fields: [faculty_id], references: [id], map: "FK_member_faculty_id")
-  member_type                member_type?                 @relation(fields: [type_id], references: [id], map: "FK_member_type_id")
   current_promotion_strategy current_promotion_strategy[]
   desired_partnership        desired_partnership?
   desired_promotion_strategy desired_promotion_strategy[]
   has_keyword                has_keyword[]
   insight                    insight?
+  account                    account                      @relation(fields: [account_id], references: [id], onDelete: Cascade, map: "FK_member_account_id")
+  faculty                    faculty?                     @relation(fields: [faculty_id], references: [id], map: "FK_member_faculty_id")
+  member_type                member_type?                 @relation(fields: [type_id], references: [id], map: "FK_member_type_id")
   partnership_member_org     partnership_member_org[]
   problem                    problem[]
   product_member_author      product_member_author[]
@@ -199,22 +206,6 @@ model organization {
   product_partnership    product_partnership[]
 }
 
-model problem {
-  id        Int     @id(map: "PK_problem") @default(autoincrement())
-  member_id Int
-  name_en   String? @db.NVarChar(4000)
-  name_fr   String? @db.NVarChar(4000)
-  member    member  @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_problem_member_id")
-}
-
-model promotion_strategy {
-  id                         Int                          @id(map: "PK_promotion_strategy") @default(autoincrement())
-  name_en                    String?                      @db.NVarChar(255)
-  name_fr                    String?                      @db.NVarChar(255)
-  current_promotion_strategy current_promotion_strategy[]
-  desired_promotion_strategy desired_promotion_strategy[]
-}
-
 model partnership_member_org {
   member_id       Int
   organization_id Int
@@ -225,11 +216,12 @@ model partnership_member_org {
   @@id([member_id, organization_id], map: "PK_current_partnership")
 }
 
-model all_author {
-  id         Int      @id(map: "PK_all_author") @default(autoincrement())
-  first_name String?  @db.NVarChar(255)
-  last_name  String?  @db.NVarChar(255)
-  product    product?
+model problem {
+  id        Int     @id(map: "PK_problem") @default(autoincrement())
+  member_id Int
+  name_en   String? @db.NVarChar(4000)
+  name_fr   String? @db.NVarChar(4000)
+  member    member  @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_problem_member_id")
 }
 
 model product {
@@ -292,6 +284,24 @@ model product_type {
   name_en String?  @db.NVarChar(200)
   name_fr String?  @db.NVarChar(200)
   product product?
+}
+
+model promotion_strategy {
+  id                         Int                          @id(map: "PK_promotion_strategy") @default(autoincrement())
+  name_en                    String?                      @db.NVarChar(255)
+  name_fr                    String?                      @db.NVarChar(255)
+  current_promotion_strategy current_promotion_strategy[]
+  desired_promotion_strategy desired_promotion_strategy[]
+}
+
+model sysdiagrams {
+  name         String @db.NVarChar(128)
+  principal_id Int
+  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B611E948832") @default(autoincrement())
+  version      Int?
+  definition   Bytes?
+
+  @@unique([principal_id, name], map: "UK_principal_name")
 }
 
 model target_stakeholder {

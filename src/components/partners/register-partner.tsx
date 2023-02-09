@@ -7,7 +7,7 @@ import { useForm } from "antd/lib/form/Form";
 import registerPartner from "../../services/register-partner";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import { OrgTypesCtx } from "../../services/context/org-types-ctx";
-//import { OrgScopeCtx } from "../../services/context/org-scopes-ctx";
+import { OrgScopeCtx } from "../../services/context/org-scopes-ctx";
 import { FacultiesCtx } from "../../services/context/faculties-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 
