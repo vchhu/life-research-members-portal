@@ -43,7 +43,7 @@ const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
     if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register accounts."); 
+      return res.status(401).send("You are not authorized to register a partner"); 
 
     const newPartner = await registerPartner(params);
 

@@ -1,15 +1,21 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import type { FC } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import { useContext } from "react";
 import { Button, Checkbox, Select, Table } from "antd";
 import Title from "antd/lib/typography/Title";
 import Form from "antd/lib/form";
-import RegisterPartner from "./register-partner";
 
 const AllPartners: FC = () => {
   const { en } = useContext(LanguageCtx);
+  const router = useRouter();
+  const { localAccount, loading } = useContext(ActiveAccountCtx);
+
+  const handleRegisterPartner = () => {
+    router.push("partners/register");
+  };
 
   //##################   SIMPLE DATA TO REPLACE  #######################/
 
@@ -190,7 +196,11 @@ const AllPartners: FC = () => {
         <Button type="primary" size="large">
           {en ? "Reset the filter" : "Réinitialiser le filtre"}
         </Button>{" "}
-        <Button type="primary" size="large">
+        <Button
+          type="primary"
+          size="large"
+          onClick={() => handleRegisterPartner()}
+        >
           {en ? "Add a new partner" : "Ajouter un nouveau partenair"}
         </Button>
       </div>

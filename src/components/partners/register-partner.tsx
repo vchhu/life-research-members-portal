@@ -8,7 +8,6 @@ import registerPartner from "../../services/register-partner";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import { OrgTypesCtx } from "../../services/context/org-types-ctx";
 import { OrgScopeCtx } from "../../services/context/org-scopes-ctx";
-import { FacultiesCtx } from "../../services/context/faculties-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 
 const { Option } = Select;
@@ -24,9 +23,8 @@ type Data = {
 const RegisterPartner: FC = () => {
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
-  //const { orgTypes } = useContext(OrgTypesCtx);
-  const { faculties } = useContext(FacultiesCtx);
-  //const { orgScopes } = useContext(OrgScopeCtx);
+  const { orgTypes } = useContext(OrgTypesCtx);
+  const { orgScopes } = useContext(OrgScopeCtx);
 
   async function handleRegister({
     name_en,
@@ -70,11 +68,18 @@ const RegisterPartner: FC = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label={en ? "Scope ID" : "ID de Portée"}
+          label={en ? "Organization Scope" : "Portée de l'organisation"}
           name="scope_id"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
-          <Input type="number" />
+          <Select>
+            <Option value="">{""}</Option>
+            {orgScopes.map((f) => (
+              <Option key={f.id} value={f.id}>
+                <GetLanguage obj={f} />
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -83,7 +88,7 @@ const RegisterPartner: FC = () => {
         >
           <Select>
             <Option value="">{""}</Option>
-            {faculties.map((f) => (
+            {orgTypes.map((f) => (
               <Option key={f.id} value={f.id}>
                 <GetLanguage obj={f} />
               </Option>

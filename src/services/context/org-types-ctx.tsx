@@ -19,8 +19,6 @@ function frSorter(a: org_type, b: org_type) {
   return a.name_fr.localeCompare(b.name_fr);
 }
 
-console.log("test here");
-
 export const OrgTypesCtx = createContext<{
   orgTypes: org_type[];
   refresh: () => void;
@@ -57,8 +55,6 @@ export const OrgTypesCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   function refresh() {
     getOrgTypes();
   }
-
-  //console.log("test here 2");
 
   return (
     <OrgTypesCtx.Provider value={{ orgTypes, refresh }}>
