@@ -5,9 +5,9 @@ import RegisterPartner from "../../components/partners/register-partner";
 
 const Register: NextPage = () => {
   return (
-    //<PageAuthGuard auths={[Authorizations.admin]}>
-    <RegisterPartner />
-    //</PageAuthGuard>
+    <PageAuthGuard auths={[Authorizations.admin]}>
+      <RegisterPartner />
+    </PageAuthGuard>
   );
 };
 
