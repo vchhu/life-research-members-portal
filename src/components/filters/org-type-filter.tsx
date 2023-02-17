@@ -1,9 +1,7 @@
-// See https://ant.design/components/form/#components-form-demo-customized-form-controls
-
 import Select, { SelectProps } from "antd/lib/select";
 import { FC, useContext, useMemo } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import { MemberTypesCtx } from "../../services/context/member-types-ctx";
+import { OrgTypesCtx } from "../../services/context/org-types-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 
 type Props = {
@@ -13,26 +11,29 @@ type Props = {
   getPopupContainer?: SelectProps["getPopupContainer"];
 };
 
-const MemberTypeFilter: FC<Props> = ({
+const OrgTypeFilter: FC<Props> = ({
   id,
   value = new Set<number>(),
   onChange = () => {},
   getPopupContainer,
 }) => {
-  const { memberTypes } = useContext(MemberTypesCtx);
+  const { orgTypes } = useContext(OrgTypesCtx);
   const { en } = useContext(LanguageCtx);
 
   const valueArray = useMemo(() => Array.from(value.values()), [value]);
 
   const options = useMemo(
     () => [
-      { label: en ? "Empty" : "Vide", value: 0 },
-      ...memberTypes.map((t) => ({
+      {
+        label: en ? "Empty" : "Vide",
+        value: 0,
+      },
+      ...orgTypes.map((t) => ({
         label: <GetLanguage obj={t} />,
         value: t.id,
       })),
     ],
-    [en, memberTypes]
+    [en, orgTypes]
   );
 
   function onSelect(id: number) {
@@ -48,7 +49,7 @@ const MemberTypeFilter: FC<Props> = ({
   return (
     <Select
       id={id}
-      className="member-type-filter"
+      className="organization-type-filter"
       value={valueArray}
       mode="multiple"
       options={options}
@@ -62,4 +63,4 @@ const MemberTypeFilter: FC<Props> = ({
   );
 };
 
-export default MemberTypeFilter;
+export default OrgTypeFilter;

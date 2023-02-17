@@ -6,7 +6,6 @@ import registerAccount from "../services/register-account";
 import Checkbox from "antd/lib/checkbox/Checkbox";
 import { useForm } from "antd/lib/form/Form";
 import { LanguageCtx } from "../services/context/language-ctx";
-
 type Data = {
   login_email: string;
   confirm_email: string;

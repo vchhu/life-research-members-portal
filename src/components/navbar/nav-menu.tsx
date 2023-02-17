@@ -19,7 +19,7 @@ const NavMenu: FC = () => {
     { label: en ? "Members" : "Membres", href: PageRoutes.allMembers },
     {
       label: en ? "Partners" : "Partenairs",
-      href: PageRoutes.partners,
+      href: PageRoutes.allPartners,
     },
     { label: en ? "Products" : "Produits", href: PageRoutes.products },
   ];

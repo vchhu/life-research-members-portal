@@ -1,37 +1,35 @@
 import {
   createContext,
   FC,
-  PropsWithChildren,
   useEffect,
   useState,
+  PropsWithChildren,
 } from "react";
 import ApiRoutes from "../../routing/api-routes";
 import Notification from "../notifications/notification";
-import type { MemberPublicInfo } from "../_types";
+import type { PartnerPublicInfo } from "../_types";
 
-export const AllMembersCtx = createContext<{
-  allMembers: MemberPublicInfo[];
+export const AllPartnersCtx = createContext<{
+  allPartners: PartnerPublicInfo[];
   loading: boolean;
   refreshing: boolean;
   refresh: () => void;
 }>(null as any);
 
-export const AllMembersCtxProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [allMembers, setAllMembers] = useState<MemberPublicInfo[]>([]);
+export const AllPartnersCtxProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [allPartners, setAllPartners] = useState<PartnerPublicInfo[]>([]);
   const [loading, setLoading] = useState(true); // true so loading icons are served from server
   const [refreshing, setRefreshing] = useState(false);
-  //console.log(allMembers);
-  async function fetchAllMembers() {
-    try {
-      const result = await fetch(ApiRoutes.allMembers);
-      if (!result.ok) throw await result.text();
-      let members: MemberPublicInfo[] = await result.json();
+  //console.log(AllPartners);
 
-      members = members.filter((m) => m.is_active);
-      members.sort((a, b) =>
-        a.account.first_name.localeCompare(b.account.first_name)
-      );
-      setAllMembers(members);
+  async function fetchAllPartners() {
+    try {
+      const result = await fetch(ApiRoutes.allPartners);
+      if (!result.ok) throw await result.text();
+      let organization: PartnerPublicInfo[] = await result.json();
+
+      organization.sort((a, b) => a.name_en!.localeCompare(b.name_en!));
+      setAllPartners(organization);
     } catch (e: any) {
       new Notification().error(e);
     }
@@ -39,7 +37,7 @@ export const AllMembersCtxProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     async function firstLoad() {
-      await fetchAllMembers();
+      await fetchAllPartners();
       setLoading(false);
     }
     firstLoad();
@@ -50,16 +48,16 @@ export const AllMembersCtxProvider: FC<PropsWithChildren> = ({ children }) => {
     const notification = new Notification("bottom-right");
     setRefreshing(true);
     notification.loading("Refreshing...");
-    await fetchAllMembers();
+    await fetchAllPartners();
     setRefreshing(false);
     notification.close();
   }
 
   return (
-    <AllMembersCtx.Provider
-      value={{ allMembers, loading, refresh, refreshing }}
+    <AllPartnersCtx.Provider
+      value={{ allPartners, loading, refresh, refreshing }}
     >
       {children}
-    </AllMembersCtx.Provider>
+    </AllPartnersCtx.Provider>
   );
 };

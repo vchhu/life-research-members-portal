@@ -1,189 +1,350 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
-import type { FC } from "react";
-import { LanguageCtx } from "../../services/context/language-ctx";
-import { useContext } from "react";
-import { Button, Checkbox, Select, Table } from "antd";
+import Button from "antd/lib/button";
+import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
+import {
+  FC,
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { LanguageCtx } from "../../services/context/language-ctx";
+import type { PartnerPublicInfo } from "../../services/_types";
+import PageRoutes from "../../routing/page-routes";
+import { AllPartnersCtx } from "../../services/context/all-partners-ctx";
+import GetLanguage from "../../utils/front-end/get-language";
+import Descriptions from "antd/lib/descriptions";
+import Item from "antd/lib/descriptions/Item";
+import SafeLink from "../link/safe-link";
+import Router, { useRouter } from "next/router";
 import Form from "antd/lib/form";
+import blurActiveElement from "../../utils/front-end/blur-active-element";
+import { Checkbox } from "antd";
+import OrgTypeFilter from "../filters/org-type-filter";
+import OrgScopeFilter from "../filters/org-scope-filter";
+import OrgNameFilter from "../filters/org-name-filter";
+import type { ParsedUrlQueryInput } from "querystring";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
+
+function nameSorter(a: { name_en: string }, b: { name_en: string }) {
+  return a.name_en.localeCompare(b.name_en);
+}
+function getName(organization: PartnerPublicInfo) {
+  return organization.name_en || "";
+}
+
+function filterFn(
+  m: PartnerPublicInfo & { name: string },
+  filters: {
+    nameFilter: Set<number>;
+    typeFilter: Set<number>;
+    scopeFilter: Set<number>;
+  }
+): boolean {
+  const { nameFilter, typeFilter, scopeFilter } = filters;
+  if (nameFilter.size > 0 && !nameFilter.has(m.id)) return false;
+  if (typeFilter.size > 0) {
+    if (!m.org_type && !typeFilter.has(0)) return false; // id 0 is for null
+    if (m.org_type && !typeFilter.has(m.org_type.id)) return false;
+  }
+  if (scopeFilter.size > 0) {
+    if (!m.org_scope && !scopeFilter.has(0)) return false; // id 0 is for null
+    if (m.org_scope && !scopeFilter.has(m.org_scope.id)) return false;
+  }
+
+  return true;
+}
+
+// Use query params for filters - for bookmarking, back button etc.
+export const queryKeys = {
+  showType: "showType",
+  showScope: "showScope",
+  type: "type",
+  scope: "scope",
+  orgIds: "orgIds",
+} as const;
+
+// Don't want to change url if query is default value
+const defaultQueries = {
+  showType: true,
+  showScope: true,
+} as const;
+
+function handleNameFilterChange(next: Set<number>) {
+  Router.push(
+    {
+      query: {
+        ...Router.query,
+        [queryKeys.orgIds]: Array.from(next.keys()),
+      },
+    },
+    undefined,
+    { scroll: false }
+  );
+}
+
+function handleTypeFilterChange(next: Set<number>) {
+  Router.push(
+    {
+      query: {
+        ...Router.query,
+        [queryKeys.type]: Array.from(next.keys()),
+      },
+    },
+    undefined,
+    { scroll: false }
+  );
+}
+
+function handleScopeFilterChange(next: Set<number>) {
+  Router.push(
+    {
+      query: {
+        ...Router.query,
+        [queryKeys.scope]: Array.from(next.keys()),
+      },
+    },
+    undefined,
+    { scroll: false }
+  );
+}
+
+function handleShowScopeChange(value: boolean) {
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showScope]: value,
+  };
+  if (value === defaultQueries.showScope) delete query[queryKeys.showScope];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
+function handleShowTypeChange(value: boolean) {
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showType]: value,
+  };
+  if (value === defaultQueries.showType) delete query[queryKeys.showType];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
+function clearQueries() {
+  Router.push({ query: null }, undefined, { scroll: false });
+}
+
+function getIdsFromQueryParams(key: string): Set<number> {
+  const res = new Set<number>();
+  const query = Router.query[key];
+  if (!query) return res;
+  if (typeof query === "string") {
+    const id = parseInt(query);
+    if (!isNaN(id)) res.add(id);
+  } else {
+    for (const keyword of query) {
+      const id = parseInt(keyword);
+      if (!isNaN(id)) res.add(id);
+    }
+  }
+  return res;
+}
+
+function getPopupContainer(): HTMLElement {
+  return (
+    document.querySelector(".all-organizations-table .filters") || document.body
+  );
+}
 
 const AllPartners: FC = () => {
   const { en } = useContext(LanguageCtx);
-  const router = useRouter();
-  const { localAccount, loading } = useContext(ActiveAccountCtx);
+
+  const {
+    allPartners,
+    loading,
+    refresh: refreshOrganizations,
+  } = useContext(AllPartnersCtx);
+
+  const { localAccount } = useContext(ActiveAccountCtx);
 
   const handleRegisterPartner = () => {
     router.push("partners/register");
   };
 
-  //##################   SIMPLE DATA TO REPLACE  #######################/
+  useEffect(() => {
+    refreshOrganizations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const [filterByName, setFilterByName] = useState("");
-  const [filterByScope, setFilterByScope] = useState("");
-  const [filterByType, setFilterByType] = useState("");
+  const [showType, setShowType] = useState<boolean>(defaultQueries.showType);
+  const [showScope, setShowScope] = useState<boolean>(defaultQueries.showScope);
 
-  const handleFilterByNameChange = (value: string) => {
-    setFilterByName(value);
-  };
+  const [nameFilter, setNameFilter] = useState(new Set<number>());
+  const [typeFilter, setTypeFilter] = useState(new Set<number>());
+  const [scopeFilter, setScopeFilter] = useState(new Set<number>());
 
-  const handleFilterByScopeChange = (value: string) => {
-    setFilterByScope(value);
-  };
+  const router = useRouter();
+  const showTypeQuery = router.query[queryKeys.showType];
+  const showScopeQuery = router.query[queryKeys.showScope];
+  const typeQuery = router.query[queryKeys.type];
+  const scopeQuery = router.query[queryKeys.scope];
+  const nameIdsQuery = router.query[queryKeys.orgIds];
 
-  const handleFilterByTypeChange = (value: string) => {
-    setFilterByType(value);
-  };
+  useEffect(() => {
+    if (!showTypeQuery) setShowType(defaultQueries.showType);
+    if (showTypeQuery === "true") setShowType(true);
+    if (showTypeQuery === "false") setShowType(false);
+  }, [showTypeQuery]);
 
-  const nameOptions = [
-    { value: "partner1", label: "Partner 1" },
-    { value: "partner2", label: "Partner 2" },
-    { value: "partner3", label: "Partner 3" },
-  ];
+  useEffect(() => {
+    if (!showScopeQuery) setShowScope(defaultQueries.showScope);
+    if (showScopeQuery === "true") setShowScope(true);
+    if (showScopeQuery === "false") setShowScope(false);
+  }, [showScopeQuery]);
 
-  const scopeOptions = [
-    { value: "scope1", label: "Scope 1" },
-    { value: "scope2", label: "Scope 2" },
-    { value: "scope3", label: "Scope 3" },
-  ];
+  useEffect(() => {
+    setNameFilter(getIdsFromQueryParams(queryKeys.orgIds));
+  }, [nameIdsQuery]);
 
-  const typeOptions = [
-    { value: "type1", label: "Type 1" },
-    { value: "type2", label: "Type 2" },
-    { value: "type3", label: "Type 3" },
-  ];
+  useEffect(() => {
+    setTypeFilter(getIdsFromQueryParams(queryKeys.type));
+  }, [typeQuery]);
 
-  const columns = [
-    {
-      title: en ? "Organization Name" : "Nom de l'organisation",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: en ? "Scope" : "Étendue",
-      dataIndex: "scope",
-      key: "scope",
-    },
-    {
-      title: en ? "Type" : "Type",
-      dataIndex: "type",
-      key: "type",
-    },
-    {
-      title: en ? "Affiliate members" : "Membres affiliés",
-      dataIndex: "members",
-      key: "members",
-    },
-  ];
+  useEffect(() => {
+    setScopeFilter(getIdsFromQueryParams(queryKeys.scope));
+  }, [scopeQuery]);
 
-  const partnership = [
-    {
-      key: "1",
-      name: "Global Tech Inc.",
-      scope: en ? "International" : "International",
-      type: en ? "NGO" : "ONG",
-      members:
-        "Rachel Davis, Joshua Anderson, Sarah Wilson, Nicholas Thompson, Anthony Martinez   ",
-    },
-    {
-      key: "2",
-      name: "Green Energy Solutions LLC",
-      scope: en ? "Provincial" : "Provincial",
-      type: en ? "Industry" : "Industrie",
-      members:
-        "Jenna Smith, Michael Johnson, Emily Brown, David Garcia, Rebecca Perez",
-    },
-    {
-      key: "3",
-      name: "Infinite Ideas Inc.",
-      scope: en ? "National" : "National",
-      type: en ? "Other" : "Autre",
-      members:
-        "Amanda Perez, Matthew Taylor, James Rodriguez, Benjamin Baker, Jennifer White",
-    },
-  ];
+  function refreshAndClearFilters() {
+    clearQueries();
+    refreshOrganizations();
+  }
 
-  const [expandedRows, setExpandedRows] = useState<string[]>([]);
-
-  const handleExpand = (isExpanded: boolean, record: any) => {
-    if (isExpanded) {
-      setExpandedRows([...expandedRows, record.key]);
-    } else {
-      setExpandedRows(expandedRows.filter((key) => key !== record.key));
-    }
-  };
-
-  const expandedRowRender = (record: any) => (
-    <p style={{ margin: 0 }}>
-      {record.name === "Global Tech Inc."
-        ? en
-          ? "Global Tech Inc. is a leading technology company that specializes in software development and IT solutions."
-          : "Global Tech Inc. est une entreprise de technologie de premier plan spécialisée dans le développement de logiciels et les solutions informatiques."
-        : record.name === "Green Energy Solutions LLC"
-        ? en
-          ? "Green Energy Solutions LLC is a renewable energy company that provides sustainable energy solutions to businesses and individuals."
-          : "Green Energy Solutions LLC est une entreprise d'énergie renouvelable qui fournit des solutions énergétiques durables aux entreprises et aux particuliers."
-        : record.name === "Infinite Ideas Inc."
-        ? en
-          ? "Infinite Ideas Inc. is an innovation and design consulting firm that helps businesses and organizations bring new ideas to life."
-          : "Infinite Ideas Inc. est une société de conseil en innovation et design qui aide les entreprises et les organisations à donner vie à de nouvelles idées."
-        : ""}
-    </p>
+  const filteredOrganisation = useMemo(
+    () =>
+      allPartners
+        .map((m) => ({ ...m, key: m.id, name: getName(m) }))
+        .filter((m) =>
+          filterFn(m, {
+            nameFilter,
+            typeFilter,
+            scopeFilter,
+          })
+        ),
+    [allPartners, typeFilter, scopeFilter, nameFilter]
   );
 
-  //##################   SIMPLE DATA END HERE #######################/
+  type OrganizationColumnType = ColumnType<typeof filteredOrganisation[number]>;
+
+  const nameColumn: OrganizationColumnType = useMemo(
+    () => ({
+      title: en ? "Name" : "Nom",
+      dataIndex: "name",
+      className: "name-column",
+      sorter: nameSorter,
+      render: (value, organization) => (
+        <SafeLink href={PageRoutes.organizationProfile(organization.id)}>
+          {value}
+        </SafeLink>
+      ),
+    }),
+    [en]
+  );
+
+  const typeColumn: OrganizationColumnType = useMemo(
+    () => ({
+      title: en ? "Organization Type" : "Type d'organisation",
+      dataIndex: ["type", en ? "name_en" : "name_fr"],
+      className: "type-column",
+      sorter: en
+        ? (a, b) =>
+            (a.org_type?.name_en || "").localeCompare(b.org_type?.name_en || "")
+        : (a, b) =>
+            (a.org_type?.name_fr || "").localeCompare(
+              b.org_type?.name_fr || ""
+            ),
+    }),
+    [en]
+  );
+
+  const scopeColumn: OrganizationColumnType = useMemo(
+    () => ({
+      title: en ? "Organization Scope" : "Champ d'activité",
+      dataIndex: ["scope", en ? "name_en" : "name_fr"],
+      className: "scope-column",
+      sorter: en
+        ? (a, b) =>
+            (a.org_scope?.name_en || "").localeCompare(
+              b.org_scope?.name_en || ""
+            )
+        : (a, b) =>
+            (a.org_scope?.name_fr || "").localeCompare(
+              b.org_scope?.name_fr || ""
+            ),
+    }),
+    [en]
+  );
+
+  const columns: OrganizationColumnType[] = [nameColumn];
+  if (showType) columns.push(typeColumn);
+  if (showScope) columns.push(scopeColumn);
 
   const filters = (
-    <Form className="filters" labelAlign="left" size="small">
+    <Form
+      onFinish={blurActiveElement}
+      className="filters"
+      labelAlign="left"
+      size="small"
+    >
       <Form.Item
         label={en ? "Filter by name" : "Filtrer par nom"}
         htmlFor="name-filter"
       >
-        <Select
-          className="name-filter"
+        <OrgNameFilter
           id="name-filter"
-          value={filterByName}
-          onChange={handleFilterByNameChange}
-          options={nameOptions}
-        />
-      </Form.Item>
-      <Form.Item
-        label={en ? "Filter by scope" : "Filtrer par étendue"}
-        htmlFor="faculty-filter"
-      >
-        <Select
-          className="name-filter"
-          id="scope-filter"
-          value={filterByScope}
-          onChange={handleFilterByScopeChange}
-          options={scopeOptions}
+          value={nameFilter}
+          onChange={handleNameFilterChange}
+          getPopupContainer={getPopupContainer}
         />
       </Form.Item>
       <Form.Item
         label={en ? "Filter by type" : "Filtrer par type"}
-        htmlFor="member-type-filter"
+        htmlFor="type-filter"
       >
-        <Select
-          className="name-filter"
+        <OrgTypeFilter
           id="type-filter"
-          value={filterByType}
-          onChange={handleFilterByTypeChange}
-          options={typeOptions}
+          value={typeFilter}
+          onChange={handleTypeFilterChange}
+          getPopupContainer={getPopupContainer}
         />
       </Form.Item>
 
+      <Form.Item
+        label={en ? "Filter by scope" : "Filtrer par champ d'activité"}
+        htmlFor="scope-filter"
+      >
+        <OrgScopeFilter
+          id="scope-filter"
+          value={scopeFilter}
+          onChange={handleScopeFilterChange}
+          getPopupContainer={getPopupContainer}
+        />
+      </Form.Item>
       <label htmlFor="show-column-checkboxes">
         {en ? "Show Columns:" : "Afficher les colonnes:"}
       </label>
+
       <span className="show-column-checkboxes" id="show-column-checkboxes">
-        <Checkbox defaultChecked>
-          {en ? "Show affiliate members" : "Afficher les membres affiliés"}
+        <Checkbox
+          checked={showType}
+          onChange={(e) => handleShowTypeChange(e.target.checked)}
+        >
+          {en ? "Show Organization Type" : "Afficher le type"}
         </Checkbox>
-        <Checkbox defaultChecked>
-          {en ? "Show scope" : "Afficher les membres affiliés"}
-        </Checkbox>
-        <Checkbox defaultChecked>
-          {en ? "Show type" : "Afficher les membres affiliés"}
+
+        <Checkbox
+          checked={showScope}
+          onChange={(e) => handleShowScopeChange(e.target.checked)}
+        >
+          {en ? "Show Organization Scope" : "Afficher le champ d'activité"}
         </Checkbox>
       </span>
     </Form>
@@ -192,30 +353,40 @@ const AllPartners: FC = () => {
   const Header = () => (
     <>
       <div className="header-title-row">
-        <Title level={1}>{en ? "All Partners" : "Tous les partenairs"}</Title>
-        <Button type="primary" size="large">
+        <Title level={1}>{en ? "All Partners" : "Tous les partenaires"}</Title>
+        <Button type="primary" onClick={refreshAndClearFilters} size="large">
           {en ? "Reset the filter" : "Réinitialiser le filtre"}
         </Button>{" "}
-        <Button
-          type="primary"
-          size="large"
-          onClick={() => handleRegisterPartner()}
-        >
-          {en ? "Add a new partner" : "Ajouter un nouveau partenair"}
-        </Button>
+        {localAccount && localAccount.is_admin && (
+          <Button
+            type="primary"
+            size="large"
+            onClick={() => handleRegisterPartner()}
+          >
+            {en ? "Add a new partner" : "Ajouter un nouveau partenair"}
+          </Button>
+        )}
       </div>
       {filters}
     </>
   );
 
+  const expandedRowRender = (organization: PartnerPublicInfo) => (
+    <Descriptions size="small" layout="vertical" className="problems-container">
+      <Item label={en ? "Partner Description" : "Description du partenaire"}>
+        {organization.description}
+      </Item>
+    </Descriptions>
+  );
+
   return (
     <Table
-      className="all-partnerships-table"
+      className="all-partners-table"
       size="small"
       tableLayout="auto"
       columns={columns}
-      dataSource={partnership}
-      // loading={loading}
+      dataSource={filteredOrganisation}
+      loading={loading}
       title={Header}
       pagination={false}
       showSorterTooltip={false}
@@ -224,9 +395,12 @@ const AllPartners: FC = () => {
       rowClassName={(_, index) =>
         "table-row " + (index % 2 === 0 ? "even" : "odd")
       }
-      expandedRowRender={expandedRowRender}
-      onExpand={handleExpand}
-      expandedRowKeys={expandedRows}
+      expandable={{
+        expandedRowRender,
+        expandedRowClassName: (_, index) =>
+          "expanded-table-row " + (index % 2 === 0 ? "even" : "odd"),
+        rowExpandable: (m) => !!m.description && m.description.length > 0,
+      }}
     />
   );
 };

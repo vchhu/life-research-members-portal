@@ -196,7 +196,7 @@ const AllProducts: FC = () => {
 
   return (
     <Table
-      className="all-partnerships-table"
+      className="all-members-table"
       size="small"
       tableLayout="auto"
       columns={columns}

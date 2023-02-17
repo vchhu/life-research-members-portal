@@ -5,12 +5,21 @@ import type {
   keyword,
   org_type,
   org_scope,
+  organization,
 } from "@prisma/client";
 import { FC, useContext } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 
 const GetLanguage: FC<{
-  obj: problem | faculty | member_type | org_type | org_scope | keyword | null;
+  obj:
+    | problem
+    | faculty
+    | member_type
+    | org_type
+    | org_scope
+    | keyword
+    | organization
+    | null;
 }> = ({ obj }) => {
   const { en } = useContext(LanguageCtx);
   if (!obj) return <></>;

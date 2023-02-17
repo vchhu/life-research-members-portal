@@ -3,6 +3,7 @@ import { ActiveAccountCtxProvider } from "./active-account-ctx";
 import { AllAccountsCtxProvider } from "./all-accounts-ctx";
 import { AllKeywordsCtxProvider } from "./all-keywords-ctx";
 import { AllMembersCtxProvider } from "./all-members-ctx";
+import { AllPartnersCtxProvider } from "./all-partners-ctx";
 import { FacultiesCtxProvider } from "./faculties-ctx";
 import { LanguageCtxProvider } from "./language-ctx";
 import { MemberTypesCtxProvider } from "./member-types-ctx";
@@ -20,6 +21,7 @@ const AllContextProviders: FC<PropsWithChildren> = [
   AllKeywordsCtxProvider,
   AllAccountsCtxProvider,
   AllMembersCtxProvider,
+  AllPartnersCtxProvider,
   OrgTypesCtxProvider,
   OrgScopeCtxProvider,
 ].reduceRight((Accumulator, Parent) => {

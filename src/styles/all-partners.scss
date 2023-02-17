@@ -1,4 +1,4 @@
-.all-partnerships-table {
+.all-partners-table {
   // Make new stacking context so popups go under navbar
   position: relative;
   z-index: 0;
@@ -38,7 +38,7 @@
 
     > label,
     .ant-form-item label {
-      width: 9.7rem;
+      width: 12.7rem;
     }
 
     .name-filter,
@@ -96,7 +96,7 @@
   }
 
   .name-column,
-  .affiliate-column {
+  .type-column, .scope-column {
     min-width: 120px;
     max-width: 12vw;
     overflow: hidden;

@@ -12,7 +12,7 @@
     "@ant-design/colors": "~6.0.0",
     "@ant-design/icons": "~4.7.0",
     "@azure/msal-react": "~1.4.6",
-    "@prisma/client": "^4.10.0",
+    "@prisma/client": "^4.10.1",
     "antd": "~4.23.6",
     "moment": "~2.29.4",
     "next": "12.3.1",

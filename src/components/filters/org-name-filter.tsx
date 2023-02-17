@@ -2,9 +2,13 @@
 
 import Select, { SelectProps } from "antd/lib/select";
 import { FC, useContext, useMemo } from "react";
-import { LanguageCtx } from "../../services/context/language-ctx";
-import { MemberTypesCtx } from "../../services/context/member-types-ctx";
-import GetLanguage from "../../utils/front-end/get-language";
+import { AllPartnersCtx } from "../../services/context/all-partners-ctx";
+import type { PartnerPublicInfo } from "../../services/_types";
+import fuzzyIncludes from "../../utils/front-end/fuzzy-includes";
+
+function getName(organization: PartnerPublicInfo) {
+  return organization.name_en;
+}
 
 type Props = {
   id?: string;
@@ -13,26 +17,19 @@ type Props = {
   getPopupContainer?: SelectProps["getPopupContainer"];
 };
 
-const MemberTypeFilter: FC<Props> = ({
+const OrgNameFilter: FC<Props> = ({
   id,
   value = new Set<number>(),
   onChange = () => {},
   getPopupContainer,
 }) => {
-  const { memberTypes } = useContext(MemberTypesCtx);
-  const { en } = useContext(LanguageCtx);
+  const { allPartners } = useContext(AllPartnersCtx);
 
   const valueArray = useMemo(() => Array.from(value.values()), [value]);
 
   const options = useMemo(
-    () => [
-      { label: en ? "Empty" : "Vide", value: 0 },
-      ...memberTypes.map((t) => ({
-        label: <GetLanguage obj={t} />,
-        value: t.id,
-      })),
-    ],
-    [en, memberTypes]
+    () => allPartners.map((m) => ({ label: getName(m), value: m.id })),
+    [allPartners]
   );
 
   function onSelect(id: number) {
@@ -45,16 +42,20 @@ const MemberTypeFilter: FC<Props> = ({
     onChange(value);
   }
 
+  /* function filterOption(input: string, option?: typeof options[number]): boolean {
+    if (!option) return false;
+    return fuzzyIncludes(option.label, input);
+  }
+ */
   return (
     <Select
       id={id}
-      className="member-type-filter"
+      className="name-filter"
       value={valueArray}
+      //filterOption={filterOption}
       mode="multiple"
       options={options}
       allowClear
-      showSearch={false}
-      showArrow
       onSelect={onSelect}
       onDeselect={onDelete}
       getPopupContainer={getPopupContainer}
@@ -62,4 +63,4 @@ const MemberTypeFilter: FC<Props> = ({
   );
 };
 
-export default MemberTypeFilter;
+export default OrgNameFilter;
