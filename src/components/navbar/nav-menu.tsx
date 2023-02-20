@@ -18,7 +18,7 @@ const NavMenu: FC = () => {
   const generalItems = [
     { label: en ? "Members" : "Membres", href: PageRoutes.allMembers },
     {
-      label: en ? "Partners" : "Partenairs",
+      label: en ? "Partners" : "Partenaires",
       href: PageRoutes.allPartners,
     },
     { label: en ? "Products" : "Produits", href: PageRoutes.products },
@@ -26,7 +26,7 @@ const NavMenu: FC = () => {
 
   // Registered Acounts
   const registeredItems = [
-    { label: en ? "My Profile" : "Mon Profil", href: PageRoutes.myProfile },
+    { label: en ? "My Profile" : "Mon profil", href: PageRoutes.myProfile },
   ];
 
   // Admins

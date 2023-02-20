@@ -19,14 +19,14 @@ function frSorter(a: organization, b: organization) {
   return a.name_fr!.localeCompare(b.name_fr!);
 }
 
-export const OrganizationCtx = createContext<{
-  organizations: organization[];
+export const PartnerNameCtx = createContext<{
+  partnername: organization[];
   refresh: () => void;
 }>(null as any);
 
-async function fetchAllOrganizations(): Promise<organization[]> {
+async function fetchAllPartnerName(): Promise<organization[]> {
   try {
-    const res = await fetch(ApiRoutes.allOrganizations);
+    const res = await fetch(ApiRoutes.allPartners);
     if (!res.ok) throw await res.text();
     return await res.json();
   } catch (e: any) {
@@ -35,34 +35,32 @@ async function fetchAllOrganizations(): Promise<organization[]> {
   }
 }
 
-export const OrganizationCtxProvider: FC<PropsWithChildren> = ({
-  children,
-}) => {
-  const [organizations, setOrganizations] = useState<organization[]>([]);
+export const PartnerNameCtxProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [partnername, setPartnerName] = useState<organization[]>([]);
   const { en } = useContext(LanguageCtx);
 
-  async function getOrganizations() {
-    setOrganizations(
-      (await fetchAllOrganizations()).sort(en ? enSorter : frSorter)
+  async function getPartnerName() {
+    setPartnerName(
+      (await fetchAllPartnerName()).sort(en ? enSorter : frSorter)
     );
   }
 
   useEffect(() => {
-    getOrganizations();
+    getPartnerName();
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    setOrganizations((prev) => [...prev].sort(en ? enSorter : frSorter));
+    setPartnerName((prev) => [...prev].sort(en ? enSorter : frSorter));
   }, [en]);
 
   function refresh() {
-    getOrganizations();
+    getPartnerName();
   }
 
   return (
-    <OrganizationCtx.Provider value={{ organizations, refresh }}>
+    <PartnerNameCtx.Provider value={{ partnername, refresh }}>
       {children}
-    </OrganizationCtx.Provider>
+    </PartnerNameCtx.Provider>
   );
 };

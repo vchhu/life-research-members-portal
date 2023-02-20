@@ -18,6 +18,7 @@ import GetLanguage from "../../utils/front-end/get-language";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import SafeLink from "../link/safe-link";
+
 import Router, { useRouter } from "next/router";
 import Form from "antd/lib/form";
 import blurActiveElement from "../../utils/front-end/blur-active-element";
@@ -25,6 +26,7 @@ import { Checkbox } from "antd";
 import OrgTypeFilter from "../filters/org-type-filter";
 import OrgScopeFilter from "../filters/org-scope-filter";
 import OrgNameFilter from "../filters/org-name-filter";
+import PartnerNameFilter from "../filters/partner-name-filter";
 import type { ParsedUrlQueryInput } from "querystring";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 
@@ -45,6 +47,7 @@ function filterFn(
 ): boolean {
   const { nameFilter, typeFilter, scopeFilter } = filters;
   if (nameFilter.size > 0 && !nameFilter.has(m.id)) return false;
+
   if (typeFilter.size > 0) {
     if (!m.org_type && !typeFilter.has(0)) return false; // id 0 is for null
     if (m.org_type && !typeFilter.has(m.org_type.id)) return false;
