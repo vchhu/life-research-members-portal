@@ -366,7 +366,7 @@ const AllPartners: FC = () => {
             size="large"
             onClick={() => handleRegisterPartner()}
           >
-            {en ? "Add a new partner" : "Ajouter un nouveau partenair"}
+            {en ? "Add a new partner" : "Ajouter un nouveau partenaire"}
           </Button>
         )}
       </div>
@@ -376,9 +376,7 @@ const AllPartners: FC = () => {
 
   const expandedRowRender = (organization: PartnerPublicInfo) => (
     <Descriptions size="small" layout="vertical" className="problems-container">
-      <Item label={en ? "Partner Description" : "Description du partenaire"}>
-        {organization.description}
-      </Item>
+      <Item label={en ? "About" : "À propos"}>{organization.description}</Item>
     </Descriptions>
   );
 

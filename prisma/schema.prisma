@@ -195,13 +195,13 @@ model org_type {
 
 model organization {
   id                     Int                      @id(map: "PK_organization") @default(autoincrement())
-  name_en                String?                  @db.NVarChar(255)
-  name_fr                String?                  @db.NVarChar(255)
-  scope_id               Int?
-  type_id                Int?
+  name_en                String                   @db.NVarChar(255)
+  name_fr                String                   @db.NVarChar(255)
+  scope_id               Int
+  type_id                Int
   description            String?                  @db.NVarChar(4000)
-  org_scope              org_scope?               @relation(fields: [scope_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_organization_scope_id")
-  org_type               org_type?                @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_organization_type_id")
+  org_scope              org_scope                @relation(fields: [scope_id], references: [id], onUpdate: NoAction, map: "FK_organization_scope_id")
+  org_type               org_type                 @relation(fields: [type_id], references: [id], onUpdate: NoAction, map: "FK_organization_type_id")
   partnership_member_org partnership_member_org[]
   product_partnership    product_partnership[]
 }
