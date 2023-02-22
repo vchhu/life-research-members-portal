@@ -1,7 +1,7 @@
 import type { NextPage } from "next/types";
 import { useContext } from "react";
 
-import AllProducts from "../../components/products/allproducts";
+import AllProducts from "../../components/products/all-products";
 import { LanguageCtx } from "../../services/context/language-ctx";
 
 const Product: NextPage = () => {

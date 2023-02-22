@@ -3,6 +3,7 @@ const ApiRoutes = {
   allMembers: "/api/all-members",
   allAccounts: "/api/all-accounts",
   allPartners: "/api/all-partners",
+  allProducts: "/api/all-products",
   registerAccount: "/api/register-account",
   registerPartner: "/api/register-partner",
   activeAccount: "/api/active-account",
@@ -28,6 +29,8 @@ const ApiRoutes = {
   allMemberTypes: "/api/all-member-types",
   allOrgTypes: "/api/all-org-types",
   allOrgScopes: "/api/all-org-scopes",
+  allProductTypes: "/api/all-product-types",
+  allProductTitles: "/api/all-product-titles",
 } as const;
 
 export default ApiRoutes;

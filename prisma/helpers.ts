@@ -80,5 +80,43 @@ description: true,
 export const selectPublicPartnerInfo: CheckKeysAreValid<
 typeof _selectPublicPartnerInfo,
 Prisma.organizationSelect
+    > = _selectPublicPartnerInfo;
 
->= _selectPublicPartnerInfo;
+const _selectPublicProductInfo = {
+    id: true,
+    title_en: true,
+    title_fr: true,
+    note: true,
+    all_author: true,
+    doi:true,
+    product_type: true,
+    product_member_author: { select: { member: { select: { id: true, account: { select: { first_name: true, last_name: true } } } } } },
+    product_target: { include: { target: true } },
+    product_partnership: { include: { organization: true } },
+} as const;
+
+export const selectPublicProductInfo: CheckKeysAreValid<
+    typeof _selectPublicProductInfo,
+    Prisma.productSelect
+    > = _selectPublicProductInfo;
+
+    const _selectPrivateProductInfo = {
+        id: true,
+        title_en: true,
+        title_fr: true,
+        note: true,
+        all_author: true,
+        product_type: true,
+        doi: true,
+        on_going: true,
+        peer_reviewed: true,
+        product_member_author: { select: { member: { select: { id: true, account: { select: { first_name: true, last_name: true } } } } } },
+        product_target: { include: { target: true } },
+        product_partnership: { include: { organization: true } },
+        product_topic: { include: { topic: true } }
+    } as const;
+    
+    export const selectPrivateProductInfo: CheckKeysAreValid<
+        typeof _selectPublicProductInfo,
+        Prisma.productSelect
+        > = _selectPrivateProductInfo;

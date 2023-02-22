@@ -10,6 +10,9 @@ import { MemberTypesCtxProvider } from "./member-types-ctx";
 import { SaveChangesCtxProvider } from "./save-changes-ctx";
 import { OrgScopeCtxProvider } from "./org-scopes-ctx";
 import { OrgTypesCtxProvider } from "./org-types-ctx";
+import { ProductTitlesCtxProvider } from "./products-title-ctx";
+import { ProductTypesCtxProvider } from "./products-types-ctx";
+import { AllProductsCtxProvider } from "./all-products-ctx";
 
 // Bundles context providers, first element in array is the outer-most provider
 const AllContextProviders: FC<PropsWithChildren> = [
@@ -24,6 +27,9 @@ const AllContextProviders: FC<PropsWithChildren> = [
   AllPartnersCtxProvider,
   OrgTypesCtxProvider,
   OrgScopeCtxProvider,
+  ProductTypesCtxProvider,
+  ProductTitlesCtxProvider,
+  AllProductsCtxProvider,
 ].reduceRight((Accumulator, Parent) => {
   const Provider: FC<PropsWithChildren> = ({ children }) => (
     <Parent>

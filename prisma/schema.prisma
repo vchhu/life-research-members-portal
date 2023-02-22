@@ -19,10 +19,10 @@ model account {
 }
 
 model all_author {
-  id         Int      @id(map: "PK_all_author") @default(autoincrement())
-  first_name String?  @db.NVarChar(255)
-  last_name  String?  @db.NVarChar(255)
-  product    product?
+  id         Int       @id(map: "PK_all_author") @default(autoincrement())
+  first_name String?   @db.NVarChar(255)
+  last_name  String?   @db.NVarChar(255)
+  product    product[]
 }
 
 model current_promotion_strategy {
@@ -226,17 +226,17 @@ model problem {
 
 model product {
   id                    Int                     @id(map: "PK_product") @default(autoincrement())
-  title_en              String?                 @db.NVarChar(500)
-  title_fr              String?                 @db.NVarChar(500)
+  title_en              String                  @db.NVarChar(500)
+  title_fr              String                  @db.NVarChar(500)
   date                  DateTime?               @db.Date
   doi                   String?                 @db.NVarChar(100)
-  on_going              Boolean?
-  peer_reviewed         Boolean?
+  on_going              Boolean
+  peer_reviewed         Boolean
   all_author_id         Int?
   product_type_id       Int
   note                  String?                 @db.NVarChar(2000)
-  all_author            all_author              @relation(fields: [id], references: [id], onUpdate: NoAction, map: "FK_product_all_author")
-  product_type          product_type            @relation(fields: [id], references: [id], onUpdate: NoAction, map: "FK_product_product_type")
+  all_author            all_author?             @relation(fields: [all_author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_product_all_author")
+  product_type          product_type            @relation(fields: [product_type_id], references: [id], onUpdate: NoAction, map: "FK_product_product_type")
   product_member_author product_member_author[]
   product_partnership   product_partnership[]
   product_target        product_target[]
@@ -262,10 +262,10 @@ model product_partnership {
 }
 
 model product_target {
-  target_id          Int
-  product_id         Int
-  product            product            @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_target_product_id")
-  target_stakeholder target_stakeholder @relation(fields: [target_id], references: [id], onUpdate: NoAction, map: "FK_product_target_target_id")
+  target_id  Int
+  product_id Int
+  product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_target_product")
+  target     target  @relation(fields: [target_id], references: [id], onUpdate: NoAction, map: "FK_product_target_target_id")
 
   @@id([target_id, product_id], map: "PK_product_target")
 }
@@ -273,17 +273,17 @@ model product_target {
 model product_topic {
   topic_id   Int
   product_id Int
-  product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_product_id")
+  product    product @relation(fields: [topic_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_product_id")
   topic      topic   @relation(fields: [topic_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_topic_id")
 
   @@id([topic_id, product_id], map: "PK_product_topic")
 }
 
 model product_type {
-  id      Int      @id(map: "PK_product_type") @default(autoincrement())
-  name_en String   @db.NVarChar(200)
-  name_fr String   @db.NVarChar(200)
-  product product?
+  id      Int       @id(map: "PK_product_type") @default(autoincrement())
+  name_en String    @db.NVarChar(200)
+  name_fr String    @db.NVarChar(200)
+  product product[]
 }
 
 model promotion_strategy {
@@ -304,7 +304,7 @@ model sysdiagrams {
   @@unique([principal_id, name], map: "UK_principal_name")
 }
 
-model target_stakeholder {
+model target {
   id             Int              @id(map: "PK_target_stakeholder") @default(autoincrement())
   name_fr        String           @db.NVarChar(300)
   name_en        String           @db.NVarChar(300)

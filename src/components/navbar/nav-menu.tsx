@@ -3,11 +3,19 @@ import Menu from "antd/lib/menu";
 import type { MenuItemType } from "antd/lib/menu/hooks/useItems";
 import Spin from "antd/lib/spin";
 import { useRouter } from "next/router";
-import { FC, useContext } from "react";
+import {
+  FC,
+  JSXElementConstructor,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  useContext,
+} from "react";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import PageRoutes from "../../routing/page-routes";
 import SafeLink from "../link/safe-link";
+import type { UrlObject } from "url";
 
 const NavMenu: FC = () => {
   const { localAccount, loading } = useContext(ActiveAccountCtx);
@@ -17,10 +25,7 @@ const NavMenu: FC = () => {
   // Everyone
   const generalItems = [
     { label: en ? "Members" : "Membres", href: PageRoutes.allMembers },
-    {
-      label: en ? "Partners" : "Partenaires",
-      href: PageRoutes.allPartners,
-    },
+    { label: en ? "Partners" : "Partenaires", href: PageRoutes.allPartners },
     { label: en ? "Products" : "Produits", href: PageRoutes.products },
   ];
 
@@ -31,21 +36,54 @@ const NavMenu: FC = () => {
 
   // Admins
   const adminItems = [
-    { label: en ? "Accounts" : "Comptes", href: PageRoutes.allAccounts },
-    { label: en ? "Register" : "Enregistrer", href: PageRoutes.register },
+    {
+      label: en ? "Accounts" : "Comptes",
+      href: PageRoutes.allAccounts,
+      children: [
+        {
+          label: en ? "All Accounts" : "Tous les comptes",
+          href: PageRoutes.allAccounts,
+        },
+        { label: en ? "Register" : "Enregistrer", href: PageRoutes.register },
+      ],
+    },
   ];
 
-  const items: { label: string; href: string }[] = generalItems;
+  const items: { label: string; href: string; children?: any }[] = generalItems;
   if (!loading) {
     if (localAccount) for (const it of registeredItems) items.push(it);
     if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
   }
 
   const menuItems: MenuItemType[] = items.map((it) => {
-    return {
-      label: <SafeLink href={it.href}>{it.label}</SafeLink>,
-      key: it.label,
-    };
+    if (it.children) {
+      return {
+        label: it.label,
+        key: it.label,
+        children: it.children.map(
+          (child: {
+            href: string | UrlObject;
+            label:
+              | string
+              | number
+              | boolean
+              | ReactElement<any, string | JSXElementConstructor<any>>
+              | ReactFragment
+              | ReactPortal
+              | null
+              | undefined;
+          }) => ({
+            label: <SafeLink href={child.href}>{child.label}</SafeLink>,
+            key: child.label,
+          })
+        ),
+      };
+    } else {
+      return {
+        label: <SafeLink href={it.href}>{it.label}</SafeLink>,
+        key: it.label,
+      };
+    }
   });
 
   if (loading) menuItems.push({ label: <Spin />, key: "loading" });
