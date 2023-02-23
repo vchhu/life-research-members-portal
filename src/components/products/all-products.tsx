@@ -28,20 +28,12 @@ import ProductAuthorFilter from "../filters/product-author-filter";
 import type { ParsedUrlQueryInput } from "querystring";
 import { AllProductsCtx } from "../../services/context/all-products-ctx";
 
-function nameSorter(a: { name: string }, b: { name: string }) {
-  return a.name.localeCompare(b.name);
-}
-
-function getEnTitle(title: ProductPublicInfo) {
-  return title.title_en;
-}
-
-function getFrTitle(title: ProductPublicInfo) {
-  return title.title_fr;
+function getTitle(product: ProductPublicInfo, en: boolean) {
+  return en ? product.title_en : product.title_fr;
 }
 
 function filterFn(
-  m: ProductPublicInfo & { name: string },
+  m: ProductPublicInfo & { product: string },
   filters: {
     productTitleFilter: Set<number>;
     productAuthorFilter: Set<number>;
@@ -50,7 +42,11 @@ function filterFn(
 ): boolean {
   const { productTitleFilter, productAuthorFilter, productTypesFilter } =
     filters;
-  if (productTitleFilter.size > 0 && !productAuthorFilter.has(m.id))
+
+  if (productTitleFilter.size > 0 && !productTitleFilter.has(m.id))
+    return false;
+
+  if (productAuthorFilter.size > 0 && !productAuthorFilter.has(m.id))
     return false;
 
   if (productTypesFilter.size > 0) {
@@ -64,7 +60,6 @@ function filterFn(
 
 // Use query params for filters - for bookmarking, back button etc.
 export const queryKeys = {
-  showAffiliateMember: "showAffiliateMember",
   showType: "showType",
   showAuthor: "showAuthor",
   productTitle: "productTitle",
@@ -78,16 +73,6 @@ const defaultQueries = {
   showType: true,
   showAuthor: false,
 } as const;
-
-function handleShowAffiliateMemberChange(value: boolean) {
-  const query: ParsedUrlQueryInput = {
-    ...Router.query,
-    [queryKeys.showAffiliateMember]: value,
-  };
-  if (value === defaultQueries.showAffiliateMember)
-    delete query[queryKeys.showAffiliateMember];
-  Router.push({ query }, undefined, { scroll: false });
-}
 
 function handleShowAuthorChange(value: boolean) {
   const query: ParsedUrlQueryInput = {
@@ -205,19 +190,12 @@ const AllProducts: FC = () => {
   );
 
   const router = useRouter();
-  const showAffiliateMemberQuery = router.query[queryKeys.showAffiliateMember];
+
   const showTypeQuery = router.query[queryKeys.showType];
   const showAuthorQuery = router.query[queryKeys.showAuthor];
   const productTitleQuery = router.query[queryKeys.productTitle];
   const productAuthorQuery = router.query[queryKeys.productAuthor];
   const productTypesQuery = router.query[queryKeys.productTypes];
-
-  useEffect(() => {
-    if (!showAffiliateMemberQuery)
-      setShowAffiliateMember(defaultQueries.showAffiliateMember);
-    if (showAffiliateMemberQuery === "true") setShowAffiliateMember(true);
-    if (showAffiliateMemberQuery === "false") setShowAffiliateMember(false);
-  }, [showAffiliateMemberQuery]);
 
   useEffect(() => {
     if (!showTypeQuery) setShowType(defaultQueries.showType);
@@ -251,7 +229,7 @@ const AllProducts: FC = () => {
   const filteredProducts = useMemo(
     () =>
       allProducts
-        .map((m) => ({ ...m, key: m.id, name: getEnTitle(m) }))
+        .map((m) => ({ ...m, key: m.id, product: getTitle(m, en) }))
         .filter((m) =>
           filterFn(m, {
             productTitleFilter,
@@ -259,7 +237,13 @@ const AllProducts: FC = () => {
             productTypesFilter,
           })
         ),
-    [allProducts, productTitleFilter, productAuthorFilter, productTypesFilter]
+    [
+      allProducts,
+      productTitleFilter,
+      productAuthorFilter,
+      productTypesFilter,
+      en,
+    ]
   );
 
   type ProductColumnType = ColumnType<typeof filteredProducts[number]>;
@@ -267,9 +251,9 @@ const AllProducts: FC = () => {
   const nameColumn: ProductColumnType = useMemo(
     () => ({
       title: en ? "Title" : "Titre",
-      dataIndex: "title",
-      className: "name-column",
-      sorter: nameSorter,
+      dataIndex: "product",
+      className: "title-column",
+      //sorter: nameSorter,
       render: (value, product) => (
         <SafeLink href={PageRoutes.productProfile(product.id)}>
           {value}
@@ -282,7 +266,7 @@ const AllProducts: FC = () => {
   const productAuthorColumn: ProductColumnType = useMemo(
     () => ({
       title: en ? "Author" : "Auteur",
-      dataIndex: ["author", en ? "title_en" : "title_fr"],
+      dataIndex: ["all_author", "first_name"],
       className: "author-column",
       sorter: en
         ? (a, b) =>
@@ -365,12 +349,6 @@ const AllProducts: FC = () => {
         {en ? "Show Columns:" : "Afficher les colonnes:"}
       </label>
       <span className="show-column-checkboxes" id="show-column-checkboxes">
-        <Checkbox
-          checked={showAffiliateMember}
-          onChange={(e) => handleShowAffiliateMemberChange(e.target.checked)}
-        >
-          {en ? "Show affiliate Members" : "Afficher les membres affiliés"}
-        </Checkbox>
         <Checkbox
           checked={showType}
           onChange={(e) => handleShowTypeChange(e.target.checked)}

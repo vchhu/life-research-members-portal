@@ -64,8 +64,8 @@ function filterFn(
 export const queryKeys = {
   showType: "showType",
   showScope: "showScope",
-  type: "type",
-  scope: "scope",
+  partnerType: "partnerType",
+  partnerScope: "partnerScope",
   orgIds: "orgIds",
 } as const;
 
@@ -88,12 +88,12 @@ function handleNameFilterChange(next: Set<number>) {
   );
 }
 
-function handleTypeFilterChange(next: Set<number>) {
+function handlePartnerTypeFilterChange(next: Set<number>) {
   Router.push(
     {
       query: {
         ...Router.query,
-        [queryKeys.type]: Array.from(next.keys()),
+        [queryKeys.partnerType]: Array.from(next.keys()),
       },
     },
     undefined,
@@ -101,12 +101,12 @@ function handleTypeFilterChange(next: Set<number>) {
   );
 }
 
-function handleScopeFilterChange(next: Set<number>) {
+function handlePartnerScopeFilterChange(next: Set<number>) {
   Router.push(
     {
       query: {
         ...Router.query,
-        [queryKeys.scope]: Array.from(next.keys()),
+        [queryKeys.partnerScope]: Array.from(next.keys()),
       },
     },
     undefined,
@@ -188,8 +188,8 @@ const AllPartners: FC = () => {
   const router = useRouter();
   const showTypeQuery = router.query[queryKeys.showType];
   const showScopeQuery = router.query[queryKeys.showScope];
-  const typeQuery = router.query[queryKeys.type];
-  const scopeQuery = router.query[queryKeys.scope];
+  const typeQuery = router.query[queryKeys.partnerType];
+  const scopeQuery = router.query[queryKeys.partnerScope];
   const nameIdsQuery = router.query[queryKeys.orgIds];
 
   useEffect(() => {
@@ -209,11 +209,11 @@ const AllPartners: FC = () => {
   }, [nameIdsQuery]);
 
   useEffect(() => {
-    setTypeFilter(getIdsFromQueryParams(queryKeys.type));
+    setTypeFilter(getIdsFromQueryParams(queryKeys.partnerType));
   }, [typeQuery]);
 
   useEffect(() => {
-    setScopeFilter(getIdsFromQueryParams(queryKeys.scope));
+    setScopeFilter(getIdsFromQueryParams(queryKeys.partnerScope));
   }, [scopeQuery]);
 
   function refreshAndClearFilters() {
@@ -255,7 +255,7 @@ const AllPartners: FC = () => {
   const typeColumn: OrganizationColumnType = useMemo(
     () => ({
       title: en ? "Organization Type" : "Type d'organisation",
-      dataIndex: ["type", en ? "name_en" : "name_fr"],
+      dataIndex: ["org_type", en ? "name_en" : "name_fr"],
       className: "type-column",
       sorter: en
         ? (a, b) =>
@@ -271,7 +271,7 @@ const AllPartners: FC = () => {
   const scopeColumn: OrganizationColumnType = useMemo(
     () => ({
       title: en ? "Organization Scope" : "Champ d'activité",
-      dataIndex: ["scope", en ? "name_en" : "name_fr"],
+      dataIndex: ["org_scope", en ? "name_en" : "name_fr"],
       className: "scope-column",
       sorter: en
         ? (a, b) =>
@@ -315,7 +315,7 @@ const AllPartners: FC = () => {
         <OrgTypeFilter
           id="type-filter"
           value={typeFilter}
-          onChange={handleTypeFilterChange}
+          onChange={handlePartnerTypeFilterChange}
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>
@@ -327,7 +327,7 @@ const AllPartners: FC = () => {
         <OrgScopeFilter
           id="scope-filter"
           value={scopeFilter}
-          onChange={handleScopeFilterChange}
+          onChange={handlePartnerScopeFilterChange}
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>

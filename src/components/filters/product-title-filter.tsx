@@ -1,8 +1,13 @@
 import Select, { SelectProps } from "antd/lib/select";
 import { FC, useContext, useMemo } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import { ProductTitlesCtx } from "../../services/context/products-title-ctx";
-import GetLanguage from "../../utils/front-end/get-product-language";
+import { AllProductsCtx } from "../../services/context/all-products-ctx";
+import type { ProductPublicInfo } from "../../services/_types";
+import fuzzyIncludes from "../../utils/front-end/fuzzy-includes";
+
+function getTitle(product: ProductPublicInfo, en: boolean) {
+  return en ? product.title_en : product.title_fr;
+}
 
 type Props = {
   id?: string;
@@ -17,20 +22,14 @@ const ProductTitleFilter: FC<Props> = ({
   onChange = () => {},
   getPopupContainer,
 }) => {
-  const { productTitles } = useContext(ProductTitlesCtx);
+  const { allProducts } = useContext(AllProductsCtx);
   const { en } = useContext(LanguageCtx);
 
   const valueArray = useMemo(() => Array.from(value.values()), [value]);
 
   const options = useMemo(
-    () => [
-      { label: en ? "Empty" : "Vide", value: 0 },
-      ...productTitles.map((title) => ({
-        label: <GetLanguage obj={title} />,
-        value: title.id,
-      })),
-    ],
-    [en, productTitles]
+    () => allProducts.map((m) => ({ label: getTitle(m, en), value: m.id })),
+    [allProducts, en]
   );
 
   function onSelect(id: number) {
@@ -43,16 +42,23 @@ const ProductTitleFilter: FC<Props> = ({
     onChange(value);
   }
 
+  function filterOption(
+    input: string,
+    option?: typeof options[number]
+  ): boolean {
+    if (!option) return false;
+    return fuzzyIncludes(option.label, input);
+  }
+
   return (
     <Select
       id={id}
       className="product-title-filter"
       value={valueArray}
+      filterOption={filterOption}
       mode="multiple"
       options={options}
       allowClear
-      showSearch={false}
-      showArrow
       onSelect={onSelect}
       onDeselect={onDelete}
       getPopupContainer={getPopupContainer}

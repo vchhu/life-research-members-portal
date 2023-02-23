@@ -7,8 +7,8 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 import type { PartnerPublicInfo } from "../../services/_types";
 import fuzzyIncludes from "../../utils/front-end/fuzzy-includes";
 
-function getName(organization: PartnerPublicInfo) {
-  return organization.name_en;
+function getName(organization: PartnerPublicInfo, en: boolean) {
+  return en ? organization.name_en : organization.name_fr;
 }
 
 type Props = {
@@ -25,12 +25,13 @@ const OrgNameFilter: FC<Props> = ({
   getPopupContainer,
 }) => {
   const { allPartners } = useContext(AllPartnersCtx);
+  const { en } = useContext(LanguageCtx);
 
   const valueArray = useMemo(() => Array.from(value.values()), [value]);
 
   const options = useMemo(
-    () => allPartners.map((m) => ({ label: getName(m), value: m.id })),
-    [allPartners]
+    () => allPartners.map((m) => ({ label: getName(m, en), value: m.id })),
+    [allPartners, en]
   );
 
   function onSelect(id: number) {
@@ -43,17 +44,20 @@ const OrgNameFilter: FC<Props> = ({
     onChange(value);
   }
 
-  /* function filterOption(input: string, option?: typeof options[number]): boolean {
+  function filterOption(
+    input: string,
+    option?: typeof options[number]
+  ): boolean {
     if (!option) return false;
     return fuzzyIncludes(option.label, input);
   }
- */
+
   return (
     <Select
       id={id}
       className="name-filter"
       value={valueArray}
-      //filterOption={filterOption}
+      filterOption={filterOption}
       mode="multiple"
       options={options}
       allowClear
