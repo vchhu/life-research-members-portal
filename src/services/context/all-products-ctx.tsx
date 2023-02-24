@@ -20,7 +20,7 @@ export const AllProductsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const [allProducts, setAllProducts] = useState<ProductPublicInfo[]>([]);
   const [loading, setLoading] = useState(true); // true so loading icons are served from server
   const [refreshing, setRefreshing] = useState(false);
-  //console.log(allMembers);
+
   async function fetchAllProducts() {
     try {
       const result = await fetch(ApiRoutes.allProducts);

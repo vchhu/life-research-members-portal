@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { selectPrivateProductInfo } from "../../../../../prisma/helpers";
+import { includeAllProductInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 
 export type PrivateProductRes = Awaited<ReturnType<typeof getPrivateProductInfo>>;
@@ -7,7 +7,7 @@ export type PrivateProductRes = Awaited<ReturnType<typeof getPrivateProductInfo>
 function getPrivateProductInfo(id: number) {
   return db.product.findUnique({
     where: { id },
-    select: selectPrivateProductInfo,
+    select: includeAllProductInfo,
   });
 }
 

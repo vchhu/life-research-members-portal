@@ -16,7 +16,7 @@ const PartnerScopeLink: FC<Props> = ({ org_scope }) => {
       href={{
         pathname: PageRoutes.allPartners,
         query: {
-          [queryKeys.scope]: org_scope.id,
+          [queryKeys.partnerScope]: org_scope.id,
           [queryKeys.showScope]: true,
         },
       }}

@@ -1,18 +1,23 @@
 // See https://ant.design/components/form/#components-form-demo-customized-form-controls
-
+import type { all_author } from "@prisma/client";
 import Select, { SelectProps } from "antd/lib/select";
-import { FC, useContext, useMemo } from "react";
-import { AllProductsCtx } from "../../services/context/all-products-ctx";
-import type { ProductPublicInfo } from "../../services/_types";
+import { LanguageCtx } from "../../services/context/language-ctx";
+import AllAuthorTag from "../products/allAuthor-tag";
+
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { AllAuthorsCtx } from "../../services/context/all-authors-ctx";
 import fuzzyIncludes from "../../utils/front-end/fuzzy-includes";
 
-function getMemberAuthor(product: ProductPublicInfo) {
+/* function getMemberAuthor(product: ProductPublicInfo) {
   return product.product_member_author + " " + product.product_member_author;
-}
-
-function getallAuthor(product: ProductPublicInfo) {
-  return product.all_author?.first_name + " " + product.all_author?.last_name;
-}
+} */
 
 type Props = {
   id?: string;
@@ -27,15 +32,42 @@ const ProductAuthorFilter: FC<Props> = ({
   onChange = () => {},
   getPopupContainer,
 }) => {
-  const { allProducts } = useContext(AllProductsCtx);
+  const { allAuthors, allAuthorMap } = useContext(AllAuthorsCtx);
+  const { en } = useContext(LanguageCtx);
 
   const valueArray = useMemo(() => Array.from(value.values()), [value]);
 
-  const options = useMemo(
-    () => allProducts.map((m) => ({ label: getallAuthor(m), value: m.id })),
-    [allProducts]
+  const getAllAuthor = useCallback(
+    (k: all_author) => {
+      let labelAndValue = "";
+      if (en) {
+        if (k.first_name) labelAndValue += k.first_name;
+        if (k.first_name && k.last_name) labelAndValue += "  ";
+        if (k.last_name) labelAndValue += k.last_name;
+      }
+      if (!en) {
+        if (k.first_name) labelAndValue += k.first_name;
+        if (k.first_name && k.last_name) labelAndValue += "  ";
+        if (k.last_name) labelAndValue += k.last_name;
+      }
+      return { label: labelAndValue, value: k.id };
+    },
+    [en]
   );
 
+  const options = useMemo(
+    () =>
+      allAuthors
+        .map((k) => getAllAuthor(k))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    [getAllAuthor, allAuthors]
+  );
+
+  /* const options = useMemo(
+    () => allAuthors.map((m) => ({ label: getAllAuthor(m), value: m.id })),
+    [getAllAuthor, allAuthors]
+  );
+ */
   function onSelect(id: number) {
     value.add(id);
     onChange(value);
@@ -46,6 +78,10 @@ const ProductAuthorFilter: FC<Props> = ({
     onChange(value);
   }
 
+  function onClear() {
+    onChange(new Set());
+  }
+
   function filterOption(
     input: string,
     option?: typeof options[number]
@@ -54,18 +90,30 @@ const ProductAuthorFilter: FC<Props> = ({
     return fuzzyIncludes(option.label, input);
   }
 
+  function tagRender(
+    props: Parameters<NonNullable<SelectProps["tagRender"]>>[0]
+  ) {
+    const allAuthors = allAuthorMap.get(props.value);
+    if (!allAuthors) return <></>;
+    return (
+      <AllAuthorTag all_author={allAuthors} deletable onDelete={onDelete} />
+    );
+  }
+
   return (
     <Select
       id={id}
       className="name-filter"
-      value={valueArray}
-      filterOption={filterOption}
       mode="multiple"
       options={options}
-      allowClear
+      value={valueArray}
       onSelect={onSelect}
       onDeselect={onDelete}
       getPopupContainer={getPopupContainer}
+      filterOption={filterOption}
+      allowClear
+      onClear={onClear}
+      tagRender={tagRender}
     ></Select>
   );
 };

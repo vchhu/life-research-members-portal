@@ -16,7 +16,7 @@ const PartnerTypeLink: FC<Props> = ({ org_type }) => {
       href={{
         pathname: PageRoutes.allPartners,
         query: {
-          [queryKeys.type]: org_type.id,
+          [queryKeys.partnerType]: org_type.id,
           [queryKeys.showType]: true,
         },
       }}

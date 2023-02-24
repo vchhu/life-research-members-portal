@@ -13,7 +13,8 @@ import {
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { ProductPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
-import KeywordTag from "../keywords/keyword-tag";
+import AllAuthorTag from "../products/allAuthor-tag";
+import type { all_author } from "@prisma/client";
 import GetLanguage from "../../utils/front-end/get-product-language";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
@@ -46,8 +47,14 @@ function filterFn(
   if (productTitleFilter.size > 0 && !productTitleFilter.has(m.id))
     return false;
 
-  if (productAuthorFilter.size > 0 && !productAuthorFilter.has(m.id))
-    return false;
+  if (productAuthorFilter.size > 0) {
+    if (
+      !m.product_member_all_author.some(({ all_author }) =>
+        productAuthorFilter.has(all_author.id)
+      )
+    )
+      return false;
+  }
 
   if (productTypesFilter.size > 0) {
     if (!m.product_type && !productTypesFilter.has(0)) return false; // id 0 is for null
@@ -62,6 +69,7 @@ function filterFn(
 export const queryKeys = {
   showType: "showType",
   showAuthor: "showAuthor",
+  showDoi: "showDoi",
   productTitle: "productTitle",
   productAuthor: "productAuthor",
   productTypes: "productTypes",
@@ -69,10 +77,19 @@ export const queryKeys = {
 
 // Don't want to change url if query is default value
 const defaultQueries = {
-  showAffiliateMember: false,
+  showDoi: true,
   showType: true,
   showAuthor: false,
 } as const;
+
+function handleShowDoiChange(value: boolean) {
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showDoi]: value,
+  };
+  if (value === defaultQueries.showDoi) delete query[queryKeys.showDoi];
+  Router.push({ query }, undefined, { scroll: false });
+}
 
 function handleShowAuthorChange(value: boolean) {
   const query: ParsedUrlQueryInput = {
@@ -171,9 +188,7 @@ const AllProducts: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [showAffiliateMember, setShowAffiliateMember] = useState<boolean>(
-    defaultQueries.showAffiliateMember
-  );
+  const [showDoi, setShowDoi] = useState<boolean>(defaultQueries.showDoi);
   const [showType, setShowType] = useState<boolean>(defaultQueries.showType);
   const [showAuthor, setShowAuthor] = useState<boolean>(
     defaultQueries.showAuthor
@@ -193,6 +208,7 @@ const AllProducts: FC = () => {
 
   const showTypeQuery = router.query[queryKeys.showType];
   const showAuthorQuery = router.query[queryKeys.showAuthor];
+  const showDoiQuery = router.query[queryKeys.showDoi];
   const productTitleQuery = router.query[queryKeys.productTitle];
   const productAuthorQuery = router.query[queryKeys.productAuthor];
   const productTypesQuery = router.query[queryKeys.productTypes];
@@ -202,6 +218,12 @@ const AllProducts: FC = () => {
     if (showTypeQuery === "true") setShowType(true);
     if (showTypeQuery === "false") setShowType(false);
   }, [showTypeQuery]);
+
+  useEffect(() => {
+    if (!showDoiQuery) setShowDoi(defaultQueries.showDoi);
+    if (showDoiQuery === "true") setShowDoi(true);
+    if (showDoiQuery === "false") setShowDoi(false);
+  }, [showDoiQuery]);
 
   useEffect(() => {
     if (!showAuthorQuery) setShowAuthor(defaultQueries.showAuthor);
@@ -225,6 +247,13 @@ const AllProducts: FC = () => {
     clearQueries();
     refreshProducts();
   }
+
+  const addAllAuthor = useCallback(
+    (k: all_author) => {
+      handleProductAuthorFilterChange(new Set(productAuthorFilter).add(k.id));
+    },
+    [productAuthorFilter]
+  );
 
   const filteredProducts = useMemo(
     () =>
@@ -263,22 +292,35 @@ const AllProducts: FC = () => {
     [en]
   );
 
+  const doiColumn: ProductColumnType = useMemo(
+    () => ({
+      title: en ? "Doi" : "Doi",
+      dataIndex: "doi",
+      className: "name-column",
+      render: (doi: string) => (
+        <SafeLink href={`https://doi.org/${doi}`} external>
+          {doi}
+        </SafeLink>
+      ),
+    }),
+    [en]
+  );
+
   const productAuthorColumn: ProductColumnType = useMemo(
     () => ({
       title: en ? "Author" : "Auteur",
-      dataIndex: ["all_author", "first_name"],
+      dataIndex: ["product_member_all_author"],
       className: "author-column",
-      sorter: en
-        ? (a, b) =>
-            (a.all_author?.first_name || "").localeCompare(
-              b.all_author?.last_name || ""
-            )
-        : (a, b) =>
-            (a.all_author?.first_name || "").localeCompare(
-              b.all_author?.last_name || ""
-            ),
+      render: (_, product) =>
+        product.product_member_all_author.map((k) => (
+          <AllAuthorTag
+            key={k.all_author.id}
+            all_author={k.all_author}
+            onClick={addAllAuthor}
+          />
+        )),
     }),
-    [en]
+    [addAllAuthor, en]
   );
 
   const productTypeColumn: ProductColumnType = useMemo(
@@ -300,7 +342,7 @@ const AllProducts: FC = () => {
   );
 
   const columns: ProductColumnType[] = [nameColumn];
-  // if (showAffiliateMember) columns.push(affiliateMemberColumn);
+  if (showDoi) columns.push(doiColumn);
   if (showType) columns.push(productTypeColumn);
   if (showAuthor) columns.push(productAuthorColumn);
 
@@ -349,6 +391,13 @@ const AllProducts: FC = () => {
         {en ? "Show Columns:" : "Afficher les colonnes:"}
       </label>
       <span className="show-column-checkboxes" id="show-column-checkboxes">
+        <Checkbox
+          checked={showDoi}
+          onChange={(e) => handleShowDoiChange(e.target.checked)}
+        >
+          {en ? "Show Product Doi" : "Afficher le Doi"}
+        </Checkbox>
+
         <Checkbox
           checked={showType}
           onChange={(e) => handleShowTypeChange(e.target.checked)}

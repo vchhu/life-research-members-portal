@@ -4,6 +4,7 @@ const ApiRoutes = {
   allAccounts: "/api/all-accounts",
   allPartners: "/api/all-partners",
   allProducts: "/api/all-products",
+  allAuthors: "/api/all-authors",
   registerAccount: "/api/register-account",
   registerPartner: "/api/register-partner",
   activeAccount: "/api/active-account",
