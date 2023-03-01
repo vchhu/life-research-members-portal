@@ -112,7 +112,7 @@ const _selectPublicProductInfo = {
     product_type: true,
     product_member_all_author: { include: { all_author: { select: { id: true, first_name: true, last_name: true } } } },
     product_member_author: { select: { member: { select: { account: { select: { id: true, first_name: true, last_name: true } } } } } },
-    product_target: { include: { target: true } },
+    product_target: { select: { target: true } },
     product_partnership: { include: { organization: true } },
 } as const;
 

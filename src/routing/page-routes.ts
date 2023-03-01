@@ -11,7 +11,7 @@ const PageRoutes = {
   allAccounts: "/accounts",
   //partners: "/partners",
   allPartners: "/partners",
-
+  allProducts: "/products",
   products: "/products",
   accountProfile: (id: number) => "/accounts/" + id,
   register: "/register",

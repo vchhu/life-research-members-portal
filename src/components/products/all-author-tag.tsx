@@ -8,7 +8,7 @@ import colorFromString from "../../utils/front-end/color-from-string";
 import GetLanguage from "../../utils/front-end/get-language";
 import GetOppositeLanguage from "../../utils/front-end/get-opposite-language";
 import SafeLink from "../link/safe-link";
-import { queryKeys } from "../products/all-products";
+import { queryKeys } from "./all-products";
 //import EditKeywordModal from "./edit-keyword-modal";
 
 type Props = {

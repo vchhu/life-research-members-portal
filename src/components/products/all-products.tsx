@@ -13,7 +13,7 @@ import {
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { ProductPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
-import AllAuthorTag from "../products/allAuthor-tag";
+import AllAuthorTag from "./all-author-tag";
 import type { all_author } from "@prisma/client";
 import GetLanguage from "../../utils/front-end/get-product-language";
 import Descriptions from "antd/lib/descriptions";
@@ -428,7 +428,7 @@ const AllProducts: FC = () => {
 
   const expandedRowRender = (product: ProductPublicInfo) => (
     <Descriptions size="small" layout="vertical" className="problems-container">
-      <Item label={en ? "Description" : "Description"}>{product.note}</Item>
+      <Item label={en ? "Abstract" : "Résumé"}>{product.note}</Item>
     </Descriptions>
   );
 

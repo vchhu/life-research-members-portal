@@ -2,7 +2,7 @@
 import type { all_author } from "@prisma/client";
 import Select, { SelectProps } from "antd/lib/select";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import AllAuthorTag from "../products/allAuthor-tag";
+import AllAuthorTag from "../products/all-author-tag";
 
 import {
   FC,
