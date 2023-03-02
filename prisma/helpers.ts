@@ -88,11 +88,12 @@ const _includeAllProductInfo = {
     title_fr: true,
     note: true,
     product_type: true,
+    date: true,
     doi: true,
     on_going: true,
     peer_reviewed: true,
     product_member_all_author: { include: { all_author: { select: { id: true, first_name: true, last_name: true } } } },
-    product_member_author: { select: { member: { select: { account: { select: { first_name: true, last_name: true } } } } } },
+    // product_member_author: { select: { member: { select: { account: { select: { first_name: true, last_name: true } } } } } },
     product_target: { include: { target: true } },
     product_partnership: { include: { organization: true } },
     product_topic: { include: { topic: true } }
@@ -111,8 +112,8 @@ const _selectPublicProductInfo = {
     doi: true,
     product_type: true,
     product_member_all_author: { include: { all_author: { select: { id: true, first_name: true, last_name: true } } } },
-    product_member_author: { select: { member: { select: { account: { select: { id: true, first_name: true, last_name: true } } } } } },
-    product_target: { select: { target: true } },
+    // product_member_author: { select: { member: { select: { account: { select: { id: true, first_name: true, last_name: true } } } } } },
+    product_target: { include: { target: true } },
     product_partnership: { include: { organization: true } },
 } as const;
 

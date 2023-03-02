@@ -64,7 +64,7 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
 
       <Item label={en ? "All Authors" : "Tous les auteurs"}>
         {product.product_member_all_author.map((entry, i) => (
-          <AllAuthorTag key={i} all_author={entry.all_author} linked />
+          <AllAuthorTag key={i} all_author={entry.all_author} />
         ))}
       </Item>
     </Descriptions>

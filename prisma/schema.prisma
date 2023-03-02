@@ -281,7 +281,7 @@ model product_target {
 model product_topic {
   topic_id   Int
   product_id Int
-  product    product @relation(fields: [topic_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_product_id")
+  product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_product_id")
   topic      topic   @relation(fields: [topic_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_topic_id")
 
   @@id([topic_id, product_id], map: "PK_product_topic")

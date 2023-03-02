@@ -6,6 +6,7 @@ const PageRoutes = {
   publicPartnerProfile: (id: number) => "/partners/" + id + "/public",
   organizationProfile: (id: number) => "/partners/" + id + "/public",
   privateMemberProfile: (id: number) => "/members/" + id + "/private",
+  privateProductProfile: (id: number) => "/products/" + id + "/private",
   productProfile: (id: number) => "/products/" + id + "/public",
   myProfile: "/my-profile",
   allAccounts: "/accounts",

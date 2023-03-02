@@ -4,15 +4,16 @@ import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import { FC, ReactNode, useCallback, useContext, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
-import PublicMemberDescription from "./product-public-description";
-import PublicMemberForm from "./product-public-form";
-import usePrivateMemberInfo from "../../services/use-private-member-info";
+import PublicProductDescription from "./product-public-description";
+import PublicProductForm from "./product-public-form";
+import usePrivateProductInfo from "../../services/use-private-product-info";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import Tabs from "antd/lib/tabs";
-import type { MemberPrivateInfo } from "../../services/_types";
-import PrivateMemberDescription from "./product-private-description";
-import PrivateMemberForm from "./product-private-form";
+import type { ProductPrivateInfo } from "../../services/_types";
+
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
+import ProductInsightDescription from "./product-insight-description";
+import InsightProductForm from "./product-insight-form";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -24,19 +25,19 @@ type Props = {
 
 const PrivateProductProfile: FC<Props> = ({ id }) => {
   const { en } = useContext(LanguageCtx);
-  const { member, setMember, loading } = usePrivateMemberInfo(id);
+  const { product, setProduct, loading } = usePrivateProductInfo(id);
   const [editMode, setEditMode] = useState(false);
   const [activeTabKey, setActiveTabKey] = useState(keys.public);
   const { saveChangesPrompt } = useContext(SaveChangesCtx);
 
   /** After saving changes via submit button - dependency of form's submit */
   const onSuccess = useCallback(
-    (updatedMember: MemberPrivateInfo) => setMember(updatedMember),
-    [setMember]
+    (updatedProduct: ProductPrivateInfo) => setProduct(updatedProduct),
+    [setProduct]
   );
 
   if (loading) return <CardSkeleton />;
-  if (!member) return <Empty />;
+  if (!product) return <Empty />;
 
   /** When clicking cancel - prompt to save changes if dirty */
   function onCancel() {
@@ -82,7 +83,7 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
           whiteSpace: "break-spaces",
         }}
       >
-        {member.account.first_name + " " + member.account.last_name}
+        {en ? product.title_en : product.title_fr}
       </Title>
       {editMode ? doneButton : editButton}
     </div>
@@ -92,32 +93,33 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
     {
       label: en ? "Public" : "Public",
       key: keys.public,
-      children: <PublicMemberDescription member={member} />,
+      children: <PublicProductDescription product={product} />,
     },
     {
-      label: en ? "Private" : "Privé",
-      key: keys.private,
-      children: <PrivateMemberDescription member={member} />,
+      label: en ? "Insight" : "Insight",
+      key: keys.insight,
+      children: <ProductInsightDescription product={product} />,
     },
   ];
 
-  const forms: Tab[] = [
+  /*   const forms: Tab[] = [
     {
       label: en ? "Public" : "Public",
-      key: keys.public,
-      children: <PublicMemberForm member={member} onSuccess={onSuccess} />,
+      key: keys.insight,
+      children: <PublicProductForm product={product} onSuccess={onSuccess} />,
     },
     {
       label: en ? "Private" : "Privé",
-      key: keys.private,
-      children: <PrivateMemberForm member={member} onSuccess={onSuccess} />,
+      key: keys.insight,
+      children: <InsightProductForm product={product} onSuccess={onSuccess} />,
     },
-  ];
+  ]; */
 
   return (
     <Card title={header} bodyStyle={{ paddingTop: 0 }}>
       <Tabs
-        items={editMode ? forms : descriptions}
+        // items={editMode ? forms : descriptions}
+        items={descriptions}
         activeKey={activeTabKey}
         onChange={onChange}
         // Very important to destroy inactive forms,

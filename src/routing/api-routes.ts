@@ -14,6 +14,7 @@ const ApiRoutes = {
   publicPartnerInfo: (id: number) => "/api/partner/" + id + "/public",
   publicProductInfo: (id: number) => "/api/product/" + id + "/public",
   privateMemberInfo: (id: number) => "/api/member/" + id + "/private",
+  privateProductInfo: (id: number) => "/api/product/" + id + "/private",
   deleteAccount: (id: number) => "/api/delete-account/" + id,
   updateAccountName: (id: number) => "/api/update-account/" + id + "/name",
   updateAccountEmail: (id: number) => "/api/update-account/" + id + "/email",
