@@ -49,7 +49,7 @@ const AllAuthorTag: FC<Props> = ({
     <SafeLink
       href={{
         pathname: PageRoutes.allAccounts,
-        query: { [queryKeys.showAuthor]: k.id },
+        // query: { [queryKeys.showAuthor]: k.id },
       }}
     >
       {text}

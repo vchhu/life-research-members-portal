@@ -13,6 +13,8 @@ import {
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { ProductPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
+import AllAuthorTag from "./all-author-tag";
+//import type { all_author } from "@prisma/client";
 import GetLanguage from "../../utils/front-end/get-product-language";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
@@ -23,10 +25,9 @@ import blurActiveElement from "../../utils/front-end/blur-active-element";
 import { Checkbox } from "antd";
 import ProductTitleFilter from "../filters/product-title-filter";
 import ProductTypeFilter from "../filters/product-type-filter";
-import ProductAllAuthorFilter from "../filters/product-all-author-filter";
+import ProductAuthorFilter from "../filters/product-author-filter";
 import type { ParsedUrlQueryInput } from "querystring";
 import { AllProductsCtx } from "../../services/context/all-products-ctx";
-import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 
 function getTitle(product: ProductPublicInfo, en: boolean) {
   return en ? product.title_en : product.title_fr;
@@ -36,18 +37,24 @@ function filterFn(
   m: ProductPublicInfo & { product: string },
   filters: {
     productTitleFilter: Set<number>;
-    productAllAuthorFilter: Set<number>;
+    productAuthorFilter: Set<number>;
     productTypesFilter: Set<number>;
   }
 ): boolean {
-  const { productTitleFilter, productAllAuthorFilter, productTypesFilter } =
+  const { productTitleFilter, productAuthorFilter, productTypesFilter } =
     filters;
 
   if (productTitleFilter.size > 0 && !productTitleFilter.has(m.id))
     return false;
 
-  if (productAllAuthorFilter.size > 0 && !productAllAuthorFilter.has(m.id))
-    return false;
+  /* if (productAuthorFilter.size > 0) {
+    if (
+      !m.product_member_all_author.some(({ all_author }) =>
+        productAuthorFilter.has(all_author.id)
+      )
+    )
+      return false;
+  } */
 
   if (productTypesFilter.size > 0) {
     if (!m.product_type && !productTypesFilter.has(0)) return false; // id 0 is for null
@@ -65,7 +72,7 @@ export const queryKeys = {
   showAllAuthor: "showAllAuthor",
   showDoi: "showDoi",
   productTitle: "productTitle",
-  productAllAuthor: "productAllAuthor",
+  productAuthor: "productAuthor",
   productTypes: "productTypes",
 } as const;
 
@@ -127,12 +134,12 @@ function handleProductTitleFilterChange(next: Set<number>) {
   );
 }
 
-function handleProductAllAuthorFilterChange(next: Set<number>) {
+function handleProductAuthorFilterChange(next: Set<number>) {
   Router.push(
     {
       query: {
         ...Router.query,
-        [queryKeys.productAllAuthor]: Array.from(next.keys()),
+        [queryKeys.productAuthor]: Array.from(next.keys()),
       },
     },
     undefined,
@@ -187,10 +194,6 @@ const AllProducts: FC = () => {
     refresh: refreshProducts,
   } = useContext(AllProductsCtx);
 
-  const handleRegisterProduct = () => {
-    router.push("products/register");
-  };
-
   useEffect(() => {
     refreshProducts();
 
@@ -206,12 +209,10 @@ const AllProducts: FC = () => {
     defaultQueries.showAllAuthor
   );
 
-  const { localAccount } = useContext(ActiveAccountCtx);
-
   const [productTitleFilter, setProductTitleFilter] = useState(
     new Set<number>()
   );
-  const [productAllAuthorFilter, setProductAllAuthorFilter] = useState(
+  const [productAuthorFilter, setProductAuthorFilter] = useState(
     new Set<number>()
   );
   const [productTypesFilter, setProductTypesFilter] = useState(
@@ -225,7 +226,7 @@ const AllProducts: FC = () => {
   const showAllAuthorQuery = router.query[queryKeys.showAllAuthor];
   const showDoiQuery = router.query[queryKeys.showDoi];
   const productTitleQuery = router.query[queryKeys.productTitle];
-  const productAuthorQuery = router.query[queryKeys.productAllAuthor];
+  const productAuthorQuery = router.query[queryKeys.productAuthor];
   const productTypesQuery = router.query[queryKeys.productTypes];
 
   useEffect(() => {
@@ -257,9 +258,7 @@ const AllProducts: FC = () => {
   }, [productTitleQuery]);
 
   useEffect(() => {
-    setProductAllAuthorFilter(
-      getIdsFromQueryParams(queryKeys.productAllAuthor)
-    );
+    setProductAuthorFilter(getIdsFromQueryParams(queryKeys.productAuthor));
   }, [productAuthorQuery]);
 
   useEffect(() => {
@@ -285,14 +284,14 @@ const AllProducts: FC = () => {
         .filter((m) =>
           filterFn(m, {
             productTitleFilter,
-            productAllAuthorFilter,
+            productAuthorFilter,
             productTypesFilter,
           })
         ),
     [
       allProducts,
       productTitleFilter,
-      productAllAuthorFilter,
+      productAuthorFilter,
       productTypesFilter,
       en,
     ]
@@ -402,10 +401,10 @@ const AllProducts: FC = () => {
         label={en ? "Filter by Author" : "Filtrer par Auteur"}
         htmlFor="author-filter"
       >
-        <ProductAllAuthorFilter
+        <ProductAuthorFilter
           id="author-filter"
-          value={productAllAuthorFilter}
-          onChange={handleProductAllAuthorFilterChange}
+          value={productAuthorFilter}
+          onChange={handleProductAuthorFilterChange}
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>
@@ -462,16 +461,6 @@ const AllProducts: FC = () => {
         <Button type="primary" onClick={refreshAndClearFilters} size="large">
           {en ? "Reset" : "Réinitialiser"}
         </Button>
-
-        {localAccount && localAccount.is_admin && (
-          <Button
-            type="primary"
-            size="large"
-            onClick={() => handleRegisterProduct()}
-          >
-            {en ? "Add a new product" : "Ajouter un nouveau produit"}
-          </Button>
-        )}
       </div>
       {filters}
     </>

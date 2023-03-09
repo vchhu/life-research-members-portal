@@ -19,10 +19,9 @@ model account {
 }
 
 model all_author {
-  id                        Int                         @id(map: "PK_all_author") @default(autoincrement())
-  first_name                String?                     @db.NVarChar(255)
-  last_name                 String?                     @db.NVarChar(255)
-  product_member_all_author product_member_all_author[]
+  id         Int     @id(map: "PK_all_author") @default(autoincrement())
+  first_name String? @db.NVarChar(255)
+  last_name  String? @db.NVarChar(255)
 }
 
 model current_promotion_strategy {
@@ -225,28 +224,26 @@ model problem {
 }
 
 model product {
-  id                        Int                         @id(map: "PK_product") @default(autoincrement())
-  title_en                  String                      @db.NVarChar(500)
-  title_fr                  String                      @db.NVarChar(500)
-  date                      DateTime?                   @db.Date
-  doi                       String?                     @db.NVarChar(100)
-  on_going                  Boolean
-  peer_reviewed             Boolean
-  product_type_id           Int
-  note                      String?                     @db.NVarChar(2000)
-  product_type              product_type                @relation(fields: [product_type_id], references: [id], onUpdate: NoAction, map: "FK_product_product_type")
-  product_member_all_author product_member_all_author[]
-  product_member_author     product_member_author[]
-  product_partnership       product_partnership[]
-  product_target            product_target[]
-  product_topic             product_topic[]
+  id                    Int                     @id(map: "PK_product") @default(autoincrement())
+  title_en              String                  @db.NVarChar(500)
+  title_fr              String                  @db.NVarChar(500)
+  date                  DateTime?               @db.Date
+  all_author            String?                 @db.NVarChar(3000)
+  doi                   String?                 @db.NVarChar(100)
+  on_going              Boolean
+  peer_reviewed         Boolean
+  product_type_id       Int
+  note                  String?                 @db.NVarChar(2000)
+  product_type          product_type            @relation(fields: [product_type_id], references: [id], onUpdate: NoAction, map: "FK_product_product_type")
+  product_member_author product_member_author[]
+  product_partnership   product_partnership[]
+  product_target        product_target[]
+  product_topic         product_topic[]
 }
 
 model product_member_all_author {
   member_id  Int
   product_id Int
-  all_author all_author @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_product_member_all_author_author")
-  product    product    @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_member_all_author_product")
 
   @@id([member_id, product_id], map: "PK_product_member_all_author")
 }

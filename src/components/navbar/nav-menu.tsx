@@ -41,10 +41,13 @@ const NavMenu: FC = () => {
       href: PageRoutes.allAccounts,
       children: [
         {
-          label: en ? "All Accounts" : "Tous les comptes",
+          label: en ? "All accounts" : "Tous les comptes",
           href: PageRoutes.allAccounts,
         },
-        { label: en ? "Register" : "Enregistrer", href: PageRoutes.register },
+        {
+          label: en ? "Register an account" : "Enregistrer un compte",
+          href: PageRoutes.register,
+        },
       ],
     },
   ];

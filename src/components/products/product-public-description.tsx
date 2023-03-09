@@ -40,7 +40,7 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
         <ProductTypeLink product_type={product.product_type} />
       </Item>
 
-      <Item label={en ? "Doi" : "Type Doi Produit"}>
+      <Item label={en ? "DOI" : "DOI"}>
         <SafeLink href={`https://doi.org/${product.doi}`} external>
           {product.doi}
         </SafeLink>
@@ -62,11 +62,11 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
         ))}
       </Item>
 
-      <Item label={en ? "All Authors" : "Tous les auteurs"}>
+      {/* <Item label={en ? "All Authors" : "Tous les auteurs"}>
         {product.product_member_all_author.map((entry, i) => (
           <AllAuthorTag key={i} all_author={entry.all_author} />
         ))}
-      </Item>
+      </Item> */}
     </Descriptions>
   );
 };

@@ -12,7 +12,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { AllAuthorsCtx } from "../../services/context/all-authors-ctx";
+import { AllAuthorsCtx } from "../../services/context/authors-ctx";
 import fuzzyIncludes from "../../utils/front-end/fuzzy-includes";
 
 /* function getMemberAuthor(product: ProductPublicInfo) {

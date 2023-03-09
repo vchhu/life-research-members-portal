@@ -1,4 +1,4 @@
-import type { all_author } from "@prisma/client";
+import type { product } from "@prisma/client";
 import {
   createContext,
   FC,
@@ -11,7 +11,12 @@ import ApiRoutes from "../../routing/api-routes";
 import Notification from "../notifications/notification";
 import { LanguageCtx } from "./language-ctx";
 
-async function fetchAllAuthors(): Promise<all_author[]> {
+export const AllAuthorsCtx = createContext<{
+  productAllAuthors: product[];
+  refresh: () => void;
+}>(null as any);
+
+async function fetchAllProductAllAuthor(): Promise<product[]> {
   try {
     const res = await fetch(ApiRoutes.allAuthors);
     if (!res.ok) throw await res.text();
@@ -22,56 +27,29 @@ async function fetchAllAuthors(): Promise<all_author[]> {
   }
 }
 
-/* function nameSorter(a: all_author, b: all_author): number {
-  return a.first_name.localeCompare(b.first_name);
-} */
-
-export const AllAuthorsCtx = createContext<{
-  allAuthors: all_author[];
-  allAuthorMap: Map<number, all_author>;
-  refresh: () => void;
-  set: (all_author: all_author) => void;
-}>(null as any);
-
 export const AllAuthorsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [allAuthors, setAllAuthor] = useState<all_author[]>([]);
-  const [allAuthorMap, setAllAuthorMap] = useState(
-    new Map<number, all_author>()
-  );
+  const [productAllAuthors, setProductAllAuthors] = useState<product[]>([]);
   const { en } = useContext(LanguageCtx);
 
-  async function getAllAuthor() {
-    const allAuthors = await fetchAllAuthors();
-    //setAllAuthor(allAuthors.sort(nameSorter));
-    setAllAuthor(allAuthors);
-    setAllAuthorMap(new Map(allAuthors.map((k) => [k.id, k])));
+  async function getProductAllAuthors() {
+    setProductAllAuthors(await fetchAllProductAllAuthor());
   }
 
   useEffect(() => {
-    getAllAuthor();
+    getProductAllAuthors();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    setAllAuthor((prev) => prev);
-    //setAllAuthor((prev) => prev.sort(nameSorter));
+    setProductAllAuthors((prev) => [...prev]);
   }, [en]);
 
   function refresh() {
-    getAllAuthor();
-  }
-
-  function set(all_author: all_author) {
-    setAllAuthor((prev) => {
-      const curr = prev.filter((k) => k.id !== all_author.id);
-      curr.push(all_author);
-      //return curr.sort(nameSorter);
-      return curr;
-    });
+    getProductAllAuthors();
   }
 
   return (
-    <AllAuthorsCtx.Provider value={{ allAuthors, allAuthorMap, refresh, set }}>
+    <AllAuthorsCtx.Provider value={{ productAllAuthors, refresh }}>
       {children}
     </AllAuthorsCtx.Provider>
   );

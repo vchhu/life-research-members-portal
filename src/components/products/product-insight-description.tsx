@@ -37,7 +37,7 @@ const ProductInsightDescription: FC<Props> = ({ product }) => {
       <Item label={en ? "Product Topic" : "Sujet du produit"}>
         {product.product_topic.map((entry, i) => (
           <Tag key={i} color="blue">
-            {en ? entry.topic.name_en : entry.topic.name_fr}
+            {en ? entry.topic.name_fr : entry.topic.name_en}
           </Tag>
         ))}
       </Item>

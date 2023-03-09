@@ -1,48 +1,138 @@
-import Button from "antd/lib/button";
-import { FC, useContext } from "react";
-import updateAccountRegisterMember from "../../services/update-account-register-member";
-import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
+import { Button, DatePicker } from "antd";
+import Select from "antd/lib/select";
+import Form from "antd/lib/form";
+import Input from "antd/lib/input";
+import React, { FC, useContext } from "react";
+import { useForm } from "antd/lib/form/Form";
+import moment from "moment";
+import type { Moment } from "moment";
+import registerProduct from "../../services/register-product";
 import { LanguageCtx } from "../../services/context/language-ctx";
+import { ProductTypesCtx } from "../../services/context/products-types-ctx";
+import GetLanguage from "../../utils/front-end/get-language";
 
-const ProductRegister: FC = () => {
+const { Option } = Select;
+
+type Data = {
+  title_en: string;
+  title_fr: string;
+  //date: Moment | null;
+  doi: String;
+  all_author: string;
+  on_going: boolean;
+  peer_reviewed: boolean;
+  product_type_id: number;
+  note: string;
+};
+
+const RegisterProduct: FC = () => {
+  const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
-  const { localAccount, setLocalAccount } = useContext(ActiveAccountCtx);
+  const { productTypes } = useContext(ProductTypesCtx);
 
-  if (!localAccount) return null; // Auth guard should prevent this
-
-  async function handleRegisterMember() {
-    if (!localAccount) return;
-    const res = await updateAccountRegisterMember(localAccount.id);
-    setLocalAccount(res);
+  async function handleRegister({
+    title_en,
+    title_fr,
+    //date,
+    doi,
+    all_author,
+    on_going,
+    peer_reviewed,
+    product_type_id,
+    note,
+  }: Data) {
+    const res = await registerProduct({
+      title_en,
+      title_fr,
+      // date,
+      doi,
+      all_author,
+      on_going,
+      peer_reviewed,
+      product_type_id,
+      note,
+    });
+    if (res) form.resetFields();
   }
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-      }}
-    >
-      <div style={{ height: "20vh" }}></div>
-      <h1>
-        {en
-          ? "You have no member information!"
-          : "Vous n'avez aucune information de membre !"}
-      </h1>
-      <h2>
-        {en
-          ? "Register as a member to tell us more about yourself."
-          : "Inscrivez-vous en tant que membre pour nous en dire plus sur vous."}
-      </h2>
-      <Button
-        type="primary"
+    <div className="register-partner-form">
+      <h1>{en ? "Register Product" : "Enregistrer un Produit"}</h1>
+      <Form
+        form={form}
+        onFinish={handleRegister}
+        style={{ width: "100%", maxWidth: "25rem" }}
         size="large"
-        style={{ marginTop: 18 }}
-        onClick={() => handleRegisterMember()}
+        layout="vertical"
       >
-        {en ? "Register as Member" : "Inscrivez-vous en tant que membre"}
-      </Button>
+        <Form.Item
+          label={en ? "Title (English)" : "Titre (Anglais)"}
+          name="title_en"
+          rules={[{ required: true, message: en ? "Required" : "Requis" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label={en ? "Title (French)" : "Titre (Français)"}
+          name="title_fr"
+          rules={[{ required: true, message: en ? "Required" : "Requis" }]}
+        >
+          <Input />
+        </Form.Item>
+        {/*  <Form.Item
+          label={en ? "Date" : "Date"}
+          name="date"
+          className="date-picker"
+        >
+          <DatePicker />
+        </Form.Item> */}
+        <Form.Item label={en ? "DOI" : "DOI"} name="doi">
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label={en ? "All Authors" : "Tous les Auteurs"}
+          name="all_author"
+        >
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item label={en ? "On Going" : "En Cours"} name="on_going">
+          <Input type="checkbox" />
+        </Form.Item>
+        <Form.Item
+          label={en ? "Peer Reviewed" : "Examiné par les Pairs"}
+          name="peer_reviewed"
+        >
+          <Input type="checkbox" />
+        </Form.Item>
+        <Form.Item
+          label={en ? "Product Type" : "Type de Produit"}
+          name="product_type_id"
+          rules={[{ required: true, message: en ? "Required" : "Requis" }]}
+        >
+          <Select>
+            <Option value="">{""}</Option>
+            {productTypes.map((f) => (
+              <Option key={f.id} value={f.id}>
+                <GetLanguage obj={f} />
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item label={en ? "Abstract" : "Résumé"} name="note">
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ paddingLeft: 40, paddingRight: 40 }}
+            size="large"
+          >
+            {en ? "Register" : "Enregistrer"}
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
-
-export default ProductRegister;
+export default RegisterProduct;
