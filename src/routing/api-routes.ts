@@ -7,6 +7,7 @@ const ApiRoutes = {
   allAuthors: "/api/all-authors",
   registerAccount: "/api/register-account",
   registerPartner: "/api/register-partner",
+  registerProduct: "/api/register-product",
   activeAccount: "/api/active-account",
   activeAccountUpdateLastLogin: "/api/active-account/update-last-login",
   account: (id: number) => "/api/account/" + id,

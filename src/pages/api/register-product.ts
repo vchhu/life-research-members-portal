@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../prisma/prisma-client";
 import getAccountFromRequest from "../../utils/api/get-account-from-request";
 
-type RegisterProductParams = {
+export type RegisterProductParams = {
   title_en: string;
   title_fr: string;
   //date: Date;
@@ -55,8 +55,8 @@ export default async function handler(
   if (typeof title_fr !== "string") return res.status(400).send("title_fr is required.");
   //if (!(date instanceof Date)) return res.status(400).send("date is required.");
   if (typeof doi !== "string") return res.status(400).send("doi is required.");
-  if (typeof on_going !== "boolean") return res.status(400).send("on_going is required.");
-  if (typeof peer_reviewed !== "boolean") return res.status(400).send("peer_reviewed is required.");
+  if (!["boolean", "undefined"].includes(typeof on_going)) return res.status(400).send("on_going is required.");
+  if (!["boolean", "undefined"].includes(typeof peer_reviewed)) return res.status(400).send("peer_reviewed is required.");
   if (typeof all_author !== "string") return res.status(400).send("all_author is required.");
   if (isNaN(product_type_id)) return res.status(400).send("product_type_id is required.");
   if (typeof note !== "string") return res.status(400).send("note is required.");

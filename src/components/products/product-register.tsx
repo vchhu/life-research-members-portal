@@ -17,7 +17,7 @@ type Data = {
   title_en: string;
   title_fr: string;
   //date: Moment | null;
-  doi: String;
+  doi: string;
   all_author: string;
   on_going: boolean;
   peer_reviewed: boolean;
