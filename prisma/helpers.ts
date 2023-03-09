@@ -6,9 +6,13 @@ import type { Prisma } from "@prisma/client";
 // So we need to let typescript INFER the actual shape of the objects
 // However, this leaves the possibility of invalid keys
 // These will normally be considered excess properties and pass typechecking
+/* type CheckKeysAreValid<T, ValidProps> = Exclude<keyof T, keyof ValidProps> extends never
+    ? T
+    : "Invalid keys" | Exclude<keyof T, keyof ValidProps>; // Hacky error message */
+
 type CheckKeysAreValid<T, ValidProps> = Exclude<keyof T, keyof ValidProps> extends never
     ? T
-    : "Invalid keys" | Exclude<keyof T, keyof ValidProps>; // Hacky error message
+    : never;
 
 const _includeAllMemberInfo = {
     account: true,
