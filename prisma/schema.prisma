@@ -18,12 +18,6 @@ model account {
   member       member?
 }
 
-model all_author {
-  id         Int     @id(map: "PK_all_author") @default(autoincrement())
-  first_name String? @db.NVarChar(255)
-  last_name  String? @db.NVarChar(255)
-}
-
 model current_promotion_strategy {
   member_id             Int
   promotion_strategy_id Int

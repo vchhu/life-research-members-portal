@@ -6,13 +6,9 @@ import type { Prisma } from "@prisma/client";
 // So we need to let typescript INFER the actual shape of the objects
 // However, this leaves the possibility of invalid keys
 // These will normally be considered excess properties and pass typechecking
-/* type CheckKeysAreValid<T, ValidProps> = Exclude<keyof T, keyof ValidProps> extends never
-    ? T
-    : "Invalid keys" | Exclude<keyof T, keyof ValidProps>; // Hacky error message */
-
 type CheckKeysAreValid<T, ValidProps> = Exclude<keyof T, keyof ValidProps> extends never
     ? T
-    : never;
+    : "Invalid keys" | Exclude<keyof T, keyof ValidProps>; // Hacky error message
 
 const _includeAllMemberInfo = {
     account: true,
@@ -97,8 +93,6 @@ const _includeAllProductInfo = {
     on_going: true,
     peer_reviewed: true,
     all_author: true,
-    //product_member_all_author: { include: { all_author: { select: { id: true, first_name: true, last_name: true } } } },
-    // product_member_author: { select: { member: { select: { account: { select: { first_name: true, last_name: true } } } } } },
     product_target: { include: { target: true } },
     product_partnership: { include: { organization: true } },
     product_topic: { include: { topic: true } }
@@ -117,8 +111,6 @@ const _selectPublicProductInfo = {
     doi: true,
     product_type: true,
     all_author: true,
-    //product_member_all_author: { include: { all_author: { select: { id: true, first_name: true, last_name: true } } } },
-    // product_member_author: { select: { member: { select: { account: { select: { id: true, first_name: true, last_name: true } } } } } },
     product_target: { include: { target: true } },
     product_partnership: { include: { organization: true } },
 } as const;
