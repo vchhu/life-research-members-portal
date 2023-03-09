@@ -53,11 +53,111 @@ model desired_promotion_strategy {
   @@id([member_id, promotion_strategy_id], map: "PK_desired_promotion_strategy")
 }
 
+model event {
+  id                     Int                      @id(map: "PK_event") @default(autoincrement())
+  name_en                String                   @db.NVarChar(2000)
+  name_fr                String                   @db.NVarChar(2000)
+  start_date             DateTime?                @db.Date
+  end_date               DateTime?                @db.Date
+  event_type_id          Int?
+  topic_id               Int?
+  note                   String?                  @db.NVarChar(Max)
+  topic                  topic?                   @relation(fields: [topic_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_event_topic")
+  event_type             event_type?              @relation(fields: [event_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_event_type")
+  event_grant_resulted   event_grant_resulted[]
+  event_member_involved  event_member_involved[]
+  event_partner_involved event_partner_involved[]
+  event_product_resulted event_product_resulted[]
+}
+
+model event_grant_resulted {
+  event_id Int
+  grant_id Int
+  event    event @relation(fields: [event_id], references: [id], onUpdate: NoAction, map: "FK_event_grant_resulted_event")
+  grant    grant @relation(fields: [grant_id], references: [id], onUpdate: NoAction, map: "FK_event_grant_resulted_grant")
+
+  @@id([event_id, grant_id], map: "PK_event_grant_resulted")
+}
+
+model event_member_involved {
+  event_id  Int
+  member_id Int
+  event     event  @relation(fields: [event_id], references: [id], onUpdate: NoAction, map: "FK_event_member_involved_event")
+  member    member @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_event_member_involved_member")
+
+  @@id([event_id, member_id], map: "PK_event_member_involved")
+}
+
+model event_partner_involved {
+  event_id        Int
+  organization_id Int
+  event           event        @relation(fields: [event_id], references: [id], onUpdate: NoAction, map: "FK_event_partner_involved_event")
+  organization    organization @relation(fields: [organization_id], references: [id], onUpdate: NoAction, map: "FK_event_partner_involved_org")
+
+  @@id([event_id, organization_id], map: "PK_event_partner_involved")
+}
+
+model event_product_resulted {
+  event_id   Int
+  product_id Int
+  event      event   @relation(fields: [event_id], references: [id], onUpdate: NoAction, map: "FK_event_product_resulted_event")
+  product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_event_product_resulted_product")
+
+  @@id([event_id, product_id], map: "PK_event_product_resulted")
+}
+
+model event_type {
+  id      Int     @id(map: "PK_event_type") @default(autoincrement())
+  name_en String  @db.NVarChar(100)
+  name_fr String  @db.NVarChar(100)
+  event   event[]
+}
+
 model faculty {
-  id      Int      @id(map: "PK_faculty") @default(autoincrement())
-  name_en String   @db.NVarChar(255)
-  name_fr String   @db.NVarChar(255)
-  member  member[]
+  id          Int           @id(map: "PK_faculty") @default(autoincrement())
+  name_en     String        @db.NVarChar(255)
+  name_fr     String        @db.NVarChar(255)
+  member      member[]
+  supervision supervision[]
+}
+
+model grant {
+  id                        Int                         @id(map: "PK_grant") @default(autoincrement())
+  title                     String                      @db.NVarChar(2000)
+  amount                    BigInt
+  throught_lri              Boolean?
+  status_id                 Int?
+  submission_date           DateTime?                   @db.Date
+  obtained_date             DateTime?                   @db.Date
+  completed_date            DateTime?                   @db.Date
+  source_id                 Int?
+  all_investigator          String?                     @db.NVarChar(3000)
+  topic_id                  Int?
+  note                      String?                     @db.NVarChar(3000)
+  event_grant_resulted      event_grant_resulted[]
+  source                    source?                     @relation(fields: [source_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_grant_source")
+  status                    status?                     @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_grant_status")
+  topic                     topic?                      @relation(fields: [topic_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_grant_topic")
+  grant_investigator_member grant_investigator_member[]
+  grant_member_involved     grant_member_involved[]
+}
+
+model grant_investigator_member {
+  grant_id  Int
+  member_id Int
+  grant     grant  @relation(fields: [grant_id], references: [id], onUpdate: NoAction, map: "FK_grant_investigator_member_grant")
+  member    member @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_grant_investigator_member_member")
+
+  @@id([grant_id, member_id], map: "PK_grant_investigator_member")
+}
+
+model grant_member_involved {
+  grant_id  Int
+  member_id Int
+  grant     grant  @relation(fields: [grant_id], references: [id], onUpdate: NoAction, map: "FK_grant_member_involved_grant")
+  member    member @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_grant_member_involved_member")
+
+  @@id([grant_id, member_id], map: "PK_grant_member_involved")
 }
 
 model has_keyword {
@@ -132,41 +232,55 @@ model legacy {
   @@ignore
 }
 
+model level {
+  id          Int           @id(map: "PK_level") @default(autoincrement())
+  name_fr     String        @db.NVarChar(50)
+  name_en     String        @db.NVarChar(50)
+  supervision supervision[]
+}
+
 model member {
-  id                         Int                          @id(map: "PK_member") @default(autoincrement())
-  account_id                 Int                          @unique(map: "UK_account_id")
-  faculty_id                 Int?
-  type_id                    Int?
-  work_email                 String?                      @db.NVarChar(255)
-  work_phone                 String?                      @db.NVarChar(50)
-  about_me_fr                String?                      @db.NVarChar(Max)
-  about_me_en                String?                      @db.NVarChar(Max)
-  website_link               String?                      @db.NVarChar(4000)
-  twitter_link               String?                      @db.NVarChar(4000)
-  facebook_link              String?                      @db.NVarChar(4000)
-  linkedin_link              String?                      @db.NVarChar(4000)
-  tiktok_link                String?                      @db.NVarChar(4000)
-  cv_link                    String?                      @db.NVarChar(4000)
-  address                    String?                      @db.NVarChar(255)
-  city                       String?                      @db.NVarChar(255)
-  province                   String?                      @db.NVarChar(255)
-  country                    String?                      @db.NVarChar(255)
-  postal_code                String?                      @db.NVarChar(255)
-  mobile_phone               String?                      @db.NVarChar(50)
-  date_joined                DateTime?                    @db.Date
-  is_active                  Boolean                      @default(true, map: "DF_member_is_active")
-  last_active                DateTime?                    @db.Date
-  current_promotion_strategy current_promotion_strategy[]
-  desired_partnership        desired_partnership?
-  desired_promotion_strategy desired_promotion_strategy[]
-  has_keyword                has_keyword[]
-  insight                    insight?
-  account                    account                      @relation(fields: [account_id], references: [id], onDelete: Cascade, map: "FK_member_account_id")
-  faculty                    faculty?                     @relation(fields: [faculty_id], references: [id], map: "FK_member_faculty_id")
-  member_type                member_type?                 @relation(fields: [type_id], references: [id], map: "FK_member_type_id")
-  partnership_member_org     partnership_member_org[]
-  problem                    problem[]
-  product_member_author      product_member_author[]
+  id                               Int                                @id(map: "PK_member") @default(autoincrement())
+  account_id                       Int                                @unique(map: "UK_account_id")
+  faculty_id                       Int?
+  type_id                          Int?
+  work_email                       String?                            @db.NVarChar(255)
+  work_phone                       String?                            @db.NVarChar(50)
+  about_me_fr                      String?                            @db.NVarChar(Max)
+  about_me_en                      String?                            @db.NVarChar(Max)
+  website_link                     String?                            @db.NVarChar(4000)
+  twitter_link                     String?                            @db.NVarChar(4000)
+  facebook_link                    String?                            @db.NVarChar(4000)
+  linkedin_link                    String?                            @db.NVarChar(4000)
+  tiktok_link                      String?                            @db.NVarChar(4000)
+  cv_link                          String?                            @db.NVarChar(4000)
+  address                          String?                            @db.NVarChar(255)
+  city                             String?                            @db.NVarChar(255)
+  province                         String?                            @db.NVarChar(255)
+  country                          String?                            @db.NVarChar(255)
+  postal_code                      String?                            @db.NVarChar(255)
+  mobile_phone                     String?                            @db.NVarChar(50)
+  date_joined                      DateTime?                          @db.Date
+  is_active                        Boolean                            @default(true, map: "DF_member_is_active")
+  last_active                      DateTime?                          @db.Date
+  current_promotion_strategy       current_promotion_strategy[]
+  desired_partnership              desired_partnership?
+  desired_promotion_strategy       desired_promotion_strategy[]
+  event_member_involved            event_member_involved[]
+  grant_investigator_member        grant_investigator_member[]
+  grant_member_involved            grant_member_involved[]
+  has_keyword                      has_keyword[]
+  insight                          insight?
+  account                          account                            @relation(fields: [account_id], references: [id], onDelete: Cascade, map: "FK_member_account_id")
+  faculty                          faculty?                           @relation(fields: [faculty_id], references: [id], map: "FK_member_faculty_id")
+  member_type                      member_type?                       @relation(fields: [type_id], references: [id], map: "FK_member_type_id")
+  partnership_member_org           partnership_member_org[]
+  problem                          problem[]
+  product_member_author            product_member_author[]
+  supervision_co_supervisor        supervision_co_supervisor[]
+  supervision_committee            supervision_committee[]
+  supervision_principal_supervisor supervision_principal_supervisor[]
+  supervision_trainee              supervision_trainee[]
 }
 
 model member_type {
@@ -199,6 +313,7 @@ model organization {
   scope_id               Int
   type_id                Int
   description            String?                  @db.NVarChar(4000)
+  event_partner_involved event_partner_involved[]
   org_scope              org_scope                @relation(fields: [scope_id], references: [id], onUpdate: NoAction, map: "FK_organization_scope_id")
   org_type               org_type                 @relation(fields: [type_id], references: [id], onUpdate: NoAction, map: "FK_organization_type_id")
   partnership_member_org partnership_member_org[]
@@ -224,21 +339,22 @@ model problem {
 }
 
 model product {
-  id                    Int                     @id(map: "PK_product") @default(autoincrement())
-  title_en              String                  @db.NVarChar(500)
-  title_fr              String                  @db.NVarChar(500)
-  date                  DateTime?               @db.Date
-  all_author            String?                 @db.NVarChar(3000)
-  doi                   String?                 @db.NVarChar(100)
-  on_going              Boolean
-  peer_reviewed         Boolean
-  product_type_id       Int
-  note                  String?                 @db.NVarChar(2000)
-  product_type          product_type            @relation(fields: [product_type_id], references: [id], onUpdate: NoAction, map: "FK_product_product_type")
-  product_member_author product_member_author[]
-  product_partnership   product_partnership[]
-  product_target        product_target[]
-  product_topic         product_topic[]
+  id                     Int                      @id(map: "PK_product") @default(autoincrement())
+  title_en               String                   @db.NVarChar(500)
+  title_fr               String                   @db.NVarChar(500)
+  date                   DateTime?                @db.Date
+  all_author             String?                  @db.NVarChar(3000)
+  doi                    String?                  @db.NVarChar(100)
+  on_going               Boolean
+  peer_reviewed          Boolean
+  product_type_id        Int
+  note                   String?                  @db.NVarChar(2000)
+  event_product_resulted event_product_resulted[]
+  product_type           product_type             @relation(fields: [product_type_id], references: [id], onUpdate: NoAction, map: "FK_product_product_type")
+  product_member_author  product_member_author[]
+  product_partnership    product_partnership[]
+  product_target         product_target[]
+  product_topic          product_topic[]
 }
 
 model product_member_all_author {
@@ -299,6 +415,73 @@ model promotion_strategy {
   desired_promotion_strategy desired_promotion_strategy[]
 }
 
+model source {
+  id      Int     @id(map: "PK_source") @default(autoincrement())
+  name_en String  @db.NVarChar(50)
+  name_fr String  @db.NVarChar(50)
+  grant   grant[]
+}
+
+model status {
+  id      Int     @id(map: "PK_status") @default(autoincrement())
+  name_en String  @db.NVarChar(50)
+  name_fr String  @db.NVarChar(50)
+  grant   grant[]
+}
+
+model supervision {
+  id                               Int                                @id(map: "PK_supervision") @default(autoincrement())
+  last_name                        String                             @db.NVarChar(100)
+  first_name                       String                             @db.NVarChar(100)
+  start_date                       DateTime?                          @db.Date
+  end_date                         DateTime?                          @db.Date
+  faculty_id                       Int?
+  level_id                         Int?
+  note                             String?                            @db.NVarChar(Max)
+  faculty                          faculty?                           @relation(fields: [faculty_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_supervision_faculty")
+  level                            level?                             @relation(fields: [level_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_supervision_level")
+  supervision_co_supervisor        supervision_co_supervisor[]
+  supervision_committee            supervision_committee[]
+  supervision_principal_supervisor supervision_principal_supervisor[]
+  supervision_trainee              supervision_trainee[]
+}
+
+model supervision_co_supervisor {
+  member_id      Int
+  supervision_id Int
+  member         member      @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_supervision_co_supervisor_member_id")
+  supervision    supervision @relation(fields: [supervision_id], references: [id], onUpdate: NoAction, map: "FK_supervision_co_supervisor_supervision_id")
+
+  @@id([member_id, supervision_id], map: "PK_supervision_co_supervisor")
+}
+
+model supervision_committee {
+  member_id      Int
+  supervision_id Int
+  member         member      @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_supervision_committee_member_id")
+  supervision    supervision @relation(fields: [supervision_id], references: [id], onUpdate: NoAction, map: "FK_supervision_committee_supervision_id")
+
+  @@id([member_id, supervision_id], map: "PK_supervision_committee")
+}
+
+model supervision_principal_supervisor {
+  member_id      Int
+  supervision_id Int
+  member         member      @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_supervision_principal_supervisor_member_id")
+  supervision    supervision @relation(fields: [supervision_id], references: [id], onUpdate: NoAction, map: "FK_supervision_principal_supervisor_supervision_id")
+
+  @@id([member_id, supervision_id], map: "PK_supervision_principal_supervisor")
+}
+
+model supervision_trainee {
+  member_id      Int
+  supervision_id Int
+  member         member      @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_supervision_trainee_member_id")
+  supervision    supervision @relation(fields: [supervision_id], references: [id], onUpdate: NoAction, map: "FK_supervision_trainee_supervision_id")
+
+  @@id([member_id, supervision_id], map: "PK_supervision_trainee")
+}
+
 model sysdiagrams {
   name         String @db.NVarChar(128)
   principal_id Int
@@ -320,5 +503,7 @@ model topic {
   id            Int             @id(map: "PK_topic") @default(autoincrement())
   name_fr       String          @db.NVarChar(300)
   name_en       String          @db.NVarChar(300)
+  event         event[]
+  grant         grant[]
   product_topic product_topic[]
 }
