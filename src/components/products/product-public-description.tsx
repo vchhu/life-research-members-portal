@@ -4,7 +4,6 @@ import Item from "antd/lib/descriptions/Item";
 import { FC, useContext } from "react";
 import type { ProductPublicInfo } from "../../services/_types";
 import GetLanguage from "../../utils/front-end/get-language";
-import AllAuthorTag from "../products/all-author-tag";
 import React from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import Tag from "antd/lib/tag";
