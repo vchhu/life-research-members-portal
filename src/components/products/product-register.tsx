@@ -92,15 +92,21 @@ const RegisterProduct: FC = () => {
         <Form.Item
           label={en ? "All Authors" : "Tous les Auteurs"}
           name="all_author"
+          rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Input.TextArea />
         </Form.Item>
-        <Form.Item label={en ? "On Going" : "En Cours"} name="on_going">
+        <Form.Item
+          label={en ? "On Going" : "En Cours"}
+          name="on_going"
+          valuePropName="checked"
+        >
           <Input type="checkbox" />
         </Form.Item>
         <Form.Item
           label={en ? "Peer Reviewed" : "Examiné par les Pairs"}
           name="peer_reviewed"
+          valuePropName="checked"
         >
           <Input type="checkbox" />
         </Form.Item>

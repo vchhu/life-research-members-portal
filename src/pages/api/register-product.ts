@@ -44,22 +44,22 @@ export default async function handler(
     title_en,
     title_fr,
     // date,
-    doi,
+    //doi,
     all_author,
     on_going,
     peer_reviewed,
     product_type_id,
-    note,
+    //note,
   } = params;
-  if (typeof title_en !== "string") return res.status(400).send("title_en is required.");
-  if (typeof title_fr !== "string") return res.status(400).send("title_fr is required.");
+  if (typeof title_en !== "string") return res.status(400).send("Please provide the title in english");
+  if (typeof title_fr !== "string") return res.status(400).send("Please provide the title in french");
   //if (!(date instanceof Date)) return res.status(400).send("date is required.");
-  if (typeof doi !== "string") return res.status(400).send("doi is required.");
+  //if (typeof doi !== "string") return res.status(400).send("doi is required.");
   if (!["boolean", "undefined"].includes(typeof on_going)) return res.status(400).send("on_going is required.");
   if (!["boolean", "undefined"].includes(typeof peer_reviewed)) return res.status(400).send("peer_reviewed is required.");
-  if (typeof all_author !== "string") return res.status(400).send("all_author is required.");
+  if (typeof all_author !== "string") return res.status(400).send("Author is required.");
   if (isNaN(product_type_id)) return res.status(400).send("product_type_id is required.");
-  if (typeof note !== "string") return res.status(400).send("note is required.");
+  //if (typeof note !== "string") return res.status(400).send("note is required.");
 
   try {
     const currentUser = await getAccountFromRequest(req, res);

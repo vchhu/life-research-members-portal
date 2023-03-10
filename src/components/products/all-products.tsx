@@ -23,7 +23,6 @@ import blurActiveElement from "../../utils/front-end/blur-active-element";
 import { Checkbox } from "antd";
 import ProductTitleFilter from "../filters/product-title-filter";
 import ProductTypeFilter from "../filters/product-type-filter";
-import ProductAllAuthorFilter from "../filters/product-all-author-filter";
 import type { ParsedUrlQueryInput } from "querystring";
 import { AllProductsCtx } from "../../services/context/all-products-ctx";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
@@ -36,17 +35,12 @@ function filterFn(
   m: ProductPublicInfo & { product: string },
   filters: {
     productTitleFilter: Set<number>;
-    productAllAuthorFilter: Set<number>;
     productTypesFilter: Set<number>;
   }
 ): boolean {
-  const { productTitleFilter, productAllAuthorFilter, productTypesFilter } =
-    filters;
+  const { productTitleFilter, productTypesFilter } = filters;
 
   if (productTitleFilter.size > 0 && !productTitleFilter.has(m.id))
-    return false;
-
-  if (productAllAuthorFilter.size > 0 && !productAllAuthorFilter.has(m.id))
     return false;
 
   if (productTypesFilter.size > 0) {
@@ -61,7 +55,6 @@ function filterFn(
 // Use query params for filters - for bookmarking, back button etc.
 export const queryKeys = {
   showType: "showType",
-  //showAuthor: "showAuthor",
   showAllAuthor: "showAllAuthor",
   showDoi: "showDoi",
   productTitle: "productTitle",
@@ -73,7 +66,6 @@ export const queryKeys = {
 const defaultQueries = {
   showDoi: true,
   showType: true,
-  //showAuthor: false,
   showAllAuthor: true,
 } as const;
 
@@ -85,15 +77,6 @@ function handleShowDoiChange(value: boolean) {
   if (value === defaultQueries.showDoi) delete query[queryKeys.showDoi];
   Router.push({ query }, undefined, { scroll: false });
 }
-
-/* function handleShowAuthorChange(value: boolean) {
-  const query: ParsedUrlQueryInput = {
-    ...Router.query,
-    [queryKeys.showAuthor]: value,
-  };
-  if (value === defaultQueries.showAuthor) delete query[queryKeys.showAuthor];
-  Router.push({ query }, undefined, { scroll: false });
-} */
 
 function handleShowAllAuthorChange(value: boolean) {
   const query: ParsedUrlQueryInput = {
@@ -199,9 +182,7 @@ const AllProducts: FC = () => {
 
   const [showDoi, setShowDoi] = useState<boolean>(defaultQueries.showDoi);
   const [showType, setShowType] = useState<boolean>(defaultQueries.showType);
-  /*  const [showAuthor, setShowAuthor] = useState<boolean>(
-    defaultQueries.showAuthor
-  ); */
+
   const [showAllAuthor, setShowAllAuthor] = useState<boolean>(
     defaultQueries.showAllAuthor
   );
@@ -221,7 +202,6 @@ const AllProducts: FC = () => {
   const router = useRouter();
 
   const showTypeQuery = router.query[queryKeys.showType];
-  //const showAuthorQuery = router.query[queryKeys.showAuthor];
   const showAllAuthorQuery = router.query[queryKeys.showAllAuthor];
   const showDoiQuery = router.query[queryKeys.showDoi];
   const productTitleQuery = router.query[queryKeys.productTitle];
@@ -239,12 +219,6 @@ const AllProducts: FC = () => {
     if (showDoiQuery === "true") setShowDoi(true);
     if (showDoiQuery === "false") setShowDoi(false);
   }, [showDoiQuery]);
-
-  /*   useEffect(() => {
-    if (!showAuthorQuery) setShowAuthor(defaultQueries.showAuthor);
-    if (showAuthorQuery === "true") setShowAuthor(true);
-    if (showAuthorQuery === "false") setShowAuthor(false);
-  }, [showAuthorQuery]); */
 
   useEffect(() => {
     if (!showAllAuthorQuery) setShowAllAuthor(defaultQueries.showAllAuthor);
@@ -271,13 +245,6 @@ const AllProducts: FC = () => {
     refreshProducts();
   }
 
-  /*   const addAllAuthor = useCallback(
-    (k: all_author) => {
-      handleProductAuthorFilterChange(new Set(productAuthorFilter).add(k.id));
-    },
-    [productAuthorFilter]
-  ); */
-
   const filteredProducts = useMemo(
     () =>
       allProducts
@@ -285,17 +252,10 @@ const AllProducts: FC = () => {
         .filter((m) =>
           filterFn(m, {
             productTitleFilter,
-            productAllAuthorFilter,
             productTypesFilter,
           })
         ),
-    [
-      allProducts,
-      productTitleFilter,
-      productAllAuthorFilter,
-      productTypesFilter,
-      en,
-    ]
+    [allProducts, productTitleFilter, productTypesFilter, en]
   );
 
   type ProductColumnType = ColumnType<typeof filteredProducts[number]>;
@@ -329,23 +289,6 @@ const AllProducts: FC = () => {
     [en]
   );
 
-  /* const productAuthorColumn: ProductColumnType = useMemo(
-    () => ({
-      title: en ? "Author" : "Auteur",
-      dataIndex: ["product_member_all_author"],
-      className: "author-column",
-      render: (_, product) =>
-        product.product_member_all_author.map((k) => (
-          <AllAuthorTag
-            key={k.all_author.id}
-            all_author={k.all_author}
-            onClick={addAllAuthor}
-          />
-        )),
-    }),
-    [addAllAuthor, en]
-  ); */
-
   const productAllAuthorColumn: ProductColumnType = useMemo(
     () => ({
       title: en ? "All Authors" : "Tous les auteurs",
@@ -377,7 +320,6 @@ const AllProducts: FC = () => {
   const columns: ProductColumnType[] = [nameColumn];
   if (showDoi) columns.push(doiColumn);
   if (showType) columns.push(productTypeColumn);
-  //if (showAuthor) columns.push(productAuthorColumn);
   if (showAllAuthor) columns.push(productAllAuthorColumn);
 
   const filters = (
@@ -398,17 +340,7 @@ const AllProducts: FC = () => {
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>
-      <Form.Item
-        label={en ? "Filter by Author" : "Filtrer par Auteur"}
-        htmlFor="author-filter"
-      >
-        <ProductAllAuthorFilter
-          id="author-filter"
-          value={productAllAuthorFilter}
-          onChange={handleProductAllAuthorFilterChange}
-          getPopupContainer={getPopupContainer}
-        />
-      </Form.Item>
+
       <Form.Item
         label={en ? "Filter by type" : "Filtrer par type"}
         htmlFor="product-type-filter"
@@ -438,12 +370,6 @@ const AllProducts: FC = () => {
         >
           {en ? "Show Product Type" : "Afficher le type de produit"}
         </Checkbox>
-        {/*   <Checkbox
-          checked={showAuthor}
-          onChange={(e) => handleShowAuthorChange(e.target.checked)}
-        >
-          {en ? "Show Authors" : "Afficher les auteurs"}
-        </Checkbox> */}
 
         <Checkbox
           checked={showAllAuthor}
