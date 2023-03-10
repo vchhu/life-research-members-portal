@@ -27,6 +27,7 @@ const NavMenu: FC = () => {
     { label: en ? "Members" : "Membres", href: PageRoutes.allMembers },
     { label: en ? "Partners" : "Partenaires", href: PageRoutes.allPartners },
     { label: en ? "Products" : "Produits", href: PageRoutes.products },
+    { label: en ? "Grants" : "Subventions", href: PageRoutes.allGrants },
   ];
 
   // Registered Acounts

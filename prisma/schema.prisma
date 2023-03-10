@@ -339,8 +339,8 @@ model product {
   date                   DateTime?                @db.Date
   all_author             String?                  @db.NVarChar(3000)
   doi                    String?                  @db.NVarChar(100)
-  on_going               Boolean
-  peer_reviewed          Boolean
+  on_going               Boolean?
+  peer_reviewed          Boolean?
   product_type_id        Int
   note                   String?                  @db.NVarChar(2000)
   event_product_resulted event_product_resulted[]

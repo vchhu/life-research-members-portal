@@ -14,6 +14,7 @@ const PageRoutes = {
   allPartners: "/partners",
   allProducts: "/products",
   products: "/products",
+  allGrants: "/grants",
   accountProfile: (id: number) => "/accounts/" + id,
   register: "/register",
   _404: "/404",
