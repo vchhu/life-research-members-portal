@@ -14,11 +14,9 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 import type { PartnerPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
 import { AllPartnersCtx } from "../../services/context/all-partners-ctx";
-import GetLanguage from "../../utils/front-end/get-language";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import SafeLink from "../link/safe-link";
-
 import Router, { useRouter } from "next/router";
 import Form from "antd/lib/form";
 import blurActiveElement from "../../utils/front-end/blur-active-element";
@@ -26,7 +24,6 @@ import { Checkbox } from "antd";
 import OrgTypeFilter from "../filters/org-type-filter";
 import OrgScopeFilter from "../filters/org-scope-filter";
 import OrgNameFilter from "../filters/org-name-filter";
-import PartnerNameFilter from "../filters/partner-name-filter";
 import type { ParsedUrlQueryInput } from "querystring";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 

@@ -118,7 +118,7 @@ model faculty {
 model grant {
   id                        Int                         @id(map: "PK_grant") @default(autoincrement())
   title                     String                      @db.NVarChar(2000)
-  amount                    BigInt
+  amount                    Float                       @db.Money
   throught_lri              Boolean?
   status_id                 Int?
   submission_date           DateTime?                   @db.Date

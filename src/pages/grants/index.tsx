@@ -1,8 +1,8 @@
-export default function About() {
-  return (
-    <div>
-      {" "}
-      <h1>Grants Pages</h1> <h3>Under Construction</h3>
-    </div>
-  );
-}
+import type { NextPage } from "next/types";
+import AllGrants from "../../components/grants/all-grants";
+
+const GrantsPage: NextPage = () => {
+  return <AllGrants />;
+};
+
+export default GrantsPage;

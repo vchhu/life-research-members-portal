@@ -1,10 +1,13 @@
-// See https://ant.design/components/form/#components-form-demo-customized-form-controls
-
 import Select, { SelectProps } from "antd/lib/select";
 import { FC, useContext, useMemo } from "react";
-import { PartnerNameCtx } from "../../services/context/partner-name-ctx";
+import { AllGrantsCtx } from "../../services/context/all-grants-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import GetLanguage from "../../utils/front-end/get-language";
+import type { GrantPublicInfo } from "../../services/_types";
+import fuzzyIncludes from "../../utils/front-end/fuzzy-includes";
+
+function getTitle(grant: GrantPublicInfo) {
+  return grant.title;
+}
 
 type Props = {
   id?: string;
@@ -13,26 +16,19 @@ type Props = {
   getPopupContainer?: SelectProps["getPopupContainer"];
 };
 
-const PartnerNameFilter: FC<Props> = ({
+const GrantNameFilter: FC<Props> = ({
   id,
   value = new Set<number>(),
   onChange = () => {},
   getPopupContainer,
 }) => {
-  const { partnername } = useContext(PartnerNameCtx);
-  const { en } = useContext(LanguageCtx);
+  const { allGrants } = useContext(AllGrantsCtx);
 
   const valueArray = useMemo(() => Array.from(value.values()), [value]);
 
   const options = useMemo(
-    () => [
-      { label: en ? "Empty" : "Vide", value: 0 },
-      ...partnername.map((t) => ({
-        label: <GetLanguage obj={t} />,
-        value: t.id,
-      })),
-    ],
-    [en, partnername]
+    () => allGrants.map((g) => ({ label: getTitle(g), value: g.id })),
+    [allGrants]
   );
 
   function onSelect(id: number) {
@@ -45,16 +41,23 @@ const PartnerNameFilter: FC<Props> = ({
     onChange(value);
   }
 
+  function filterOption(
+    input: string,
+    option?: typeof options[number]
+  ): boolean {
+    if (!option) return false;
+    return fuzzyIncludes(option.label, input);
+  }
+
   return (
     <Select
       id={id}
-      className="faculty-filter"
-      mode="multiple"
+      className="grant-title-filter"
       value={valueArray}
+      filterOption={filterOption}
+      mode="multiple"
       options={options}
       allowClear
-      showSearch={false}
-      showArrow
       onSelect={onSelect}
       onDeselect={onDelete}
       getPopupContainer={getPopupContainer}
@@ -62,4 +65,4 @@ const PartnerNameFilter: FC<Props> = ({
   );
 };
 
-export default PartnerNameFilter;
+export default GrantNameFilter;

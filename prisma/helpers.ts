@@ -120,3 +120,22 @@ export const selectPublicProductInfo: CheckKeysAreValid<
     Prisma.productSelect
 > = _selectPublicProductInfo;
 
+const _selectPublicGrantInfo = {
+    id: true,
+    title: true,
+    amount: true,
+    throught_lri: true,
+    status: true,
+    submission_date: true,
+    obtained_date: true,
+    completed_date: true,
+    source: true,
+    all_investigator: true,
+    topic: true,
+    note: true,
+} as const;
+
+export const selectPublicGrantInfo: CheckKeysAreValid<
+    typeof _selectPublicGrantInfo,
+    Prisma.grantSelect
+> = _selectPublicGrantInfo;
