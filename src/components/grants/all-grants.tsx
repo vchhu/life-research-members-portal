@@ -328,8 +328,7 @@ const AllGrants: FC = () => {
       title: "Amount",
       dataIndex: "amount",
       className: "amount-column",
-      sorter: (a, b) => a.amount - b.amount,
-      render: (value) => value?.toLocaleString(),
+      render: (value) => `$ ${value?.toLocaleString()}`,
     }),
     []
   );
