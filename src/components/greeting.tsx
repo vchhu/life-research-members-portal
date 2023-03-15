@@ -1,4 +1,8 @@
-import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
+import {
+  AuthenticatedTemplate,
+  UnauthenticatedTemplate,
+  useMsal,
+} from "@azure/msal-react";
 import Spin from "antd/lib/spin";
 import { FC, useContext } from "react";
 import { ActiveAccountCtx } from "../services/context/active-account-ctx";
@@ -11,10 +15,10 @@ const Greeting: FC = () => {
 
   const adminGreeting = (
     <h2 style={{ color: blue[6] }}>
-      {en ? "You are an administrator, congrats!" : "Vous êtes administrateur, félicitations !"}
+      {en
+        ? "You are an administrator, congrats!"
+        : "Vous êtes administrateur, félicitations !"}
     </h2>
-    
-
   );
 
   const noMemberInfo = (
@@ -49,7 +53,11 @@ const Greeting: FC = () => {
 
   const notRegistered = (
     <>
-      <h2>{en ? "This account is not registered." : "Ce compte n'est pas enregistré."}</h2>
+      <h2>
+        {en
+          ? "This account is not registered."
+          : "Ce compte n'est pas enregistré."}
+      </h2>
       <h2>
         {en
           ? "If you are a member, please ask an administrator to register you."
@@ -63,7 +71,7 @@ const Greeting: FC = () => {
       <h2>
         {en
           ? "If you are a member, please login."
-          : "Si vous êtes membre, connectez-vous s'il vous plait."}
+          : "Si vous êtes membre, connectez-vous s'il vous plaît."}
       </h2>
       <h2>
         {en
@@ -96,7 +104,9 @@ const Greeting: FC = () => {
           ? "Welcome to the LIFE Research Insitute Member Portal!"
           : "Bienvenue sur le Portail des Membres du LIFE Research Institute !"}
       </h1>
-      <UnauthenticatedTemplate>{unauthenticatedGreeting}</UnauthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        {unauthenticatedGreeting}
+      </UnauthenticatedTemplate>
       <AuthenticatedTemplate>{greeting()}</AuthenticatedTemplate>
     </div>
   );

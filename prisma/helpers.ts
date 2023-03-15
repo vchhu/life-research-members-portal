@@ -139,3 +139,22 @@ export const selectPublicGrantInfo: CheckKeysAreValid<
     typeof _selectPublicGrantInfo,
     Prisma.grantSelect
 > = _selectPublicGrantInfo;
+
+const _selectPublicEventInfo = {
+    id: true,
+    name_en: true,
+    name_fr: true,
+    start_date: true,
+    end_date: true,
+    event_type_id: true,
+    topic_id: true,
+    note: true,
+    topic: true,
+    event_type: true,
+} as const;
+
+export const selectPublicEventInfo: CheckKeysAreValid<
+    typeof _selectPublicEventInfo,
+    Prisma.eventSelect
+> = _selectPublicEventInfo;
+

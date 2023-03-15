@@ -1,4 +1,10 @@
-import { createContext, FC, PropsWithChildren, useEffect, useState } from "react";
+import {
+  createContext,
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from "react";
 
 const cacheKey = "preferred-language";
 export let en = true; // For use outside components
@@ -28,6 +34,8 @@ export const LanguageCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   return (
-    <LanguageCtx.Provider value={{ en: _en, toggleLanguage }}>{children}</LanguageCtx.Provider>
+    <LanguageCtx.Provider value={{ en: _en, toggleLanguage }}>
+      {children}
+    </LanguageCtx.Provider>
   );
 };

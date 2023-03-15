@@ -16,6 +16,8 @@ import { AllProductsCtxProvider } from "./all-products-ctx";
 import { AllGrantsCtxProvider } from "./all-grants-ctx";
 import { GrantSourcesCtxProvider } from "./grant-sources-ctx";
 import { GrantStatusCtxProvider } from "./grant-statuses-ctx";
+import { AllEventsCtxProvider } from "./all-events-ctx";
+import { EventTypesCtxProvider } from "./event-types-ctx";
 
 // Bundles context providers, first element in array is the outer-most provider
 const AllContextProviders: FC<PropsWithChildren> = [
@@ -36,6 +38,8 @@ const AllContextProviders: FC<PropsWithChildren> = [
   GrantSourcesCtxProvider,
   AllGrantsCtxProvider,
   GrantStatusCtxProvider,
+  AllEventsCtxProvider,
+  EventTypesCtxProvider,
 ].reduceRight((Accumulator, Parent) => {
   const Provider: FC<PropsWithChildren> = ({ children }) => (
     <Parent>

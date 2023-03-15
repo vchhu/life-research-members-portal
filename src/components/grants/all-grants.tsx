@@ -59,13 +59,13 @@ function filterFn(
 
 // Use query params for filters - for bookmarking, back button etc.
 export const queryKeys = {
+  grantIds: "grantIds",
+  grantStatus: "grantStatus",
+  grantSource: "grantSource",
   showStatus: "showStatus",
   showSource: "showSource",
   showAmount: "showAmount",
   showSubmissionDate: "showSubmissionDate",
-  grantIds: "grantIds",
-  grantStatus: "grantStatus",
-  grantSource: "grantSource",
 } as const;
 
 // Don't want to change url if query is default value

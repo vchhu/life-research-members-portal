@@ -21,11 +21,11 @@ import blurActiveElement from "../../utils/front-end/blur-active-element";
 import { Checkbox } from "antd";
 import type { ParsedUrlQueryInput } from "querystring";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
-import type { PartnerPublicInfo } from "../../services/_types";
-import { AllPartnersCtx } from "../../services/context/all-partners-ctx";
-import OrgTypeFilter from "../filters/org-type-filter";
-import OrgScopeFilter from "../filters/org-scope-filter";
-import OrgNameFilter from "../filters/org-name-filter";
+
+import { AllEventsCtx } from "../../services/context/all-events-ctx";
+import EventNameFilter from "../filters/event-name-filter";
+import EventTypeFilter from "../filters/event-type-filter";
+import type { EventPublicInfo } from "../../services/_types";
 
 function nameSorter(en: boolean) {
   return (
@@ -38,28 +38,23 @@ function nameSorter(en: boolean) {
   };
 }
 
-function getName(organization: PartnerPublicInfo, en: boolean) {
-  return en ? organization.name_en : organization.name_fr;
+function getName(event: EventPublicInfo, en: boolean) {
+  return en ? event.name_en : event.name_fr;
 }
-
 function filterFn(
-  m: PartnerPublicInfo & { name: string },
+  m: EventPublicInfo,
   filters: {
     nameFilter: Set<number>;
     typeFilter: Set<number>;
-    scopeFilter: Set<number>;
   }
 ): boolean {
-  const { nameFilter, typeFilter, scopeFilter } = filters;
+  const { nameFilter, typeFilter } = filters;
+
   if (nameFilter.size > 0 && !nameFilter.has(m.id)) return false;
 
   if (typeFilter.size > 0) {
-    if (!m.org_type && !typeFilter.has(0)) return false; // id 0 is for null
-    if (m.org_type && !typeFilter.has(m.org_type.id)) return false;
-  }
-  if (scopeFilter.size > 0) {
-    if (!m.org_scope && !scopeFilter.has(0)) return false; // id 0 is for null
-    if (m.org_scope && !scopeFilter.has(m.org_scope.id)) return false;
+    if (!m.event_type) return false;
+    if (!typeFilter.has(m.event_type.id)) return false;
   }
 
   return true;
@@ -67,25 +62,26 @@ function filterFn(
 
 // Use query params for filters - for bookmarking, back button etc.
 export const queryKeys = {
+  eventIds: "eventIds",
+  eventType: "eventType",
+  eventStartDate: "eventStartDate",
   showType: "showType",
-  showScope: "showScope",
-  partnerType: "partnerType",
-  partnerScope: "partnerScope",
-  orgIds: "orgIds",
+  showStartDate: "showStartDate",
+  showEndDate: "showEndDate",
 } as const;
 
 // Don't want to change url if query is default value
 const defaultQueries = {
   showType: true,
-  showScope: true,
+  showStartDate: true,
+  showEndDate: true,
 } as const;
-
-function handleNameFilterChange(next: Set<number>) {
+function handleEventNameFilterChange(next: Set<number>) {
   Router.push(
     {
       query: {
         ...Router.query,
-        [queryKeys.orgIds]: Array.from(next.keys()),
+        [queryKeys.eventIds]: Array.from(next.keys()),
       },
     },
     undefined,
@@ -93,12 +89,12 @@ function handleNameFilterChange(next: Set<number>) {
   );
 }
 
-function handlePartnerTypeFilterChange(next: Set<number>) {
+function handleEventTypeFilterChange(next: Set<number>) {
   Router.push(
     {
       query: {
         ...Router.query,
-        [queryKeys.partnerType]: Array.from(next.keys()),
+        [queryKeys.eventType]: Array.from(next.keys()),
       },
     },
     undefined,
@@ -106,26 +102,17 @@ function handlePartnerTypeFilterChange(next: Set<number>) {
   );
 }
 
-function handlePartnerScopeFilterChange(next: Set<number>) {
+function handleEventStartDateFilterChange(date: moment.Moment | null) {
   Router.push(
     {
       query: {
         ...Router.query,
-        [queryKeys.partnerScope]: Array.from(next.keys()),
+        [queryKeys.eventStartDate]: date ? date.format("YYYY-MM-DD") : "",
       },
     },
     undefined,
     { scroll: false }
   );
-}
-
-function handleShowScopeChange(value: boolean) {
-  const query: ParsedUrlQueryInput = {
-    ...Router.query,
-    [queryKeys.showScope]: value,
-  };
-  if (value === defaultQueries.showScope) delete query[queryKeys.showScope];
-  Router.push({ query }, undefined, { scroll: false });
 }
 
 function handleShowTypeChange(value: boolean) {
@@ -134,6 +121,25 @@ function handleShowTypeChange(value: boolean) {
     [queryKeys.showType]: value,
   };
   if (value === defaultQueries.showType) delete query[queryKeys.showType];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
+function handleShowStartDateChange(value: boolean) {
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showStartDate]: value,
+  };
+  if (value === defaultQueries.showStartDate)
+    delete query[queryKeys.showStartDate];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
+function handleShowEndDateChange(value: boolean) {
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showEndDate]: value,
+  };
+  if (value === defaultQueries.showEndDate) delete query[queryKeys.showEndDate];
   Router.push({ query }, undefined, { scroll: false });
 }
 
@@ -163,39 +169,43 @@ function getPopupContainer(): HTMLElement {
   );
 }
 
-const AllPartners: FC = () => {
+const AllEvents: FC = () => {
   const { en } = useContext(LanguageCtx);
 
   const {
-    allPartners,
+    allEvents,
     loading,
-    refresh: refreshOrganizations,
-  } = useContext(AllPartnersCtx);
-
-  const { localAccount } = useContext(ActiveAccountCtx);
-
-  const handleRegisterPartner = () => {
-    router.push("partners/register");
-  };
+    refresh: refreshEvents,
+  } = useContext(AllEventsCtx);
 
   useEffect(() => {
-    refreshOrganizations();
+    refreshEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleCreateEvent = () => {
+    router.push("events/register");
+  };
+
+  const { localAccount } = useContext(ActiveAccountCtx);
+
   const [showType, setShowType] = useState<boolean>(defaultQueries.showType);
-  const [showScope, setShowScope] = useState<boolean>(defaultQueries.showScope);
+  const [showStartDate, setShowStartDate] = useState<boolean>(
+    defaultQueries.showStartDate
+  );
+  const [showEndDate, setShowEndDate] = useState<boolean>(
+    defaultQueries.showEndDate
+  );
 
   const [nameFilter, setNameFilter] = useState(new Set<number>());
   const [typeFilter, setTypeFilter] = useState(new Set<number>());
-  const [scopeFilter, setScopeFilter] = useState(new Set<number>());
 
   const router = useRouter();
   const showTypeQuery = router.query[queryKeys.showType];
-  const showScopeQuery = router.query[queryKeys.showScope];
-  const typeQuery = router.query[queryKeys.partnerType];
-  const scopeQuery = router.query[queryKeys.partnerScope];
-  const nameIdsQuery = router.query[queryKeys.orgIds];
+  const showStartDateQuery = router.query[queryKeys.showStartDate];
+  const showEndDateQuery = router.query[queryKeys.showEndDate];
+  const typeQuery = router.query[queryKeys.eventType];
+  const nameIdsQuery = router.query[queryKeys.eventIds];
 
   useEffect(() => {
     if (!showTypeQuery) setShowType(defaultQueries.showType);
@@ -204,96 +214,107 @@ const AllPartners: FC = () => {
   }, [showTypeQuery]);
 
   useEffect(() => {
-    if (!showScopeQuery) setShowScope(defaultQueries.showScope);
-    if (showScopeQuery === "true") setShowScope(true);
-    if (showScopeQuery === "false") setShowScope(false);
-  }, [showScopeQuery]);
+    if (!showStartDateQuery) setShowStartDate(defaultQueries.showStartDate);
+    if (showStartDateQuery === "true") setShowStartDate(true);
+    if (showStartDateQuery === "false") setShowStartDate(false);
+  }, [showStartDateQuery]);
 
   useEffect(() => {
-    setNameFilter(getIdsFromQueryParams(queryKeys.orgIds));
+    if (!showEndDateQuery) setShowEndDate(defaultQueries.showEndDate);
+    if (showEndDateQuery === "true") setShowEndDate(true);
+    if (showEndDateQuery === "false") setShowEndDate(false);
+  }, [showEndDateQuery]);
+
+  useEffect(() => {
+    setNameFilter(getIdsFromQueryParams(queryKeys.eventIds));
   }, [nameIdsQuery]);
 
   useEffect(() => {
-    setTypeFilter(getIdsFromQueryParams(queryKeys.partnerType));
+    setTypeFilter(getIdsFromQueryParams(queryKeys.eventType));
   }, [typeQuery]);
-
-  useEffect(() => {
-    setScopeFilter(getIdsFromQueryParams(queryKeys.partnerScope));
-  }, [scopeQuery]);
 
   function refreshAndClearFilters() {
     clearQueries();
-    refreshOrganizations();
+    refreshEvents();
   }
-
-  const filteredOrganisation = useMemo(
+  const filteredEvents = useMemo(
     () =>
-      allPartners
+      allEvents
         .map((m) => ({ ...m, key: m.id, name: getName(m, en) }))
         .filter((m) =>
           filterFn(m, {
             nameFilter,
             typeFilter,
-            scopeFilter,
           })
         ),
-    [allPartners, typeFilter, scopeFilter, nameFilter, en]
+    [allEvents, nameFilter, typeFilter, en]
   );
 
-  type OrganizationColumnType = ColumnType<typeof filteredOrganisation[number]>;
+  type EventColumnType = ColumnType<typeof filteredEvents[number]>;
 
-  const nameColumn: OrganizationColumnType = useMemo(
+  const nameColumn: EventColumnType = useMemo(
     () => ({
       title: en ? "Name" : "Nom",
-      dataIndex: "name",
+      dataIndex: ["name_en", "name_fr"],
       className: "name-column",
       sorter: nameSorter(en),
-      render: (value, organization) => (
-        <SafeLink href={PageRoutes.organizationProfile(organization.id)}>
-          {value}
+      render: (value, event) => (
+        <SafeLink href={PageRoutes.eventProfile(event.id)}>
+          {event.name_en || event.name_fr}
         </SafeLink>
       ),
     }),
     [en]
   );
 
-  const typeColumn: OrganizationColumnType = useMemo(
+  const typeColumn: EventColumnType = useMemo(
     () => ({
-      title: en ? "Organization Type" : "Type d'organisation",
-      dataIndex: ["org_type", en ? "name_en" : "name_fr"],
+      title: en ? "Event Type" : "Type d'événement",
+      dataIndex: ["event_type", en ? "name_en" : "name_fr"],
       className: "type-column",
       sorter: en
         ? (a, b) =>
-            (a.org_type?.name_en || "").localeCompare(b.org_type?.name_en || "")
-        : (a, b) =>
-            (a.org_type?.name_fr || "").localeCompare(
-              b.org_type?.name_fr || ""
-            ),
-    }),
-    [en]
-  );
-
-  const scopeColumn: OrganizationColumnType = useMemo(
-    () => ({
-      title: en ? "Organization Scope" : "Champ d'activité",
-      dataIndex: ["org_scope", en ? "name_en" : "name_fr"],
-      className: "scope-column",
-      sorter: en
-        ? (a, b) =>
-            (a.org_scope?.name_en || "").localeCompare(
-              b.org_scope?.name_en || ""
+            (a.event_type?.name_en || "").localeCompare(
+              b.event_type?.name_en || ""
             )
         : (a, b) =>
-            (a.org_scope?.name_fr || "").localeCompare(
-              b.org_scope?.name_fr || ""
+            (a.event_type?.name_fr || "").localeCompare(
+              b.event_type?.name_fr || ""
             ),
     }),
     [en]
   );
 
-  const columns: OrganizationColumnType[] = [nameColumn];
+  const startDateColumn: EventColumnType = useMemo(
+    () => ({
+      title: "Start Date",
+      dataIndex: "start_date",
+      className: "start-date-column",
+      render: (value) => {
+        const date = new Date(value);
+        return date.toISOString().split("T")[0];
+      },
+    }),
+    []
+  );
+
+  const endDateColumn: EventColumnType = useMemo(
+    () => ({
+      title: "End Date",
+      dataIndex: "end_date",
+      className: "end-date-column",
+      render: (value) => {
+        const date = new Date(value);
+        return date.toISOString().split("T")[0];
+      },
+    }),
+    []
+  );
+
+  const columns: EventColumnType[] = [nameColumn];
   if (showType) columns.push(typeColumn);
-  if (showScope) columns.push(scopeColumn);
+  if (showStartDate) columns.push(startDateColumn);
+  if (showEndDate) columns.push(endDateColumn);
 
   const filters = (
     <Form
@@ -303,41 +324,30 @@ const AllPartners: FC = () => {
       size="small"
     >
       <Form.Item
-        label={en ? "Filter by name" : "Filtrer par nom"}
-        htmlFor="name-filter"
+        label={en ? "Filter by event name" : "Filtrer par nom de l'événement"}
+        htmlFor="event-name-filter"
       >
-        <OrgNameFilter
-          id="name-filter"
+        <EventNameFilter
+          id="event-name-filter"
           value={nameFilter}
-          onChange={handleNameFilterChange}
+          onChange={handleEventNameFilterChange}
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>
       <Form.Item
-        label={en ? "Filter by type" : "Filtrer par type"}
-        htmlFor="type-filter"
+        label={en ? "Filter by event type" : "Filtrer par type d'événement"}
+        htmlFor="event-type-filter"
       >
-        <OrgTypeFilter
-          id="type-filter"
+        <EventTypeFilter
+          id="event-type-filter"
           value={typeFilter}
-          onChange={handlePartnerTypeFilterChange}
+          onChange={handleEventTypeFilterChange}
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>
 
-      <Form.Item
-        label={en ? "Filter by scope" : "Filtrer par champ d'activité"}
-        htmlFor="scope-filter"
-      >
-        <OrgScopeFilter
-          id="scope-filter"
-          value={scopeFilter}
-          onChange={handlePartnerScopeFilterChange}
-          getPopupContainer={getPopupContainer}
-        />
-      </Form.Item>
       <label htmlFor="show-column-checkboxes">
-        {en ? "Show Columns:" : "Afficher les colonnes:"}
+        {en ? " Show Columns:" : "Afficher les colonnes:"}
       </label>
 
       <span className="show-column-checkboxes" id="show-column-checkboxes">
@@ -345,14 +355,21 @@ const AllPartners: FC = () => {
           checked={showType}
           onChange={(e) => handleShowTypeChange(e.target.checked)}
         >
-          {en ? "Show Organization Type" : "Afficher le type"}
+          {en ? " Show Type" : "Afficher le type"}
         </Checkbox>
 
         <Checkbox
-          checked={showScope}
-          onChange={(e) => handleShowScopeChange(e.target.checked)}
+          checked={showStartDate}
+          onChange={(e) => handleShowStartDateChange(e.target.checked)}
         >
-          {en ? "Show Organization Scope" : "Afficher le champ d'activité"}
+          {en ? " Show Start Date" : "Afficher la date de début"}
+        </Checkbox>
+
+        <Checkbox
+          checked={showEndDate}
+          onChange={(e) => handleShowEndDateChange(e.target.checked)}
+        >
+          {en ? " Show End Date" : "Afficher la date de fin"}
         </Checkbox>
       </span>
     </Form>
@@ -361,7 +378,7 @@ const AllPartners: FC = () => {
   const Header = () => (
     <>
       <div className="header-title-row">
-        <Title level={1}>{en ? "All Partners" : "Tous les partenaires"}</Title>
+        <Title level={1}>{en ? "All Events" : "Tous les événements"}</Title>
         <Button type="primary" onClick={refreshAndClearFilters} size="large">
           {en ? "Reset the filter" : "Réinitialiser le filtre"}
         </Button>{" "}
@@ -369,9 +386,9 @@ const AllPartners: FC = () => {
           <Button
             type="primary"
             size="large"
-            onClick={() => handleRegisterPartner()}
+            onClick={() => handleCreateEvent()}
           >
-            {en ? "Add a new partner" : "Ajouter un nouveau partenaire"}
+            {en ? "Create a new event" : "Créer un nouvel événement"}
           </Button>
         )}
       </div>
@@ -379,19 +396,21 @@ const AllPartners: FC = () => {
     </>
   );
 
-  const expandedRowRender = (organization: PartnerPublicInfo) => (
+  const expandedRowRender = (event: EventPublicInfo) => (
     <Descriptions size="small" layout="vertical" className="problems-container">
-      <Item label={en ? "About" : "À propos"}>{organization.description}</Item>
+      <Item label={en ? "About this event" : "À propos de cet événement"}>
+        {event.note}
+      </Item>
     </Descriptions>
   );
 
   return (
     <Table
-      className="all-partners-table"
+      className="all-grants-table"
       size="small"
       tableLayout="auto"
       columns={columns}
-      dataSource={filteredOrganisation}
+      dataSource={filteredEvents}
       loading={loading}
       title={Header}
       pagination={false}
@@ -405,10 +424,10 @@ const AllPartners: FC = () => {
         expandedRowRender,
         expandedRowClassName: (_, index) =>
           "expanded-table-row " + (index % 2 === 0 ? "even" : "odd"),
-        rowExpandable: (m) => !!m.description && m.description.length > 0,
+        rowExpandable: (m) => !!m.note && m.note.length > 0,
       }}
     />
   );
 };
 
-export default AllPartners;
+export default AllEvents;
