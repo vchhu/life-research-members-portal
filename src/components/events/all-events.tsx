@@ -102,19 +102,6 @@ function handleEventTypeFilterChange(next: Set<number>) {
   );
 }
 
-function handleEventStartDateFilterChange(date: moment.Moment | null) {
-  Router.push(
-    {
-      query: {
-        ...Router.query,
-        [queryKeys.eventStartDate]: date ? date.format("YYYY-MM-DD") : "",
-      },
-    },
-    undefined,
-    { scroll: false }
-  );
-}
-
 function handleShowTypeChange(value: boolean) {
   const query: ParsedUrlQueryInput = {
     ...Router.query,

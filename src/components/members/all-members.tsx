@@ -11,7 +11,6 @@ import {
   useState,
 } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import type { MemberPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
 import KeywordTag from "../keywords/keyword-tag";
 import { AllMembersCtx } from "../../services/context/all-members-ctx";
@@ -25,6 +24,7 @@ import type { keyword } from "@prisma/client";
 import KeywordFilter from "../filters/keyword-filter";
 import blurActiveElement from "../../utils/front-end/blur-active-element";
 import { Checkbox } from "antd";
+import type { MemberPublicInfo } from "../../services/_types";
 import MemberTypeFilter from "../filters/member-type-filter";
 import FacultyFilter from "../filters/faculty-filter";
 import MemberNameFilter from "../filters/member-name-filter";

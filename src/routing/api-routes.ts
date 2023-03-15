@@ -41,6 +41,8 @@ const ApiRoutes = {
   allProductTypes: "/api/all-product-types",
   allProductTitles: "/api/all-product-titles",
   allEventTypes: "/api/all-event-types",
+  allSupervisions: "/api/all-supervisions",
+  allLevels: "/api/all-levels",
 } as const;
 
 export default ApiRoutes;

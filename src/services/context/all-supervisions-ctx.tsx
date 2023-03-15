@@ -1,37 +1,38 @@
 import {
   createContext,
   FC,
-  PropsWithChildren,
   useEffect,
   useState,
+  PropsWithChildren,
 } from "react";
 import ApiRoutes from "../../routing/api-routes";
 import Notification from "../notifications/notification";
-import type { MemberPublicInfo } from "../_types";
+import type { SupervisionPublicInfo } from "../_types";
 
-export const AllMembersCtx = createContext<{
-  allMembers: MemberPublicInfo[];
+export const AllSupervisionsCtx = createContext<{
+  allSupervisions: SupervisionPublicInfo[];
   loading: boolean;
   refreshing: boolean;
   refresh: () => void;
 }>(null as any);
 
-export const AllMembersCtxProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [allMembers, setAllMembers] = useState<MemberPublicInfo[]>([]);
+export const AllSupervisionsCtxProvider: FC<PropsWithChildren> = ({
+  children,
+}) => {
+  const [allSupervisions, setAllSupervisions] = useState<
+    SupervisionPublicInfo[]
+  >([]);
   const [loading, setLoading] = useState(true); // true so loading icons are served from server
   const [refreshing, setRefreshing] = useState(false);
 
-  async function fetchAllMembers() {
+  async function fetchAllSupervisions() {
     try {
-      const result = await fetch(ApiRoutes.allMembers);
+      const result = await fetch(ApiRoutes.allSupervisions);
       if (!result.ok) throw await result.text();
-      let members: MemberPublicInfo[] = await result.json();
+      let supervision: SupervisionPublicInfo[] = await result.json();
 
-      members = members.filter((m) => m.is_active);
-      members.sort((a, b) =>
-        a.account.first_name.localeCompare(b.account.first_name)
-      );
-      setAllMembers(members);
+      supervision.sort((a, b) => a.first_name?.localeCompare(b.first_name));
+      setAllSupervisions(supervision);
     } catch (e: any) {
       new Notification().error(e);
     }
@@ -39,7 +40,7 @@ export const AllMembersCtxProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     async function firstLoad() {
-      await fetchAllMembers();
+      await fetchAllSupervisions();
       setLoading(false);
     }
     firstLoad();
@@ -50,16 +51,16 @@ export const AllMembersCtxProvider: FC<PropsWithChildren> = ({ children }) => {
     const notification = new Notification("bottom-right");
     setRefreshing(true);
     notification.loading("Refreshing...");
-    await fetchAllMembers();
+    await fetchAllSupervisions();
     setRefreshing(false);
     notification.close();
   }
 
   return (
-    <AllMembersCtx.Provider
-      value={{ allMembers, loading, refresh, refreshing }}
+    <AllSupervisionsCtx.Provider
+      value={{ allSupervisions, loading, refresh, refreshing }}
     >
       {children}
-    </AllMembersCtx.Provider>
+    </AllSupervisionsCtx.Provider>
   );
 };

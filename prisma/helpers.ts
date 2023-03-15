@@ -158,3 +158,24 @@ export const selectPublicEventInfo: CheckKeysAreValid<
     Prisma.eventSelect
 > = _selectPublicEventInfo;
 
+
+const _selectPublicSupervisionInfo = {
+    id: true,
+    last_name: true,
+    first_name: true,
+    start_date: true,
+    end_date: true,
+    note: true,
+    faculty: true,
+    level: true,
+    level_id: true,
+    faculty_id: true,
+} as const;
+
+export const selectPublicSupervisionInfo: CheckKeysAreValid<
+    typeof _selectPublicSupervisionInfo,
+    Prisma.supervisionSelect
+> = _selectPublicSupervisionInfo;
+
+
+
