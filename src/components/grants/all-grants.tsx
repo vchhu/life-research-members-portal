@@ -26,6 +26,8 @@ import GrantStatusFilter from "../filters/grant-status-filter";
 import GrantSourceFilter from "../filters/grant-source-filter";
 import { AllGrantsCtx } from "../../services/context/all-grants-ctx";
 import type { GrantPublicInfo } from "../../services/_types";
+import getMemberInvolved from "../getters/grant-member-involved-getter";
+import getInvestigatorMember from "../getters/grant-investigator-member-getter";
 
 function nameSorter(a: { title: string }, b: { title: string }) {
   return a.title.localeCompare(b.title);
@@ -66,6 +68,8 @@ export const queryKeys = {
   showSource: "showSource",
   showAmount: "showAmount",
   showSubmissionDate: "showSubmissionDate",
+  showMemberinvolved: "showMemberinvolved",
+  showInvestigatorMember: "showInvestigatorMember",
 } as const;
 
 // Don't want to change url if query is default value
@@ -74,6 +78,8 @@ const defaultQueries = {
   showSource: true,
   showAmount: true,
   showSubmissionDate: false,
+  showMemberinvolved: false,
+  showInvestigatorMember: false,
 } as const;
 
 function handleGrantNameFilterChange(next: Set<number>) {
@@ -152,6 +158,26 @@ function handleShowSubmissionDateChange(value: boolean) {
   Router.push({ query }, undefined, { scroll: false });
 }
 
+function handleShowMemberInvolvedChange(value: boolean) {
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showMemberinvolved]: value,
+  };
+  if (value === defaultQueries.showMemberinvolved)
+    delete query[queryKeys.showMemberinvolved];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
+function handleShowInvestigatorMemberChange(value: boolean) {
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showInvestigatorMember]: value,
+  };
+  if (value === defaultQueries.showInvestigatorMember)
+    delete query[queryKeys.showInvestigatorMember];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
 function clearQueries() {
   Router.push({ query: null }, undefined, { scroll: false });
 }
@@ -173,9 +199,7 @@ function getIdsFromQueryParams(key: string): Set<number> {
 }
 
 function getPopupContainer(): HTMLElement {
-  return (
-    document.querySelector(".all-organizations-table .filters") || document.body
-  );
+  return document.querySelector(".all-grants-table .filters") || document.body;
 }
 
 const AllGrants: FC = () => {
@@ -210,6 +234,12 @@ const AllGrants: FC = () => {
   const [showSubmissionDate, setShowSubmissionDate] = useState<boolean>(
     defaultQueries.showSubmissionDate
   );
+  const [showMemberInvolved, setShowMemberInvolved] = useState<boolean>(
+    defaultQueries.showMemberinvolved
+  );
+  const [showInvestigatorMember, setShowInvestigatorMember] = useState<boolean>(
+    defaultQueries.showInvestigatorMember
+  );
 
   const [nameFilter, setNameFilter] = useState(new Set<number>());
   const [statusFilter, setStatusFilter] = useState(new Set<number>());
@@ -220,6 +250,9 @@ const AllGrants: FC = () => {
   const showSourceQuery = router.query[queryKeys.showSource];
   const showAmountQuery = router.query[queryKeys.showAmount];
   const showSubmissionDateQuery = router.query[queryKeys.showSubmissionDate];
+  const showMemberInvolvedQuery = router.query[queryKeys.showMemberinvolved];
+  const showInvestigatorMemberQuery =
+    router.query[queryKeys.showInvestigatorMember];
   const grantIdsQuery = router.query[queryKeys.grantIds];
   const statusQuery = router.query[queryKeys.grantStatus];
   const sourceQuery = router.query[queryKeys.grantSource];
@@ -248,6 +281,21 @@ const AllGrants: FC = () => {
     if (showSubmissionDateQuery === "true") setShowSubmissionDate(true);
     if (showSubmissionDateQuery === "false") setShowSubmissionDate(false);
   }, [showSubmissionDateQuery]);
+
+  useEffect(() => {
+    if (!showMemberInvolvedQuery)
+      setShowMemberInvolved(defaultQueries.showMemberinvolved);
+    if (showMemberInvolvedQuery === "true") setShowMemberInvolved(true);
+    if (showMemberInvolvedQuery === "false") setShowMemberInvolved(false);
+  }, [showMemberInvolvedQuery]);
+
+  useEffect(() => {
+    if (!showInvestigatorMemberQuery)
+      setShowInvestigatorMember(defaultQueries.showInvestigatorMember);
+    if (showInvestigatorMemberQuery === "true") setShowInvestigatorMember(true);
+    if (showInvestigatorMemberQuery === "false")
+      setShowInvestigatorMember(false);
+  }, [showInvestigatorMemberQuery]);
 
   useEffect(() => {
     setNameFilter(getIdsFromQueryParams(queryKeys.grantIds));
@@ -346,12 +394,50 @@ const AllGrants: FC = () => {
     []
   );
 
+  const memberInvolvedColumn: GrantColumnType = useMemo(() => {
+    return {
+      title: "Member Involved",
+      dataIndex: "grant_member_involved",
+      key: "grant_member_involved",
+      render: (
+        grant_member_involved: Array<{
+          member: {
+            id: number;
+            account: { first_name: string; last_name: string };
+          };
+        }>
+      ) => {
+        return <div>{getMemberInvolved(grant_member_involved)}</div>;
+      },
+    };
+  }, []);
+
+  const investigatorMemberColumn: GrantColumnType = useMemo(() => {
+    return {
+      title: "Investigator Member",
+      dataIndex: "grant_investigator_member",
+      key: "grant_investigator_member",
+      render: (
+        grant_investigator_member: Array<{
+          member: {
+            id: number;
+            account: { first_name: string; last_name: string };
+          };
+        }>
+      ) => {
+        return <div>{getInvestigatorMember(grant_investigator_member)}</div>;
+      },
+    };
+  }, []);
+
   const columns: GrantColumnType[] = [nameColumn];
   if (showSource) columns.push(sourceColumn);
   if (showStatus) columns.push(statusColumn);
 
   if (showAmount) columns.push(amountColumn);
   if (showSubmissionDate) columns.push(submissionDateColumn);
+  if (showMemberInvolved) columns.push(memberInvolvedColumn);
+  if (showInvestigatorMember) columns.push(investigatorMemberColumn);
 
   const filters = (
     <Form
@@ -429,6 +515,22 @@ const AllGrants: FC = () => {
           onChange={(e) => handleShowSubmissionDateChange(e.target.checked)}
         >
           {en ? " Show Submission Date" : "Afficher la date de soumission"}
+        </Checkbox>
+
+        <Checkbox
+          checked={showMemberInvolved}
+          onChange={(e) => handleShowMemberInvolvedChange(e.target.checked)}
+        >
+          {en ? " Show Member Involved" : "Afficher le membre impliqué"}
+        </Checkbox>
+
+        <Checkbox
+          checked={showInvestigatorMember}
+          onChange={(e) => handleShowInvestigatorMemberChange(e.target.checked)}
+        >
+          {en
+            ? " Show Investigators Member"
+            : "Afficher les membres investigateur"}
         </Checkbox>
       </span>
     </Form>

@@ -2,11 +2,11 @@ const colors = [
   "magenta",
   "red",
   "volcano",
+  "blue",
   "orange",
   "gold",
   "green",
   "cyan",
-  "blue",
   "geekblue",
   "purple",
 ] as const;

@@ -131,9 +131,38 @@ const _selectPublicGrantInfo = {
     completed_date: true,
     source: true,
     all_investigator: true,
+    grant_member_involved: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
+    grant_investigator_member: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
     topic: true,
     note: true,
 } as const;
+
 
 export const selectPublicGrantInfo: CheckKeysAreValid<
     typeof _selectPublicGrantInfo,
