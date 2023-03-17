@@ -9,7 +9,7 @@ import {
 
 const msalConfig: Configuration = {
   auth: {
-    clientId: "95c17033-6f55-4b10-b9ca-9bb43ef022ff",
+    clientId: "2f1170e0-1177-43a3-9e2d-380d4662175b",
     authority: "https://login.microsoftonline.com/common",
     redirectUri: typeof window === "undefined" ? undefined : window.location.origin, // undefined if in Node.js server
   },
