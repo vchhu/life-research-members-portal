@@ -21,11 +21,14 @@ import blurActiveElement from "../../utils/front-end/blur-active-element";
 import { Checkbox } from "antd";
 import type { ParsedUrlQueryInput } from "querystring";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
-
 import { AllEventsCtx } from "../../services/context/all-events-ctx";
 import EventNameFilter from "../filters/event-name-filter";
 import EventTypeFilter from "../filters/event-type-filter";
+import EventDateFilter from "../filters/event-date-filter";
 import type { EventPublicInfo } from "../../services/_types";
+import DatePicker from "antd/lib/date-picker";
+import moment, { Moment } from "moment";
+import type { RangeValue } from "rc-picker/lib/interface";
 
 function nameSorter(en: boolean) {
   return (
@@ -46,15 +49,27 @@ function filterFn(
   filters: {
     nameFilter: Set<number>;
     typeFilter: Set<number>;
+    startDateFilter: moment.Moment | null;
+    endDateFilter: moment.Moment | null;
   }
 ): boolean {
-  const { nameFilter, typeFilter } = filters;
+  const { nameFilter, typeFilter, startDateFilter, endDateFilter } = filters;
 
   if (nameFilter.size > 0 && !nameFilter.has(m.id)) return false;
 
   if (typeFilter.size > 0) {
     if (!m.event_type) return false;
     if (!typeFilter.has(m.event_type.id)) return false;
+  }
+
+  if (startDateFilter && m.start_date) {
+    const eventStartDate = moment(m.start_date);
+    if (eventStartDate.isBefore(startDateFilter, "day")) return false;
+  }
+
+  if (endDateFilter && m.end_date) {
+    const eventEndDate = moment(m.end_date);
+    if (eventEndDate.isAfter(endDateFilter, "day")) return false;
   }
 
   return true;
@@ -65,6 +80,7 @@ export const queryKeys = {
   eventIds: "eventIds",
   eventType: "eventType",
   eventStartDate: "eventStartDate",
+  eventEndDate: "eventEndDate",
   showType: "showType",
   showStartDate: "showStartDate",
   showEndDate: "showEndDate",
@@ -76,6 +92,7 @@ const defaultQueries = {
   showStartDate: true,
   showEndDate: true,
 } as const;
+
 function handleEventNameFilterChange(next: Set<number>) {
   Router.push(
     {
@@ -95,6 +112,21 @@ function handleEventTypeFilterChange(next: Set<number>) {
       query: {
         ...Router.query,
         [queryKeys.eventType]: Array.from(next.keys()),
+      },
+    },
+    undefined,
+    { scroll: false }
+  );
+}
+function handleEventDateFilterChange(value: RangeValue<Moment> | null) {
+  Router.push(
+    {
+      query: {
+        ...Router.query,
+        [queryKeys.eventStartDate]: value
+          ? value[0]?.format("YYYY-MM-DD")
+          : null,
+        [queryKeys.eventEndDate]: value ? value[1]?.format("YYYY-MM-DD") : null,
       },
     },
     undefined,
@@ -186,10 +218,19 @@ const AllEvents: FC = () => {
 
   const [nameFilter, setNameFilter] = useState(new Set<number>());
   const [typeFilter, setTypeFilter] = useState(new Set<number>());
+  const [startDateFilter, setStartDateFilter] = useState<moment.Moment | null>(
+    null
+  );
+  const [endDateFilter, setEndDateFilter] = useState<moment.Moment | null>(
+    null
+  );
 
   const router = useRouter();
   const showTypeQuery = router.query[queryKeys.showType];
   const showStartDateQuery = router.query[queryKeys.showStartDate];
+  const startDateQuery = router.query[queryKeys.eventStartDate];
+  const endDateQuery = router.query[queryKeys.eventEndDate];
+
   const showEndDateQuery = router.query[queryKeys.showEndDate];
   const typeQuery = router.query[queryKeys.eventType];
   const nameIdsQuery = router.query[queryKeys.eventIds];
@@ -205,6 +246,15 @@ const AllEvents: FC = () => {
     if (showStartDateQuery === "true") setShowStartDate(true);
     if (showStartDateQuery === "false") setShowStartDate(false);
   }, [showStartDateQuery]);
+
+  useEffect(() => {
+    if (!startDateQuery) setStartDateFilter(null);
+    else setStartDateFilter(moment(startDateQuery));
+  }, [startDateQuery]);
+  useEffect(() => {
+    if (!endDateQuery) setEndDateFilter(null);
+    else setEndDateFilter(moment(endDateQuery));
+  }, [endDateQuery]);
 
   useEffect(() => {
     if (!showEndDateQuery) setShowEndDate(defaultQueries.showEndDate);
@@ -232,9 +282,11 @@ const AllEvents: FC = () => {
           filterFn(m, {
             nameFilter,
             typeFilter,
+            startDateFilter,
+            endDateFilter,
           })
         ),
-    [allEvents, nameFilter, typeFilter, en]
+    [allEvents, nameFilter, typeFilter, startDateFilter, endDateFilter, en]
   );
 
   type EventColumnType = ColumnType<typeof filteredEvents[number]>;
@@ -330,6 +382,17 @@ const AllEvents: FC = () => {
           value={typeFilter}
           onChange={handleEventTypeFilterChange}
           getPopupContainer={getPopupContainer}
+        />
+      </Form.Item>
+
+      <Form.Item
+        label={en ? "Filter by date" : "Filtrer par date"}
+        htmlFor="event-date-filter"
+      >
+        <EventDateFilter
+          id="event-date-filter"
+          getPopupContainer={getPopupContainer}
+          onChange={handleEventDateFilterChange}
         />
       </Form.Item>
 
