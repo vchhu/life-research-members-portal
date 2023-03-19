@@ -9,6 +9,10 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 import Tag from "antd/lib/tag";
 import SafeLink from "../link/safe-link";
 import ProductTypeLink from "../link/product-type-link";
+import type { PublicMemberRes } from "../../pages/api/member/[id]/public";
+import PageRoutes from "../../routing/page-routes";
+import colorFromString from "../../utils/front-end/color-from-string";
+import { useState, useEffect } from "react";
 
 const { useBreakpoint } = Grid;
 
@@ -19,6 +23,18 @@ type Props = {
 const PublicProductDescription: FC<Props> = ({ product }) => {
   const screens = useBreakpoint();
   const { en } = useContext(LanguageCtx);
+
+  const [members, setAccounts] = useState<PublicMemberRes[]>([]);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      const res = await fetch("../../api/all-members");
+      const data = await res.json();
+      setAccounts(data);
+    };
+
+    fetchAccounts();
+  }, []);
 
   return (
     <Descriptions
@@ -35,7 +51,7 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
         {en ? product.note : product.note}
       </Item>
 
-      <Item label={en ? "Product Type" : "Type de Produit"}>
+      <Item label={en ? "Product Type" : "Type de produit"}>
         <ProductTypeLink product_type={product.product_type} />
       </Item>
 
@@ -45,7 +61,7 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
         </SafeLink>
       </Item>
 
-      <Item label={en ? "Product Partnership" : "Partenariat du Produit"}>
+      <Item label={en ? "Product Partnership" : "Partenariat du produit"}>
         {product.product_partnership.map((entry, i) => (
           <Tag key={i} color="blue">
             {en ? entry.organization.name_en : entry.organization.name_fr}
@@ -53,7 +69,7 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
         ))}
       </Item>
 
-      <Item label={en ? "Product Target" : "Cible du Produit"}>
+      <Item label={en ? "Product Target" : "Cible du produit"}>
         {product.product_target.map((entry, i) => (
           <Tag key={i} color="blue">
             {en ? entry.target.name_en : entry.target.name_fr}
@@ -62,6 +78,42 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
       </Item>
 
       <Item label={en ? "Authors" : "Auteurs"}>{product.all_author}</Item>
+
+      <Item label={en ? "Member Authors" : "Auteurs membres"}>
+        {product.all_author ? (
+          product.all_author
+            .split(/[,;&]/)
+            .map((author) => author.trim())
+            .map((author) => {
+              const [firstName, lastName] = author.split(" ");
+              const foundMember = members.find(
+                (member) =>
+                  member?.account.first_name === firstName ||
+                  member?.account.last_name === lastName ||
+                  member?.account.last_name === firstName ||
+                  member?.account.first_name === lastName
+              );
+
+              return foundMember
+                ? {
+                    name: `${foundMember.account.first_name} ${foundMember.account.last_name}`,
+                    id: foundMember.id,
+                  }
+                : null;
+            })
+            .filter((author) => author !== null)
+            .map((author) => (
+              <SafeLink
+                key={author!.id}
+                href={PageRoutes.memberProfile(author!.id)}
+              >
+                <Tag color={colorFromString(author!.name)}>{author!.name}</Tag>
+              </SafeLink>
+            ))
+        ) : (
+          <span>{en ? "No authors" : "Pas d'auteurs"}</span>
+        )}
+      </Item>
     </Descriptions>
   );
 };

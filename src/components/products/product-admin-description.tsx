@@ -13,7 +13,7 @@ type Props = {
   product: ProductPrivateInfo;
 };
 
-const ProductInsightDescription: FC<Props> = ({ product }) => {
+const ProductAdminDescription: FC<Props> = ({ product }) => {
   const screens = useBreakpoint();
   const { en } = useContext(LanguageCtx);
 
@@ -26,14 +26,6 @@ const ProductInsightDescription: FC<Props> = ({ product }) => {
       contentStyle={{ whiteSpace: "break-spaces" }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
-      <Item label={en ? "Peer reviewed" : "Évalué par les pairs"}>
-        {product.peer_reviewed ? (en ? "Yes" : "Oui") : en ? "No" : "Non"}
-      </Item>
-
-      <Item label={en ? "On going " : "En cours"}>
-        {product.on_going ? (en ? "Yes" : "Oui") : en ? "No" : "Non"}
-      </Item>
-
       <Item label={en ? "Product Topic" : "Sujet du produit"}>
         {product.product_topic.map((entry, i) => (
           <Tag key={i} color="blue">
@@ -45,4 +37,4 @@ const ProductInsightDescription: FC<Props> = ({ product }) => {
   );
 };
 
-export default ProductInsightDescription;
+export default ProductAdminDescription;

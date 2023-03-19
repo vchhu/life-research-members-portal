@@ -28,6 +28,7 @@ import { AllProductsCtx } from "../../services/context/all-products-ctx";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import type { PublicMemberRes } from "../../pages/api/member/[id]/public";
 import colorFromString from "../../utils/front-end/color-from-string";
+import ProductAllAuthorFilter from "../filters/product-all-author-filter";
 
 function getTitle(product: ProductPublicInfo, en: boolean) {
   return en ? product.title_en : product.title_fr;
@@ -38,9 +39,11 @@ function filterFn(
   filters: {
     productTitleFilter: Set<number>;
     productTypesFilter: Set<number>;
+    productAllAuthorsFilter: Set<string>;
   }
 ): boolean {
-  const { productTitleFilter, productTypesFilter } = filters;
+  const { productTitleFilter, productTypesFilter, productAllAuthorsFilter } =
+    filters;
 
   if (productTitleFilter.size > 0 && !productTitleFilter.has(m.id))
     return false;
@@ -49,6 +52,18 @@ function filterFn(
     if (!m.product_type && !productTypesFilter.has(0)) return false; // id 0 is for null
     if (m.product_type && !productTypesFilter.has(m.product_type.id))
       return false;
+  }
+
+  if (productAllAuthorsFilter.size > 0) {
+    const authorNames = productAllAuthorsFilter;
+    const allAuthorNames = new Set(
+      m.all_author!.split(/(?:,|;|&)(?!\s\w\.)/).map((author) => author.trim())
+    );
+    const intersection = new Set(
+      [...authorNames].filter((name) => allAuthorNames.has(name))
+    );
+
+    if (intersection.size === 0) return false;
   }
 
   return true;
@@ -136,6 +151,18 @@ function handleProductTypeFilterChange(next: Set<number>) {
     { scroll: false }
   );
 }
+function handleProductAllAuthorFilterChange(next: Set<string>) {
+  Router.push(
+    {
+      query: {
+        ...Router.query,
+        [queryKeys.productAllAuthor]: Array.from(next.keys()),
+      },
+    },
+    undefined,
+    { scroll: false }
+  );
+}
 
 function clearQueries() {
   Router.push({ query: null }, undefined, { scroll: false });
@@ -152,6 +179,20 @@ function getIdsFromQueryParams(key: string): Set<number> {
     for (const keyword of query) {
       const id = parseInt(keyword);
       if (!isNaN(id)) res.add(id);
+    }
+  }
+  return res;
+}
+
+function getIdsFromQueryParams2(key: string): Set<string> {
+  const res = new Set<string>();
+  const query = Router.query[key];
+  if (!query) return res;
+  if (typeof query === "string") {
+    res.add(query);
+  } else {
+    for (const keyword of query) {
+      res.add(keyword);
     }
   }
   return res;
@@ -197,8 +238,8 @@ const AllProducts: FC = () => {
   const [productTitleFilter, setProductTitleFilter] = useState(
     new Set<number>()
   );
-  const [productAllAuthorFilter, setProductAllAuthorFilter] = useState(
-    new Set<number>()
+  const [productAllAuthorsFilter, setProductAllAuthorFilter] = useState(
+    new Set<string>()
   );
   const [productTypesFilter, setProductTypesFilter] = useState(
     new Set<number>()
@@ -245,7 +286,7 @@ const AllProducts: FC = () => {
 
   useEffect(() => {
     setProductAllAuthorFilter(
-      getIdsFromQueryParams(queryKeys.productAllAuthor)
+      getIdsFromQueryParams2(queryKeys.productAllAuthor)
     );
   }, [productAuthorQuery]);
 
@@ -280,9 +321,16 @@ const AllProducts: FC = () => {
           filterFn(m, {
             productTitleFilter,
             productTypesFilter,
+            productAllAuthorsFilter,
           })
         ),
-    [allProducts, productTitleFilter, productTypesFilter, en]
+    [
+      allProducts,
+      productTitleFilter,
+      productTypesFilter,
+      productAllAuthorsFilter,
+      en,
+    ]
   );
 
   type ProductColumnType = ColumnType<typeof filteredProducts[number]>;
@@ -380,8 +428,11 @@ const AllProducts: FC = () => {
           <span>
             {matchedAuthors.length > 0
               ? matchedAuthors.map((author) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <SafeLink href={PageRoutes.memberProfile(author!.id)}>
+                  // Add a unique key to the SafeLink component
+                  <SafeLink
+                    key={author!.id}
+                    href={PageRoutes.memberProfile(author!.id)}
+                  >
                     <Tag color={colorFromString(author!.name)}>
                       {" "}
                       {author!.name}
@@ -429,6 +480,18 @@ const AllProducts: FC = () => {
           id="product-type-filter"
           value={productTypesFilter}
           onChange={handleProductTypeFilterChange}
+          getPopupContainer={getPopupContainer}
+        />
+      </Form.Item>
+
+      <Form.Item
+        label={en ? "Filter by all authors" : "Filtrer par tous les auteurs"}
+        htmlFor="all-authors-filter"
+      >
+        <ProductAllAuthorFilter
+          id="all-authors-filter"
+          value={productAllAuthorsFilter}
+          onChange={handleProductAllAuthorFilterChange}
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>

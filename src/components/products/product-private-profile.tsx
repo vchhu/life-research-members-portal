@@ -12,8 +12,8 @@ import Tabs from "antd/lib/tabs";
 import type { ProductPrivateInfo } from "../../services/_types";
 
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
-import ProductInsightDescription from "./product-insight-description";
-import InsightProductForm from "./product-insight-form";
+import ProductAdminDescription from "./product-admin-description";
+import PrivateProductDescription from "./product-private-description";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -96,9 +96,15 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
       children: <PublicProductDescription product={product} />,
     },
     {
-      label: en ? "Insight" : "Insight",
+      label: en ? "Private" : "Privé",
+      key: keys.private,
+      children: <PrivateProductDescription product={product} />,
+    },
+
+    {
+      label: en ? "Admin" : "Admin",
       key: keys.insight,
-      children: <ProductInsightDescription product={product} />,
+      children: <ProductAdminDescription product={product} />,
     },
   ];
 
