@@ -19,11 +19,11 @@ const PrivateProductPage: NextPage = () => {
     const id = parseInt(idString);
 
     if (localAccount?.is_admin) {
-      router.replace(PageRoutes.privateMemberProfile(id));
+      router.replace(PageRoutes.privateProductProfile(id));
       return;
     }
 
-    router.replace(PageRoutes.publicMemberProfile(id));
+    router.replace(PageRoutes.publicProductProfile(id));
   }, [localAccount, loading, idString, router]);
 
   return <CardSkeleton />;

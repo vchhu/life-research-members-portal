@@ -293,13 +293,15 @@ const AllProducts: FC = () => {
       dataIndex: "product",
       className: "title-column",
       //sorter: nameSorter,
-      render: (value, product) => (
-        <SafeLink href={PageRoutes.productProfile(product.id)}>
-          {value}
-        </SafeLink>
-      ),
+      render: (value, product) => {
+        const profileRoute = localAccount?.is_admin
+          ? PageRoutes.privateProductProfile(product.id)
+          : PageRoutes.publicProductProfile(product.id);
+
+        return <SafeLink href={profileRoute}>{value}</SafeLink>;
+      },
     }),
-    [en]
+    [en, localAccount]
   );
 
   const doiColumn: ProductColumnType = useMemo(

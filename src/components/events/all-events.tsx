@@ -26,7 +26,6 @@ import EventNameFilter from "../filters/event-name-filter";
 import EventTypeFilter from "../filters/event-type-filter";
 import EventDateFilter from "../filters/event-date-filter";
 import type { EventPublicInfo } from "../../services/_types";
-import DatePicker from "antd/lib/date-picker";
 import moment, { Moment } from "moment";
 import type { RangeValue } from "rc-picker/lib/interface";
 
