@@ -12,20 +12,22 @@ import {
 } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import type { ProductPublicInfo } from "../../services/_types";
+import type { MemberPublicInfo } from "../../services/_types";
 import PageRoutes from "../../routing/page-routes";
-import GetLanguage from "../../utils/front-end/get-product-language";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import SafeLink from "../link/safe-link";
 import Router, { useRouter } from "next/router";
 import Form from "antd/lib/form";
 import blurActiveElement from "../../utils/front-end/blur-active-element";
-import { Checkbox } from "antd";
+import { Checkbox, Tag } from "antd";
 import ProductTitleFilter from "../filters/product-title-filter";
 import ProductTypeFilter from "../filters/product-type-filter";
 import type { ParsedUrlQueryInput } from "querystring";
 import { AllProductsCtx } from "../../services/context/all-products-ctx";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
+import type { PublicMemberRes } from "../../pages/api/member/[id]/public";
+import colorFromString from "../../utils/front-end/color-from-string";
 
 function getTitle(product: ProductPublicInfo, en: boolean) {
   return en ? product.title_en : product.title_fr;
@@ -56,6 +58,7 @@ function filterFn(
 export const queryKeys = {
   showType: "showType",
   showAllAuthor: "showAllAuthor",
+  showMemberAuthor: "showMemberAuthor",
   showDoi: "showDoi",
   productTitle: "productTitle",
   productAllAuthor: "productAllAuthor",
@@ -67,6 +70,7 @@ const defaultQueries = {
   showDoi: true,
   showType: true,
   showAllAuthor: true,
+  showMemberAuthor: true,
 } as const;
 
 function handleShowDoiChange(value: boolean) {
@@ -88,6 +92,16 @@ function handleShowAllAuthorChange(value: boolean) {
   Router.push({ query }, undefined, { scroll: false });
 }
 
+function handleShowMemberAuthorChange(value: boolean) {
+  const query: ParsedUrlQueryInput = {
+    ...Router.query,
+    [queryKeys.showMemberAuthor]: value,
+  };
+  if (value === defaultQueries.showMemberAuthor)
+    delete query[queryKeys.showMemberAuthor];
+  Router.push({ query }, undefined, { scroll: false });
+}
+
 function handleShowTypeChange(value: boolean) {
   const query: ParsedUrlQueryInput = {
     ...Router.query,
@@ -103,19 +117,6 @@ function handleProductTitleFilterChange(next: Set<number>) {
       query: {
         ...Router.query,
         [queryKeys.productTitle]: Array.from(next.keys()),
-      },
-    },
-    undefined,
-    { scroll: false }
-  );
-}
-
-function handleProductAllAuthorFilterChange(next: Set<number>) {
-  Router.push(
-    {
-      query: {
-        ...Router.query,
-        [queryKeys.productAllAuthor]: Array.from(next.keys()),
       },
     },
     undefined,
@@ -187,6 +188,10 @@ const AllProducts: FC = () => {
     defaultQueries.showAllAuthor
   );
 
+  const [showMemberAuthor, setShowMemberAuthor] = useState<boolean>(
+    defaultQueries.showMemberAuthor
+  );
+
   const { localAccount } = useContext(ActiveAccountCtx);
 
   const [productTitleFilter, setProductTitleFilter] = useState(
@@ -203,6 +208,7 @@ const AllProducts: FC = () => {
 
   const showTypeQuery = router.query[queryKeys.showType];
   const showAllAuthorQuery = router.query[queryKeys.showAllAuthor];
+  const showMemberAuthorQuery = router.query[queryKeys.showMemberAuthor];
   const showDoiQuery = router.query[queryKeys.showDoi];
   const productTitleQuery = router.query[queryKeys.productTitle];
   const productAuthorQuery = router.query[queryKeys.productAllAuthor];
@@ -227,6 +233,13 @@ const AllProducts: FC = () => {
   }, [showAllAuthorQuery]);
 
   useEffect(() => {
+    if (!showMemberAuthorQuery)
+      setShowMemberAuthor(defaultQueries.showMemberAuthor);
+    if (showMemberAuthorQuery === "true") setShowMemberAuthor(true);
+    if (showMemberAuthorQuery === "false") setShowMemberAuthor(false);
+  }, [showMemberAuthorQuery]);
+
+  useEffect(() => {
     setProductTitleFilter(getIdsFromQueryParams(queryKeys.productTitle));
   }, [productTitleQuery]);
 
@@ -244,6 +257,20 @@ const AllProducts: FC = () => {
     clearQueries();
     refreshProducts();
   }
+
+  const [members, setAccounts] = useState<PublicMemberRes[]>([]);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      const res = await fetch("api/all-members");
+      const data = await res.json();
+      setAccounts(data);
+
+      //console.log(data);
+    };
+
+    fetchAccounts();
+  }, []);
 
   const filteredProducts = useMemo(
     () =>
@@ -289,16 +316,6 @@ const AllProducts: FC = () => {
     [en]
   );
 
-  const productAllAuthorColumn: ProductColumnType = useMemo(
-    () => ({
-      title: en ? "All Authors" : "Tous les auteurs",
-      dataIndex: "all_author",
-      className: "name-column",
-      render: (all_author: string) => <span>{all_author}</span>,
-    }),
-    [en]
-  );
-
   const productTypeColumn: ProductColumnType = useMemo(
     () => ({
       title: en ? "Product Type" : "Type de produit",
@@ -317,10 +334,71 @@ const AllProducts: FC = () => {
     [en]
   );
 
+  const productAllAuthorColumn: ProductColumnType = useMemo(
+    () => ({
+      title: en ? "All Authors" : "Tous les auteurs",
+      dataIndex: "all_author",
+      className: "name-column",
+      render: (all_author: string) => <span>{all_author}</span>,
+    }),
+    [en]
+  );
+
+  const productMemberAuthorColumn: ProductColumnType = useMemo(
+    () => ({
+      title: en ? "Member Authors" : "Auteurs membres",
+      dataIndex: "all_author",
+      className: "name-column",
+      render: (all_author: string) => {
+        const authors = all_author
+          .split(/[,;&]/)
+          .map((author) => author.trim());
+        const matchedAuthors = authors
+          .map((author) => {
+            const [firstName, lastName] = author.split(" ");
+
+            const foundAccount = members.find(
+              (member) =>
+                member?.account.first_name === firstName ||
+                member?.account.last_name === lastName ||
+                member?.account.last_name === firstName ||
+                member?.account.first_name === lastName
+            );
+
+            return foundAccount
+              ? {
+                  name: `${foundAccount.account.first_name} ${foundAccount.account.last_name}`,
+                  id: foundAccount.id,
+                }
+              : null;
+          })
+          .filter((author) => author !== null);
+
+        return (
+          <span>
+            {matchedAuthors.length > 0
+              ? matchedAuthors.map((author) => (
+                  // eslint-disable-next-line react/jsx-key
+                  <SafeLink href={PageRoutes.memberProfile(author!.id)}>
+                    <Tag color={colorFromString(author!.name)}>
+                      {" "}
+                      {author!.name}
+                    </Tag>
+                  </SafeLink>
+                ))
+              : "No matches"}
+          </span>
+        );
+      },
+    }),
+    [members, en]
+  );
+
   const columns: ProductColumnType[] = [nameColumn];
   if (showDoi) columns.push(doiColumn);
   if (showType) columns.push(productTypeColumn);
   if (showAllAuthor) columns.push(productAllAuthorColumn);
+  if (showMemberAuthor) columns.push(productMemberAuthorColumn);
 
   const filters = (
     <Form
@@ -376,6 +454,13 @@ const AllProducts: FC = () => {
           onChange={(e) => handleShowAllAuthorChange(e.target.checked)}
         >
           {en ? "Show all Authors" : "Afficher tous les auteurs"}
+        </Checkbox>
+
+        <Checkbox
+          checked={showMemberAuthor}
+          onChange={(e) => handleShowMemberAuthorChange(e.target.checked)}
+        >
+          {en ? "Show Member Authors" : "Afficher les auteurs membres"}
         </Checkbox>
       </span>
     </Form>
