@@ -32,7 +32,7 @@ body {
   box-sizing: border-box;
 }
 
-.next-page-container {
+/* .next-page-container {
   padding: 12px;
 }
 
@@ -40,6 +40,28 @@ body {
   .next-page-container {
     padding: 12px 24px;
   }
+}
+ */
+
+
+ .ant-table {
+  padding: 12px;
+}
+
+@media screen and (min-width: 600px) {
+  .ant-table  {
+    padding: 12px 24px;
+  }
+
+
+
+
+}
+@media only screen and (max-width: 600px) {
+
+.welcome-image{
+  display:none!important;
+}
 }
 
 // Override - table cells

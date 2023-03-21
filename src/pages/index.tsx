@@ -1,8 +1,8 @@
 import type { NextPage } from "next/types";
-import Greeting from "../components/greeting";
+import Welcome from "../components/welcome";
 
 const Home: NextPage = () => {
-  return ( <Greeting /> );
+  return <Welcome />;
 };
 
 export default Home;
