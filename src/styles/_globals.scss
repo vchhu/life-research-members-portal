@@ -44,7 +44,7 @@ body {
  .banner h1{
   
     font-weight: bold;
-    font-size: 2.8em;
+    font-size: 2.6em;
     line-height: 1.2em;
     color: #4b4b4b;
 
@@ -230,9 +230,32 @@ margin: 0 auto;
 
 @media only screen and (max-width: 600px) {
 
+  .banner{
+
+    padding:10px 20px;
+  }
+
+  .four-columns-container{
+
+    padding:10px 20px;
+  }
+
 .welcome-image{
   display:none!important;
 }
+
+.banner h1{
+  
+  font-size: 1.6em!important;
+
+}
+
+h2.ant-typography{
+  font-size: 25px!important;
+}
+
+
+
 }
 
 // Override - table cells
