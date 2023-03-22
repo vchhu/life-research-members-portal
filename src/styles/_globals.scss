@@ -36,98 +36,100 @@ body {
 
 .ant-table.ant-table-small .ant-table-title {
   background-color: #84b3ed1a;
- 
+
 }
 
 
 
- .banner h1{
-  
-    font-weight: bold;
-    font-size: 2.6em;
-    line-height: 1.2em;
-    color: #4b4b4b;
+.banner h1 {
 
- }
+  font-weight: bold;
+  font-size: 2.6em;
+  line-height: 1.2em;
+  color: #4b4b4b;
 
- .banner h3{
-    
+}
+
+.banner h3 {
+
   margin-bottom: 0.5em;
   color: rgba(0, 0, 0, 0.85);
   font-weight: 600;
   font-size: 20px;
   line-height: 1.4;
 
- }
+}
 
-  .banner h2{
-        
-          font-weight: 400;
-          font-size: 1.5em;
-          line-height: 1.4em;
-          color: #0750a3;
-    
-    }
+.banner h2 {
 
- .banner h4{
-      
-        font-weight: 400;
-        font-size: 1.2em;
-        line-height: 1.8em;
-        color:seagreen;
-  
-  }
+  font-weight: 400;
+  font-size: 1.5em;
+  line-height: 1.4em;
+  color: #0750a3;
 
- .banner{
+}
+
+.banner h4 {
+
+  font-weight: 400;
+  font-size: 1.2em;
+  line-height: 1.8em;
+  color: seagreen;
+
+}
+
+.banner {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   padding: 15px 0px;
- 
+
 }
-.banner-content{
-max-width: 1200px;
-margin: 0 auto;
+
+.banner-content {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .center-title {
   text-align: center;
-  margin: 40px 0; /* Adjust the margin to your preference */
+  margin: 40px 0;
+  /* Adjust the margin to your preference */
 }
 
 
- .four-columns-container {
+.four-columns-container {
   display: flex;
   flex-wrap: wrap;
- 
+
   align-items: center;
-  
+
   padding: 10px 0px 40px 0px;
   max-width: 1200px;
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .rounded-box {
   display: flex;
   flex-direction: column;
-  align-items:flex-start;
+  align-items: flex-start;
   justify-content: center;
   background-color: #f8f8f8;
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  color:white;
+  color: white;
 }
 
 .rounded-box:hover {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-  color:#0750a3;
+  color: #0750a3;
 }
 
 
-.title{
+.title {
   font-size: 16px;
   font-weight: 600;
 }
@@ -141,12 +143,12 @@ margin: 0 auto;
 
 
 .rounded-box-gradient-1 {
-  background-image: linear-gradient(to right, #41D8DD,  #5583EE);
- 
+  background-image: linear-gradient(to right, #41D8DD, #5583EE);
+
 }
 
 .rounded-box-gradient-1:hover {
-  background-image: linear-gradient(to right, #5583EE, #41D8DD );
+  background-image: linear-gradient(to right, #5583EE, #41D8DD);
 
 }
 
@@ -167,16 +169,16 @@ margin: 0 auto;
 }
 
 .rounded-box-gradient-2 {
-  background-image: linear-gradient(to right,  #41C7AF, #54E38E);
+  background-image: linear-gradient(to right, #41C7AF, #54E38E);
 
 }
 
 .rounded-box-gradient-2:hover {
   background-image: linear-gradient(to right, #54E38E, #41C7AF);
-} 
+}
 
 .rounded-box-gradient-4 {
-  background-image: linear-gradient(to right,  #6DE195, #C4E759);
+  background-image: linear-gradient(to right, #6DE195, #C4E759);
 
 }
 
@@ -185,9 +187,9 @@ margin: 0 auto;
 }
 
 .rounded-box-gradient-6 {
-  background-image: linear-gradient(to right, #95ba3f,  #99E5A2, #41C7AF);
+  background-image: linear-gradient(to right, #95ba3f, #99E5A2, #41C7AF);
 
- 
+
 }
 
 .rounded-box-gradient-6:hover {
@@ -204,57 +206,84 @@ margin: 0 auto;
 
 
 .ant-space-vertical {
- 
+
   width: 100%;
 }
 
 
-
-
-
-
-
-
-
- .ant-table {
+.ant-table {
   padding: 12px;
 }
 
 @media screen and (min-width: 600px) {
-  .ant-table  {
+  .ant-table {
     padding: 12px 24px;
   }
 
 }
 
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 600px)  {
 
-  .banner{
+  .banner {
 
-    padding:10px 20px;
+    padding: 10px 20px;
   }
 
-  .four-columns-container{
+  .center-title {
 
-    padding:10px 20px;
+    padding: 0 20px;
   }
 
-.welcome-image{
-  display:none!important;
+  .four-columns-container {
+
+    padding: 10px 20px;
+  }
+
+  .welcome-image {
+    display: none !important;
+  }
+
+  .banner h1 {
+
+    font-size: 1.6em !important;
+
+  }
+
+  h2.ant-typography {
+    font-size: 25px !important;
+  }
+
 }
 
-.banner h1{
-  
-  font-size: 1.6em!important;
+@media only screen and (max-width: 1200px)  {
 
-}
+  .banner {
 
-h2.ant-typography{
-  font-size: 25px!important;
-}
+    padding: 10px 20px;
+  }
+
+  .center-title {
+
+    padding: 0 20px;
+  }
+
+  .four-columns-container {
+
+    padding: 10px 20px;
+  }
 
 
+
+  .banner h1 {
+
+    font-size: 2em !important;
+
+  }
+
+  h2.ant-typography {
+    font-size: 25px !important;
+  }
 
 }
 
