@@ -81,8 +81,12 @@ export const selectPublicPartnerInfo: CheckKeysAreValid<
 > = _selectPublicPartnerInfo;
 
 const _includeAllPartnerInfo = {
+    id: true,
+    name_en: true,
+    name_fr: true,
     org_scope: true,
     org_type: true,
+    description: true,
     event_partner_involved: { select: { member: true } },
     partnership_member_org: { select: { member: true } },
     product_partnership: { select: { product: true } },
