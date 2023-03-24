@@ -104,7 +104,8 @@ const PrivatePartnerProfile: FC<Props> = ({ id }) => {
   return (
     <Card title={header} bodyStyle={{ paddingTop: 0 }}>
       <Tabs
-        items={editMode ? forms : descriptions}
+        // items={editMode ? forms : descriptions}
+        items={descriptions}
         activeKey={activeTabKey}
         onChange={onChange}
         // Very important to destroy inactive forms,

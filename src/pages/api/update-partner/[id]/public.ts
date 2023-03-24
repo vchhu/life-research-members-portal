@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { includeAllPartnerInfo } from "../../../../../prisma/helpers";
+import { selectAllPartnerInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import type { PartnerPrivateInfo } from "../../../../services/_types";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
-import type { PrivatePartnerDBRes } from "../../partner/[id]/private";
+import type { PrivatePartnerRes } from "../../partner/[id]/private";
 
 export type UpdatePartnerPublicParams = {
   name_en: string;
@@ -41,13 +41,13 @@ function updatePartner(
           : undefined,
       description,
     },
-    include: includeAllPartnerInfo,
+    select: selectAllPartnerInfo,
   });
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PrivatePartnerDBRes | string>
+  res: NextApiResponse<PrivatePartnerRes | string>
 ) {
   if (!req.query.id || typeof req.query.id !== "string")
     return res.status(400).send("Partner ID is required.");

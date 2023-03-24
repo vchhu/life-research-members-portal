@@ -80,19 +80,54 @@ export const selectPublicPartnerInfo: CheckKeysAreValid<
     Prisma.organizationSelect
 > = _selectPublicPartnerInfo;
 
-
 const _includeAllPartnerInfo = {
     org_scope: true,
     org_type: true,
-    event_partner_involved: { include: { member: true } },
-    partnership_member_org: { include: { member: true } },
-    product_partnership: { include: { product: true } },
+    event_partner_involved: { select: { member: true } },
+    partnership_member_org: { select: { member: true } },
+    product_partnership: { select: { product: true } },
 } as const;
 
 export const includeAllPartnerInfo: CheckKeysAreValid<
     typeof _includeAllPartnerInfo,
     Prisma.organizationSelect
 > = _includeAllPartnerInfo;
+
+const _selectAllPartnerInfo = {
+    id: true,
+    name_en: true,
+    name_fr: true,
+    org_scope: true,
+    org_type: true,
+    description: true,
+    event_partner_involved: {
+        select: {
+            event: true,
+            member: true,
+            organization: true,
+        },
+    },
+    partnership_member_org: {
+        select: {
+            member: true,
+            organization: true,
+            partnership: true,
+        },
+    },
+    product_partnership: {
+        select: {
+            organization: true,
+            product: true,
+        },
+    },
+} as const;
+
+export const selectAllPartnerInfo: CheckKeysAreValid<
+    typeof _selectAllPartnerInfo,
+    Prisma.organizationSelect
+> = _selectAllPartnerInfo;
+
+
 
 const _includeAllProductInfo = {
     id: true,
