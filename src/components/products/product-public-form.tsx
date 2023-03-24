@@ -107,7 +107,11 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
     title_en: product.title_en,
     title_fr: product.title_fr,
     publish_date: product.publish_date
-      ? moment(product.publish_date.split("T")[0])
+      ? moment(
+          product.publish_date instanceof Date
+            ? product.publish_date.toISOString().split("T")[0]
+            : (product.publish_date as string).split("T")[0]
+        )
       : null,
     all_author: product.all_author || "",
     doi: product.doi || "",
