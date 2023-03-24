@@ -9,10 +9,10 @@ export type PrivateProductDBRes = Awaited<ReturnType<typeof getPrivateProductInf
 // Dates will be stringified when sending response!
 export type PrivateProductRes = Omit<
   NonNullable<PrivateProductDBRes>,
-  "product" | "publish_date"
+  "product"
 > & {
-  publish_date: string | null;
-  product: (Omit<product, "publish_date"> & { publish_date: string | null }) | null;
+
+  public: (Omit<product, "publish_date"> & { publish_date: string | null }) | null;
 };
 
 
