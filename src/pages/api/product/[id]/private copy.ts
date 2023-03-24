@@ -1,19 +1,9 @@
-import type { product } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { selectAllProductInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
 
-export type PrivateProductDBRes = Awaited<ReturnType<typeof getPrivateProductInfo>>;
-
-// Dates will be stringified when sending response!
-export type PrivateProductRes = Omit<
-  NonNullable<PrivateProductDBRes>,
-  "product"
-> & {
-  public: (Omit<product, "publish_date"> & { publish_date: string | null }) | null;
-};
-
+export type PrivateProductRes = Awaited<ReturnType<typeof getPrivateProductInfo>>;
 
 function getPrivateProductInfo(id: number) {
   return db.product.findUnique({
@@ -24,7 +14,7 @@ function getPrivateProductInfo(id: number) {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PrivateProductDBRes | string>
+  res: NextApiResponse<PrivateProductRes | string>
 ) {
   if (!req.query.id || typeof req.query.id !== "string")
     return res.status(400).send("Product ID is required.");

@@ -62,7 +62,6 @@ const _selectPublicMemberInfo = {
 export const selectPublicMemberInfo: CheckKeysAreValid<
     typeof _selectPublicMemberInfo,
     Prisma.memberSelect
-
 > = _selectPublicMemberInfo;
 
 
@@ -74,7 +73,6 @@ const _selectPublicPartnerInfo = {
     org_scope: true,
     org_type: true,
     description: true,
-
 } as const;
 
 export const selectPublicPartnerInfo: CheckKeysAreValid<
@@ -82,17 +80,29 @@ export const selectPublicPartnerInfo: CheckKeysAreValid<
     Prisma.organizationSelect
 > = _selectPublicPartnerInfo;
 
+
+const _includeAllPartnerInfo = {
+    org_scope: true,
+    org_type: true,
+    event_partner_involved: { include: { member: true } },
+    partnership_member_org: { include: { member: true } },
+    product_partnership: { include: { product: true } },
+} as const;
+
+export const includeAllPartnerInfo: CheckKeysAreValid<
+    typeof _includeAllPartnerInfo,
+    Prisma.organizationSelect
+> = _includeAllPartnerInfo;
+
 const _includeAllProductInfo = {
     id: true,
     title_en: true,
     title_fr: true,
-    note: true,
-    product_type: true,
-    date: true,
     doi: true,
-    on_going: true,
-    peer_reviewed: true,
+    publish_date: true,
+    note: true,
     all_author: true,
+    product_type: true,
     product_target: { include: { target: true } },
     product_partnership: { include: { organization: true } },
     product_topic: { include: { topic: true } }
@@ -103,12 +113,36 @@ export const includeAllProductInfo: CheckKeysAreValid<
     Prisma.productSelect
 > = _includeAllProductInfo;
 
+const _selectAllProductInfo = {
+    id: true,
+    title_en: true,
+    title_fr: true,
+    note: true,
+    doi: true,
+    publish_date: true,
+    all_author: true,
+    peer_reviewed: true,
+    product_type_id: true,
+    on_going: true,
+    product_type: true,
+    product_target: { include: { target: true } },
+    product_partnership: { include: { organization: true } },
+    product_topic: { include: { topic: true } }
+} as const;
+
+export const selectAllProductInfo: CheckKeysAreValid<
+    typeof _selectAllProductInfo,
+    Prisma.productSelect
+> = _selectAllProductInfo;
+
+
 const _selectPublicProductInfo = {
     id: true,
     title_en: true,
     title_fr: true,
     note: true,
     doi: true,
+    publish_date: true,
     product_type: true,
     all_author: true,
     product_target: { include: { target: true } },

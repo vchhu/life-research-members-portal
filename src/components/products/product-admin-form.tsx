@@ -13,7 +13,10 @@ import updateMemberInsight from "../../services/update-member-insight";
 import moment from "moment";
 import DatePicker from "antd/lib/date-picker";
 import Notification from "../../services/notifications/notification";
-import { SaveChangesCtx, useResetDirtyOnUnmount } from "../../services/context/save-changes-ctx";
+import {
+  SaveChangesCtx,
+  useResetDirtyOnUnmount,
+} from "../../services/context/save-changes-ctx";
 
 type Props = {
   member: MemberPrivateInfo;
@@ -30,7 +33,7 @@ type Data = {
   other_notes: string;
 };
 
-const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
+const ProductAdminForm: FC<Props> = ({ member, onSuccess }) => {
   // This sets the return type of the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
@@ -72,7 +75,9 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
     try {
       return submitValidated(await form.validateFields());
     } catch (e: any) {
-      new Notification().warning(en ? "A field is invalid!" : "Un champ est invalide !");
+      new Notification().warning(
+        en ? "A field is invalid!" : "Un champ est invalide !"
+      );
       return false;
     }
   }, [en, form, submitValidated]);
@@ -83,7 +88,9 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
   }, [setSubmit, validateAndSubmit]);
 
   const initialValues: Data = {
-    interview_date: insight?.interview_date ? moment(insight.interview_date) : null,
+    interview_date: insight?.interview_date
+      ? moment(insight.interview_date)
+      : null,
     about_member: insight?.about_member || "",
     about_promotions: insight?.about_promotions || "",
     dream: insight?.dream || "",
@@ -108,11 +115,17 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
         className="member-insight-form"
         onValuesChange={() => setDirty(true)}
       >
-        <Form.Item label={en ? "Interview Date" : "Date de l'entretien"} name="interview_date">
+        <Form.Item
+          label={en ? "Interview Date" : "Date de l'entretien"}
+          name="interview_date"
+        >
           <DatePicker />
         </Form.Item>
         <div className="row">
-          <Form.Item label={en ? "About Member" : "À propos du membre"} name="about_member">
+          <Form.Item
+            label={en ? "About Member" : "À propos du membre"}
+            name="about_member"
+          >
             <TextArea spellCheck="false" />
           </Form.Item>
 
@@ -129,18 +142,28 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
           </Form.Item>
 
           <Form.Item
-            label={en ? "How the institute can help" : "Comment l'institut peut vous aider"}
+            label={
+              en
+                ? "How the institute can help"
+                : "Comment l'institut peut vous aider"
+            }
             name="how_can_we_help"
           >
             <TextArea spellCheck="false" />
           </Form.Item>
         </div>
         <div className="row">
-          <Form.Item label={en ? "Admin Notes" : "Notes d'administration"} name="admin_notes">
+          <Form.Item
+            label={en ? "Admin Notes" : "Notes d'administration"}
+            name="admin_notes"
+          >
             <TextArea spellCheck="false" />
           </Form.Item>
 
-          <Form.Item label={en ? "Other Notes" : "Autres notes"} name="other_notes">
+          <Form.Item
+            label={en ? "Other Notes" : "Autres notes"}
+            name="other_notes"
+          >
             <TextArea spellCheck="false" />
           </Form.Item>
         </div>
@@ -160,4 +183,4 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
   );
 };
 
-export default MemberInsightForm;
+export default ProductAdminForm;

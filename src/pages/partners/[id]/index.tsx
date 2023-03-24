@@ -18,6 +18,11 @@ const PrivatePartnerPage: NextPage = () => {
 
     const id = parseInt(idString);
 
+    if (localAccount?.is_admin) {
+      router.replace(PageRoutes.privateProductProfile(id));
+      return;
+    }
+
     router.replace(PageRoutes.publicPartnerProfile(id));
   }, [localAccount, loading, idString, router]);
 

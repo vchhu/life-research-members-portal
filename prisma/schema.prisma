@@ -304,12 +304,12 @@ model organization {
   id                     Int                      @id(map: "PK_organization") @default(autoincrement())
   name_en                String                   @db.NVarChar(255)
   name_fr                String                   @db.NVarChar(255)
-  scope_id               Int
-  type_id                Int
+  scope_id               Int?
+  type_id                Int?
   description            String?                  @db.NVarChar(4000)
   event_partner_involved event_partner_involved[]
-  org_scope              org_scope                @relation(fields: [scope_id], references: [id], onUpdate: NoAction, map: "FK_organization_scope_id")
-  org_type               org_type                 @relation(fields: [type_id], references: [id], onUpdate: NoAction, map: "FK_organization_type_id")
+  org_scope              org_scope?               @relation(fields: [scope_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_organization_scope_id")
+  org_type               org_type?                @relation(fields: [type_id], references: [id], onUpdate: SetNull, map: "FK_organization_type_id")
   partnership_member_org partnership_member_org[]
   product_partnership    product_partnership[]
 }
@@ -336,15 +336,15 @@ model product {
   id                     Int                      @id(map: "PK_product") @default(autoincrement())
   title_en               String                   @db.NVarChar(500)
   title_fr               String                   @db.NVarChar(500)
-  date                   DateTime?                @db.Date
+  publish_date           DateTime?                @db.Date
   all_author             String?                  @db.NVarChar(3000)
   doi                    String?                  @db.NVarChar(100)
   on_going               Boolean?
   peer_reviewed          Boolean?
-  product_type_id        Int
+  product_type_id        Int?
   note                   String?                  @db.NVarChar(2000)
   event_product_resulted event_product_resulted[]
-  product_type           product_type             @relation(fields: [product_type_id], references: [id], onUpdate: NoAction, map: "FK_product_product_type")
+  product_type           product_type?            @relation(fields: [product_type_id], references: [id], map: "FK_product_product_type")
   product_member_author  product_member_author[]
   product_partnership    product_partnership[]
   product_target         product_target[]
@@ -432,7 +432,7 @@ model supervision {
   faculty_id                       Int?
   level_id                         Int?
   note                             String?                            @db.NVarChar(Max)
-  faculty                          faculty?                           @relation(fields: [faculty_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_supervision_faculty")
+  faculty                          faculty?                           @relation(fields: [faculty_id], references: [id], map: "FK_supervision_faculty")
   level                            level?                             @relation(fields: [level_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_supervision_level")
   supervision_co_supervisor        supervision_co_supervisor[]
   supervision_committee            supervision_committee[]

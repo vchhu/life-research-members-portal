@@ -1,44 +1,39 @@
 import Empty from "antd/lib/empty";
-import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import { FC, ReactNode, useCallback, useContext, useState } from "react";
+import { FC, ReactNode, useContext, useState, useCallback } from "react";
+import usePrivatePartnerInfo from "../../services/use-private-partner-info";
 import CardSkeleton from "../loading/card-skeleton";
-import PublicProductDescription from "./product-public-description";
-import PublicProductForm from "./product-public-form";
-import ProductAdminForm from "./product-admin-form";
-import usePrivateProductInfo from "../../services/use-private-product-info";
+import PublicPartnerDescription from "./partner-public-description";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import Tabs from "antd/lib/tabs";
-import type { ProductPrivateInfo } from "../../services/_types";
-
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
-import ProductAdminDescription from "./product-admin-description";
-import PrivateProductDescription from "./product-private-description";
+import type { PartnerPrivateInfo } from "../../services/_types";
+import { Button, Tabs } from "antd";
+import PrivatePartnerForm from "./partner-private-form";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
-const keys = { public: "public", private: "private", admin: "admin" };
+const keys = { public: "public", private: "private", insight: "insight" };
 
 type Props = {
   id: number;
 };
 
-const PrivateProductProfile: FC<Props> = ({ id }) => {
+const PrivatePartnerProfile: FC<Props> = ({ id }) => {
+  const { org, loading, setOrg } = usePrivatePartnerInfo(id);
   const { en } = useContext(LanguageCtx);
-  const { product, setProduct, loading } = usePrivateProductInfo(id);
   const [editMode, setEditMode] = useState(false);
   const [activeTabKey, setActiveTabKey] = useState(keys.public);
   const { saveChangesPrompt } = useContext(SaveChangesCtx);
 
   /** After saving changes via submit button - dependency of form's submit */
   const onSuccess = useCallback(
-    (updatedProduct: ProductPrivateInfo) => setProduct(updatedProduct),
-    [setProduct]
+    (updatedPartner: PartnerPrivateInfo) => setOrg(updatedPartner),
+    [setOrg]
   );
 
   if (loading) return <CardSkeleton />;
-  if (!product) return <Empty />;
+  if (!org) return <Empty />;
 
   /** When clicking cancel - prompt to save changes if dirty */
   function onCancel() {
@@ -84,7 +79,7 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
           whiteSpace: "break-spaces",
         }}
       >
-        {en ? product.title_en : product.title_fr}
+        {org.name_en}
       </Title>
       {editMode ? doneButton : editButton}
     </div>
@@ -94,18 +89,7 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
     {
       label: en ? "Public" : "Public",
       key: keys.public,
-      children: <PublicProductDescription product={product} />,
-    },
-    {
-      label: en ? "Private" : "Privé",
-      key: keys.private,
-      children: <PrivateProductDescription product={product} />,
-    },
-
-    {
-      label: en ? "Admin" : "Admin",
-      key: keys.admin,
-      children: <ProductAdminDescription product={product} />,
+      children: <PublicPartnerDescription partner={org} />,
     },
   ];
 
@@ -113,7 +97,7 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
     {
       label: en ? "Public" : "Public",
       key: keys.public,
-      children: <PublicProductForm product={product} onSuccess={onSuccess} />,
+      children: <PrivatePartnerForm partner={org} onSuccess={onSuccess} />,
     },
   ];
 
@@ -121,7 +105,6 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
     <Card title={header} bodyStyle={{ paddingTop: 0 }}>
       <Tabs
         items={editMode ? forms : descriptions}
-        // items={descriptions}
         activeKey={activeTabKey}
         onChange={onChange}
         // Very important to destroy inactive forms,
@@ -132,4 +115,4 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
   );
 };
 
-export default PrivateProductProfile;
+export default PrivatePartnerProfile;
