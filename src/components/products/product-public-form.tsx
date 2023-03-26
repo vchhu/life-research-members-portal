@@ -31,6 +31,10 @@ import { ProductTypesCtx } from "../../services/context/products-types-ctx";
 import moment, { Moment } from "moment";
 
 import DatePicker from "antd/lib/date-picker";
+import type { target } from "@prisma/client";
+import type { organization } from "@prisma/client";
+import TargetSelector from "../targets/target-selector";
+//import PartnerSelector from "../partners/partner-selector";
 
 const { Option } = Select;
 
@@ -45,6 +49,7 @@ type Data = {
   publish_date: Moment | null;
   all_author?: string;
   doi?: string;
+  targets: Map<number, target>;
   product_type_id?: number;
   note?: string;
 };
@@ -57,6 +62,29 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
   const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
   useResetDirtyOnUnmount();
 
+  const diffTargets = useCallback(
+    (
+      newTargets: Map<number, target>
+    ): {
+      deleteTargets: number[];
+      addTargets: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deleteTargets: number[] = [];
+      const addTargets: number[] = [];
+      for (const product_target of product.product_target)
+        oldIds.add(product_target.target.id);
+      for (const target of newTargets.values()) newIds.add(target.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deleteTargets.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addTargets.push(newId);
+      return { deleteTargets, addTargets };
+    },
+    [product.product_target]
+  );
+
   /** Submits validated data */
   const submitValidated = useCallback(
     async (data: Data): Promise<boolean> => {
@@ -65,6 +93,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         return true;
       }
       setLoading(true);
+      const { addTargets, deleteTargets } = diffTargets(data.targets);
       const params: UpdateProductPublicParams = {
         title_en: data.title_en,
         title_fr: data.title_fr,
@@ -73,9 +102,10 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         doi: data.doi || "",
         product_type_id: data.product_type_id || null,
         note: data.note || "",
+        deleteTargets,
+        addTargets,
       };
       const newInfo = await updateProductPublic(product.id, params);
-
       setLoading(false);
       if (newInfo) {
         setDirty(false);
@@ -83,7 +113,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
       }
       return !!newInfo;
     },
-    [onSuccess, product.id, dirty, en, setDirty]
+    [onSuccess, diffTargets, product.id, dirty, en, setDirty]
   );
 
   /** When called from context - need to validate manually */
@@ -103,6 +133,10 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
     setSubmit(() => validateAndSubmit);
   }, [setSubmit, validateAndSubmit]);
 
+  function getInitialTargets() {
+    return new Map(product.product_target.map((k) => [k.target.id, k.target]));
+  }
+
   const initialValues: Data = {
     title_en: product.title_en,
     title_fr: product.title_fr,
@@ -117,6 +151,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
     doi: product.doi || "",
     product_type_id: product.product_type?.id,
     note: product.note || "",
+    targets: getInitialTargets(),
   };
 
   return (
@@ -167,6 +202,17 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         >
           <DatePicker />
         </Form.Item>
+
+        <label htmlFor="targets">
+          {en ? "Product target" : "Cible du produit	"}
+        </label>
+        <Divider />
+        <Form.Item name="targets">
+          <TargetSelector
+            setErrors={(e) => form.setFields([{ name: "targets", errors: e }])}
+          />
+        </Form.Item>
+        <Divider />
 
         <Form.Item label={en ? "Authors" : "Auteurs"} name="all_author">
           <TextArea rows={4} spellCheck="false" />

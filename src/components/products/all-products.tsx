@@ -78,6 +78,7 @@ export const queryKeys = {
   productTitle: "productTitle",
   productAllAuthor: "productAllAuthor",
   productTypes: "productTypes",
+  targets: "targets",
 } as const;
 
 // Don't want to change url if query is default value
@@ -401,7 +402,7 @@ const AllProducts: FC = () => {
       className: "name-column",
       render: (all_author: string) => {
         const authors = all_author
-          .split(/[,;&]/)
+          .split(/(?:,|;|&)(?!\s\w\.)/)
           .map((author) => author.trim());
         const matchedAuthors = authors
           .map((author) => {

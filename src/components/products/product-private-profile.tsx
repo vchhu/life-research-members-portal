@@ -15,6 +15,7 @@ import type { ProductPrivateInfo } from "../../services/_types";
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
 import ProductAdminDescription from "./product-admin-description";
 import PrivateProductDescription from "./product-private-description";
+import PrivateProductForm from "./product-private-form";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -114,6 +115,16 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
       label: en ? "Public" : "Public",
       key: keys.public,
       children: <PublicProductForm product={product} onSuccess={onSuccess} />,
+    },
+    {
+      label: en ? "Private" : "Privé",
+      key: keys.private,
+      children: <PrivateProductForm product={product} onSuccess={onSuccess} />,
+    },
+    {
+      label: en ? "Admin" : "Admin",
+      key: keys.admin,
+      children: <ProductAdminForm product={product} onSuccess={onSuccess} />,
     },
   ];
 

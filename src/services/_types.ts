@@ -1,4 +1,4 @@
-import type { keyword, problem } from "@prisma/client";
+import type { keyword, problem, target, topic } from "@prisma/client";
 import type { AccountRes } from "../pages/api/account/[id]";
 import type { PrivateMemberRes } from "../pages/api/member/[id]/private";
 import type { PublicMemberRes } from "../pages/api/member/[id]/public";
@@ -23,3 +23,5 @@ export type EventPublicInfo = NonNullable<PublicEventRes>;
 export type SupervisionPublicInfo = NonNullable<PublicSupervisionRes>;
 export type ProblemInfo = Omit<problem, "id" | "member_id">;
 export type KeywordInfo = Omit<keyword, "id">;
+export type TargetInfo = Omit<target, "id">;
+export type TopicInfo = Omit<topic, "id">;

@@ -2,6 +2,8 @@ import type { FC, PropsWithChildren } from "react";
 import { ActiveAccountCtxProvider } from "./active-account-ctx";
 import { AllAccountsCtxProvider } from "./all-accounts-ctx";
 import { AllKeywordsCtxProvider } from "./all-keywords-ctx";
+import { AllTargetsCtxProvider } from "./all-targets-ctx";
+import { AllTopicsCtxProvider } from "./all-topics-ctx";
 import { AllMembersCtxProvider } from "./all-members-ctx";
 import { AllPartnersCtxProvider } from "./all-partners-ctx";
 import { FacultiesCtxProvider } from "./faculties-ctx";
@@ -29,6 +31,8 @@ const AllContextProviders: FC<PropsWithChildren> = [
   FacultiesCtxProvider,
   SaveChangesCtxProvider,
   AllKeywordsCtxProvider,
+  AllTargetsCtxProvider,
+  AllTopicsCtxProvider,
   AllAccountsCtxProvider,
   AllMembersCtxProvider,
   AllPartnersCtxProvider,

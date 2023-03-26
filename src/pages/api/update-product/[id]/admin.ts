@@ -1,69 +1,53 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { includeAllMemberInfo } from "../../../../../prisma/helpers";
+import { selectAllProductInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
-import type { PrivateMemberDBRes } from "../../member/[id]/private";
+import type { PrivateProductDBRes } from "../../product/[id]/private";
 
-export type UpdateMemberInsightParams = {
-  interview_date?: string | null;
-  about_member?: string;
-  about_promotions?: string;
-  dream?: string;
-  how_can_we_help?: string;
-  admin_notes?: string;
-  other_notes?: string;
+export type UpdateProductAdminParams = {
+  deleteTopics?: number[];
+  addTopics?: number[];
 };
 
-function updateMember(id: number, params: UpdateMemberInsightParams) {
-  return db.member.update({
+function updateProduct(
+  id: number,
+  {
+
+    deleteTopics = [],
+    addTopics = [],
+  }: UpdateProductAdminParams
+) {
+  return db.product.update({
     where: { id },
     data: {
-      insight: {
-        upsert: {
-          update: {
-            interview_date: params.interview_date,
-            about_member: params.about_member,
-            about_promotions: params.about_promotions,
-            dream: params.dream,
-            how_can_we_help: params.how_can_we_help,
-            admin_notes: params.admin_notes,
-            other_notes: params.other_notes,
-          },
-          create: {
-            interview_date: params.interview_date,
-            about_member: params.about_member,
-            about_promotions: params.about_promotions,
-            dream: params.dream,
-            how_can_we_help: params.how_can_we_help,
-            admin_notes: params.admin_notes,
-            other_notes: params.other_notes,
-          },
-        },
+      product_topic: {
+        deleteMany: deleteTopics.map((id) => ({ topic_id: id })),
+        createMany: { data: addTopics.map((id) => ({ topic_id: id })) },
       },
     },
-    include: includeAllMemberInfo,
+    select: selectAllProductInfo,
   });
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PrivateMemberDBRes | string>
+  res: NextApiResponse<PrivateProductDBRes | string>
 ) {
   if (!req.query.id || typeof req.query.id !== "string")
-    return res.status(400).send("Member ID is required.");
+    return res.status(400).send("Product ID is required.");
 
   try {
     const id = parseInt(req.query.id);
-    const params = req.body as UpdateMemberInsightParams;
+    const params = req.body as UpdateProductAdminParams;
 
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
     const authorized = currentUser.is_admin || currentUser.member?.id === id;
     if (!authorized)
-      return res.status(401).send("You are not authorized to edit this member information.");
+      return res.status(401).send("You are not authorized to edit this product information.");
 
-    const updated = await updateMember(id, params);
+    const updated = await updateProduct(id, params);
 
     return res.status(200).send(updated);
   } catch (e: any) {

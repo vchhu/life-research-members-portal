@@ -2,16 +2,17 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import React, { FC, useCallback, useContext, useEffect, useState } from "react";
-import type { MemberPrivateInfo } from "../../services/_types";
+import type { ProductPrivateInfo } from "../../services/_types";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import TextArea from "antd/lib/input/TextArea";
 import Divider from "antd/lib/divider";
 import Text from "antd/lib/typography/Text";
-import type { Moment } from "moment";
-import type { UpdateMemberInsightParams } from "../../pages/api/update-member/[id]/insight";
-import updateMemberInsight from "../../services/update-member-insight";
-import moment from "moment";
-import DatePicker from "antd/lib/date-picker";
+import type { UpdateProductAdminParams } from "../../pages/api/update-product/[id]/admin";
+import updateProductAdmin from "../../services/update-product-admin";
+
+import type { topic } from "@prisma/client";
+import TopicSelector from "../topics/topic-selector";
+
 import Notification from "../../services/notifications/notification";
 import {
   SaveChangesCtx,
@@ -19,28 +20,44 @@ import {
 } from "../../services/context/save-changes-ctx";
 
 type Props = {
-  member: MemberPrivateInfo;
-  onSuccess: (member: MemberPrivateInfo) => void;
+  product: ProductPrivateInfo;
+  onSuccess: (member: ProductPrivateInfo) => void;
 };
 
 type Data = {
-  interview_date: Moment | null;
-  about_member: string;
-  about_promotions: string;
-  dream: string;
-  how_can_we_help: string;
-  admin_notes: string;
-  other_notes: string;
+  topics: Map<number, topic>;
 };
 
-const ProductAdminForm: FC<Props> = ({ member, onSuccess }) => {
+const ProductAdminForm: FC<Props> = ({ product, onSuccess }) => {
   // This sets the return type of the form
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
   const [loading, setLoading] = useState(false);
   const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
   useResetDirtyOnUnmount();
-  const insight = member.insight;
+
+  const diffTopics = useCallback(
+    (
+      newTopics: Map<number, topic>
+    ): {
+      deleteTopics: number[];
+      addTopics: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deleteTopics: number[] = [];
+      const addTopics: number[] = [];
+      for (const product_topic of product.product_topic)
+        oldIds.add(product_topic.topic.id);
+      for (const topic of newTopics.values()) newIds.add(topic.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deleteTopics.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addTopics.push(newId);
+      return { deleteTopics, addTopics };
+    },
+    [product.product_topic]
+  );
 
   /** Submits validated data */
   const submitValidated = useCallback(
@@ -50,16 +67,11 @@ const ProductAdminForm: FC<Props> = ({ member, onSuccess }) => {
         return true;
       }
       setLoading(true);
-      const params: UpdateMemberInsightParams = {
-        interview_date: data.interview_date?.toISOString() || null,
-        about_member: data.about_member,
-        about_promotions: data.about_promotions,
-        dream: data.dream,
-        how_can_we_help: data.how_can_we_help,
-        admin_notes: data.admin_notes,
-        other_notes: data.other_notes,
+      const { addTopics, deleteTopics } = diffTopics(data.topics);
+      const params: UpdateProductAdminParams = {
+        addTopics,
       };
-      const newInfo = await updateMemberInsight(member.id, params);
+      const newInfo = await updateProductAdmin(product.id, params);
       setLoading(false);
       if (newInfo) {
         setDirty(false);
@@ -67,7 +79,7 @@ const ProductAdminForm: FC<Props> = ({ member, onSuccess }) => {
       }
       return !!newInfo;
     },
-    [dirty, member.id, en, setDirty, onSuccess]
+    [dirty, product.id, en, diffTopics, setDirty, onSuccess]
   );
 
   /** When called from context - need to validate manually */
@@ -87,25 +99,16 @@ const ProductAdminForm: FC<Props> = ({ member, onSuccess }) => {
     setSubmit(() => validateAndSubmit);
   }, [setSubmit, validateAndSubmit]);
 
+  function getInitialTopics() {
+    return new Map(product.product_topic.map((k) => [k.topic.id, k.topic]));
+  }
+
   const initialValues: Data = {
-    interview_date: insight?.interview_date
-      ? moment(insight.interview_date)
-      : null,
-    about_member: insight?.about_member || "",
-    about_promotions: insight?.about_promotions || "",
-    dream: insight?.dream || "",
-    how_can_we_help: insight?.how_can_we_help || "",
-    admin_notes: insight?.admin_notes || "",
-    other_notes: insight?.other_notes || "",
+    topics: getInitialTopics(),
   };
 
   return (
-    <div className="member-insight-form-container">
-      <Text strong>
-        {en
-          ? "The institution is here to help, give us some insight into yourself."
-          : "L'institution est là pour vous aider, donnez-nous un aperçu de vous-même."}
-      </Text>
+    <div className="member-admin-form-container">
       <Divider />
       <Form
         form={form}
@@ -115,57 +118,17 @@ const ProductAdminForm: FC<Props> = ({ member, onSuccess }) => {
         className="member-insight-form"
         onValuesChange={() => setDirty(true)}
       >
-        <Form.Item
-          label={en ? "Interview Date" : "Date de l'entretien"}
-          name="interview_date"
-        >
-          <DatePicker />
-        </Form.Item>
         <div className="row">
-          <Form.Item
-            label={en ? "About Member" : "À propos du membre"}
-            name="about_member"
-          >
-            <TextArea spellCheck="false" />
+          <label htmlFor="topics">
+            {en ? "Product topic" : "Sujet du produit		"}
+          </label>
+          <Divider />
+          <Form.Item name="topics">
+            <TopicSelector
+              setErrors={(e) => form.setFields([{ name: "topics", errors: e }])}
+            />
           </Form.Item>
-
-          <Form.Item
-            label={en ? "About Promotions" : "À propos des promotions"}
-            name="about_promotions"
-          >
-            <TextArea spellCheck="false" />
-          </Form.Item>
-        </div>
-        <div className="row">
-          <Form.Item label={en ? "Dream" : "Rêver"} name="dream">
-            <TextArea spellCheck="false" />
-          </Form.Item>
-
-          <Form.Item
-            label={
-              en
-                ? "How the institute can help"
-                : "Comment l'institut peut vous aider"
-            }
-            name="how_can_we_help"
-          >
-            <TextArea spellCheck="false" />
-          </Form.Item>
-        </div>
-        <div className="row">
-          <Form.Item
-            label={en ? "Admin Notes" : "Notes d'administration"}
-            name="admin_notes"
-          >
-            <TextArea spellCheck="false" />
-          </Form.Item>
-
-          <Form.Item
-            label={en ? "Other Notes" : "Autres notes"}
-            name="other_notes"
-          >
-            <TextArea spellCheck="false" />
-          </Form.Item>
+          <Divider />
         </div>
         <Form.Item style={{ marginBottom: 0 }}>
           <Button

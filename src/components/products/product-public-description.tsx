@@ -55,6 +55,12 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
         <ProductTypeLink product_type={product.product_type} />
       </Item>
 
+      <Item label={en ? "Published Date" : "Date de publication"}>
+        {product.publish_date
+          ? new Date(product.publish_date).toISOString().split("T")[0]
+          : ""}
+      </Item>
+
       <Item label={en ? "DOI" : "DOI"}>
         <SafeLink href={`https://doi.org/${product.doi}`} external>
           {product.doi}

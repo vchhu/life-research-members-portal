@@ -119,7 +119,7 @@ model grant {
   id                        Int                         @id(map: "PK_grant") @default(autoincrement())
   title                     String                      @db.NVarChar(2000)
   amount                    Float                       @db.Money
-  throught_lri              Boolean?
+  throught_lri              Boolean                     @default(false, map: "DF_grant_throught_lri")
   status_id                 Int?
   submission_date           DateTime?                   @db.Date
   obtained_date             DateTime?                   @db.Date
@@ -339,8 +339,8 @@ model product {
   publish_date           DateTime?                @db.Date
   all_author             String?                  @db.NVarChar(3000)
   doi                    String?                  @db.NVarChar(100)
-  on_going               Boolean?
-  peer_reviewed          Boolean?
+  on_going               Boolean                  @default(false, map: "DF_product_on_going")
+  peer_reviewed          Boolean                  @default(false, map: "DF_product_peer_reviewed")
   product_type_id        Int?
   note                   String?                  @db.NVarChar(2000)
   event_product_resulted event_product_resulted[]

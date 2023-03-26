@@ -1,6 +1,6 @@
 import CloseOutlined from "@ant-design/icons/lib/icons/CloseOutlined";
 import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
-import type { keyword } from "@prisma/client";
+import type { target } from "@prisma/client";
 import Tag from "antd/lib/tag";
 import { CSSProperties, FC, useState } from "react";
 import PageRoutes from "../../routing/page-routes";
@@ -8,23 +8,22 @@ import colorFromString from "../../utils/front-end/color-from-string";
 import GetLanguage from "../../utils/front-end/get-language";
 import GetOppositeLanguage from "../../utils/front-end/get-opposite-language";
 import SafeLink from "../link/safe-link";
-import { queryKeys } from "../members/all-members";
-import EditKeywordModal from "./edit-keyword-modal";
+import { queryKeys } from "../products/all-products";
 
 type Props = {
-  keyword: keyword;
+  target: target;
   linked?: boolean;
   editable?: boolean;
   deletable?: boolean;
-  onClick?: (k: keyword) => void;
+  onClick?: (k: target) => void;
   onDelete?: (id: number) => void;
-  onEdit?: (keyword: keyword) => void;
+  onEdit?: (target: target) => void;
   oppositeLanguage?: boolean;
   style?: CSSProperties;
 };
 
-const KeywordTag: FC<Props> = ({
-  keyword: k,
+const TargetTag: FC<Props> = ({
+  target: k,
   linked = false,
   editable = false,
   deletable = false,
@@ -39,11 +38,6 @@ const KeywordTag: FC<Props> = ({
   const classList = ["keyword-tag"];
   if (linked || editable || onClick) classList.push("cursor-pointer");
 
-  function onEditSuccess(keyword: keyword) {
-    setModalOpen(false);
-    onEdit(keyword);
-  }
-
   const text = oppositeLanguage ? (
     <GetOppositeLanguage obj={k} />
   ) : (
@@ -52,8 +46,8 @@ const KeywordTag: FC<Props> = ({
   const content = linked ? (
     <SafeLink
       href={{
-        pathname: PageRoutes.allMembers,
-        query: { [queryKeys.keywords]: k.id },
+        pathname: PageRoutes.allProducts,
+        query: { [queryKeys.targets]: k.id },
       }}
     >
       {text}
@@ -77,7 +71,6 @@ const KeywordTag: FC<Props> = ({
       <Tag
         className={classList.join(" ")}
         color={colorFromString((k.name_en || "") + (k.name_fr || ""))}
-        onClick={editable ? () => setModalOpen(true) : () => onClick?.(k)}
         closable={deletable}
         onClose={() => onDelete(k.id)}
         closeIcon={closeIcon}
@@ -86,16 +79,8 @@ const KeywordTag: FC<Props> = ({
       >
         {content}
       </Tag>
-      {editable ? (
-        <EditKeywordModal
-          open={modalOpen}
-          keyword={k}
-          onSuccess={onEditSuccess}
-          onCancel={() => setModalOpen(false)}
-        />
-      ) : null}
     </>
   );
 };
 
-export default KeywordTag;
+export default TargetTag;
