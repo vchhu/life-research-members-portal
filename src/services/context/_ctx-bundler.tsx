@@ -3,6 +3,7 @@ import { ActiveAccountCtxProvider } from "./active-account-ctx";
 import { AllAccountsCtxProvider } from "./all-accounts-ctx";
 import { AllKeywordsCtxProvider } from "./all-keywords-ctx";
 import { AllTargetsCtxProvider } from "./all-targets-ctx";
+import { AllOrganizationsCtxProvider } from "./all-organizations-ctx";
 import { AllTopicsCtxProvider } from "./all-topics-ctx";
 import { AllMembersCtxProvider } from "./all-members-ctx";
 import { AllPartnersCtxProvider } from "./all-partners-ctx";
@@ -33,6 +34,7 @@ const AllContextProviders: FC<PropsWithChildren> = [
   AllKeywordsCtxProvider,
   AllTargetsCtxProvider,
   AllTopicsCtxProvider,
+  AllOrganizationsCtxProvider,
   AllAccountsCtxProvider,
   AllMembersCtxProvider,
   AllPartnersCtxProvider,

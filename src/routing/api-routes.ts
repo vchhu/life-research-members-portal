@@ -42,6 +42,7 @@ const ApiRoutes = {
   allKeywords: "/api/all-keywords",
   allTargets: "/api/all-targets",
   allTopics: "/api/all-topics",
+  allOrganizations: "/api/all-organizations",
   allFaculties: "/api/all-faculties",
   allMemberTypes: "/api/all-member-types",
   allOrgTypes: "/api/all-org-types",

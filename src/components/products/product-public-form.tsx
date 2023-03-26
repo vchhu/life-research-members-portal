@@ -34,7 +34,7 @@ import DatePicker from "antd/lib/date-picker";
 import type { target } from "@prisma/client";
 import type { organization } from "@prisma/client";
 import TargetSelector from "../targets/target-selector";
-//import PartnerSelector from "../partners/partner-selector";
+import PartnerSelector from "../partners/partner-selector";
 
 const { Option } = Select;
 
@@ -50,6 +50,7 @@ type Data = {
   all_author?: string;
   doi?: string;
   targets: Map<number, target>;
+  organizations: Map<number, organization>;
   product_type_id?: number;
   note?: string;
 };
@@ -85,6 +86,30 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
     [product.product_target]
   );
 
+  const diffPartners = useCallback(
+    (
+      newPartners: Map<number, organization>
+    ): {
+      deletePartners: number[];
+      addPartners: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deletePartners: number[] = [];
+      const addPartners: number[] = [];
+      for (const product_partnership of product.product_partnership)
+        oldIds.add(product_partnership.organization.id);
+      for (const organization of newPartners.values())
+        newIds.add(organization.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deletePartners.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addPartners.push(newId);
+      return { deletePartners, addPartners };
+    },
+    [product.product_partnership]
+  );
+
   /** Submits validated data */
   const submitValidated = useCallback(
     async (data: Data): Promise<boolean> => {
@@ -94,6 +119,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
       }
       setLoading(true);
       const { addTargets, deleteTargets } = diffTargets(data.targets);
+      const { addPartners, deletePartners } = diffPartners(data.organizations);
       const params: UpdateProductPublicParams = {
         title_en: data.title_en,
         title_fr: data.title_fr,
@@ -104,6 +130,8 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         note: data.note || "",
         deleteTargets,
         addTargets,
+        deletePartners,
+        addPartners,
       };
       const newInfo = await updateProductPublic(product.id, params);
       setLoading(false);
@@ -113,7 +141,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
       }
       return !!newInfo;
     },
-    [onSuccess, diffTargets, product.id, dirty, en, setDirty]
+    [onSuccess, diffTargets, diffPartners, product.id, dirty, en, setDirty]
   );
 
   /** When called from context - need to validate manually */
@@ -137,6 +165,15 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
     return new Map(product.product_target.map((k) => [k.target.id, k.target]));
   }
 
+  function getInitialPartners() {
+    return new Map(
+      product.product_partnership.map((k) => [
+        k.organization.id,
+        k.organization,
+      ])
+    );
+  }
+
   const initialValues: Data = {
     title_en: product.title_en,
     title_fr: product.title_fr,
@@ -152,6 +189,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
     product_type_id: product.product_type?.id,
     note: product.note || "",
     targets: getInitialTargets(),
+    organizations: getInitialPartners(),
   };
 
   return (
@@ -210,6 +248,19 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         <Form.Item name="targets">
           <TargetSelector
             setErrors={(e) => form.setFields([{ name: "targets", errors: e }])}
+          />
+        </Form.Item>
+
+        <label htmlFor="organizations">
+          {en ? "Product partner" : "Partenaire du produit		"}
+        </label>
+        <Divider />
+
+        <Form.Item name="organizations">
+          <PartnerSelector
+            setErrors={(e) =>
+              form.setFields([{ name: "organizations", errors: e }])
+            }
           />
         </Form.Item>
         <Divider />

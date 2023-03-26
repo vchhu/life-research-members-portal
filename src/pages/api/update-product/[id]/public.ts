@@ -14,6 +14,8 @@ export type UpdateProductPublicParams = {
   note?: string;
   deleteTargets?: number[];
   addTargets?: number[];
+  deletePartners?: number[];
+  addPartners?: number[];
 };
 
 function updateProduct(
@@ -28,6 +30,8 @@ function updateProduct(
     note,
     deleteTargets = [],
     addTargets = [],
+    deletePartners = [],
+    addPartners = [],
   }: UpdateProductPublicParams
 ) {
   return db.product.update({
@@ -47,6 +51,10 @@ function updateProduct(
       product_target: {
         deleteMany: deleteTargets.map((id) => ({ target_id: id })),
         createMany: { data: addTargets.map((id) => ({ target_id: id })) },
+      },
+      product_partnership: {
+        deleteMany: deletePartners.map((id) => ({ organization_id: id })),
+        createMany: { data: addPartners.map((id) => ({ organization_id: id })) },
       },
     },
     select: selectAllProductInfo,
