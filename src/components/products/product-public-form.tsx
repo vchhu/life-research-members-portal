@@ -29,18 +29,30 @@ import {
 } from "../../services/context/save-changes-ctx";
 import { ProductTypesCtx } from "../../services/context/products-types-ctx";
 import moment, { Moment } from "moment";
-
+import type { MemberPublicInfo } from "../../services/_types";
 import DatePicker from "antd/lib/date-picker";
 import type { target } from "@prisma/client";
 import type { organization } from "@prisma/client";
 import TargetSelector from "../targets/target-selector";
 import PartnerSelector from "../partners/partner-selector";
+import getMemberAuthor from "../getters/product-member-author-getter";
+import MemberSelector from "../members/member-selector";
 
 const { Option } = Select;
 
 type Props = {
   product: ProductPublicInfo;
   onSuccess: (product: ProductPrivateInfo) => void;
+};
+
+type ProductMemberAuthor = {
+  member: {
+    id: number;
+    account: {
+      first_name: string;
+      last_name: string;
+    };
+  };
 };
 
 type Data = {
@@ -53,6 +65,7 @@ type Data = {
   organizations: Map<number, organization>;
   product_type_id?: number;
   note?: string;
+  members: Map<number, MemberPublicInfo>;
 };
 
 const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
@@ -62,6 +75,29 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
   useResetDirtyOnUnmount();
+
+  const diffMembers = useCallback(
+    (
+      newMembers: Map<number, MemberPublicInfo>
+    ): {
+      deleteMembers: number[];
+      addMembers: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deleteMembers: number[] = [];
+      const addMembers: number[] = [];
+      for (const product_member_author of product.product_member_author)
+        oldIds.add(product_member_author.member.id);
+      for (const member of newMembers.values()) newIds.add(member.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deleteMembers.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addMembers.push(newId);
+      return { deleteMembers, addMembers };
+    },
+    [product.product_member_author]
+  );
 
   const diffTargets = useCallback(
     (
@@ -120,6 +156,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
       setLoading(true);
       const { addTargets, deleteTargets } = diffTargets(data.targets);
       const { addPartners, deletePartners } = diffPartners(data.organizations);
+      const { addMembers, deleteMembers } = diffMembers(data.members);
       const params: UpdateProductPublicParams = {
         title_en: data.title_en,
         title_fr: data.title_fr,
@@ -132,6 +169,8 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         addTargets,
         deletePartners,
         addPartners,
+        deleteMembers,
+        addMembers,
       };
       const newInfo = await updateProductPublic(product.id, params);
       setLoading(false);
@@ -141,7 +180,16 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
       }
       return !!newInfo;
     },
-    [onSuccess, diffTargets, diffPartners, product.id, dirty, en, setDirty]
+    [
+      onSuccess,
+      diffTargets,
+      diffPartners,
+      diffMembers,
+      product.id,
+      dirty,
+      en,
+      setDirty,
+    ]
   );
 
   /** When called from context - need to validate manually */
@@ -160,6 +208,22 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
   useEffect(() => {
     setSubmit(() => validateAndSubmit);
   }, [setSubmit, validateAndSubmit]);
+
+  function getInitialMembers(product_member_author: ProductMemberAuthor[]) {
+    const initialMembers = new Map(
+      product_member_author.map((k) => [
+        k.member.id,
+        {
+          id: k.member.id,
+          account: {
+            first_name: k.member.account.first_name,
+            last_name: k.member.account.last_name,
+          },
+        },
+      ])
+    );
+    return initialMembers;
+  }
 
   function getInitialTargets() {
     return new Map(product.product_target.map((k) => [k.target.id, k.target]));
@@ -190,6 +254,8 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
     note: product.note || "",
     targets: getInitialTargets(),
     organizations: getInitialPartners(),
+    // @ts-ignore
+    members: getInitialMembers(product.product_member_author),
   };
 
   return (
@@ -244,7 +310,6 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         <label htmlFor="targets">
           {en ? "Product target" : "Cible du produit	"}
         </label>
-        <Divider />
         <Form.Item name="targets">
           <TargetSelector
             setErrors={(e) => form.setFields([{ name: "targets", errors: e }])}
@@ -254,7 +319,6 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         <label htmlFor="organizations">
           {en ? "Product partner" : "Partenaire du produit		"}
         </label>
-        <Divider />
 
         <Form.Item name="organizations">
           <PartnerSelector
@@ -263,10 +327,17 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
             }
           />
         </Form.Item>
-        <Divider />
 
         <Form.Item label={en ? "Authors" : "Auteurs"} name="all_author">
           <TextArea rows={4} spellCheck="false" />
+        </Form.Item>
+        <label htmlFor="members">
+          {en ? "Member authors" : "Auteurs membres"}
+        </label>
+        <Form.Item name="members">
+          <MemberSelector
+            setErrors={(e) => form.setFields([{ name: "members", errors: e }])}
+          />
         </Form.Item>
 
         <Form.Item label={en ? "DOI" : "DOI"} name="doi">

@@ -57,6 +57,7 @@ const _selectPublicMemberInfo = {
     problem: true,
     member_type: true,
     has_keyword: { select: { keyword: true } },
+    product_member_author: { select: { product: true } },
 } as const;
 
 export const selectPublicMemberInfo: CheckKeysAreValid<
@@ -144,7 +145,8 @@ const _includeAllProductInfo = {
     product_type: true,
     product_target: { include: { target: true } },
     product_partnership: { include: { organization: true } },
-    product_topic: { include: { topic: true } }
+    product_topic: { include: { topic: true } },
+    product_member_author: { include: { member: true } },
 } as const;
 
 export const includeAllProductInfo: CheckKeysAreValid<
@@ -166,7 +168,21 @@ const _selectAllProductInfo = {
     product_type: true,
     product_target: { include: { target: true } },
     product_partnership: { include: { organization: true } },
-    product_topic: { include: { topic: true } }
+    product_topic: { include: { topic: true } },
+    product_member_author: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
 } as const;
 
 export const selectAllProductInfo: CheckKeysAreValid<
@@ -186,6 +202,20 @@ const _selectPublicProductInfo = {
     all_author: true,
     product_target: { include: { target: true } },
     product_partnership: { include: { organization: true } },
+    product_member_author: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
 } as const;
 
 export const selectPublicProductInfo: CheckKeysAreValid<

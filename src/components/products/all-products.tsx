@@ -29,6 +29,8 @@ import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import type { PublicMemberRes } from "../../pages/api/member/[id]/public";
 import colorFromString from "../../utils/front-end/color-from-string";
 import ProductAllAuthorFilter from "../filters/product-all-author-filter";
+import isAuthorMatch from "./author-match";
+import getMemberAuthor from "../getters/product-member-author-getter";
 
 function getTitle(product: ProductPublicInfo, en: boolean) {
   return en ? product.title_en : product.title_fr;
@@ -395,48 +397,74 @@ const AllProducts: FC = () => {
     [en]
   );
 
-  const productMemberAuthorColumn: ProductColumnType = useMemo(
+  const productMemberAuthorColumn: ProductColumnType = useMemo(() => {
+    return {
+      title: "Member Involved",
+      dataIndex: "product_member_author",
+      key: "product_member_author",
+      render: (
+        product_member_author: Array<{
+          member: {
+            id: number;
+            account: { first_name: string; last_name: string };
+          };
+        }>
+      ) => {
+        return <div>{getMemberAuthor(product_member_author)}</div>;
+      },
+    };
+  }, []);
+
+  /*  const productMemberAuthorColumn: ProductColumnType = useMemo(
     () => ({
       title: en ? "Member Authors" : "Auteurs membres",
       dataIndex: "all_author",
       className: "name-column",
       render: (all_author: string) => {
         const authors = all_author
-          .split(/(?:,|;|&)(?!\s\w\.)/)
+          .split(/[,;&]/)
           .map((author) => author.trim());
-        const matchedAuthors = authors
-          .map((author) => {
-            const [firstName, lastName] = author.split(" ");
 
-            const foundAccount = members.find(
-              (member) =>
-                member?.account.first_name === firstName ||
-                member?.account.last_name === lastName ||
-                member?.account.last_name === firstName ||
-                member?.account.first_name === lastName
-            );
+        const matchedAuthorsMap = new Map<
+          number,
+          { name: string; id: number }
+        >();
 
-            return foundAccount
-              ? {
-                  name: `${foundAccount.account.first_name} ${foundAccount.account.last_name}`,
-                  id: foundAccount.id,
-                }
-              : null;
-          })
-          .filter((author) => author !== null);
+        authors.forEach((author) => {
+          const foundAccount = members.find(
+            (member) =>
+              member &&
+              member.account &&
+              member.account.first_name &&
+              member.account.last_name &&
+              isAuthorMatch(
+                author,
+                member.account.first_name,
+                member.account.last_name
+              )
+          );
+
+          if (foundAccount) {
+            const name = `${foundAccount.account.first_name} ${foundAccount.account.last_name}`;
+            matchedAuthorsMap.set(foundAccount.id, {
+              name,
+              id: foundAccount.id,
+            });
+          }
+        });
+
+        const matchedAuthors = Array.from(matchedAuthorsMap.values());
 
         return (
           <span>
             {matchedAuthors.length > 0
               ? matchedAuthors.map((author) => (
-                  // Add a unique key to the SafeLink component
                   <SafeLink
-                    key={author!.id}
-                    href={PageRoutes.memberProfile(author!.id)}
+                    key={author.id}
+                    href={PageRoutes.memberProfile(author.id)}
                   >
-                    <Tag color={colorFromString(author!.name)}>
-                      {" "}
-                      {author!.name}
+                    <Tag color={colorFromString(author.name)}>
+                      {author.name}
                     </Tag>
                   </SafeLink>
                 ))
@@ -446,7 +474,7 @@ const AllProducts: FC = () => {
       },
     }),
     [members, en]
-  );
+  ); */
 
   const columns: ProductColumnType[] = [nameColumn];
   if (showDoi) columns.push(doiColumn);
@@ -486,7 +514,7 @@ const AllProducts: FC = () => {
       </Form.Item>
 
       <Form.Item
-        label={en ? "Filter by all authors" : "Filtrer par tous les auteurs"}
+        label={en ? "Filter by authors" : "Filtrer par auteurs"}
         htmlFor="all-authors-filter"
       >
         <ProductAllAuthorFilter

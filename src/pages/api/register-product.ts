@@ -1,7 +1,9 @@
 import { product, Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../prisma/prisma-client";
+import isAuthorMatch from "../../components/products/author-match";
 import getAccountFromRequest from "../../utils/api/get-account-from-request";
+
 
 export type RegisterProductParams = {
   title_en: string;
@@ -31,9 +33,23 @@ function registerProduct(params: RegisterProductParams) {
       on_going: params.on_going,  // Set on_going field from params
       peer_reviewed: params.peer_reviewed,  // Set peer_reviewed field from params
 
+    }, select: {
+      id: true, // Add this line to select the id of the created product
     },
   });
 }
+
+// Add this function before the handler function
+async function fetchMembers() {
+  return db.member.findMany({
+    include: {
+      account: true,
+    },
+  });
+}
+
+// Replace the useState line in the handler function with this line:
+
 
 export default async function handler(
   req: NextApiRequest,
@@ -70,11 +86,48 @@ export default async function handler(
 
     const newProduct = await registerProduct(params);
 
+    // Get the matched authors
+    const members = await fetchMembers();
+
+    const authors = all_author.split(/[,;&]/).map((author) => author.trim());
+    const matchedAuthors = Array.from(
+      new Set(
+        authors
+          .map((author) => {
+            const foundAccount = members.find((member) =>
+              member &&
+              member.account &&
+              member.account.first_name &&
+              member.account.last_name &&
+              isAuthorMatch(
+                author,
+                member.account.first_name,
+                member.account.last_name
+              )
+            );
+
+            return foundAccount ? foundAccount.id : null;
+          })
+          .filter((authorId) => authorId !== null) // Filter out null values here
+          .map((authorId) => authorId as number) // Map the remaining values as numbers
+      )
+    );
+
+    // Insert matched authors into the product_member_author table
+    await Promise.all(
+      matchedAuthors.map((authorId) =>
+        db.product_member_author.create({
+          data: {
+            member_id: authorId,
+            product_id: newProduct.id,
+          },
+        })
+      )
+    );
+
     return res.status(200).send(newProduct);
   } catch (e: any) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
-      return res.status(400).send("This product is already registered: " + title_en);
-
-    return res.status(500).send({ ...e, message: e.message });
+    console.error("Error while registering product:", e);
+    return res.status(500).send({ ...e, message: "An error occurred while registering the product." });
   }
 }

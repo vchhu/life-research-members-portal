@@ -1,4 +1,4 @@
-import type { keyword, problem, target, topic, organization } from "@prisma/client";
+import type { keyword, problem, target, topic, organization, member } from "@prisma/client";
 import type { AccountRes } from "../pages/api/account/[id]";
 import type { PrivateMemberRes } from "../pages/api/member/[id]/private";
 import type { PublicMemberRes } from "../pages/api/member/[id]/public";
@@ -26,3 +26,4 @@ export type KeywordInfo = Omit<keyword, "id">;
 export type TargetInfo = Omit<target, "id">;
 export type TopicInfo = Omit<topic, "id">;
 export type OrganizationInfo = Omit<organization, "id">;
+

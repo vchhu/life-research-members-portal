@@ -23,6 +23,7 @@ import { AllEventsCtxProvider } from "./all-events-ctx";
 import { EventTypesCtxProvider } from "./event-types-ctx";
 import { AllSupervisionsCtxProvider } from "./all-supervisions-ctx";
 import { LevelsCtxProvider } from "./levels-ctx";
+import { AllMembersSelectorCtxProvider } from "./all-members-selector-ctx";
 
 // Bundles context providers, first element in array is the outer-most provider
 const AllContextProviders: FC<PropsWithChildren> = [
@@ -35,6 +36,7 @@ const AllContextProviders: FC<PropsWithChildren> = [
   AllTargetsCtxProvider,
   AllTopicsCtxProvider,
   AllOrganizationsCtxProvider,
+  AllMembersSelectorCtxProvider,
   AllAccountsCtxProvider,
   AllMembersCtxProvider,
   AllPartnersCtxProvider,

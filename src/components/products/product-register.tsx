@@ -61,7 +61,7 @@ const RegisterProduct: FC = () => {
       <Form
         form={form}
         onFinish={handleRegister}
-        style={{ width: "100%", maxWidth: "25rem" }}
+        style={{ width: "100%", maxWidth: "30rem" }}
         size="large"
         layout="vertical"
       >
@@ -72,6 +72,7 @@ const RegisterProduct: FC = () => {
         >
           <Input />
         </Form.Item>
+
         <Form.Item
           label={en ? "Title (French)" : "Titre (Français)"}
           name="title_fr"
@@ -79,6 +80,7 @@ const RegisterProduct: FC = () => {
         >
           <Input />
         </Form.Item>
+
         {/*  <Form.Item
           label={en ? "Date" : "Date"}
           name="date"
@@ -96,6 +98,7 @@ const RegisterProduct: FC = () => {
         >
           <Input.TextArea />
         </Form.Item>
+
         <Form.Item
           label={en ? "On Going" : "En Cours"}
           name="on_going"

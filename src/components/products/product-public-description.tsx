@@ -13,6 +13,8 @@ import type { PublicMemberRes } from "../../pages/api/member/[id]/public";
 import PageRoutes from "../../routing/page-routes";
 import colorFromString from "../../utils/front-end/color-from-string";
 import { useState, useEffect } from "react";
+import isAuthorMatch from "./author-match";
+import getMemberAuthor from "../getters/product-member-author-getter";
 
 const { useBreakpoint } = Grid;
 
@@ -86,39 +88,9 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
       <Item label={en ? "Authors" : "Auteurs"}>{product.all_author}</Item>
 
       <Item label={en ? "Member Authors" : "Auteurs membres"}>
-        {product.all_author ? (
-          product.all_author
-            .split(/[,;&]/)
-            .map((author) => author.trim())
-            .map((author) => {
-              const [firstName, lastName] = author.split(" ");
-              const foundMember = members.find(
-                (member) =>
-                  member?.account.first_name === firstName ||
-                  member?.account.last_name === lastName ||
-                  member?.account.last_name === firstName ||
-                  member?.account.first_name === lastName
-              );
-
-              return foundMember
-                ? {
-                    name: `${foundMember.account.first_name} ${foundMember.account.last_name}`,
-                    id: foundMember.id,
-                  }
-                : null;
-            })
-            .filter((author) => author !== null)
-            .map((author) => (
-              <SafeLink
-                key={author!.id}
-                href={PageRoutes.memberProfile(author!.id)}
-              >
-                <Tag color={colorFromString(author!.name)}>{author!.name}</Tag>
-              </SafeLink>
-            ))
-        ) : (
-          <span>{en ? "No authors" : "Pas d'auteurs"}</span>
-        )}
+        {product.all_author
+          ? getMemberAuthor(product.product_member_author)
+          : null}
       </Item>
     </Descriptions>
   );
