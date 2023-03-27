@@ -18,8 +18,10 @@ const getMemberAuthor = (
       " " +
       member_author.member.account.last_name;
     return (
-      // eslint-disable-next-line react/jsx-key
-      <SafeLink href={PageRoutes.memberProfile(member_author.member.id)}>
+      <SafeLink
+        key={member_author.member.id} // Added the key prop here
+        href={PageRoutes.memberProfile(member_author.member.id)}
+      >
         <Tag color={colorFromString(name)}>{name}</Tag>
       </SafeLink>
     );

@@ -71,7 +71,7 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
 
       <Item label={en ? "Product Partnership" : "Partenariat du produit"}>
         {product.product_partnership.map((entry, i) => (
-          <Tag key={i} color="blue">
+          <Tag key={entry.organization.id} color="blue">
             {en ? entry.organization.name_en : entry.organization.name_fr}
           </Tag>
         ))}
@@ -79,7 +79,7 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
 
       <Item label={en ? "Product Target" : "Cible du produit"}>
         {product.product_target.map((entry, i) => (
-          <Tag key={i} color="blue">
+          <Tag key={entry.target.id} color="blue">
             {en ? entry.target.name_en : entry.target.name_fr}
           </Tag>
         ))}

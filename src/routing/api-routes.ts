@@ -23,6 +23,7 @@ const ApiRoutes = {
   privateMemberInfo: (id: number) => "/api/member/" + id + "/private",
   privateProductInfo: (id: number) => "/api/product/" + id + "/private",
   deleteAccount: (id: number) => "/api/delete-account/" + id,
+  deleteProduct: (id: number) => "/api/delete-product/" + id,
   updateAccountName: (id: number) => "/api/update-account/" + id + "/name",
   updateAccountEmail: (id: number) => "/api/update-account/" + id + "/email",
   updateAccountGrantAdmin: (id: number) => "/api/update-account/" + id + "/grant-admin",

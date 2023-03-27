@@ -16,6 +16,7 @@ import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
 import ProductAdminDescription from "./product-admin-description";
 import PrivateProductDescription from "./product-private-description";
 import PrivateProductForm from "./product-private-form";
+import DeleteProductButton from "./delete-product-button";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -138,6 +139,11 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
         // Very important to destroy inactive forms,
         // so they register their submit function to the save changes context when navigated back
         destroyInactiveTabPane
+      />
+      <DeleteProductButton
+        product={product}
+        setProduct={setProduct}
+        style={{ marginLeft: "auto", display: "block" }}
       />
     </Card>
   );
