@@ -361,8 +361,8 @@ model product_member_all_author {
 model product_member_author {
   member_id  Int
   product_id Int
-  member     member  @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_product_member_author_member")
-  product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_member_author_product")
+  member     member  @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_product_member_author_member")
+  product    product @relation(fields: [product_id], references: [id], onDelete: Cascade, map: "FK_product_member_author_product")
 
   @@id([member_id, product_id], map: "PK_product_member_author")
 }
@@ -370,8 +370,8 @@ model product_member_author {
 model product_partnership {
   organization_id Int
   product_id      Int
-  organization    organization @relation(fields: [organization_id], references: [id], onUpdate: NoAction, map: "FK_product_partnership_ong")
-  product         product      @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_partnership_product")
+  organization    organization @relation(fields: [organization_id], references: [id], onDelete: Cascade, map: "FK_product_partnership_ong")
+  product         product      @relation(fields: [product_id], references: [id], onDelete: Cascade, map: "FK_product_partnership_product")
 
   @@id([organization_id, product_id], map: "PK_product_partnership")
 }
@@ -379,8 +379,8 @@ model product_partnership {
 model product_target {
   target_id  Int
   product_id Int
-  product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_target_product")
-  target     target  @relation(fields: [target_id], references: [id], onUpdate: NoAction, map: "FK_product_target_target_id")
+  product    product @relation(fields: [product_id], references: [id], onDelete: Cascade, map: "FK_product_target_product")
+  target     target  @relation(fields: [target_id], references: [id], onDelete: Cascade, map: "FK_product_target_target_id")
 
   @@id([target_id, product_id], map: "PK_product_target")
 }
@@ -388,8 +388,8 @@ model product_target {
 model product_topic {
   topic_id   Int
   product_id Int
-  product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_product_id")
-  topic      topic   @relation(fields: [topic_id], references: [id], onUpdate: NoAction, map: "FK_product_topic_topic_id")
+  product    product @relation(fields: [product_id], references: [id], onDelete: Cascade, map: "FK_product_topic_product_id")
+  topic      topic   @relation(fields: [topic_id], references: [id], onDelete: Cascade, map: "FK_product_topic_topic_id")
 
   @@id([topic_id, product_id], map: "PK_product_topic")
 }

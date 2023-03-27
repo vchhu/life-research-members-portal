@@ -19,6 +19,7 @@ import CvIcon from "../icons/cv-icon";
 import WebsiteIcon from "../icons/website-icon";
 import MemberTypeLink from "../link/member-type-link";
 import FacultyLink from "../link/faculty-link";
+import getMemberProduct from "../getters/member-product-author-getter";
 
 const { useBreakpoint } = Grid;
 
@@ -125,6 +126,10 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
             </SafeLink>
           ) : null}
         </>
+      </Item>
+
+      <Item label={en ? "Member's Product" : "Produit du Membre"}>
+        {getMemberProduct(member.product_member_author)}
       </Item>
     </Descriptions>
   );
