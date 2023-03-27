@@ -21,6 +21,7 @@ const _includeAllMemberInfo = {
     has_keyword: { include: { keyword: true } },
     insight: true,
     problem: true,
+    product_member_author: { include: { product: true } },
 } as const;
 
 export const includeAllMemberInfo: CheckKeysAreValid<
