@@ -128,9 +128,11 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
         </>
       </Item>
 
-      <Item label={en ? "Member's Product" : "Produit du Membre"}>
-        {getMemberProduct(member.product_member_author)}
-      </Item>
+      {member.product_member_author.length > 0 && (
+        <Item label={en ? "Member's Product" : "Produit du Membre"}>
+          {getMemberProduct(member.product_member_author)}
+        </Item>
+      )}
     </Descriptions>
   );
 };

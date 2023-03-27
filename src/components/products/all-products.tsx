@@ -399,7 +399,7 @@ const AllProducts: FC = () => {
 
   const productMemberAuthorColumn: ProductColumnType = useMemo(() => {
     return {
-      title: "Member Involved",
+      title: en ? "Authors Member" : "Auteurs membres",
       dataIndex: "product_member_author",
       key: "product_member_author",
       render: (
@@ -413,7 +413,7 @@ const AllProducts: FC = () => {
         return <div>{getMemberAuthor(product_member_author)}</div>;
       },
     };
-  }, []);
+  }, [en]);
 
   /*  const productMemberAuthorColumn: ProductColumnType = useMemo(
     () => ({

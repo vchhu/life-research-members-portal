@@ -118,12 +118,15 @@ function handleEventTypeFilterChange(next: Set<number>) {
   );
 }
 function handleEventDateFilterChange(value: RangeValue<Moment> | null) {
+  const adjustedStartDate =
+    value && value[0] ? value[0].clone().subtract(1, "day") : null;
+
   Router.push(
     {
       query: {
         ...Router.query,
-        [queryKeys.eventStartDate]: value
-          ? value[0]?.format("YYYY-MM-DD")
+        [queryKeys.eventStartDate]: adjustedStartDate
+          ? adjustedStartDate.format("YYYY-MM-DD")
           : null,
         [queryKeys.eventEndDate]: value ? value[1]?.format("YYYY-MM-DD") : null,
       },
