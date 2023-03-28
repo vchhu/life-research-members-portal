@@ -67,7 +67,6 @@ export const selectPublicMemberInfo: CheckKeysAreValid<
 > = _selectPublicMemberInfo;
 
 
-
 const _selectPublicPartnerInfo = {
     id: true,
     name_en: true,
@@ -75,7 +74,29 @@ const _selectPublicPartnerInfo = {
     org_scope: true,
     org_type: true,
     description: true,
+    event_partner_involved: {
+        select: {
+            event: true,
+            event_id: true,
+            organization_id: true,
+        },
+    },
+    partnership_member_org: {
+        select: {
+            member: true,
+            organization_id: true,
+            member_id: true,
+        },
+    },
+    product_partnership: {
+        select: {
+            organization_id: true,
+            product_id: true,
+        },
+    },
+
 } as const;
+
 
 export const selectPublicPartnerInfo: CheckKeysAreValid<
     typeof _selectPublicPartnerInfo,
@@ -89,9 +110,10 @@ const _includeAllPartnerInfo = {
     org_scope: true,
     org_type: true,
     description: true,
-    event_partner_involved: { select: { member: true } },
-    partnership_member_org: { select: { member: true } },
-    product_partnership: { select: { product: true } },
+    event_partner_involved: { include: { event: true } },
+    partnership_member_org: { include: { member: true } },
+    product_partnership: { include: { product: true } },
+
 } as const;
 
 export const includeAllPartnerInfo: CheckKeysAreValid<
@@ -109,21 +131,21 @@ const _selectAllPartnerInfo = {
     event_partner_involved: {
         select: {
             event: true,
-            member: true,
-            organization: true,
+            event_id: true,
+            organization_id: true,
         },
     },
     partnership_member_org: {
         select: {
             member: true,
-            organization: true,
-            partnership: true,
+            organization_id: true,
+            member_id: true,
         },
     },
     product_partnership: {
         select: {
-            organization: true,
-            product: true,
+            organization_id: true,
+            product_id: true,
         },
     },
 } as const;

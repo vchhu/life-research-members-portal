@@ -39,7 +39,7 @@ type Data = {
   description: string | null;
 };
 
-const PrivatePartnerForm: FC<Props> = ({ partner, onSuccess }) => {
+const PublicPartnerForm: FC<Props> = ({ partner, onSuccess }) => {
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
   const { orgTypes } = useContext(OrgTypesCtx);
@@ -98,14 +98,14 @@ const PrivatePartnerForm: FC<Props> = ({ partner, onSuccess }) => {
   };
 
   return (
-    <div className="private-member-form-container">
+    <div className="public-partner-form-container">
       <Divider />
       <Form
         form={form}
         onFinish={submitValidated}
         initialValues={initialValues}
         layout="vertical"
-        className="private-member-form"
+        className="public-partner-form"
         onValuesChange={() => setDirty(true)}
       >
         <div className="row">
@@ -140,29 +140,29 @@ const PrivatePartnerForm: FC<Props> = ({ partner, onSuccess }) => {
             </Select>
           </Form.Item>
         </div>
-        <div className="row">
-          <Form.Item
-            className="org_type"
-            label={en ? "Organization type" : "Type d'organisation"}
-            name="type_id"
-          >
-            <Select>
-              <Option value="">{""}</Option>
-              {orgTypes.map((f) => (
-                <Option key={f.id} value={f.id}>
-                  <GetLanguage obj={f} />
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </div>
+
+        <Form.Item
+          className="org_type"
+          label={en ? "Organization type" : "Type d'organisation"}
+          name="type_id"
+        >
+          <Select>
+            <Option value="">{""}</Option>
+            {orgTypes.map((f) => (
+              <Option key={f.id} value={f.id}>
+                <GetLanguage obj={f} />
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
         <div className="row">
           <Form.Item
             label={en ? "Description" : "Description"}
             name="description"
             className="description"
           >
-            <Input.TextArea />
+            <Input.TextArea rows={5} />
           </Form.Item>
         </div>
 
@@ -181,4 +181,4 @@ const PrivatePartnerForm: FC<Props> = ({ partner, onSuccess }) => {
     </div>
   );
 };
-export default PrivatePartnerForm;
+export default PublicPartnerForm;

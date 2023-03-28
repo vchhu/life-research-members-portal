@@ -1,9 +1,18 @@
+import type { organization } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { selectAllPartnerInfo } from "../../../../../prisma/helpers";
+import { selectAllPartnerInfo, selectPublicPartnerInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
 
-export type PrivatePartnerRes = Awaited<ReturnType<typeof getPrivatePartnerInfo>>;
+export type PrivatePartnerDBRes = Awaited<ReturnType<typeof getPrivatePartnerInfo>>;
+
+// Dates will be stringified when sending response!
+export type PrivatePartnerRes = Omit<
+  NonNullable<PrivatePartnerDBRes>,
+  "organization"
+> & {
+  public: (Omit<organization, "added_date"> & { added_date: string | null }) | null;
+};
 
 function getPrivatePartnerInfo(id: number) {
   return db.organization.findUnique({
@@ -14,13 +23,12 @@ function getPrivatePartnerInfo(id: number) {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PrivatePartnerRes | string>
+  res: NextApiResponse<PrivatePartnerDBRes | string>
 ) {
   if (!req.query.id || typeof req.query.id !== "string")
     return res.status(400).send("Partner ID is required.");
 
   try {
-
     const id = parseInt(req.query.id);
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
