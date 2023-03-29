@@ -93,11 +93,11 @@ const PrivateGrantProfile: FC<Props> = ({ id }) => {
   );
 
   const descriptions: Tab[] = [
-    {
+    /*   {
       label: en ? "Public" : "Publique",
       key: keys.public,
       children: <PublicGrantDescription grant={grant} />,
-    },
+    }, */
     /*  {
       label: en ? "Private" : "Privé",
       key: keys.private,

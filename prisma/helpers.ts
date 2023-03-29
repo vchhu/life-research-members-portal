@@ -349,6 +349,7 @@ const _includeAllGrantInfo = {
     grant_investigator_member: { include: { member: { include: { account: true } } } },
     topic: true,
     note: true,
+
 } as const;
 
 export const includeAllGrantInfo: CheckKeysAreValid<
@@ -371,6 +372,7 @@ const _selectAllGrantInfo = {
     grant_investigator_member: { include: { member: { include: { account: true } } } },
     topic: true,
     note: true,
+
 } as const;
 
 export const selectAllGrantInfo: CheckKeysAreValid<
@@ -419,6 +421,7 @@ const _selectPublicGrantInfo = {
     },
     topic: true,
     note: true,
+
 } as const;
 
 export const selectPublicGrantInfo: CheckKeysAreValid<
