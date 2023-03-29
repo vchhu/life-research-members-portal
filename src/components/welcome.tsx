@@ -80,10 +80,16 @@ const Welcome: FC = () => {
   );
   const notRegistered = (
     <>
-      <h4>
+      <h1>
         {en
           ? "This account is not registered."
           : "Ce compte n'est pas enregistré."}
+      </h1>
+
+      <h4>
+        {en
+          ? "If you are a member, please ask an administrator to register you."
+          : "Si vous êtes membre, veuillez demander à un administrateur de vous inscrire."}
       </h4>
     </>
   );
@@ -179,7 +185,7 @@ const Welcome: FC = () => {
         <Row gutter={[16, 16]}>
           <Col xs={24} md={6}>
             <Title level={4}>
-              {en ? "LIFE at a glance" : "LIFE en un coup d'œil"}
+              {en ? "LRI at a glance" : "IRL en un coup d'œil"}
             </Title>
             <p>
               {en
