@@ -265,7 +265,7 @@ export const selectPublicEventInfo: CheckKeysAreValid<
 > = _selectPublicEventInfo; */
 
 
-const _selectPublicSupervisionInfo = {
+/* const _selectPublicSupervisionInfo = {
     id: true,
     last_name: true,
     first_name: true,
@@ -282,7 +282,7 @@ export const selectPublicSupervisionInfo: CheckKeysAreValid<
     typeof _selectPublicSupervisionInfo,
     Prisma.supervisionSelect
 > = _selectPublicSupervisionInfo;
-
+ */
 
 
 const _includeAllGrantInfo = {
@@ -471,3 +471,70 @@ export const selectPublicEventInfo: CheckKeysAreValid<
     typeof _selectPublicEventInfo,
     Prisma.eventSelect
 > = _selectPublicEventInfo;
+
+
+const _includeAllSupervisionInfo = {
+    id: true,
+    last_name: true,
+    first_name: true,
+    start_date: true,
+    end_date: true,
+    faculty_id: true,
+    level_id: true,
+    note: true,
+    faculty: true,
+    level: true,
+    supervision_co_supervisor: true,
+    supervision_committee: true,
+    supervision_principal_supervisor: true,
+    supervision_trainee: true,
+} as const;
+
+export const includeAllSupervisionInfo: CheckKeysAreValid<
+    typeof _includeAllSupervisionInfo,
+    Prisma.supervisionSelect
+> = _includeAllSupervisionInfo;
+
+const _selectAllSupervisionInfo = {
+    id: true,
+    last_name: true,
+    first_name: true,
+    start_date: true,
+    end_date: true,
+    faculty_id: true,
+    level_id: true,
+    note: true,
+    faculty: true,
+    level: true,
+    supervision_co_supervisor: true,
+    supervision_committee: true,
+    supervision_principal_supervisor: true,
+    supervision_trainee: true,
+} as const;
+
+export const selectAllSupervisionInfo: CheckKeysAreValid<
+    typeof _selectAllSupervisionInfo,
+    Prisma.supervisionSelect
+> = _selectAllSupervisionInfo;
+
+const _selectPublicSupervisionInfo = {
+    id: true,
+    last_name: true,
+    first_name: true,
+    start_date: true,
+    end_date: true,
+    faculty_id: true,
+    level_id: true,
+    faculty: true,
+    level: true,
+    note: true,
+    supervision_co_supervisor: true,
+    supervision_committee: true,
+    supervision_principal_supervisor: true,
+    supervision_trainee: true,
+} as const;
+
+export const selectPublicSupervisionInfo: CheckKeysAreValid<
+    typeof _selectPublicSupervisionInfo,
+    Prisma.supervisionSelect
+> = _selectPublicSupervisionInfo;

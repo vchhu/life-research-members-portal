@@ -11,6 +11,7 @@ import type { PrivateEventRes } from "../pages/api/event/[id]/private";
 import type { PrivateProductRes } from "../pages/api/product/[id]/private";
 import type { PublicEventRes } from "../pages/api/event/[id]/public";
 import type { PublicSupervisionRes } from "../pages/api/supervision/[id]/public";
+import type { PrivateSupervisionRes } from "../pages/api/supervision/[id]/private";
 
 
 export type AccountInfo = NonNullable<AccountRes>;
@@ -25,6 +26,7 @@ export type GrantPrivateInfo = NonNullable<PrivateGrantRes>;
 export type EventPrivateInfo = NonNullable<PrivateEventRes>;
 export type EventPublicInfo = NonNullable<PublicEventRes>;
 export type SupervisionPublicInfo = NonNullable<PublicSupervisionRes>;
+export type SupervisionPrivateInfo = NonNullable<PrivateSupervisionRes>;
 export type ProblemInfo = Omit<problem, "id" | "member_id">;
 export type KeywordInfo = Omit<keyword, "id">;
 export type TargetInfo = Omit<target, "id">;

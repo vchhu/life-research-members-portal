@@ -296,7 +296,11 @@ const AllSupervisions: FC = () => {
       dataIndex: "name",
       className: "name-column",
       //sorter: nameSorter,
-      render: (value, member) => value, // Changed this line
+      render: (value, member) => (
+        <SafeLink href={PageRoutes.supervisionProfile(member.id)}>
+          {value}
+        </SafeLink>
+      ),
     }),
     [en]
   );
