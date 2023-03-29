@@ -1,8 +1,8 @@
-import { Button, DatePicker } from "antd";
+import { Button, Col, DatePicker, Row, Switch } from "antd";
 import Select from "antd/lib/select";
 import Form from "antd/lib/form";
 import Input from "antd/lib/input";
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, useState } from "react";
 import { useForm } from "antd/lib/form/Form";
 import moment from "moment";
 import type { Moment } from "moment";
@@ -29,6 +29,8 @@ const RegisterProduct: FC = () => {
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
   const { productTypes } = useContext(ProductTypesCtx);
+  const [onGoing, setOnGoing] = useState(false);
+  const [peerReviewed, setPeerReviewed] = useState(false);
 
   async function handleRegister({
     title_en,
@@ -36,19 +38,17 @@ const RegisterProduct: FC = () => {
     //date,
     doi,
     all_author,
-    on_going,
-    peer_reviewed,
     product_type_id,
     note,
-  }: Data) {
+  }: Omit<Data, "on_going" | "peer_reviewed">) {
     const res = await registerProduct({
       title_en,
       title_fr,
       // date,
       doi,
       all_author,
-      on_going,
-      peer_reviewed,
+      on_going: onGoing,
+      peer_reviewed: peerReviewed,
       product_type_id,
       note,
     });
@@ -98,21 +98,6 @@ const RegisterProduct: FC = () => {
         >
           <Input.TextArea />
         </Form.Item>
-
-        <Form.Item
-          label={en ? "On Going" : "En Cours"}
-          name="on_going"
-          valuePropName="checked"
-        >
-          <Input type="checkbox" />
-        </Form.Item>
-        <Form.Item
-          label={en ? "Peer Reviewed" : "Examiné par les Pairs"}
-          name="peer_reviewed"
-          valuePropName="checked"
-        >
-          <Input type="checkbox" />
-        </Form.Item>
         <Form.Item
           label={en ? "Product Type" : "Type de Produit"}
           name="product_type_id"
@@ -127,6 +112,37 @@ const RegisterProduct: FC = () => {
             ))}
           </Select>
         </Form.Item>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="on_going"
+              valuePropName="checked"
+              style={{ display: "inline-block" }}
+            >
+              {en ? "On Going: " : "En Cours: "}
+
+              <Switch checked={onGoing} onChange={() => setOnGoing(!onGoing)} />
+              {onGoing ? " Yes" : " No"}
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="peer_reviewed"
+              valuePropName="checked"
+              style={{ display: "inline-block" }}
+            >
+              {en ? "Peer Reviewed: " : "Examiné par les Pairs: "}
+              <Switch
+                checked={peerReviewed}
+                onChange={() => setPeerReviewed(!peerReviewed)}
+              />
+
+              {peerReviewed ? " Yes" : " No"}
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item label={en ? "Abstract" : "Résumé"} name="note">
           <Input.TextArea />
         </Form.Item>

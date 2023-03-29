@@ -11,8 +11,9 @@ export type PrivatePartnerRes = Omit<
   NonNullable<PrivatePartnerDBRes>,
   "organization"
 > & {
-  public: (Omit<organization, "added_date"> & { added_date: string | null }) | null;
+
 };
+
 
 function getPrivatePartnerInfo(id: number) {
   return db.organization.findUnique({

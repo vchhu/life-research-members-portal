@@ -5,7 +5,7 @@ import { ActiveAccountCtx } from "../../../services/context/active-account-ctx";
 import CardSkeleton from "../../../components/loading/card-skeleton";
 import PageRoutes from "../../../routing/page-routes";
 
-const PrivateProductPage: NextPage = () => {
+const PrivateGrantPage: NextPage = () => {
   const router = useRouter();
   const { localAccount, loading } = useContext(ActiveAccountCtx);
   const { id: idString } = router.query;
@@ -19,14 +19,14 @@ const PrivateProductPage: NextPage = () => {
     const id = parseInt(idString);
 
     if (localAccount?.is_admin) {
-      router.replace(PageRoutes.privateProductProfile(id));
+      router.replace(PageRoutes.privateGrantProfile(id));
       return;
-    } else {
-      router.replace(PageRoutes.publicProductProfile(id));
     }
+
+    router.replace(PageRoutes.publicGrantProfile(id));
   }, [localAccount, loading, idString, router]);
 
   return <CardSkeleton />;
 };
 
-export default PrivateProductPage;
+export default PrivateGrantPage;

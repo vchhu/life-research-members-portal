@@ -245,7 +245,7 @@ export const selectPublicProductInfo: CheckKeysAreValid<
     typeof _selectPublicProductInfo,
     Prisma.productSelect
 > = _selectPublicProductInfo;
-
+/* 
 const _selectPublicGrantInfo = {
     id: true,
     title: true,
@@ -293,7 +293,7 @@ const _selectPublicGrantInfo = {
 export const selectPublicGrantInfo: CheckKeysAreValid<
     typeof _selectPublicGrantInfo,
     Prisma.grantSelect
-> = _selectPublicGrantInfo;
+> = _selectPublicGrantInfo; */
 
 const _selectPublicEventInfo = {
     id: true,
@@ -334,3 +334,94 @@ export const selectPublicSupervisionInfo: CheckKeysAreValid<
 
 
 
+const _includeAllGrantInfo = {
+    id: true,
+    title: true,
+    amount: true,
+    throught_lri: true,
+    status: true,
+    submission_date: true,
+    obtained_date: true,
+    completed_date: true,
+    source: true,
+    all_investigator: true,
+    grant_member_involved: { include: { member: { include: { account: true } } } },
+    grant_investigator_member: { include: { member: { include: { account: true } } } },
+    topic: true,
+    note: true,
+} as const;
+
+export const includeAllGrantInfo: CheckKeysAreValid<
+    typeof _includeAllGrantInfo,
+    Prisma.grantSelect
+> = _includeAllGrantInfo;
+
+const _selectAllGrantInfo = {
+    id: true,
+    title: true,
+    amount: true,
+    throught_lri: true,
+    status: true,
+    submission_date: true,
+    obtained_date: true,
+    completed_date: true,
+    source: true,
+    all_investigator: true,
+    grant_member_involved: { include: { member: { include: { account: true } } } },
+    grant_investigator_member: { include: { member: { include: { account: true } } } },
+    topic: true,
+    note: true,
+} as const;
+
+export const selectAllGrantInfo: CheckKeysAreValid<
+    typeof _selectAllGrantInfo,
+    Prisma.grantSelect
+> = _selectAllGrantInfo;
+
+const _selectPublicGrantInfo = {
+    id: true,
+    title: true,
+    amount: true,
+    throught_lri: true,
+    status: true,
+    submission_date: true,
+    obtained_date: true,
+    completed_date: true,
+    source: true,
+    all_investigator: true,
+    grant_member_involved: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
+    grant_investigator_member: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
+    topic: true,
+    note: true,
+} as const;
+
+export const selectPublicGrantInfo: CheckKeysAreValid<
+    typeof _selectPublicGrantInfo,
+    Prisma.grantSelect
+> = _selectPublicGrantInfo;

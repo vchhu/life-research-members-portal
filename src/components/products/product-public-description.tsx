@@ -3,17 +3,13 @@ import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";
 import { FC, useContext } from "react";
 import type { ProductPublicInfo } from "../../services/_types";
-import GetLanguage from "../../utils/front-end/get-language";
 import React from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import Tag from "antd/lib/tag";
 import SafeLink from "../link/safe-link";
 import ProductTypeLink from "../link/product-type-link";
 import type { PublicMemberRes } from "../../pages/api/member/[id]/public";
-import PageRoutes from "../../routing/page-routes";
-import colorFromString from "../../utils/front-end/color-from-string";
 import { useState, useEffect } from "react";
-import isAuthorMatch from "./author-match";
 import getMemberAuthor from "../getters/product-member-author-getter";
 
 const { useBreakpoint } = Grid;

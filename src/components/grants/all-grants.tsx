@@ -214,7 +214,7 @@ const AllGrants: FC = () => {
   const { localAccount } = useContext(ActiveAccountCtx);
 
   const handleCreateGrant = () => {
-    router.push("grants/create");
+    router.push("grants/register");
   };
 
   useEffect(() => {
