@@ -14,6 +14,8 @@ const PageRoutes = {
   privatePartnerProfile: (id: number) => "/partners/" + id + "/private",
   privateGrantProfile: (id: number) => "/grants/" + id + "/private",
   publicGrantProfile: (id: number) => "/grants/" + id + "/public",
+  privateEventProfile: (id: number) => "/events/" + id + "/private",
+  publicEventProfile: (id: number) => "/events/" + id + "/public",
   myProfile: "/my-profile",
   allAccounts: "/accounts",
   allPartners: "/partners",

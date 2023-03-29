@@ -245,57 +245,8 @@ export const selectPublicProductInfo: CheckKeysAreValid<
     typeof _selectPublicProductInfo,
     Prisma.productSelect
 > = _selectPublicProductInfo;
-/* 
-const _selectPublicGrantInfo = {
-    id: true,
-    title: true,
-    amount: true,
-    throught_lri: true,
-    status: true,
-    submission_date: true,
-    obtained_date: true,
-    completed_date: true,
-    source: true,
-    all_investigator: true,
-    grant_member_involved: {
-        include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
-            },
-        },
-    },
-    grant_investigator_member: {
-        include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
-            },
-        },
-    },
-    topic: true,
-    note: true,
-} as const;
 
-
-export const selectPublicGrantInfo: CheckKeysAreValid<
-    typeof _selectPublicGrantInfo,
-    Prisma.grantSelect
-> = _selectPublicGrantInfo; */
-
-const _selectPublicEventInfo = {
+/* const _selectPublicEventInfo = {
     id: true,
     name_en: true,
     name_fr: true,
@@ -311,7 +262,7 @@ const _selectPublicEventInfo = {
 export const selectPublicEventInfo: CheckKeysAreValid<
     typeof _selectPublicEventInfo,
     Prisma.eventSelect
-> = _selectPublicEventInfo;
+> = _selectPublicEventInfo; */
 
 
 const _selectPublicSupervisionInfo = {
@@ -440,3 +391,83 @@ export const selectPublicGrantInfo: CheckKeysAreValid<
     typeof _selectPublicGrantInfo,
     Prisma.grantSelect
 > = _selectPublicGrantInfo;
+
+
+const _includeAllEventInfo = {
+    id: true,
+    name_en: true,
+    name_fr: true,
+    start_date: true,
+    end_date: true,
+    event_type_id: true,
+    topic_id: true,
+    note: true,
+    topic: true,
+    event_type: true,
+    event_grant_resulted: true,
+    event_member_involved: { include: { member: { include: { account: true } } } },
+    event_partner_involved: true,
+    event_product_resulted: true,
+} as const;
+
+export const includeAllEventInfo: CheckKeysAreValid<
+    typeof _includeAllEventInfo,
+    Prisma.eventSelect
+> = _includeAllEventInfo;
+
+const _selectAllEventInfo = {
+    id: true,
+    name_en: true,
+    name_fr: true,
+    start_date: true,
+    end_date: true,
+    event_type_id: true,
+    topic_id: true,
+    note: true,
+    topic: true,
+    event_type: true,
+    event_grant_resulted: true,
+    event_member_involved: { include: { member: { include: { account: true } } } },
+    event_partner_involved: true,
+    event_product_resulted: true,
+} as const;
+
+export const selectAllEventInfo: CheckKeysAreValid<
+    typeof _selectAllEventInfo,
+    Prisma.eventSelect
+> = _selectAllEventInfo;
+
+const _selectPublicEventInfo = {
+    id: true,
+    name_en: true,
+    name_fr: true,
+    start_date: true,
+    end_date: true,
+    event_type_id: true,
+    topic_id: true,
+    topic: true,
+    event_type: true,
+    event_grant_resulted: true,
+    event_member_involved: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
+    event_partner_involved: true,
+    event_product_resulted: true,
+    note: true,
+} as const;
+
+export const selectPublicEventInfo: CheckKeysAreValid<
+    typeof _selectPublicEventInfo,
+    Prisma.eventSelect
+> = _selectPublicEventInfo;
