@@ -9,7 +9,7 @@ export type PrivateGrantDBRes = Awaited<ReturnType<typeof getPrivateGrantInfo>>;
 // Dates will be stringified when sending response!
 export type PrivateGrantRes = Omit<
   NonNullable<PrivateGrantDBRes>,
-  "submission_date" | "obtained_date" | "completed_date" | "grant"
+  "grant"
 > & {
 
   public: (Omit<grant, "submission_date" | "obtained_date" | "completed_date"> & { submission_date: string | null, obtained_date: string | null, completed_date: string | null }) | null;

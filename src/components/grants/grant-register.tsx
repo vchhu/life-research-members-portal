@@ -17,7 +17,7 @@ const { Option } = Select;
 
 type GrantData = {
   title: string;
-  amount: number;
+  amount: string;
   status_id: number;
   submission_date: Moment | null;
   obtained_date: Moment | null;
@@ -50,7 +50,7 @@ const RegisterGrant: FC = () => {
   }: GrantData) {
     const res = await registerGrant({
       title,
-      amount,
+      amount: parseFloat(amount), // Convert amount to a float
       throught_lri: throughtLRI,
       status_id,
       submission_date: submission_date ? submission_date.toDate() : null,
@@ -63,8 +63,6 @@ const RegisterGrant: FC = () => {
     });
     if (res) form.resetFields();
   }
-
-  // Add form items and other components related to the grant model
 
   return (
     <div className="register-grant-form">

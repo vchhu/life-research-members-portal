@@ -51,27 +51,19 @@ export default async function handler(
     amount,
     throught_lri,
     status_id,
-    submission_date,
-    obtained_date,
-    completed_date,
+
     source_id,
     all_investigator,
-    topic_id,
-    note,
+
   } = params;
 
-  /* if (typeof title !== "string") return res.status(400).send("Please provide the title");
+  if (typeof title !== "string") return res.status(400).send("Please provide the title");
   if (isNaN(amount)) return res.status(400).send("Amount is required.");
   if (typeof throught_lri !== "boolean") return res.status(400).send("Throught LRI is required.");
   if (isNaN(status_id)) return res.status(400).send("Status ID is required.");
-  if (!(submission_date instanceof Date)) return res.status(400).send("Submission date is required.");
-  if (!(obtained_date instanceof Date)) return res.status(400).send("Obtained date is required.");
-  if (!(completed_date instanceof Date)) return res.status(400).send("Completed date is required.");
   if (isNaN(source_id)) return res.status(400).send("Source ID is required.");
   if (typeof all_investigator !== "string") return res.status(400).send("All investigator is required.");
-  if (isNaN(topic_id)) return res.status(400).send("Topic ID is required.");
-  if (typeof note !== "string") return res.status(400).send("Note is required.");
- */
+
   try {
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;

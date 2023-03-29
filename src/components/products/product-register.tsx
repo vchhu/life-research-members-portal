@@ -16,7 +16,7 @@ const { Option } = Select;
 type Data = {
   title_en: string;
   title_fr: string;
-  //date: Moment | null;
+  publish_date: Moment | null;
   doi: string;
   all_author: string;
   on_going: boolean;
@@ -35,7 +35,7 @@ const RegisterProduct: FC = () => {
   async function handleRegister({
     title_en,
     title_fr,
-    //date,
+    publish_date,
     doi,
     all_author,
     product_type_id,
@@ -44,7 +44,7 @@ const RegisterProduct: FC = () => {
     const res = await registerProduct({
       title_en,
       title_fr,
-      // date,
+      publish_date: publish_date ? publish_date.toDate() : null,
       doi,
       all_author,
       on_going: onGoing,
@@ -81,13 +81,13 @@ const RegisterProduct: FC = () => {
           <Input />
         </Form.Item>
 
-        {/*  <Form.Item
-          label={en ? "Date" : "Date"}
-          name="date"
+        <Form.Item
+          label={en ? "Published Date" : "Date de Publication"}
+          name="publish_date"
           className="date-picker"
         >
           <DatePicker />
-        </Form.Item> */}
+        </Form.Item>
         <Form.Item label={en ? "DOI" : "DOI"} name="doi">
           <Input />
         </Form.Item>

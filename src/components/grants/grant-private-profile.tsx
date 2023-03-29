@@ -93,11 +93,11 @@ const PrivateGrantProfile: FC<Props> = ({ id }) => {
   );
 
   const descriptions: Tab[] = [
-    /*   {
+    {
       label: en ? "Public" : "Publique",
       key: keys.public,
       children: <PublicGrantDescription grant={grant} />,
-    }, */
+    },
     /*  {
       label: en ? "Private" : "Privé",
       key: keys.private,
@@ -111,12 +111,13 @@ const PrivateGrantProfile: FC<Props> = ({ id }) => {
     }, */
   ];
 
-  /*   const forms: Tab[] = [
-    {
+  const forms: Tab[] = [
+    /*{
       label: en ? "Public" : "Publique",
       key: keys.public,
       children: <PublicGrantForm grant={grant} onSuccess={onSuccess} />,
     },
+   
     {
       label: en ? "Private" : "Privé",
       key: keys.private,
@@ -127,13 +128,14 @@ const PrivateGrantProfile: FC<Props> = ({ id }) => {
       key: keys.admin,
       children: <GrantAdminForm grant={grant} onSuccess={onSuccess} />,
     },
-  ]; */
+    */
+  ];
 
   return (
     <Card title={header} bodyStyle={{ paddingTop: 0 }}>
       <Tabs
-        //items={editMode ? forms : descriptions}
-        items={descriptions}
+        items={editMode ? forms : descriptions}
+        // items={descriptions}
         activeKey={activeTabKey}
         onChange={onChange}
         // Very important to destroy inactive forms,

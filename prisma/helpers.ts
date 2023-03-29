@@ -344,11 +344,14 @@ const _includeAllGrantInfo = {
     obtained_date: true,
     completed_date: true,
     source: true,
+    topic: true,
+    note: true,
     all_investigator: true,
     grant_member_involved: { include: { member: { include: { account: true } } } },
     grant_investigator_member: { include: { member: { include: { account: true } } } },
-    topic: true,
-    note: true,
+
+    event_grant_resulted: { include: { event: true } },
+
 
 } as const;
 
@@ -363,15 +366,20 @@ const _selectAllGrantInfo = {
     amount: true,
     throught_lri: true,
     status: true,
+    status_id: true,
+    source_id: true,
+    topic_id: true,
     submission_date: true,
     obtained_date: true,
     completed_date: true,
     source: true,
+    topic: true,
+    note: true,
     all_investigator: true,
     grant_member_involved: { include: { member: { include: { account: true } } } },
     grant_investigator_member: { include: { member: { include: { account: true } } } },
-    topic: true,
-    note: true,
+    event_grant_resulted: { include: { event: true } },
+
 
 } as const;
 
@@ -389,8 +397,12 @@ const _selectPublicGrantInfo = {
     submission_date: true,
     obtained_date: true,
     completed_date: true,
+    status_id: true,
+    source_id: true,
+    topic_id: true,
     source: true,
     all_investigator: true,
+    event_grant_resulted: { include: { event: true } },
     grant_member_involved: {
         include: {
             member: {

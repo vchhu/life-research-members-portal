@@ -549,7 +549,7 @@ const AllGrants: FC = () => {
             size="large"
             onClick={() => handleCreateGrant()}
           >
-            {en ? "Create a new grant" : "Créer une nouvelle subvention"}
+            {en ? "Add a new grant" : "Ajouter une nouvelle subvention"}
           </Button>
         )}
       </div>
