@@ -1,6 +1,13 @@
+import removeDiacritics from "../../utils/front-end/remove-diacritics";
+
 const isAuthorMatch = (author: string, firstName: string, lastName: string) => {
-  const normalizedAuthor = author.replace(/[^a-zA-Z\s]+/g, "").trim();
+  const normalizedAuthor = removeDiacritics(
+    author.replace(/[^a-zA-Z\s\-]+/g, "").trim()
+  );
   const authorParts = normalizedAuthor.split(" ").map((part) => part.trim());
+
+  firstName = removeDiacritics(firstName);
+  lastName = removeDiacritics(lastName);
 
   if (authorParts.length === 2) {
     const [aFirstName, aLastName] = authorParts;

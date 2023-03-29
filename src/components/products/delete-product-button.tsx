@@ -97,8 +97,10 @@ const DeleteProductButton: FC<Props> = ({ product, setProduct, style }) => {
             name="confirmation"
             label={
               <Text>
-                {en ? "Type " : "Tapez"}
-                <b>{productName}</b>
+                {en ? "Type: " : "Tapez : "}
+                <b>
+                  <span style={{ color: "red" }}>{productName}</span>
+                </b>
                 {" to confirm"}
               </Text>
             }

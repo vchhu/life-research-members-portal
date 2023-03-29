@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../prisma/prisma-client";
 import isAuthorMatch from "../../components/products/author-match";
 import getAccountFromRequest from "../../utils/api/get-account-from-request";
+import removeDiacritics from "../../utils/front-end/remove-diacritics";
 
 
 export type RegisterProductParams = {
@@ -100,11 +101,12 @@ export default async function handler(
               member.account.first_name &&
               member.account.last_name &&
               isAuthorMatch(
-                author,
+                removeDiacritics(author), // Add removeDiacritics here
                 member.account.first_name,
                 member.account.last_name
               )
             );
+
 
             return foundAccount ? foundAccount.id : null;
           })
