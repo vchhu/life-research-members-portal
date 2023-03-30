@@ -1,6 +1,7 @@
 // components/Footer.tsx
 
 import { Row, Col } from "antd";
+import SafeLink from "./link/safe-link";
 
 const Footer = () => {
   return (
@@ -13,10 +14,13 @@ const Footer = () => {
           </span>
         </Col>
         <Col>
-          <a href="/privacy-policy" style={{ marginRight: "16px" }}>
+          <SafeLink
+            href={"https://www.uottawa.ca/about-us/aipo/privacy-rights"}
+            external
+          >
             Privacy Policy
-          </a>
-          <a href="/terms-of-use">Terms of Use</a>
+          </SafeLink>
+          {/*    <a href="/terms-of-use">Terms of Use</a> */}
         </Col>
       </Row>
     </footer>
