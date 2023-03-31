@@ -9,6 +9,7 @@ import usePrivateSupervisionInfo from "../../services/use-private-supervision-in
 import { LanguageCtx } from "../../services/context/language-ctx";
 import Tabs from "antd/lib/tabs";
 import type { SupervisionPrivateInfo } from "../../services/_types";
+import DeleteSupervisionButton from "./delete-supervision-button";
 
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
 
@@ -107,11 +108,11 @@ const PrivateSupervisionProfile: FC<Props> = ({ id }) => {
         // so they register their submit function to the save changes context when navigated back
         destroyInactiveTabPane
       />
-      {/*   <DeleteGrantButton
-        grant={grant}
-        setGrant={setGrant}
+      <DeleteSupervisionButton
+        supervision={supervision}
+        setSupervision={setSupervision}
         style={{ marginLeft: "auto", marginTop: "20px", display: "block" }}
-      /> */}
+      />
     </Card>
   );
 };

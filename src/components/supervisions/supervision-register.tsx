@@ -62,16 +62,15 @@ const RegisterSupervision: FC = () => {
         layout="vertical"
       >
         <Form.Item
-          label={en ? "Last Name" : "Nom"}
-          name="last_name"
+          label={en ? "First Name" : "Prénom"}
+          name="first_name"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Input />
         </Form.Item>
-
         <Form.Item
-          label={en ? "First Name" : "Prénom"}
-          name="first_name"
+          label={en ? "Last Name" : "Nom"}
+          name="last_name"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Input />

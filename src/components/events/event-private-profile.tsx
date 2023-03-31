@@ -9,7 +9,7 @@ import usePrivateEventInfo from "../../services/use-private-event-info";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import Tabs from "antd/lib/tabs";
 import type { EventPrivateInfo } from "../../services/_types";
-//import DeleteEventButton from "./delete-event-button";
+import DeleteEventButton from "./delete-event-button";
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
 
 type Tab = { label: string; key: string; children: ReactNode };
@@ -104,9 +104,11 @@ const PrivateEventProfile: FC<Props> = ({ id }) => {
         onChange={onChange}
         destroyInactiveTabPane
       />
-      {/* Add a delete button
-
-      /> */}
+      <DeleteEventButton
+        event={event}
+        setEvent={setEvent}
+        style={{ marginLeft: "auto", marginTop: "20px", display: "block" }}
+      />
     </Card>
   );
 };

@@ -4,19 +4,19 @@ import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
 import { FC, ReactNode, useCallback, useContext, useState } from "react";
 import CardSkeleton from "../loading/card-skeleton";
-import PublicGrantDescription from "./grant-public-description";
-//import PublicGrantForm from "./grant-public-form";
-//import GrantAdminForm from "./grant-admin-form";
+
 import usePrivateGrantInfo from "../../services/use-private-grant-info";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import Tabs from "antd/lib/tabs";
 import type { GrantPrivateInfo } from "../../services/_types";
-
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
+import PublicGrantDescription from "./grant-public-description";
 //import GrantAdminDescription from "./grant-admin-description";
 //import PrivateGrantDescription from "./grant-private-description";
 //import PrivateGrantForm from "./grant-private-form";
-//import DeleteGrantButton from "./delete-grant-button";
+//import PublicGrantForm from "./grant-public-form";
+//import GrantAdminForm from "./grant-admin-form";
+import DeleteGrantButton from "./delete-grant-button";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -142,11 +142,11 @@ const PrivateGrantProfile: FC<Props> = ({ id }) => {
         // so they register their submit function to the save changes context when navigated back
         destroyInactiveTabPane
       />
-      {/*   <DeleteGrantButton
+      <DeleteGrantButton
         grant={grant}
         setGrant={setGrant}
         style={{ marginLeft: "auto", marginTop: "20px", display: "block" }}
-      /> */}
+      />
     </Card>
   );
 };
