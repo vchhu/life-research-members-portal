@@ -440,7 +440,7 @@ const AllEvents: FC = () => {
             size="large"
             onClick={() => handleCreateEvent()}
           >
-            {en ? "Create a new event" : "Créer un nouvel événement"}
+            {en ? "Add a new event" : "Ajouter un nouvel événement"}
           </Button>
         )}
       </div>

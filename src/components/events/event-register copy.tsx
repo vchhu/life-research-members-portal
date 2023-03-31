@@ -13,13 +13,12 @@ import { AllTopicsCtx } from "../../services/context/all-topics-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 
 const { Option } = Select;
-const { RangePicker } = DatePicker; // Add RangePicker import
 
 type EventData = {
   name_en: string;
   name_fr: string;
-
-  date_range: [Moment | null, Moment | null];
+  start_date: Moment | null;
+  end_date: Moment | null;
   event_type_id: number;
   topic_id: number;
   note: string;
@@ -34,7 +33,8 @@ const RegisterEvent: FC = () => {
   async function handleRegister({
     name_en,
     name_fr,
-    date_range,
+    start_date,
+    end_date,
     event_type_id,
     topic_id,
     note,
@@ -42,8 +42,8 @@ const RegisterEvent: FC = () => {
     const res = await registerEvent({
       name_en,
       name_fr,
-      start_date: date_range[0] ? date_range[0].toDate() : null, // Access start_date from date_range
-      end_date: date_range[1] ? date_range[1].toDate() : null, // Access end_date from date_range
+      start_date: start_date ? start_date.toDate() : null,
+      end_date: end_date ? end_date.toDate() : null,
       event_type_id,
       topic_id,
       note,
@@ -78,11 +78,19 @@ const RegisterEvent: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Date Range" : "Plage de Dates"} // Change the label to "Date Range"
-          name="date_range" // Change the name to "date_range"
-          className="date-range-picker"
+          label={en ? "Start Date" : "Date de Début"}
+          name="start_date"
+          className="date-picker"
         >
-          <RangePicker />
+          <DatePicker />
+        </Form.Item>
+
+        <Form.Item
+          label={en ? "End Date" : "Date de Fin"}
+          name="end_date"
+          className="date-picker"
+        >
+          <DatePicker />
         </Form.Item>
 
         <Form.Item

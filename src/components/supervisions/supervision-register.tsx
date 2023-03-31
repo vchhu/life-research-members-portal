@@ -13,12 +13,12 @@ import { LevelsCtx } from "../../services/context/levels-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 type SupervisionData = {
   last_name: string;
   first_name: string;
-  start_date: Moment | null;
-  end_date: Moment | null;
+  date_range: [Moment | null, Moment | null];
   faculty_id: number | null;
   level_id: number | null;
   note: string | null;
@@ -33,8 +33,7 @@ const RegisterSupervision: FC = () => {
   async function handleRegister({
     last_name,
     first_name,
-    start_date,
-    end_date,
+    date_range,
     faculty_id,
     level_id,
     note,
@@ -42,8 +41,8 @@ const RegisterSupervision: FC = () => {
     const res = await registerSupervision({
       last_name,
       first_name,
-      start_date: start_date ? start_date.toDate() : null,
-      end_date: end_date ? end_date.toDate() : null,
+      start_date: date_range[0] ? date_range[0].toDate() : null, // Access start_date from date_range
+      end_date: date_range[1] ? date_range[1].toDate() : null, // Access end_date from date_range
       faculty_id: faculty_id || null,
       level_id: level_id || null,
       note: note || null,
@@ -77,19 +76,11 @@ const RegisterSupervision: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Start Date" : "Date de Début"}
-          name="start_date"
-          className="date-picker"
+          label={en ? "Date Range" : "Plage de Dates"} // Change the label to "Date Range"
+          name="date_range" // Change the name to "date_range"
+          className="date-range-picker"
         >
-          <DatePicker />
-        </Form.Item>
-
-        <Form.Item
-          label={en ? "End Date" : "Date de Fin"}
-          name="end_date"
-          className="date-picker"
-        >
-          <DatePicker />
+          <RangePicker />
         </Form.Item>
 
         <Form.Item label={en ? "Faculty" : "Faculté"} name="faculty_id">
