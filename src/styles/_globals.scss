@@ -219,7 +219,7 @@ body {
   padding: 12px;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 576px) {
   .ant-table {
     padding: 12px 24px;
   }
@@ -227,7 +227,7 @@ body {
 }
 
 
-@media only screen and (max-width: 600px)  {
+@media only screen and (max-width: 576px)  {
 
   .banner {
 
@@ -264,6 +264,10 @@ body {
     flex-basis: 200px;
     margin-top: 5px;
 }
+
+.ant-picker-panels { 
+  flex-direction: column;
+} 
 
 }
 
