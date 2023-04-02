@@ -172,6 +172,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         deleteMembers,
         addMembers,
       };
+      
       const newInfo = await updateProductPublic(product.id, params);
       setLoading(false);
       if (newInfo) {

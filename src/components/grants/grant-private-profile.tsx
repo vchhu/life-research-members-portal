@@ -14,7 +14,7 @@ import PublicGrantDescription from "./grant-public-description";
 //import GrantAdminDescription from "./grant-admin-description";
 //import PrivateGrantDescription from "./grant-private-description";
 //import PrivateGrantForm from "./grant-private-form";
-//import PublicGrantForm from "./grant-public-form";
+import PublicGrantForm from "./grant-public-form";
 //import GrantAdminForm from "./grant-admin-form";
 import DeleteGrantButton from "./delete-grant-button";
 
@@ -112,12 +112,12 @@ const PrivateGrantProfile: FC<Props> = ({ id }) => {
   ];
 
   const forms: Tab[] = [
-    /*{
+    {
       label: en ? "Public" : "Publique",
       key: keys.public,
       children: <PublicGrantForm grant={grant} onSuccess={onSuccess} />,
     },
-   
+    /*
     {
       label: en ? "Private" : "Privé",
       key: keys.private,
