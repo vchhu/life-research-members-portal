@@ -15,7 +15,11 @@ import {
   SaveChangesCtx,
   useResetDirtyOnUnmount,
 } from "../../services/context/save-changes-ctx";
-import type { GrantPrivateInfo, GrantPublicInfo } from "../../services/_types";
+import type {
+  GrantPrivateInfo,
+  GrantPublicInfo,
+  MemberPublicInfo,
+} from "../../services/_types";
 import { GrantSourcesCtx } from "../../services/context/grant-sources-ctx";
 import { GrantStatusCtx } from "../../services/context/grant-statuses-ctx";
 import { AllTopicsCtx } from "../../services/context/all-topics-ctx";
@@ -24,12 +28,34 @@ import updateGrantPublic from "../../services/update-grant-public";
 import moment from "moment";
 import GetLanguage from "../../utils/front-end/get-language";
 import { Switch } from "antd";
+import GrantMemberInvestigatorSelector from "./grant-member-investigator-selector";
+import GrantMemberInvolvedSelector from "./grant-member-involved-selector";
 
 const { Option } = Select;
 
 type Props = {
   grant: GrantPublicInfo;
   onSuccess: (grant: GrantPrivateInfo) => void;
+};
+
+type GrantInvestigator = {
+  member: {
+    id: number;
+    account: {
+      first_name: string;
+      last_name: string;
+    };
+  };
+};
+
+type GrantMemberInvolved = {
+  member: {
+    id: number;
+    account: {
+      first_name: string;
+      last_name: string;
+    };
+  };
 };
 
 type GrantData = {
@@ -44,6 +70,8 @@ type GrantData = {
   all_investigator: string;
   topic_id: number;
   note: string;
+  membersInvestigator: Map<number, MemberPublicInfo>;
+  membersInvolved: Map<number, MemberPublicInfo>;
 };
 
 const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
@@ -57,6 +85,52 @@ const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
   const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
   useResetDirtyOnUnmount();
 
+  const diffInvestigator = useCallback(
+    (
+      newMembers: Map<number, MemberPublicInfo>
+    ): {
+      deleteInvestigatorMembers: number[];
+      addInvestigatorMembers: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deleteInvestigatorMembers: number[] = [];
+      const addInvestigatorMembers: number[] = [];
+      for (const grant_investigator_member of grant.grant_investigator_member)
+        oldIds.add(grant_investigator_member.member.id);
+      for (const member of newMembers.values()) newIds.add(member.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deleteInvestigatorMembers.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addInvestigatorMembers.push(newId);
+      return { deleteInvestigatorMembers, addInvestigatorMembers };
+    },
+    [grant.grant_investigator_member]
+  );
+
+  const diffInvolved = useCallback(
+    (
+      newMembers: Map<number, MemberPublicInfo>
+    ): {
+      deleteInvolvedMembers: number[];
+      addInvolvedMembers: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deleteInvolvedMembers: number[] = [];
+      const addInvolvedMembers: number[] = [];
+      for (const grant_member_involved of grant.grant_member_involved)
+        oldIds.add(grant_member_involved.member.id);
+      for (const member of newMembers.values()) newIds.add(member.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deleteInvolvedMembers.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addInvolvedMembers.push(newId);
+      return { deleteInvolvedMembers, addInvolvedMembers };
+    },
+    [grant.grant_member_involved]
+  );
+
   const submitValidated = useCallback(
     async (data: GrantData): Promise<boolean> => {
       if (!dirty) {
@@ -64,6 +138,13 @@ const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
         return true;
       }
       setLoading(true);
+
+      const { deleteInvestigatorMembers, addInvestigatorMembers } =
+        diffInvestigator(data.membersInvestigator);
+
+      const { deleteInvolvedMembers, addInvolvedMembers } = diffInvolved(
+        data.membersInvolved
+      );
 
       const params: UpdateGrantPublicParams = {
         title: data.title,
@@ -77,6 +158,10 @@ const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
         all_investigator: data.all_investigator,
         topic_id: data.topic_id,
         note: data.note || "",
+        deleteInvestigatorMembers,
+        addInvestigatorMembers,
+        deleteInvolvedMembers,
+        addInvolvedMembers,
       };
 
       const updatedGrant = await updateGrantPublic(grant.id, params);
@@ -88,11 +173,10 @@ const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
       }
       return !!updatedGrant;
     },
-    [onSuccess, grant.id, dirty, en, setDirty]
+    [onSuccess, grant.id, dirty, en, diffInvestigator, diffInvolved, setDirty]
   );
   /** When called from context - need to validate manually */
 
-  
   const validateAndSubmit = useCallback(async () => {
     try {
       return submitValidated(await form.validateFields());
@@ -115,6 +199,42 @@ const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
     if (througth_lri_status !== data.throught_lri) {
       setThroughtLRI(data.throught_lri);
     }
+  }
+
+  function getInitialInvestigatorMembers(
+    grant_investigator_member: GrantInvestigator[]
+  ) {
+    const initialInvestigatorMembers = new Map(
+      grant_investigator_member.map((k) => [
+        k.member.id,
+        {
+          id: k.member.id,
+          account: {
+            first_name: k.member.account.first_name,
+            last_name: k.member.account.last_name,
+          },
+        },
+      ])
+    );
+    return initialInvestigatorMembers;
+  }
+
+  function getInitialInvolvedMembers(
+    grant_member_involved: GrantMemberInvolved[]
+  ) {
+    const initialInvolvedMembers = new Map(
+      grant_member_involved.map((k) => [
+        k.member.id,
+        {
+          id: k.member.id,
+          account: {
+            first_name: k.member.account.first_name,
+            last_name: k.member.account.last_name,
+          },
+        },
+      ])
+    );
+    return initialInvolvedMembers;
   }
 
   const initialValues: GrantData = {
@@ -147,6 +267,12 @@ const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
     all_investigator: grant.all_investigator || "",
     topic_id: grant.topic?.id || 0,
     note: grant.note || "",
+    // @ts-ignore
+    membersInvestigator: getInitialInvestigatorMembers(
+      grant.grant_investigator_member
+    ),
+    // @ts-ignore
+    membersInvolved: getInitialInvolvedMembers(grant.grant_member_involved),
   };
 
   return (
@@ -283,6 +409,28 @@ const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
           ]}
         >
           <Input />
+        </Form.Item>
+
+        <label htmlFor="membersInvestigator">
+          {en ? "Grant Investigator Member" : "Membre enquêteur"}
+        </label>
+        <Form.Item name="membersInvestigator">
+          <GrantMemberInvestigatorSelector
+            setErrors={(e) =>
+              form.setFields([{ name: "membersInvestigator", errors: e }])
+            }
+          />
+        </Form.Item>
+
+        <label htmlFor="membersInvolved">
+          {en ? "Grant Member Involved" : "Membre impliqué"}
+        </label>
+        <Form.Item name="membersInvolved">
+          <GrantMemberInvolvedSelector
+            setErrors={(e) =>
+              form.setFields([{ name: "membersInvolved", errors: e }])
+            }
+          />
         </Form.Item>
 
         <Form.Item

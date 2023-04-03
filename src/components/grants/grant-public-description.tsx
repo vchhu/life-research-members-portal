@@ -61,6 +61,36 @@ const PublicGrantDescription: FC<Props> = ({ grant }) => {
         {grant.all_investigator}
       </Item>
 
+      <Item label={en ? "Investigator Member" : "Membre chercheur"}>
+        {grant.grant_investigator_member.map((entry, i) => (
+          <SafeLink
+            key={entry.member.id}
+            href={PageRoutes.memberProfile(entry.member.id)}
+          >
+            <Tag color="red">
+              {entry.member.account.first_name +
+                " " +
+                entry.member.account.last_name}
+            </Tag>
+          </SafeLink>
+        ))}
+      </Item>
+
+      <Item label={en ? "Member Involved" : "Membre impliqué"}>
+        {grant.grant_member_involved.map((entry, i) => (
+          <SafeLink
+            key={entry.member.id}
+            href={PageRoutes.memberProfile(entry.member.id)}
+          >
+            <Tag color="blue">
+              {entry.member.account.first_name +
+                " " +
+                entry.member.account.last_name}
+            </Tag>
+          </SafeLink>
+        ))}
+      </Item>
+
       <Item label={en ? "Topic" : "Sujet"}>
         {grant.topic ? (en ? grant.topic.name_en : grant.topic.name_fr) : ""}
       </Item>

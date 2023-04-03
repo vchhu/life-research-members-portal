@@ -117,14 +117,6 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
               </Tag>
             </SafeLink>
           ) : null}
-
-          {member.tiktok_link ? (
-            <SafeLink href={member.tiktok_link} external>
-              <Tag icon={<TikTokIcon />} color="#0D0D0D">
-                TikTok
-              </Tag>
-            </SafeLink>
-          ) : null}
         </>
       </Item>
 

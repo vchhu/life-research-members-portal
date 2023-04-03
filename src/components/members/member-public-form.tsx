@@ -2,8 +2,19 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { useForm } from "antd/lib/form/Form";
 import Input from "antd/lib/input";
-import React, { FC, Fragment, useCallback, useContext, useEffect, useState } from "react";
-import type { MemberPrivateInfo, ProblemInfo, MemberPublicInfo } from "../../services/_types";
+import React, {
+  FC,
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import type {
+  MemberPrivateInfo,
+  ProblemInfo,
+  MemberPublicInfo,
+} from "../../services/_types";
 import updateMemberPublic from "../../services/update-member-public";
 import type { keyword, problem } from "@prisma/client";
 import { LanguageCtx } from "../../services/context/language-ctx";
@@ -17,7 +28,10 @@ import type { UpdateMemberPublicParams } from "../../pages/api/update-member/[id
 import Text from "antd/lib/typography/Text";
 import KeywordSelector from "../keywords/keyword-selector";
 import Notification from "../../services/notifications/notification";
-import { SaveChangesCtx, useResetDirtyOnUnmount } from "../../services/context/save-changes-ctx";
+import {
+  SaveChangesCtx,
+  useResetDirtyOnUnmount,
+} from "../../services/context/save-changes-ctx";
 
 const { Option } = Select;
 
@@ -66,7 +80,8 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
       const deleteProblems = [];
       for (const [i, newP] of newProblems.entries()) {
         const oldP = oldProblems[i] as problem | undefined;
-        const different = oldP?.name_en !== newP.name_en || oldP?.name_fr !== newP.name_fr;
+        const different =
+          oldP?.name_en !== newP.name_en || oldP?.name_fr !== newP.name_fr;
         const hasName = newP.name_en || newP.name_fr;
         if (different) {
           if (oldP) deleteProblems.push(oldP.id);
@@ -89,10 +104,13 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
       const newIds = new Set<number>();
       const deleteKeywords: number[] = [];
       const addKeywords: number[] = [];
-      for (const has_keyword of member.has_keyword) oldIds.add(has_keyword.keyword.id);
+      for (const has_keyword of member.has_keyword)
+        oldIds.add(has_keyword.keyword.id);
       for (const keyword of newKeywords.values()) newIds.add(keyword.id);
-      for (const oldId of oldIds.values()) if (!newIds.has(oldId)) deleteKeywords.push(oldId);
-      for (const newId of newIds.values()) if (!oldIds.has(newId)) addKeywords.push(newId);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deleteKeywords.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addKeywords.push(newId);
       return { deleteKeywords, addKeywords };
     },
     [member.has_keyword]
@@ -144,7 +162,9 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
     try {
       return submitValidated(await form.validateFields());
     } catch (e: any) {
-      new Notification().warning(en ? "A field is invalid!" : "Un champ est invalide !");
+      new Notification().warning(
+        en ? "A field is invalid!" : "Un champ est invalide !"
+      );
       return false;
     }
   }, [en, form, submitValidated]);
@@ -158,7 +178,10 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
     const problems: ProblemInfo[] = [];
     for (const i of [0, 1, 2]) {
       const problem = member.problem[i] as problem | undefined;
-      problems[i] = { name_en: problem?.name_en || "", name_fr: problem?.name_fr || "" };
+      problems[i] = {
+        name_en: problem?.name_en || "",
+        name_fr: problem?.name_fr || "",
+      };
     }
     return problems;
   }
@@ -217,7 +240,10 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
           >
             <Input />
           </Form.Item>
-          <Form.Item label={en ? "Member Type" : "Type de Membre"} name="type_id">
+          <Form.Item
+            label={en ? "Member Type" : "Type de Membre"}
+            name="type_id"
+          >
             <Select>
               <Option value="">{""}</Option>
               {memberTypes.map((f) => (
@@ -228,7 +254,11 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
             </Select>
           </Form.Item>
 
-          <Form.Item className="faculty" label={en ? "Faculty" : "Faculté"} name="faculty_id">
+          <Form.Item
+            className="faculty"
+            label={en ? "Faculty" : "Faculté"}
+            name="faculty_id"
+          >
             <Select>
               <Option value="">{""}</Option>
               {faculties.map((f) => (
@@ -242,12 +272,20 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
           <Form.Item
             label={en ? "Work Email" : "Email de Travail"}
             name="work_email"
-            rules={[{ type: "email", message: en ? "Invalid Email" : "Email Invalide" }]}
+            rules={[
+              {
+                type: "email",
+                message: en ? "Invalid Email" : "Email Invalide",
+              },
+            ]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item label={en ? "Work Phone" : "Téléphone de Travail"} name="work_phone">
+          <Form.Item
+            label={en ? "Work Phone" : "Téléphone de Travail"}
+            name="work_phone"
+          >
             <Input type="tel" />
           </Form.Item>
         </div>
@@ -310,7 +348,9 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
         <label htmlFor="keywords">{en ? "Keywords" : "Mots Clés"}</label>
         <Divider />
         <Form.Item name="keywords">
-          <KeywordSelector setErrors={(e) => form.setFields([{ name: "keywords", errors: e }])} />
+          <KeywordSelector
+            setErrors={(e) => form.setFields([{ name: "keywords", errors: e }])}
+          />
         </Form.Item>
         <Divider />
 
@@ -320,7 +360,9 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
           <Form.Item
             label={en ? "Your CV" : "Votre CV"}
             name="cv_link"
-            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+            rules={[
+              { type: "url", message: en ? "Invalid URL" : "URL invalide" },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -328,7 +370,9 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
           <Form.Item
             label={en ? "Personal Website" : "Site Web personnel"}
             name="website_link"
-            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+            rules={[
+              { type: "url", message: en ? "Invalid URL" : "URL invalide" },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -336,7 +380,9 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
           <Form.Item
             label="LinkedIn"
             name="linkedin_link"
-            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+            rules={[
+              { type: "url", message: en ? "Invalid URL" : "URL invalide" },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -344,7 +390,9 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
           <Form.Item
             label="Twitter"
             name="twitter_link"
-            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+            rules={[
+              { type: "url", message: en ? "Invalid URL" : "URL invalide" },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -352,15 +400,9 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
           <Form.Item
             label="Facebook"
             name="facebook_link"
-            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="TikTok"
-            name="tiktok_link"
-            rules={[{ type: "url", message: en ? "Invalid URL" : "URL invalide" }]}
+            rules={[
+              { type: "url", message: en ? "Invalid URL" : "URL invalide" },
+            ]}
           >
             <Input />
           </Form.Item>

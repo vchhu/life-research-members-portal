@@ -16,6 +16,10 @@ export type UpdateGrantPublicParams = {
   all_investigator?: string;
   topic_id: number;
   note?: string;
+  deleteInvestigatorMembers: number[];
+  addInvestigatorMembers: number[];
+  deleteInvolvedMembers: number[];
+  addInvolvedMembers: number[];
 };
 
 function updateGrant(
@@ -32,6 +36,10 @@ function updateGrant(
     all_investigator,
     topic_id,
     note,
+    deleteInvestigatorMembers,
+    addInvestigatorMembers,
+    deleteInvolvedMembers,
+    addInvolvedMembers,
   }: UpdateGrantPublicParams
 ) {
   return db.grant.update({
@@ -47,6 +55,14 @@ function updateGrant(
       source: { connect: { id: source_id } },
       all_investigator,
       topic: { connect: { id: topic_id } },
+      grant_investigator_member: {
+        deleteMany: deleteInvestigatorMembers.map((id) => ({ member_id: id })),
+        createMany: { data: addInvestigatorMembers.map((id) => ({ member_id: id })) },
+      },
+      grant_member_involved: {
+        deleteMany: deleteInvolvedMembers.map((id) => ({ member_id: id })),
+        createMany: { data: addInvolvedMembers.map((id) => ({ member_id: id })) },
+      },
       note,
     },
     select: selectAllGrantInfo,
