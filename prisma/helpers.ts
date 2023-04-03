@@ -263,10 +263,7 @@ const _includeAllGrantInfo = {
     all_investigator: true,
     grant_member_involved: { include: { member: { include: { account: true } } } },
     grant_investigator_member: { include: { member: { include: { account: true } } } },
-
     event_grant_resulted: { include: { event: true } },
-
-
 } as const;
 
 export const includeAllGrantInfo: CheckKeysAreValid<
@@ -367,7 +364,7 @@ const _includeAllEventInfo = {
     note: true,
     topic: true,
     event_type: true,
-    event_grant_resulted: true,
+    event_grant_resulted: { include: { grant: true } },
     event_topic: { include: { topic: true } },
     event_member_involved: { include: { member: { include: { account: true } } } },
     event_partner_involved: { include: { organization: true } },
@@ -390,7 +387,7 @@ const _selectAllEventInfo = {
     note: true,
     topic: true,
     event_type: true,
-    event_grant_resulted: true,
+    event_grant_resulted: { include: { grant: true } },
     event_topic: { include: { topic: true } },
     event_member_involved: {
         include: {
@@ -432,7 +429,7 @@ const _selectPublicEventInfo = {
     topic_id: true,
     topic: true,
     event_type: true,
-    event_grant_resulted: true,
+    event_grant_resulted: { include: { grant: true } },
     event_member_involved: {
         include: {
             member: {

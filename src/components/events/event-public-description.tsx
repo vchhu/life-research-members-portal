@@ -5,6 +5,7 @@ import { FC, useContext } from "react";
 import type { EventPublicInfo } from "../../services/_types";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import React from "react";
+import { Tag } from "antd";
 
 const { useBreakpoint } = Grid;
 
@@ -52,6 +53,52 @@ const PublicEventDescription: FC<Props> = ({ event }) => {
       </Item>
       <Item label={en ? "Note" : "Note"} style={{ whiteSpace: "break-spaces" }}>
         {event.note}
+      </Item>
+
+      <Item label={en ? "Member Involved" : "Membre impliqué"}>
+        {event.event_member_involved.map((entry, i) => (
+          <Tag key={entry.member.id} color="blue">
+            {entry.member.account.first_name +
+              " " +
+              entry.member.account.last_name}
+          </Tag>
+        ))}
+      </Item>
+
+      <Item label={en ? "Event Partnership" : "Partenariat de l'événement"}>
+        {event.event_partner_involved.map((entry, i) => (
+          <Tag key={entry.organization.id} color="green">
+            {en ? entry.organization.name_en : entry.organization.name_fr}
+          </Tag>
+        ))}
+      </Item>
+
+      <Item label={en ? "Grant Resulted" : "Subvention résultante"}>
+        {event.event_grant_resulted.map((entry, i) =>
+          entry.grant ? (
+            <Tag key={entry.grant.id} color="orange">
+              {entry.grant.title}
+            </Tag>
+          ) : null
+        )}
+      </Item>
+
+      <Item label={en ? "Product Resulted" : "Produit résultant"}>
+        {event.event_product_resulted.map((entry, i) =>
+          entry.product ? (
+            <Tag key={entry.product.id} color="red">
+              {en ? entry.product.title_en : entry.product.title_fr}
+            </Tag>
+          ) : null
+        )}
+      </Item>
+
+      <Item label={en ? "Product Topic" : "Sujet du produit"}>
+        {event.event_topic.map((entry, i) => (
+          <Tag key={i} color="blue">
+            {en ? entry.topic.name_fr : entry.topic.name_en}
+          </Tag>
+        ))}
       </Item>
     </Descriptions>
   );
