@@ -3,7 +3,6 @@ import { selectAllEventInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
 import type { PrivateEventDBRes } from "../../event/[id]/private";
-import type deleteGrant from "../../../../services/delete-grant";
 
 export type UpdateEventPublicParams = {
 

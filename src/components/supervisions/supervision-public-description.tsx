@@ -5,7 +5,9 @@ import { FC, useContext } from "react";
 import type { SupervisionPublicInfo } from "../../services/_types";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import React from "react";
-
+import SafeLink from "../link/safe-link";
+import { Tag } from "antd";
+import PageRoutes from "../../routing/page-routes";
 const { useBreakpoint } = Grid;
 
 type Props = {
@@ -46,6 +48,66 @@ const PublicSupervisionDescription: FC<Props> = ({ supervision }) => {
 
       <Item label={en ? "Level" : "Niveau"}>
         {supervision.level ? supervision.level.name_en : ""}
+      </Item>
+
+      <Item label={en ? "Trainee" : "Superviseur"}>
+        {supervision.supervision_trainee.map((entry, i) => (
+          <SafeLink
+            key={entry.member.id}
+            href={PageRoutes.memberProfile(entry.member.id)}
+          >
+            <Tag color="magenta">
+              {entry.member.account.first_name +
+                " " +
+                entry.member.account.last_name}
+            </Tag>
+          </SafeLink>
+        ))}
+      </Item>
+
+      <Item label={en ? "Principal Supervisor" : "Superviseur principal"}>
+        {supervision.supervision_principal_supervisor.map((entry, i) => (
+          <SafeLink
+            key={entry.member.id}
+            href={PageRoutes.memberProfile(entry.member.id)}
+          >
+            <Tag color="orange">
+              {entry.member.account.first_name +
+                " " +
+                entry.member.account.last_name}
+            </Tag>
+          </SafeLink>
+        ))}
+      </Item>
+
+      <Item label={en ? "Co-Supervisor" : "Co-superviseur"}>
+        {supervision.supervision_co_supervisor.map((entry, i) => (
+          <SafeLink
+            key={entry.member.id}
+            href={PageRoutes.memberProfile(entry.member.id)}
+          >
+            <Tag color="blue">
+              {entry.member.account.first_name +
+                " " +
+                entry.member.account.last_name}
+            </Tag>
+          </SafeLink>
+        ))}
+      </Item>
+
+      <Item label={en ? "Committee" : "Comité"}>
+        {supervision.supervision_committee.map((entry, i) => (
+          <SafeLink
+            key={entry.member.id}
+            href={PageRoutes.memberProfile(entry.member.id)}
+          >
+            <Tag color="red">
+              {entry.member.account.first_name +
+                " " +
+                entry.member.account.last_name}
+            </Tag>
+          </SafeLink>
+        ))}
       </Item>
 
       <Item label={en ? "Note" : "Note"} style={{ whiteSpace: "break-spaces" }}>

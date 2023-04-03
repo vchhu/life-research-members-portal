@@ -245,6 +245,23 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
     ]
   );
 
+  // When called from context - need to validate manually
+  const validateAndSubmit = useCallback(async () => {
+    try {
+      return submitValidated(await form.validateFields());
+    } catch (e: any) {
+      new Notification().warning(
+        en ? "A field is invalid!" : "Un champ est invalide !"
+      );
+      return false;
+    }
+  }, [en, form, submitValidated]);
+
+  // Pass submit function to context
+  useEffect(() => {
+    setSubmit(() => validateAndSubmit);
+  }, [setSubmit, validateAndSubmit]);
+
   function getInitialMembers(event_member_involved: EventMemberInvolved[]) {
     const initialMembers = new Map(
       event_member_involved.map((k) => [

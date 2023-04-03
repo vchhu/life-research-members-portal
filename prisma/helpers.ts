@@ -472,10 +472,10 @@ const _includeAllSupervisionInfo = {
     note: true,
     faculty: true,
     level: true,
-    supervision_co_supervisor: true,
-    supervision_committee: true,
-    supervision_principal_supervisor: true,
-    supervision_trainee: true,
+    supervision_co_supervisor: { include: { member: { include: { account: true } } } },
+    supervision_committee: { include: { member: { include: { account: true } } } },
+    supervision_principal_supervisor: { include: { member: { include: { account: true } } } },
+    supervision_trainee: { include: { member: { include: { account: true } } } },
 } as const;
 
 export const includeAllSupervisionInfo: CheckKeysAreValid<
@@ -494,10 +494,11 @@ const _selectAllSupervisionInfo = {
     note: true,
     faculty: true,
     level: true,
-    supervision_co_supervisor: true,
-    supervision_committee: true,
-    supervision_principal_supervisor: true,
-    supervision_trainee: true,
+    supervision_co_supervisor: { include: { member: { include: { account: true } } } },
+    supervision_committee: { include: { member: { include: { account: true } } } },
+    supervision_principal_supervisor: { include: { member: { include: { account: true } } } },
+    supervision_trainee: { include: { member: { include: { account: true } } } },
+
 } as const;
 
 export const selectAllSupervisionInfo: CheckKeysAreValid<
@@ -516,10 +517,23 @@ const _selectPublicSupervisionInfo = {
     faculty: true,
     level: true,
     note: true,
-    supervision_co_supervisor: true,
-    supervision_committee: true,
-    supervision_principal_supervisor: true,
-    supervision_trainee: true,
+    supervision_co_supervisor: { include: { member: { include: { account: true } } } },
+    supervision_committee: { include: { member: { include: { account: true } } } },
+    supervision_principal_supervisor: { include: { member: { include: { account: true } } } },
+    supervision_trainee: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
 } as const;
 
 export const selectPublicSupervisionInfo: CheckKeysAreValid<

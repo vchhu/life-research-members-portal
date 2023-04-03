@@ -6,6 +6,8 @@ import type { EventPublicInfo } from "../../services/_types";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import React from "react";
 import { Tag } from "antd";
+import SafeLink from "../link/safe-link";
+import PageRoutes from "../../routing/page-routes";
 
 const { useBreakpoint } = Grid;
 
@@ -48,49 +50,61 @@ const PublicEventDescription: FC<Props> = ({ event }) => {
             : event.event_type.name_fr
           : ""}
       </Item>
-      <Item label={en ? "Topic" : "Sujet"}>
-        {event.topic ? (en ? event.topic.name_en : event.topic.name_fr) : ""}
-      </Item>
-      <Item label={en ? "Note" : "Note"} style={{ whiteSpace: "break-spaces" }}>
-        {event.note}
-      </Item>
 
       <Item label={en ? "Member Involved" : "Membre impliqué"}>
         {event.event_member_involved.map((entry, i) => (
-          <Tag key={entry.member.id} color="blue">
-            {entry.member.account.first_name +
-              " " +
-              entry.member.account.last_name}
-          </Tag>
+          <SafeLink
+            key={entry.member.id}
+            href={PageRoutes.memberProfile(entry.member.id)}
+          >
+            <Tag color="blue">
+              {entry.member.account.first_name +
+                " " +
+                entry.member.account.last_name}
+            </Tag>
+          </SafeLink>
         ))}
       </Item>
 
       <Item label={en ? "Event Partnership" : "Partenariat de l'événement"}>
         {event.event_partner_involved.map((entry, i) => (
-          <Tag key={entry.organization.id} color="green">
-            {en ? entry.organization.name_en : entry.organization.name_fr}
-          </Tag>
+          <SafeLink
+            key={entry.organization.id}
+            href={PageRoutes.organizationProfile(entry.organization.id)}
+          >
+            <Tag color="green">
+              {en ? entry.organization.name_en : entry.organization.name_fr}
+            </Tag>
+          </SafeLink>
         ))}
       </Item>
 
       <Item label={en ? "Grant Resulted" : "Subvention résultante"}>
-        {event.event_grant_resulted.map((entry, i) =>
-          entry.grant ? (
-            <Tag key={entry.grant.id} color="orange">
-              {entry.grant.title}
-            </Tag>
-          ) : null
-        )}
+        <ol>
+          {event.event_grant_resulted.map((entry, i) =>
+            entry.grant ? (
+              <li key={entry.grant.id}>
+                <SafeLink href={PageRoutes.grantProfile(entry.grant.id)}>
+                  {entry.grant.title}
+                </SafeLink>
+              </li>
+            ) : null
+          )}
+        </ol>
       </Item>
 
       <Item label={en ? "Product Resulted" : "Produit résultant"}>
-        {event.event_product_resulted.map((entry, i) =>
-          entry.product ? (
-            <Tag key={entry.product.id} color="red">
-              {en ? entry.product.title_en : entry.product.title_fr}
-            </Tag>
-          ) : null
-        )}
+        <ol>
+          {event.event_product_resulted.map((entry, i) =>
+            entry.product ? (
+              <li key={entry.product.id}>
+                <SafeLink href={PageRoutes.productProfile(entry.product.id)}>
+                  {en ? entry.product.title_en : entry.product.title_fr}
+                </SafeLink>
+              </li>
+            ) : null
+          )}
+        </ol>
       </Item>
 
       <Item label={en ? "Product Topic" : "Sujet du produit"}>
@@ -99,6 +113,12 @@ const PublicEventDescription: FC<Props> = ({ event }) => {
             {en ? entry.topic.name_fr : entry.topic.name_en}
           </Tag>
         ))}
+      </Item>
+      <Item label={en ? "Topic" : "Sujet"}>
+        {event.topic ? (en ? event.topic.name_en : event.topic.name_fr) : ""}
+      </Item>
+      <Item label={en ? "Note" : "Note"} style={{ whiteSpace: "break-spaces" }}>
+        {event.note}
       </Item>
     </Descriptions>
   );

@@ -12,6 +12,7 @@ import type { SupervisionPrivateInfo } from "../../services/_types";
 import DeleteSupervisionButton from "./delete-supervision-button";
 
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
+import PublicSupervisionForm from "./supervision-public-form";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -97,11 +98,24 @@ const PrivateSupervisionProfile: FC<Props> = ({ id }) => {
     },
   ];
 
+  const forms: Tab[] = [
+    {
+      label: en ? "Public" : "Publique",
+      key: keys.public,
+      children: (
+        <PublicSupervisionForm
+          supervision={supervision}
+          onSuccess={onSuccess}
+        />
+      ),
+    },
+  ];
+
   return (
     <Card title={header} bodyStyle={{ paddingTop: 0 }}>
       <Tabs
-        // items={editMode ? forms : descriptions}
-        items={descriptions}
+        items={editMode ? forms : descriptions}
+        //items={descriptions}
         activeKey={activeTabKey}
         onChange={onChange}
         // Very important to destroy inactive forms,
