@@ -11,6 +11,7 @@ import Tabs from "antd/lib/tabs";
 import type { EventPrivateInfo } from "../../services/_types";
 import DeleteEventButton from "./delete-event-button";
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
+import PublicEventForm from "./event-public-form";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -93,6 +94,11 @@ const PrivateEventProfile: FC<Props> = ({ id }) => {
   ];
 
   const forms: Tab[] = [
+    {
+      label: en ? "Public" : "Publique",
+      key: keys.public,
+      children: <PublicEventForm event={event} onSuccess={onSuccess} />,
+    },
     // Add form components for editing event information here
   ];
 

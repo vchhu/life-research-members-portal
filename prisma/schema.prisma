@@ -62,6 +62,7 @@ model event {
   event_member_involved  event_member_involved[]
   event_partner_involved event_partner_involved[]
   event_product_resulted event_product_resulted[]
+  event_topic            event_topic[]
 }
 
 model event_grant_resulted {
@@ -98,6 +99,15 @@ model event_product_resulted {
   product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_event_product_resulted_product")
 
   @@id([event_id, product_id], map: "PK_event_product_resulted")
+}
+
+model event_topic {
+  topic_id Int
+  event_id Int
+  event    event @relation(fields: [event_id], references: [id], onDelete: Cascade, map: "FK_event_topic_event_id")
+  topic    topic @relation(fields: [topic_id], references: [id], onDelete: Cascade, map: "FK_event_topic_topic_id")
+
+  @@id([topic_id, event_id], map: "PK_event_topic")
 }
 
 model event_type {
@@ -498,6 +508,7 @@ model topic {
   name_fr       String          @db.NVarChar(300)
   name_en       String          @db.NVarChar(300)
   event         event[]
+  event_topic   event_topic[]
   grant         grant[]
   product_topic product_topic[]
 }

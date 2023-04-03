@@ -44,6 +44,7 @@ const ApiRoutes = {
   updateMemberPublic: (id: number) => "/api/update-member/" + id + "/public",
   updateMemberPrivate: (id: number) => "/api/update-member/" + id + "/private",
   updateProductPublic: (id: number) => "/api/update-product/" + id + "/public",
+  updateEventPublic: (id: number) => "/api/update-event/" + id + "/public",
   updateProductPrivate: (id: number) => "/api/update-product/" + id + "/private",
   updateGrantPublic: (id: number) => "/api/update-grant/" + id + "/public",
   updateGrantPrivate: (id: number) => "/api/update-grant/" + id + "/private",

@@ -35,7 +35,6 @@ import type { target } from "@prisma/client";
 import type { organization } from "@prisma/client";
 import TargetSelector from "../targets/target-selector";
 import PartnerSelector from "../partners/partner-selector";
-import getMemberAuthor from "../getters/product-member-author-getter";
 import MemberSelector from "../members/member-selector";
 
 const { Option } = Select;

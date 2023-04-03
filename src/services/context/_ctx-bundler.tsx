@@ -16,6 +16,7 @@ import { OrgTypesCtxProvider } from "./org-types-ctx";
 import { ProductTitlesCtxProvider } from "./products-title-ctx";
 import { ProductTypesCtxProvider } from "./products-types-ctx";
 import { AllProductsCtxProvider } from "./all-products-ctx";
+import { ProductsCtxProvider } from "./products-ctx";
 import { AllGrantsCtxProvider } from "./all-grants-ctx";
 import { GrantSourcesCtxProvider } from "./grant-sources-ctx";
 import { GrantStatusCtxProvider } from "./grant-statuses-ctx";
@@ -45,6 +46,7 @@ const AllContextProviders: FC<PropsWithChildren> = [
   ProductTypesCtxProvider,
   ProductTitlesCtxProvider,
   AllProductsCtxProvider,
+  ProductsCtxProvider,
   GrantSourcesCtxProvider,
   AllGrantsCtxProvider,
   GrantStatusCtxProvider,

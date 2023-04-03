@@ -246,43 +246,6 @@ export const selectPublicProductInfo: CheckKeysAreValid<
     Prisma.productSelect
 > = _selectPublicProductInfo;
 
-/* const _selectPublicEventInfo = {
-    id: true,
-    name_en: true,
-    name_fr: true,
-    start_date: true,
-    end_date: true,
-    event_type_id: true,
-    topic_id: true,
-    note: true,
-    topic: true,
-    event_type: true,
-} as const;
-
-export const selectPublicEventInfo: CheckKeysAreValid<
-    typeof _selectPublicEventInfo,
-    Prisma.eventSelect
-> = _selectPublicEventInfo; */
-
-
-/* const _selectPublicSupervisionInfo = {
-    id: true,
-    last_name: true,
-    first_name: true,
-    start_date: true,
-    end_date: true,
-    note: true,
-    faculty: true,
-    level: true,
-    level_id: true,
-    faculty_id: true,
-} as const;
-
-export const selectPublicSupervisionInfo: CheckKeysAreValid<
-    typeof _selectPublicSupervisionInfo,
-    Prisma.supervisionSelect
-> = _selectPublicSupervisionInfo;
- */
 
 
 const _includeAllGrantInfo = {
@@ -405,9 +368,10 @@ const _includeAllEventInfo = {
     topic: true,
     event_type: true,
     event_grant_resulted: true,
+    event_topic: { include: { topic: true } },
     event_member_involved: { include: { member: { include: { account: true } } } },
-    event_partner_involved: true,
-    event_product_resulted: true,
+    event_partner_involved: { include: { organization: true } },
+    event_product_resulted: { include: { product: true } },
 } as const;
 
 export const includeAllEventInfo: CheckKeysAreValid<
@@ -427,9 +391,29 @@ const _selectAllEventInfo = {
     topic: true,
     event_type: true,
     event_grant_resulted: true,
-    event_member_involved: { include: { member: { include: { account: true } } } },
-    event_partner_involved: true,
-    event_product_resulted: true,
+    event_topic: { include: { topic: true } },
+    event_member_involved: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
+    event_partner_involved: {
+        select: {
+            organization: true,
+            event_id: true,
+            organization_id: true,
+        },
+    },
+    event_product_resulted: { include: { product: true } },
 } as const;
 
 export const selectAllEventInfo: CheckKeysAreValid<
@@ -444,6 +428,7 @@ const _selectPublicEventInfo = {
     start_date: true,
     end_date: true,
     event_type_id: true,
+    event_topic: { include: { topic: true } },
     topic_id: true,
     topic: true,
     event_type: true,
@@ -462,8 +447,14 @@ const _selectPublicEventInfo = {
             },
         },
     },
-    event_partner_involved: true,
-    event_product_resulted: true,
+    event_partner_involved: {
+        select: {
+            organization: true,
+            event_id: true,
+            organization_id: true,
+        },
+    },
+    event_product_resulted: { include: { product: true } },
     note: true,
 } as const;
 
