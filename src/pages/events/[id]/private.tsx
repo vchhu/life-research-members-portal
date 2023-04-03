@@ -4,6 +4,7 @@ import Authorizations from "../../../components/auth-guard/authorizations";
 import PageAuthGuard from "../../../components/auth-guard/page-auth-guard";
 import CardSkeleton from "../../../components/loading/card-skeleton";
 import PrivateEventProfile from "../../../components/events/event-private-profile";
+import Layout from "../../../components/layout/layout";
 
 const PrivateEventPage: NextPage = () => {
   const router = useRouter();
@@ -15,7 +16,9 @@ const PrivateEventPage: NextPage = () => {
       auths={[Authorizations.admin]}
       loadingIcon={<CardSkeleton />}
     >
-      <PrivateEventProfile id={id} />
+      <Layout>
+        <PrivateEventProfile id={id} />
+      </Layout>
     </PageAuthGuard>
   );
 };

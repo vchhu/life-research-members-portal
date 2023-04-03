@@ -1,10 +1,13 @@
 import type { NextPage } from "next/types";
 import AllSupervisions from "../../components/supervisions/all-supervisions";
+import Layout from "../../components/layout/layout";
 
 const SupervisionsPage: NextPage = () => {
-  return <AllSupervisions />;
-
-  //return <h1>Supervisions - comming soon</h1>;
+  return (
+    <Layout>
+      <AllSupervisions />;
+    </Layout>
+  );
 };
 
 export default SupervisionsPage;

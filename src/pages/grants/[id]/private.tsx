@@ -4,6 +4,7 @@ import Authorizations from "../../../components/auth-guard/authorizations";
 import PageAuthGuard from "../../../components/auth-guard/page-auth-guard";
 import CardSkeleton from "../../../components/loading/card-skeleton";
 import PrivateGrantProfile from "../../../components/grants/grant-private-profile";
+import Layout from "../../../components/layout/layout";
 
 const PrivateGrantPage: NextPage = () => {
   const router = useRouter();
@@ -15,7 +16,9 @@ const PrivateGrantPage: NextPage = () => {
       auths={[Authorizations.admin]}
       loadingIcon={<CardSkeleton />}
     >
-      <PrivateGrantProfile id={id} />
+      <Layout>
+        <PrivateGrantProfile id={id} />
+      </Layout>
     </PageAuthGuard>
   );
 };
