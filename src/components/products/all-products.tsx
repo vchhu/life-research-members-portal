@@ -415,67 +415,6 @@ const AllProducts: FC = () => {
     };
   }, [en]);
 
-  /*  const productMemberAuthorColumn: ProductColumnType = useMemo(
-    () => ({
-      title: en ? "Member Authors" : "Auteurs membres",
-      dataIndex: "all_author",
-      className: "name-column",
-      render: (all_author: string) => {
-        const authors = all_author
-          .split(/[,;&]/)
-          .map((author) => author.trim());
-
-        const matchedAuthorsMap = new Map<
-          number,
-          { name: string; id: number }
-        >();
-
-        authors.forEach((author) => {
-          const foundAccount = members.find(
-            (member) =>
-              member &&
-              member.account &&
-              member.account.first_name &&
-              member.account.last_name &&
-              isAuthorMatch(
-                author,
-                member.account.first_name,
-                member.account.last_name
-              )
-          );
-
-          if (foundAccount) {
-            const name = `${foundAccount.account.first_name} ${foundAccount.account.last_name}`;
-            matchedAuthorsMap.set(foundAccount.id, {
-              name,
-              id: foundAccount.id,
-            });
-          }
-        });
-
-        const matchedAuthors = Array.from(matchedAuthorsMap.values());
-
-        return (
-          <span>
-            {matchedAuthors.length > 0
-              ? matchedAuthors.map((author) => (
-                  <SafeLink
-                    key={author.id}
-                    href={PageRoutes.memberProfile(author.id)}
-                  >
-                    <Tag color={colorFromString(author.name)}>
-                      {author.name}
-                    </Tag>
-                  </SafeLink>
-                ))
-              : "No matches"}
-          </span>
-        );
-      },
-    }),
-    [members, en]
-  ); */
-
   const columns: ProductColumnType[] = [nameColumn];
   if (showDoi) columns.push(doiColumn);
   if (showType) columns.push(productTypeColumn);

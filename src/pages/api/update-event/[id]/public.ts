@@ -3,6 +3,7 @@ import { selectAllEventInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
 import type { PrivateEventDBRes } from "../../event/[id]/private";
+import type deleteGrant from "../../../../services/delete-grant";
 
 export type UpdateEventPublicParams = {
 
@@ -20,6 +21,9 @@ export type UpdateEventPublicParams = {
   deletePartners: number[];
   addProducts: number[];
   deleteProducts: number[];
+  deleteGrants: number[];
+  addGrants: number[];
+
 };
 
 function updateEvent(
@@ -40,6 +44,8 @@ function updateEvent(
     deletePartners,
     addProducts,
     deleteProducts,
+    deleteGrants,
+    addGrants,
   }: UpdateEventPublicParams
 ) {
   return db.event.update({
@@ -71,6 +77,11 @@ function updateEvent(
         deleteMany: deleteProducts.map((id) => ({ product_id: id })),
         createMany: { data: addProducts.map((id) => ({ product_id: id })) },
       },
+      event_grant_resulted: {
+        deleteMany: deleteGrants.map((id) => ({ grant_id: id })),
+        createMany: { data: addGrants.map((id) => ({ grant_id: id })) },
+      },
+
     },
     select: selectAllEventInfo,
   });

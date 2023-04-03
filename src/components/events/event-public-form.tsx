@@ -25,6 +25,7 @@ import TopicSelector from "../topics/topic-selector";
 import MemberSelector from "../members/member-selector";
 import PartnerSelector from "../partners/partner-selector";
 import ProductSelector from "../products/product-selector";
+import GrantSelector from "../grants/grant-selector";
 import { EventTypesCtx } from "../../services/context/event-types-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 import type { UpdateEventPublicParams } from "../../pages/api/update-event/[id]/public";
@@ -164,6 +165,29 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
     [event.event_product_resulted]
   );
 
+  const diffGrants = useCallback(
+    (
+      newGrants: Map<number, grant>
+    ): {
+      deleteGrants: number[];
+      addGrants: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deleteGrants: number[] = [];
+      const addGrants: number[] = [];
+      for (const event_grant_resulted of event.event_grant_resulted)
+        oldIds.add(event_grant_resulted.grant.id);
+      for (const grant of newGrants.values()) newIds.add(grant.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deleteGrants.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addGrants.push(newId);
+      return { deleteGrants, addGrants };
+    },
+    [event.event_grant_resulted]
+  );
+
   /** Submits validated data */
   const submitValidated = useCallback(
     async (data: Data): Promise<boolean> => {
@@ -177,6 +201,7 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
       const { addMembers, deleteMembers } = diffMembers(data.members);
       const { addTopics, deleteTopics } = diffTopics(data.topics);
       const { addProducts, deleteProducts } = diffProducts(data.products);
+      const { addGrants, deleteGrants } = diffGrants(data.grants);
 
       // Update the necessary fields and relations for the event
       const params: UpdateEventPublicParams = {
@@ -194,6 +219,8 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
         deletePartners,
         addProducts,
         deleteProducts,
+        addGrants,
+        deleteGrants,
       };
 
       const newInfo = await updateEventPublic(event.id, params);
@@ -212,6 +239,7 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
       diffMembers,
       diffPartners,
       diffProducts,
+      diffGrants,
       diffTopics,
       setDirty,
     ]
@@ -252,6 +280,12 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
     );
   }
 
+  function getInitialGrants() {
+    return new Map(
+      event.event_grant_resulted.map((k) => [k.grant.id, k.grant])
+    );
+  }
+
   const initialValues: Data = {
     // Set the initial values for the event form
     name_en: event.name_en,
@@ -277,6 +311,7 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
     // @ts-ignore
     members: getInitialMembers(event.event_member_involved),
     topics: getInitialTopics(),
+    grants: getInitialGrants(),
   };
 
   return (
@@ -350,6 +385,15 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
         <Form.Item name="members">
           <MemberSelector
             setErrors={(e) => form.setFields([{ name: "members", errors: e }])}
+          />
+        </Form.Item>
+
+        <label htmlFor="grants">
+          {en ? "Event Grants" : "Subventions de l'événement"}
+        </label>
+        <Form.Item name="grants">
+          <GrantSelector
+            setErrors={(e) => form.setFields([{ name: "grants", errors: e }])}
           />
         </Form.Item>
 
