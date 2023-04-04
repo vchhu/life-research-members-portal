@@ -20,6 +20,7 @@ import WebsiteIcon from "../icons/website-icon";
 import MemberTypeLink from "../link/member-type-link";
 import FacultyLink from "../link/faculty-link";
 import getMemberProduct from "../getters/member-product-author-getter";
+import getMemberOrg from "../getters/member-partner-getter";
 
 const { useBreakpoint } = Grid;
 
@@ -123,6 +124,12 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       {member.product_member_author.length > 0 && (
         <Item label={en ? "Member's Product" : "Produit du Membre"}>
           {getMemberProduct(member.product_member_author)}
+        </Item>
+      )}
+
+      {member.partnership_member_org.length > 0 && (
+        <Item label={en ? "Member's Partner" : "Partenaire du Membre"}>
+          {getMemberOrg(member.partnership_member_org)}
         </Item>
       )}
     </Descriptions>

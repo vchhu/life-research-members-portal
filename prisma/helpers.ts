@@ -59,6 +59,8 @@ const _selectPublicMemberInfo = {
     member_type: true,
     has_keyword: { select: { keyword: true } },
     product_member_author: { select: { product: true } },
+    partnership_member_org: { include: { organization: true } },
+
 } as const;
 
 export const selectPublicMemberInfo: CheckKeysAreValid<

@@ -26,6 +26,7 @@ import { AllPartnersCtx } from "../../services/context/all-partners-ctx";
 import OrgTypeFilter from "../filters/org-type-filter";
 import OrgScopeFilter from "../filters/org-scope-filter";
 import OrgNameFilter from "../filters/org-name-filter";
+import getMemberOrg from "../getters/member-partner-getter";
 
 function nameSorter(en: boolean) {
   return (

@@ -15,6 +15,8 @@ import MemberInsightDescription from "./member-insight-description";
 import PrivateMemberForm from "./member-private-form";
 import MemberInsightForm from "./member-insight-form";
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
+import router from "next/router";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -30,6 +32,12 @@ const PrivateMemberProfile: FC<Props> = ({ id }) => {
   const [editMode, setEditMode] = useState(false);
   const [activeTabKey, setActiveTabKey] = useState(keys.public);
   const { saveChangesPrompt } = useContext(SaveChangesCtx);
+
+  const handleRegisterPartner = () => {
+    router.push("/partners/register-partner");
+  };
+
+  const { localAccount } = useContext(ActiveAccountCtx);
 
   /** After saving changes via submit button - dependency of form's submit */
   const onSuccess = useCallback(
@@ -50,6 +58,17 @@ const PrivateMemberProfile: FC<Props> = ({ id }) => {
     saveChangesPrompt({ onSuccessOrDiscard: () => setActiveTabKey(key) });
   }
 
+  const addPartnerButton = localAccount && (
+    <Button
+      type="primary"
+      size="large"
+      onClick={() => handleRegisterPartner()}
+      style={{ marginRight: 16 }}
+    >
+      {en ? "Add a partner" : "Ajouter un partenaire"}
+    </Button>
+  );
+
   const editButton = (
     <Button
       size="large"
@@ -62,7 +81,12 @@ const PrivateMemberProfile: FC<Props> = ({ id }) => {
   );
 
   const doneButton = (
-    <Button size="large" danger style={{ flexGrow: 1, maxWidth: "10rem" }} onClick={onCancel}>
+    <Button
+      size="large"
+      danger
+      style={{ flexGrow: 1, maxWidth: "10rem" }}
+      onClick={onCancel}
+    >
       {en ? "Done" : "Fini"}
     </Button>
   );
@@ -81,6 +105,7 @@ const PrivateMemberProfile: FC<Props> = ({ id }) => {
       >
         {member.account.first_name + " " + member.account.last_name}
       </Title>
+      {addPartnerButton}
       {editMode ? doneButton : editButton}
     </div>
   );

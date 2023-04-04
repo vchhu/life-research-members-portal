@@ -24,6 +24,7 @@ const PublicEventDescription: FC<Props> = ({ event }) => {
       size="small"
       bordered
       column={1}
+      className="event-description"
       labelStyle={{ whiteSpace: "nowrap", width: 0 }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
