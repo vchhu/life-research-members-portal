@@ -127,6 +127,8 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
         </Item>
       )}
 
+      
+
       {member.partnership_member_org.length > 0 && (
         <Item label={en ? "Member's Partner" : "Partenaire du Membre"}>
           {getMemberOrg(member.partnership_member_org)}

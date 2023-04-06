@@ -100,11 +100,7 @@ const RegisterEvent: FC = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item
-          label={en ? "Topic" : "Sujet"}
-          name="topic_id"
-          rules={[{ required: true, message: en ? "Required" : "Requis" }]}
-        >
+        <Form.Item label={en ? "Topic" : "Sujet"} name="topic_id">
           <Select>
             <Option value="">{""}</Option>
             {topics.map((f) => (
