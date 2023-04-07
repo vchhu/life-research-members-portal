@@ -67,17 +67,24 @@ const AccountProfile: FC<Props> = ({ id }) => {
   const lastLoginItem = (
     <Item label={en ? "Last Login" : "Dernière connexion"}>
       {account.last_login?.split("T")[0] ||
-        (en ? "This account has never signed in" : "Ce compte ne s'est jamais connecté")}
+        (en
+          ? "This account has never signed in"
+          : "Ce compte ne s'est jamais connecté")}
     </Item>
   );
 
-  const trueSymbol = <CheckCircleTwoTone style={{ fontSize: 18, marginRight: 8 }} />;
+  const trueSymbol = (
+    <CheckCircleTwoTone style={{ fontSize: 18, marginRight: 8 }} />
+  );
   const falseSymbol = (
-    <CloseCircleTwoTone style={{ fontSize: 18, marginRight: 8 }} twoToneColor={red[6]} />
+    <CloseCircleTwoTone
+      style={{ fontSize: 18, marginRight: 8 }}
+      twoToneColor={red[6]}
+    />
   );
 
   const adminItem = (
-    <Item label={en ? "Administrator Privileges" : "Privilèges Administratifs"}>
+    <Item label={en ? "Administrator Privileges" : "Privilèges administratifs"}>
       {account.is_admin ? (
         <>
           <Text>
@@ -113,7 +120,9 @@ const AccountProfile: FC<Props> = ({ id }) => {
               : "Ce compte est enregistré en tant que membre"}
           </Text>
           <Button ghost type="primary">
-            <SafeLink href={PageRoutes.privateMemberProfile(account.member?.id || 0)}>
+            <SafeLink
+              href={PageRoutes.privateMemberProfile(account.member?.id || 0)}
+            >
               {en ? "Go to member profile" : "Accéder au profil du membre"}
             </SafeLink>
           </Button>

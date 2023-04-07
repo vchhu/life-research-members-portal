@@ -21,6 +21,7 @@ import MemberTypeLink from "../link/member-type-link";
 import FacultyLink from "../link/faculty-link";
 import getMemberProduct from "../getters/member-product-author-getter";
 import getMemberOrg from "../getters/member-partner-getter";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 
 const { useBreakpoint } = Grid;
 
@@ -31,6 +32,7 @@ type Props = {
 const PublicMemberDescription: FC<Props> = ({ member }) => {
   const screens = useBreakpoint();
   const { en } = useContext(LanguageCtx);
+  const { localAccount } = useContext(ActiveAccountCtx);
 
   return (
     <Descriptions
@@ -127,13 +129,13 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
         </Item>
       )}
 
-      
-
-      {member.partnership_member_org.length > 0 && (
-        <Item label={en ? "Member's Partner" : "Partenaire du Membre"}>
-          {getMemberOrg(member.partnership_member_org)}
-        </Item>
-      )}
+      {member.partnership_member_org.length > 0 &&
+        localAccount &&
+        (localAccount.member?.id === member.id || localAccount.is_admin) && (
+          <Item label={en ? "Member's Partner" : "Partenaire du Membre"}>
+            {getMemberOrg(member.partnership_member_org)}
+          </Item>
+        )}
     </Descriptions>
   );
 };

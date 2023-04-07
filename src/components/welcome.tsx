@@ -195,84 +195,136 @@ const Welcome: FC = () => {
           </Col>
           <Col xs={24} md={6}>
             <Space direction="vertical">
-              <Link href={PageRoutes.allMembers}>
-                <a>
-                  <div className="rounded-box rounded-box-gradient-1">
-                    <TeamOutlined className="icon-gradient" />
-                    <span className="count">{activeMembersCount}</span>
-                    <span className="title">
-                      {en ? "Active Members" : "Membres actifs"}
-                    </span>
-                  </div>
-                </a>
-              </Link>
-              <Link href={PageRoutes.allProducts}>
-                <a>
-                  <div className="rounded-box rounded-box-gradient-2">
-                    <AppstoreOutlined className="icon-gradient" />
-                    <span className="count">{activeProductsCount}</span>
-                    <span className="title">
-                      {en ? "Products" : "Produits"}
-                    </span>
-                  </div>
-                </a>
-              </Link>
+              {localAccount ? (
+                <Link href={PageRoutes.allMembers}>
+                  <a>
+                    <div className="rounded-box rounded-box-gradient-1">
+                      <TeamOutlined className="icon-gradient" />
+                      <span className="count">{activeMembersCount}</span>
+                      <span className="title">
+                        {en ? "Active Members" : "Membres actifs"}
+                      </span>
+                    </div>
+                  </a>
+                </Link>
+              ) : (
+                <div className="rounded-box rounded-box-gradient-1">
+                  <TeamOutlined className="icon-gradient" />
+                  <span className="count">{activeMembersCount}</span>
+                  <span className="title">
+                    {en ? "Active Members" : "Membres actifs"}
+                  </span>
+                </div>
+              )}
+              {localAccount?.is_admin ? (
+                <Link href={PageRoutes.allGrants}>
+                  <a>
+                    <div className="rounded-box rounded-box-gradient-3">
+                      <FundOutlined className="icon-gradient" />
+                      <span className="count">{activeGrantsCount}</span>
+                      <span className="title">
+                        {en ? "Grants" : "Subventions"}
+                      </span>
+                    </div>
+                  </a>
+                </Link>
+              ) : (
+                <div className="rounded-box rounded-box-gradient-3">
+                  <FundOutlined className="icon-gradient" />
+                  <span className="count">{activeGrantsCount}</span>
+                  <span className="title">{en ? "Grants" : "Subventions"}</span>
+                </div>
+              )}
             </Space>
           </Col>
           <Col xs={24} md={6}>
             <Space direction="vertical">
-              <Link href={PageRoutes.allGrants}>
-                <a>
-                  <div className="rounded-box rounded-box-gradient-3">
-                    <FundOutlined className="icon-gradient" />
-                    <span className="count">{activeGrantsCount}</span>
+              {localAccount ? (
+                <Link href={PageRoutes.allProducts}>
+                  <a>
+                    <div className="rounded-box rounded-box-gradient-2">
+                      <AppstoreOutlined className="icon-gradient" />
+                      <span className="count">{activeProductsCount}</span>
+                      <span className="title">
+                        {en ? "Products" : "Produits"}
+                      </span>
+                    </div>
+                  </a>
+                </Link>
+              ) : (
+                <div className="rounded-box rounded-box-gradient-2">
+                  <AppstoreOutlined className="icon-gradient" />
+                  <span className="count">{activeProductsCount}</span>
+                  <span className="title">{en ? "Products" : "Produits"}</span>
+                </div>
+              )}
 
-                    <span className="title">
-                      {en ? "Grants" : "Subventions"}
-                    </span>
-                  </div>
-                </a>
-              </Link>
-              <Link href={PageRoutes.allEvents}>
-                <a>
-                  <div className="rounded-box rounded-box-gradient-4">
-                    <CalendarOutlined className="icon-gradient" />
-                    <span className="count">{activeEventsCount}</span>
-
-                    <span className="title">
-                      {en ? "Events" : "Événements"}
-                    </span>
-                  </div>
-                </a>
-              </Link>
+              {localAccount && localAccount.is_admin ? (
+                <Link href={PageRoutes.allEvents}>
+                  <a>
+                    <div className="rounded-box rounded-box-gradient-4">
+                      <CalendarOutlined className="icon-gradient" />
+                      <span className="count">{activeEventsCount}</span>
+                      <span className="title">
+                        {en ? "Events" : "Événements"}
+                      </span>
+                    </div>
+                  </a>
+                </Link>
+              ) : (
+                <div className="rounded-box rounded-box-gradient-4">
+                  <CalendarOutlined className="icon-gradient" />
+                  <span className="count">{activeEventsCount}</span>
+                  <span className="title">{en ? "Events" : "Événements"}</span>
+                </div>
+              )}
             </Space>
           </Col>
           <Col xs={24} md={6}>
             <Space direction="vertical">
-              <Link href={PageRoutes.allSupervisions}>
-                <a>
-                  <div className="rounded-box rounded-box-gradient-5">
-                    <SolutionOutlined className="icon-gradient" />
-                    <span className="count">{activeSupervisionsCount}</span>
+              {localAccount ? (
+                <Link href={PageRoutes.allSupervisions}>
+                  <a>
+                    <div className="rounded-box rounded-box-gradient-5">
+                      <SolutionOutlined className="icon-gradient" />
+                      <span className="count">{activeSupervisionsCount}</span>
+                      <span className="title">
+                        {en ? "Supervisions" : "Supervisions"}
+                      </span>
+                    </div>
+                  </a>
+                </Link>
+              ) : (
+                <div className="rounded-box rounded-box-gradient-5">
+                  <SolutionOutlined className="icon-gradient" />
+                  <span className="count">{activeSupervisionsCount}</span>
+                  <span className="title">
+                    {en ? "Supervisions" : "Supervisions"}
+                  </span>
+                </div>
+              )}
 
-                    <span className="title">
-                      {en ? "Supervisions" : "Supervisions"}
-                    </span>
-                  </div>
-                </a>
-              </Link>
-              <Link href={PageRoutes.allPartners}>
-                <a>
-                  <div className="rounded-box rounded-box-gradient-6">
-                    <TeamOutlined className="icon-gradient" />
-                    <span className="count">{activePartnersCount}</span>
-
-                    <span className="title">
-                      {en ? "Partners" : "Partenaires"}
-                    </span>
-                  </div>
-                </a>
-              </Link>
+              {localAccount ? (
+                <Link href={PageRoutes.allPartners}>
+                  <a>
+                    <div className="rounded-box rounded-box-gradient-6">
+                      <TeamOutlined className="icon-gradient" />
+                      <span className="count">{activePartnersCount}</span>
+                      <span className="title">
+                        {en ? "Partners" : "Partenaires"}
+                      </span>
+                    </div>
+                  </a>
+                </Link>
+              ) : (
+                <div className="rounded-box rounded-box-gradient-6">
+                  <TeamOutlined className="icon-gradient" />
+                  <span className="count">{activePartnersCount}</span>
+                  <span className="title">
+                    {en ? "Partners" : "Partenaires"}
+                  </span>
+                </div>
+              )}
             </Space>
           </Col>
         </Row>

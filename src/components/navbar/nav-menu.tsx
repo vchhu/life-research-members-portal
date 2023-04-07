@@ -24,11 +24,14 @@ const NavMenu: FC = () => {
 
   // Everyone
   const generalItems = [
+    { label: en ? "Home" : "Accueil", href: PageRoutes.home },
+  ];
+
+  // Registered Acounts
+  const registeredItemsFirst = [
     { label: en ? "Members" : "Membres", href: PageRoutes.allMembers },
-    { label: en ? "Partners" : "Partenaires", href: PageRoutes.allPartners },
     { label: en ? "Products" : "Produits", href: PageRoutes.products },
-    { label: en ? "Grants" : "Subventions", href: PageRoutes.allGrants },
-    { label: en ? "Events" : "Événements", href: PageRoutes.allEvents },
+    { label: en ? "Partners" : "Partenaires", href: PageRoutes.allPartners },
     {
       label: en ? "Supervisions" : "Supervisions",
       href: PageRoutes.allSupervisions,
@@ -36,12 +39,16 @@ const NavMenu: FC = () => {
   ];
 
   // Registered Acounts
-  const registeredItems = [
+  const registeredItemsLast = [
     { label: en ? "My Profile" : "Mon profil", href: PageRoutes.myProfile },
   ];
 
   // Admins
   const adminItems = [
+   
+    { label: en ? "Grants" : "Subventions", href: PageRoutes.allGrants },
+    { label: en ? "Events" : "Événements", href: PageRoutes.allEvents },
+   
     {
       label: en ? "Accounts" : "Comptes",
       href: PageRoutes.allAccounts,
@@ -60,8 +67,9 @@ const NavMenu: FC = () => {
 
   const items: { label: string; href: string; children?: any }[] = generalItems;
   if (!loading) {
-    if (localAccount) for (const it of registeredItems) items.push(it);
+    if (localAccount) for (const it of registeredItemsFirst) items.push(it);
     if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
+    if (localAccount) for (const it of registeredItemsLast) items.push(it);
   }
 
   const menuItems: MenuItemType[] = items.map((it) => {
