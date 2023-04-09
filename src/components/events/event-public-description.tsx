@@ -80,6 +80,49 @@ const PublicEventDescription: FC<Props> = ({ event }) => {
         ))}
       </Item>
 
+      <Item label={en ? "Previous Events" : "Événements précédents"}>
+        <ol>
+          {event.event_previous_event_event_previous_event_event_idToevent &&
+            event.event_previous_event_event_previous_event_event_idToevent.map(
+              (prevEvent) => (
+                <li key={prevEvent.previous_event_id}>
+                  <SafeLink
+                    href={PageRoutes.eventProfile(prevEvent.previous_event_id)}
+                  >
+                    {en
+                      ? prevEvent
+                          .event_event_previous_event_previous_event_idToevent
+                          .name_en
+                      : prevEvent
+                          .event_event_previous_event_previous_event_idToevent
+                          .name_fr}
+                  </SafeLink>
+                </li>
+              )
+            )}
+        </ol>
+      </Item>
+      <Item label={en ? "Next Events" : "Événements suivants"}>
+        <ol>
+          {event.event_next_event_event_next_event_event_idToevent &&
+            event.event_next_event_event_next_event_event_idToevent.map(
+              (nextEvent) => (
+                <li key={nextEvent.next_event_id}>
+                  <SafeLink
+                    href={PageRoutes.eventProfile(nextEvent.next_event_id)}
+                  >
+                    {en
+                      ? nextEvent.event_event_next_event_next_event_idToevent
+                          .name_en
+                      : nextEvent.event_event_next_event_next_event_idToevent
+                          .name_fr}
+                  </SafeLink>
+                </li>
+              )
+            )}
+        </ol>
+      </Item>
+
       <Item label={en ? "Grant Resulted" : "Subvention résultante"}>
         <ol>
           {event.event_grant_resulted.map((entry, i) =>

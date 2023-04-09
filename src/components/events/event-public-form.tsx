@@ -10,7 +10,7 @@ import {
 } from "../../services/context/save-changes-ctx";
 import moment, { Moment } from "moment";
 import Notification from "../../services/notifications/notification";
-import type { organization } from "@prisma/client";
+import type { event, organization } from "@prisma/client";
 import type { grant } from "@prisma/client";
 import type { product } from "@prisma/client";
 import type { topic } from "@prisma/client";
@@ -30,6 +30,7 @@ import { EventTypesCtx } from "../../services/context/event-types-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 import type { UpdateEventPublicParams } from "../../pages/api/update-event/[id]/public";
 import updateEventPublic from "../../services/update-event-public";
+import EventSelector from "./event-selector";
 
 const { Option } = Select;
 
@@ -60,6 +61,8 @@ type Data = {
   organizations: Map<number, organization>;
   grants: Map<number, grant>;
   products: Map<number, product>;
+  previous_events: Map<number, event>;
+  next_events: Map<number, event>;
 };
 
 const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
@@ -188,6 +191,53 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
     [event.event_grant_resulted]
   );
 
+  const diffPreviousEvents = useCallback(
+    (
+      newPreviousEvents: Map<number, event>
+    ): {
+      deletePreviousEvents: number[];
+      addPreviousEvents: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deletePreviousEvents: number[] = [];
+      const addPreviousEvents: number[] = [];
+      for (const event_event of event.event_previous_event_event_previous_event_event_idToevent)
+        oldIds.add(event_event.previous_event_id);
+      for (const prevEvent of newPreviousEvents.values())
+        newIds.add(prevEvent.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deletePreviousEvents.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addPreviousEvents.push(newId);
+      return { deletePreviousEvents, addPreviousEvents };
+    },
+    [event.event_previous_event_event_previous_event_event_idToevent]
+  );
+
+  const diffNextEvents = useCallback(
+    (
+      newNextEvents: Map<number, event>
+    ): {
+      deleteNextEvents: number[];
+      addNextEvents: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deleteNextEvents: number[] = [];
+      const addNextEvents: number[] = [];
+      for (const event_event of event.event_next_event_event_next_event_event_idToevent)
+        oldIds.add(event_event.next_event_id);
+      for (const nextEvent of newNextEvents.values()) newIds.add(nextEvent.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deleteNextEvents.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addNextEvents.push(newId);
+      return { deleteNextEvents, addNextEvents };
+    },
+    [event.event_next_event_event_next_event_event_idToevent]
+  );
+
   /** Submits validated data */
   const submitValidated = useCallback(
     async (data: Data): Promise<boolean> => {
@@ -202,6 +252,12 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
       const { addTopics, deleteTopics } = diffTopics(data.topics);
       const { addProducts, deleteProducts } = diffProducts(data.products);
       const { addGrants, deleteGrants } = diffGrants(data.grants);
+      const { addPreviousEvents, deletePreviousEvents } = diffPreviousEvents(
+        data.previous_events
+      );
+      const { addNextEvents, deleteNextEvents } = diffNextEvents(
+        data.next_events
+      );
 
       // Update the necessary fields and relations for the event
       const params: UpdateEventPublicParams = {
@@ -221,6 +277,10 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
         deleteProducts,
         addGrants,
         deleteGrants,
+        addPreviousEvents,
+        deletePreviousEvents,
+        addNextEvents,
+        deleteNextEvents,
       };
 
       const newInfo = await updateEventPublic(event.id, params);
@@ -242,6 +302,8 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
       diffGrants,
       diffTopics,
       setDirty,
+      diffPreviousEvents,
+      diffNextEvents,
     ]
   );
 
@@ -296,6 +358,25 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
       event.event_product_resulted.map((k) => [k.product.id, k.product])
     );
   }
+  function getInitialPreviousEvents() {
+    return new Map(
+      event.event_previous_event_event_previous_event_event_idToevent.map(
+        (k) => [
+          k.event_event_previous_event_previous_event_idToevent.id,
+          k.event_event_previous_event_previous_event_idToevent,
+        ]
+      )
+    );
+  }
+
+  function getInitialNextEvents() {
+    return new Map(
+      event.event_next_event_event_next_event_event_idToevent.map((k) => [
+        k.event_event_next_event_next_event_idToevent.id,
+        k.event_event_next_event_next_event_idToevent,
+      ])
+    );
+  }
 
   function getInitialGrants() {
     return new Map(
@@ -329,6 +410,8 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
     members: getInitialMembers(event.event_member_involved),
     topics: getInitialTopics(),
     grants: getInitialGrants(),
+    previous_events: getInitialPreviousEvents(),
+    next_events: getInitialNextEvents(),
   };
 
   return (
@@ -393,6 +476,28 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
         <Form.Item name="topics">
           <TopicSelector
             setErrors={(e) => form.setFields([{ name: "topics", errors: e }])}
+          />
+        </Form.Item>
+
+        <label htmlFor="previous_events">
+          {en ? "Previous Events" : "Événements précédents"}
+        </label>
+        <Form.Item name="previous_events">
+          <EventSelector
+            setErrors={(e) =>
+              form.setFields([{ name: "previous_events", errors: e }])
+            }
+          />
+        </Form.Item>
+
+        <label htmlFor="next_events">
+          {en ? "Next Events" : "Événements suivants"}
+        </label>
+        <Form.Item name="next_events">
+          <EventSelector
+            setErrors={(e) =>
+              form.setFields([{ name: "next_events", errors: e }])
+            }
           />
         </Form.Item>
 

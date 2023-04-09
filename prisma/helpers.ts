@@ -371,6 +371,13 @@ const _includeAllEventInfo = {
     event_member_involved: { include: { member: { include: { account: true } } } },
     event_partner_involved: { include: { organization: true } },
     event_product_resulted: { include: { product: true } },
+    event_next_event_event_next_event_event_idToevent: {
+        include: { event_event_next_event_next_event_idToevent: true },
+    },
+    event_previous_event_event_previous_event_event_idToevent: {
+        include: { event_event_previous_event_previous_event_idToevent: true },
+    },
+
 } as const;
 
 export const includeAllEventInfo: CheckKeysAreValid<
@@ -413,6 +420,22 @@ const _selectAllEventInfo = {
         },
     },
     event_product_resulted: { include: { product: true } },
+    event_next_event_event_next_event_event_idToevent: {
+        select: {
+            event_event_next_event_next_event_idToevent: true,
+            event_id: true,
+            next_event_id: true,
+        },
+    },
+    event_previous_event_event_previous_event_event_idToevent: {
+        select: {
+            event_event_previous_event_previous_event_idToevent: true,
+            event_id: true,
+            previous_event_id: true,
+        },
+    },
+
+
 } as const;
 
 export const selectAllEventInfo: CheckKeysAreValid<
@@ -446,6 +469,7 @@ const _selectPublicEventInfo = {
             },
         },
     },
+    event_product_resulted: { include: { product: true } },
     event_partner_involved: {
         select: {
             organization: true,
@@ -453,7 +477,12 @@ const _selectPublicEventInfo = {
             organization_id: true,
         },
     },
-    event_product_resulted: { include: { product: true } },
+    event_next_event_event_next_event_event_idToevent: {
+        include: { event_event_next_event_next_event_idToevent: true },
+    },
+    event_previous_event_event_previous_event_event_idToevent: {
+        include: { event_event_previous_event_previous_event_idToevent: true },
+    },
     note: true,
 } as const;
 

@@ -48,28 +48,39 @@ model desired_promotion_strategy {
 }
 
 model event {
-  id                     Int                      @id(map: "PK_event") @default(autoincrement())
-  name_en                String                   @db.NVarChar(2000)
-  name_fr                String                   @db.NVarChar(2000)
-  start_date             DateTime?                @db.Date
-  end_date               DateTime?                @db.Date
-  event_type_id          Int?
-  topic_id               Int?
-  note                   String?                  @db.NVarChar(Max)
-  topic                  topic?                   @relation(fields: [topic_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_event_topic")
-  event_type             event_type?              @relation(fields: [event_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_event_type")
-  event_grant_resulted   event_grant_resulted[]
-  event_member_involved  event_member_involved[]
-  event_partner_involved event_partner_involved[]
-  event_product_resulted event_product_resulted[]
-  event_topic            event_topic[]
+  id                                                                 Int                      @id(map: "PK_event") @default(autoincrement())
+  name_en                                                            String                   @db.NVarChar(2000)
+  name_fr                                                            String                   @db.NVarChar(2000)
+  start_date                                                         DateTime?                @db.Date
+  end_date                                                           DateTime?                @db.Date
+  event_type_id                                                      Int?
+  topic_id                                                           Int?
+  note                                                               String?                  @db.NVarChar(Max)
+  topic                                                              topic?                   @relation(fields: [topic_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_event_topic")
+  event_type                                                         event_type?              @relation(fields: [event_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_event_type")
+  event_grant_resulted                                               event_grant_resulted[]
+  event_member_involved                                              event_member_involved[]
+  event_next_event_event_next_event_event_idToevent                  event_next_event[]       @relation("event_next_event_event_idToevent")
+  event_next_event_event_next_event_next_event_idToevent             event_next_event[]       @relation("event_next_event_next_event_idToevent")
+  event_partner_involved                                             event_partner_involved[]
+  event_previous_event_event_previous_event_event_idToevent          event_previous_event[]   @relation("event_previous_event_event_idToevent")
+  event_previous_event_event_previous_event_previous_event_idToevent event_previous_event[]   @relation("event_previous_event_previous_event_idToevent")
+  event_product_resulted                                             event_product_resulted[]
+  event_topic                                                        event_topic[]
+}
+
+model event_event {
+  previous_event_id Int
+  next_event_id     Int
+
+  @@id([previous_event_id, next_event_id], map: "PK_event_event")
 }
 
 model event_grant_resulted {
   event_id Int
   grant_id Int
-  event    event @relation(fields: [event_id], references: [id], onUpdate: NoAction, map: "FK_event_grant_resulted_event")
-  grant    grant @relation(fields: [grant_id], references: [id], onUpdate: NoAction, map: "FK_event_grant_resulted_grant")
+  event    event @relation(fields: [event_id], references: [id], onDelete: Cascade, map: "FK_event_grant_resulted_event")
+  grant    grant @relation(fields: [grant_id], references: [id], onDelete: Cascade, map: "FK_event_grant_resulted_grant")
 
   @@id([event_id, grant_id], map: "PK_event_grant_resulted")
 }
@@ -77,10 +88,19 @@ model event_grant_resulted {
 model event_member_involved {
   event_id  Int
   member_id Int
-  event     event  @relation(fields: [event_id], references: [id], onUpdate: NoAction, map: "FK_event_member_involved_event")
-  member    member @relation(fields: [member_id], references: [id], onUpdate: NoAction, map: "FK_event_member_involved_member")
+  event     event  @relation(fields: [event_id], references: [id], onDelete: Cascade, map: "FK_event_member_involved_event")
+  member    member @relation(fields: [member_id], references: [id], onDelete: Cascade, map: "FK_event_member_involved_member")
 
   @@id([event_id, member_id], map: "PK_event_member_involved")
+}
+
+model event_next_event {
+  event_id                                    Int
+  next_event_id                               Int
+  event_event_next_event_event_idToevent      event @relation("event_next_event_event_idToevent", fields: [event_id], references: [id], onUpdate: NoAction, map: "FK_event_next_event_event_id")
+  event_event_next_event_next_event_idToevent event @relation("event_next_event_next_event_idToevent", fields: [next_event_id], references: [id], onUpdate: NoAction, map: "FK_event_next_event_next_event_id")
+
+  @@id([event_id, next_event_id], map: "PK_event_next_event")
 }
 
 model event_partner_involved {
@@ -92,11 +112,20 @@ model event_partner_involved {
   @@id([event_id, organization_id], map: "PK_event_partner_involved")
 }
 
+model event_previous_event {
+  event_id                                            Int
+  previous_event_id                                   Int
+  event_event_previous_event_event_idToevent          event @relation("event_previous_event_event_idToevent", fields: [event_id], references: [id], onUpdate: NoAction, map: "FK_event_previous_event_event_id")
+  event_event_previous_event_previous_event_idToevent event @relation("event_previous_event_previous_event_idToevent", fields: [previous_event_id], references: [id], onUpdate: NoAction, map: "FK_event_previous_event_previous_event_id")
+
+  @@id([event_id, previous_event_id], map: "PK_event_previous_event")
+}
+
 model event_product_resulted {
   event_id   Int
   product_id Int
-  event      event   @relation(fields: [event_id], references: [id], onUpdate: NoAction, map: "FK_event_product_resulted_event")
-  product    product @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "FK_event_product_resulted_product")
+  event      event   @relation(fields: [event_id], references: [id], onDelete: Cascade, map: "FK_event_product_resulted_event")
+  product    product @relation(fields: [product_id], references: [id], onDelete: Cascade, map: "FK_event_product_resulted_product")
 
   @@id([event_id, product_id], map: "PK_event_product_resulted")
 }

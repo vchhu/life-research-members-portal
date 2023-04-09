@@ -22,6 +22,10 @@ export type UpdateEventPublicParams = {
   deleteProducts: number[];
   deleteGrants: number[];
   addGrants: number[];
+  addPreviousEvents: number[];
+  deletePreviousEvents: number[];
+  addNextEvents: number[];
+  deleteNextEvents: number[];
 
 };
 
@@ -45,6 +49,10 @@ function updateEvent(
     deleteProducts,
     deleteGrants,
     addGrants,
+    addPreviousEvents,
+    deletePreviousEvents,
+    addNextEvents,
+    deleteNextEvents,
   }: UpdateEventPublicParams
 ) {
   return db.event.update({
@@ -80,8 +88,17 @@ function updateEvent(
         deleteMany: deleteGrants.map((id) => ({ grant_id: id })),
         createMany: { data: addGrants.map((id) => ({ grant_id: id })) },
       },
+      event_previous_event_event_previous_event_event_idToevent: {
+        deleteMany: deletePreviousEvents.map((previous_event_id) => ({ previous_event_id })),
+        createMany: { data: addPreviousEvents.map((previous_event_id) => ({ previous_event_id })) },
 
+      },
+      event_next_event_event_next_event_event_idToevent: {
+        deleteMany: deleteNextEvents.map((next_event_id) => ({ next_event_id })),
+        createMany: { data: addNextEvents.map((next_event_id) => ({ next_event_id })) },
+      },
     },
+
     select: selectAllEventInfo,
   });
 }
