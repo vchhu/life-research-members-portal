@@ -24,6 +24,8 @@ export type UpdateMemberPublicParams = {
   addProblems?: ProblemInfo[];
   deleteKeywords?: number[];
   addKeywords?: number[];
+  addPartners?: number[];
+  deletePartners?: number[];
 };
 
 function updateMember(
@@ -47,6 +49,8 @@ function updateMember(
     addProblems = [],
     deleteKeywords = [],
     addKeywords = [],
+    addPartners = [],
+    deletePartners = [],
   }: UpdateMemberPublicParams
 ) {
   return db.member.update({
@@ -66,13 +70,13 @@ function updateMember(
       faculty: faculty_id
         ? { connect: { id: faculty_id } }
         : faculty_id === null
-        ? { disconnect: true }
-        : undefined,
+          ? { disconnect: true }
+          : undefined,
       member_type: type_id
         ? { connect: { id: type_id } }
         : type_id === null
-        ? { disconnect: true }
-        : undefined,
+          ? { disconnect: true }
+          : undefined,
       has_keyword: {
         deleteMany: deleteKeywords.map((id) => ({ keyword_id: id })),
         createMany: { data: addKeywords.map((id) => ({ keyword_id: id })) },
@@ -80,6 +84,10 @@ function updateMember(
       problem: {
         deleteMany: deleteProblems.map((id) => ({ id })),
         create: addProblems,
+      },
+      partnership_member_org: {
+        deleteMany: deletePartners.map((id) => ({ organization_id: id })),
+        createMany: { data: addPartners.map((id) => ({ organization_id: id })) },
       },
     },
     include: includeAllMemberInfo,

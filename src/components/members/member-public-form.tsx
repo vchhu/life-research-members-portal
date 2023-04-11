@@ -26,12 +26,15 @@ import GetLanguage from "../../utils/front-end/get-language";
 import Divider from "antd/lib/divider";
 import type { UpdateMemberPublicParams } from "../../pages/api/update-member/[id]/public";
 import Text from "antd/lib/typography/Text";
+import type { organization } from "@prisma/client";
+
 import KeywordSelector from "../keywords/keyword-selector";
 import Notification from "../../services/notifications/notification";
 import {
   SaveChangesCtx,
   useResetDirtyOnUnmount,
 } from "../../services/context/save-changes-ctx";
+import PartnerSelector from "../partners/partner-selector";
 
 const { Option } = Select;
 
@@ -57,6 +60,7 @@ type Data = {
   cv_link: string;
   facebook_link: string;
   tiktok_link: string;
+  organizations: Map<number, organization>;
 };
 
 const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
@@ -116,6 +120,30 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
     [member.has_keyword]
   );
 
+  const diffPartners = useCallback(
+    (
+      newPartners: Map<number, organization>
+    ): {
+      deletePartners: number[];
+      addPartners: number[];
+    } => {
+      const oldIds = new Set<number>();
+      const newIds = new Set<number>();
+      const deletePartners: number[] = [];
+      const addPartners: number[] = [];
+      for (const partnership_member_org of member.partnership_member_org)
+        oldIds.add(partnership_member_org.organization.id);
+      for (const organization of newPartners.values())
+        newIds.add(organization.id);
+      for (const oldId of oldIds.values())
+        if (!newIds.has(oldId)) deletePartners.push(oldId);
+      for (const newId of newIds.values())
+        if (!oldIds.has(newId)) addPartners.push(newId);
+      return { deletePartners, addPartners };
+    },
+    [member.partnership_member_org]
+  );
+
   /** Submits validated data */
   const submitValidated = useCallback(
     async (data: Data): Promise<boolean> => {
@@ -126,6 +154,7 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
       setLoading(true);
       const { addProblems, deleteProblems } = diffProblems(data.problems);
       const { addKeywords, deleteKeywords } = diffKeywords(data.keywords);
+      const { addPartners, deletePartners } = diffPartners(data.organizations);
       const params: UpdateMemberPublicParams = {
         first_name: data.first_name,
         last_name: data.last_name,
@@ -145,6 +174,8 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
         addProblems,
         deleteKeywords,
         addKeywords,
+        deletePartners,
+        addPartners,
       };
       const newInfo = await updateMemberPublic(member.id, params);
       setLoading(false);
@@ -154,7 +185,16 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
       }
       return !!newInfo;
     },
-    [onSuccess, diffKeywords, diffProblems, member.id, dirty, en, setDirty]
+    [
+      onSuccess,
+      diffKeywords,
+      diffProblems,
+      diffPartners,
+      member.id,
+      dirty,
+      en,
+      setDirty,
+    ]
   );
 
   /** When called from context - need to validate manually */
@@ -190,6 +230,15 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
     return new Map(member.has_keyword.map((k) => [k.keyword.id, k.keyword]));
   }
 
+  function getInitialPartners() {
+    return new Map(
+      member.partnership_member_org.map((k) => [
+        k.organization.id,
+        k.organization,
+      ])
+    );
+  }
+
   const initialValues: Data = {
     first_name: member.account.first_name,
     last_name: member.account.last_name,
@@ -205,6 +254,7 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
     cv_link: member.cv_link || "",
     facebook_link: member.facebook_link || "",
     tiktok_link: member.tiktok_link || "",
+    organizations: getInitialPartners(),
     problems: getInitialProblems(),
     keywords: getInitialKeywords(),
   };
@@ -352,6 +402,15 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
             setErrors={(e) => form.setFields([{ name: "keywords", errors: e }])}
           />
         </Form.Item>
+        <Divider />
+        <Form.Item name="organizations">
+          <PartnerSelector
+            setErrors={(e) =>
+              form.setFields([{ name: "organizations", errors: e }])
+            }
+          />
+        </Form.Item>
+
         <Divider />
 
         <label>{en ? "External Links" : "Liens externes"}</label>
