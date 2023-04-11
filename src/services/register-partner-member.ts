@@ -24,7 +24,7 @@ export default async function registerPartner(
         if (!res.ok) throw await res.text();
         const result = await res.json();
         notification.success();
-        router.push(`/members/${result.memberId}/private`);
+        router.push(`/my-profile`);
         return result;
     } catch (e: any) {
         notification.error(e);

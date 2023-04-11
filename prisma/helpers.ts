@@ -84,10 +84,17 @@ const _selectPublicPartnerInfo = {
         },
     },
     partnership_member_org: {
-        select: {
-            member: true,
-            organization_id: true,
-            member_id: true,
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
         },
     },
     product_partnership: {
@@ -113,7 +120,7 @@ const _includeAllPartnerInfo = {
     org_type: true,
     description: true,
     event_partner_involved: { include: { event: true } },
-    partnership_member_org: { include: { member: true } },
+    partnership_member_org: { include: { member: { include: { account: true } } } },
     product_partnership: { include: { product: true } },
 
 } as const;
@@ -137,13 +144,7 @@ const _selectAllPartnerInfo = {
             organization_id: true,
         },
     },
-    partnership_member_org: {
-        select: {
-            member: true,
-            organization_id: true,
-            member_id: true,
-        },
-    },
+    partnership_member_org: { include: { member: { include: { account: true } } } },
     product_partnership: {
         select: {
             organization_id: true,

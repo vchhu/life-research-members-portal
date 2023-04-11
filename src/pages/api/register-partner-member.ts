@@ -32,14 +32,10 @@ function registerPartner(params: RegisterPartnerParams, memberId: number) {
   });
 }
 
-
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<RegisterPartnerRes | string>
 ) {
-
-
   const params: RegisterPartnerParams = req.body;
   const { name_en, name_fr, scope_id, type_id } = params;
   if (typeof name_en !== "string") return res.status(400).send("name_en is required.");
@@ -51,7 +47,7 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    if (!currentUser.is_admin)
+    if (!currentUser.member)
       return res.status(401).send("You are not authorized to register a partner");
 
     const currentMember = await db.member.findUnique({
@@ -59,6 +55,20 @@ export default async function handler(
     });
 
     if (!currentMember) return res.status(400).send("Member not found");
+
+    // Check if partner already exists
+    const existingPartner = await db.organization.findFirst({
+      where: {
+        OR: [
+          { name_en: params.name_en },
+          { name_fr: params.name_fr },
+        ],
+      },
+    });
+
+    if (existingPartner) {
+      return res.status(400).send("This partner is already registered: " + name_en);
+    }
 
     const newPartner = await registerPartner(params, currentMember.id);
 

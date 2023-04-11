@@ -9,9 +9,9 @@ export type RegisterPartnerParams = {
   scope_id: number;
   type_id: number;
   description: string;
- 
+
 };
- export type RegisterPartnerRes = Awaited<ReturnType<typeof registerPartner>>;
+export type RegisterPartnerRes = Awaited<ReturnType<typeof registerPartner>>;
 
 function registerPartner(params: RegisterPartnerParams) {
   return db.organization.create({
@@ -19,13 +19,11 @@ function registerPartner(params: RegisterPartnerParams) {
       name_en: params.name_en,
       name_fr: params.name_fr,
       scope_id: Number(params.scope_id),
-      type_id:  Number(params.type_id),
+      type_id: Number(params.type_id),
       description: params.description,
     },
   });
 }
-
-
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,16 +32,30 @@ export default async function handler(
   const params: RegisterPartnerParams = req.body;
   const { name_en, name_fr, scope_id, type_id } = params;
   if (typeof name_en !== "string") return res.status(400).send("name_en is required.");
-if (typeof name_fr !== "string") return res.status(400).send("name_fr is required.");
-if (isNaN(scope_id)) return res.status(400).send("scope_id is required.");
-if (isNaN(scope_id)) return res.status(400).send("type_id is required.");
+  if (typeof name_fr !== "string") return res.status(400).send("name_fr is required.");
+  if (isNaN(scope_id)) return res.status(400).send("scope_id is required.");
+  if (isNaN(scope_id)) return res.status(400).send("type_id is required.");
 
   try {
-const currentUser = await getAccountFromRequest(req, res);
+    const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
     if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register a partner"); 
+      return res.status(401).send("You are not authorized to register a partner");
+
+    // Check if partner already exists
+    const existingPartner = await db.organization.findFirst({
+      where: {
+        OR: [
+          { name_en: params.name_en },
+          { name_fr: params.name_fr },
+        ],
+      },
+    });
+
+    if (existingPartner) {
+      return res.status(400).send("This partner is already registered: " + name_en);
+    }
 
     const newPartner = await registerPartner(params);
 
@@ -53,5 +65,5 @@ const currentUser = await getAccountFromRequest(req, res);
       return res.status(400).send("This partner is already registered: " + name_en);
 
     return res.status(500).send({ ...e, message: e.message });
-  } 
+  }
 }

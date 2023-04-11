@@ -1,7 +1,14 @@
 import Button from "antd/lib/button";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import React, { FC, ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  FC,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import CardSkeleton from "../loading/card-skeleton";
 import PublicMemberDescription from "./member-public-description";
@@ -15,6 +22,7 @@ import MemberInsightDescription from "./member-insight-description";
 import PrivateMemberForm from "./member-private-form";
 import MemberInsightForm from "./member-insight-form";
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
+import router from "next/router";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -22,10 +30,15 @@ const keys = { public: "public", private: "private", insight: "insight" };
 
 const MyProfile: FC = () => {
   const { en } = useContext(LanguageCtx);
-  const { localAccount, setLocalAccount, loading, refresh } = useContext(ActiveAccountCtx);
+  const { localAccount, setLocalAccount, loading, refresh } =
+    useContext(ActiveAccountCtx);
   const [editMode, setEditMode] = useState(false);
   const [activeTabKey, setActiveTabKey] = useState(keys.public);
   const { saveChangesPrompt } = useContext(SaveChangesCtx);
+
+  const handleRegisterPartner = () => {
+    router.push("/partners/register-partner");
+  };
 
   useEffect(() => {
     refresh();
@@ -64,6 +77,17 @@ const MyProfile: FC = () => {
     saveChangesPrompt({ onSuccessOrDiscard: () => setActiveTabKey(key) });
   }
 
+  const addPartnerButton = localAccount && (
+    <Button
+      type="primary"
+      size="large"
+      onClick={() => handleRegisterPartner()}
+      style={{ marginRight: 16 }}
+    >
+      {en ? "Add a partner" : "Ajouter un partenaire"}
+    </Button>
+  );
+
   const editButton = (
     <Button
       size="large"
@@ -76,7 +100,12 @@ const MyProfile: FC = () => {
   );
 
   const doneButton = (
-    <Button size="large" danger style={{ flexGrow: 1, maxWidth: "10rem" }} onClick={onCancel}>
+    <Button
+      size="large"
+      danger
+      style={{ flexGrow: 1, maxWidth: "10rem" }}
+      onClick={onCancel}
+    >
       {en ? "Done" : "Fini"}
     </Button>
   );
@@ -95,6 +124,7 @@ const MyProfile: FC = () => {
       >
         {localAccount.first_name + " " + localAccount.last_name}
       </Title>
+      {addPartnerButton}
       {editMode ? doneButton : editButton}
     </div>
   );

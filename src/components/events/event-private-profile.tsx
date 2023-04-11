@@ -86,7 +86,7 @@ const PrivateEventProfile: FC<Props> = ({ id }) => {
 
   const descriptions: Tab[] = [
     {
-      label: en ? "Public" : "Publique",
+      label: en ? "About this event" : "À propos de cet événement",
       key: keys.public,
       children: <PublicEventDescription event={event} />,
     },
@@ -95,7 +95,10 @@ const PrivateEventProfile: FC<Props> = ({ id }) => {
 
   const forms: Tab[] = [
     {
-      label: en ? "Public" : "Publique",
+      label: en
+        ? "Edit event informations"
+        : "Éditer les informations de l'événement",
+
       key: keys.public,
       children: <PublicEventForm event={event} onSuccess={onSuccess} />,
     },
