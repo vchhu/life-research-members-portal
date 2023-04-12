@@ -32,10 +32,6 @@ const NavMenu: FC = () => {
     { label: en ? "Members" : "Membres", href: PageRoutes.allMembers },
     { label: en ? "Products" : "Produits", href: PageRoutes.products },
     { label: en ? "Partners" : "Partenaires", href: PageRoutes.allPartners },
-    {
-      label: en ? "Supervisions" : "Supervisions",
-      href: PageRoutes.allSupervisions,
-    },
   ];
 
   // Registered Acounts
@@ -45,10 +41,13 @@ const NavMenu: FC = () => {
 
   // Admins
   const adminItems = [
-   
     { label: en ? "Grants" : "Subventions", href: PageRoutes.allGrants },
     { label: en ? "Events" : "Événements", href: PageRoutes.allEvents },
-   
+    {
+      label: en ? "Supervisions" : "Supervisions",
+      href: PageRoutes.allSupervisions,
+    },
+
     {
       label: en ? "Accounts" : "Comptes",
       href: PageRoutes.allAccounts,

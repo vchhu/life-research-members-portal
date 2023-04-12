@@ -87,8 +87,8 @@ export const queryKeys = {
 const defaultQueries = {
   showDoi: true,
   showType: true,
-  showAllAuthor: true,
   showMemberAuthor: true,
+  showAllAuthor: false,
 } as const;
 
 function handleShowDoiChange(value: boolean) {
@@ -330,8 +330,9 @@ const AllProducts: FC = () => {
     [
       allProducts,
       productTitleFilter,
-      productTypesFilter,
       productAllAuthorsFilter,
+      productTypesFilter,
+
       en,
     ]
   );
@@ -418,8 +419,8 @@ const AllProducts: FC = () => {
   const columns: ProductColumnType[] = [nameColumn];
   if (showDoi) columns.push(doiColumn);
   if (showType) columns.push(productTypeColumn);
-  if (showAllAuthor) columns.push(productAllAuthorColumn);
   if (showMemberAuthor) columns.push(productMemberAuthorColumn);
+  if (showAllAuthor) columns.push(productAllAuthorColumn);
 
   const filters = (
     <Form
@@ -483,17 +484,16 @@ const AllProducts: FC = () => {
         </Checkbox>
 
         <Checkbox
-          checked={showAllAuthor}
-          onChange={(e) => handleShowAllAuthorChange(e.target.checked)}
-        >
-          {en ? "Show all Authors" : "Afficher tous les auteurs"}
-        </Checkbox>
-
-        <Checkbox
           checked={showMemberAuthor}
           onChange={(e) => handleShowMemberAuthorChange(e.target.checked)}
         >
           {en ? "Show Member Authors" : "Afficher les auteurs membres"}
+        </Checkbox>
+        <Checkbox
+          checked={showAllAuthor}
+          onChange={(e) => handleShowAllAuthorChange(e.target.checked)}
+        >
+          {en ? "Show all Authors" : "Afficher tous les auteurs"}
         </Checkbox>
       </span>
     </Form>

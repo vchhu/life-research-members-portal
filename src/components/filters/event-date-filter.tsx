@@ -33,9 +33,14 @@ const EventDateFilter: FC<Props> = ({
     const filteredEvents = allEvents.filter((event) => {
       if (!event.start_date) return false;
       const startDate = moment(event.start_date);
+      const endDate = event.end_date ? moment(event.end_date) : startDate;
+
+      const selectedStartDate = values[0]?.startOf("day");
+      const selectedEndDate = values[1]?.endOf("day");
+
       return (
-        (!values[0] || startDate.isSameOrAfter(values[0])) &&
-        (!values[1] || startDate.isSameOrBefore(values[1]))
+        (!selectedStartDate || endDate.isSameOrAfter(selectedStartDate)) &&
+        (!selectedEndDate || startDate.isSameOrBefore(selectedEndDate))
       );
     });
 

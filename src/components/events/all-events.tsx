@@ -117,6 +117,7 @@ function handleEventTypeFilterChange(next: Set<number>) {
     { scroll: false }
   );
 }
+
 function handleEventDateFilterChange(value: RangeValue<Moment> | null) {
   const adjustedStartDate =
     value && value[0] ? value[0].clone().subtract(1, "day") : null;

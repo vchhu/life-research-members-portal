@@ -185,12 +185,12 @@ const Welcome: FC = () => {
         <Row gutter={[16, 16]}>
           <Col xs={24} md={6}>
             <Title level={4}>
-              {en ? "LRI at a glance" : "IRL en un coup d'œil"}
+              {en ? "LRI Portal at a glance" : "Aperçu du portail LRI"}
             </Title>
             <p>
               {en
-                ? "A short description about life at the institute, highlighting key aspects and experiences."
-                : "Une brève description de l'institut, mettant en lumière les aspects clés et les expériences."}
+                ? "The portal provides to members a comprehensive overview of our research, partnerships, and initiatives. Stay informed and engaged with our work by exploring the Database Portal today."
+                : "Le portail fournit aux membres un aperçu complet de nos recherches, partenariats et initiatives. Restez informé et impliqué dans notre travail en explorant le portail de base de données aujourd'hui."}
             </p>
           </Col>
           <Col xs={24} md={6}>
