@@ -344,16 +344,14 @@ const AllProducts: FC = () => {
       title: en ? "Title" : "Titre",
       dataIndex: "product",
       className: "title-column",
-      //sorter: nameSorter,
-      render: (value, product) => {
-        const profileRoute = localAccount?.is_admin
-          ? PageRoutes.privateProductProfile(product.id)
-          : PageRoutes.publicProductProfile(product.id);
 
-        return <SafeLink href={profileRoute}>{value}</SafeLink>;
-      },
+      render: (value, product) => (
+        <SafeLink href={PageRoutes.productProfile(product.id)}>
+          {value}
+        </SafeLink>
+      ),
     }),
-    [en, localAccount]
+    [en]
   );
 
   const doiColumn: ProductColumnType = useMemo(
@@ -507,7 +505,7 @@ const AllProducts: FC = () => {
           {en ? "Reset" : "Réinitialiser"}
         </Button>
 
-        {localAccount && localAccount.is_admin && (
+        {localAccount && (
           <Button
             type="primary"
             size="large"

@@ -6,21 +6,28 @@ import getAccountFromRequest from "../../../../utils/api/get-account-from-reques
 
 export type PrivateProductDBRes = Awaited<ReturnType<typeof getPrivateProductInfo>>;
 
-// Dates will be stringified when sending response!
 export type PrivateProductRes = Omit<
   NonNullable<PrivateProductDBRes>,
   "product"
 > & {
-
   public: (Omit<product, "publish_date"> & { publish_date: string | null }) | null;
 };
-
 
 function getPrivateProductInfo(id: number) {
   return db.product.findUnique({
     where: { id },
     select: selectAllProductInfo,
   });
+}
+
+async function isProductAuthor(accountId: number, productId: number) {
+  const author = await db.product_member_author.findFirst({
+    where: {
+      product_id: productId,
+      member_id: accountId,
+    },
+  });
+  return !!author;
 }
 
 export default async function handler(
@@ -31,13 +38,15 @@ export default async function handler(
     return res.status(400).send("Product ID is required.");
 
   try {
-
     const id = parseInt(req.query.id);
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    const authorized =
-      currentAccount.is_admin || (currentAccount.member && currentAccount.member.id === id);
+    const isAuthor = currentAccount.member
+      ? await isProductAuthor(currentAccount.member.id, id)
+      : false;
+
+    const authorized = currentAccount.member || isAuthor || currentAccount.is_admin;
 
     if (!authorized)
       return res

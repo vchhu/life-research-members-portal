@@ -13,7 +13,7 @@ const PrivateProductPage: NextPage = () => {
   const id = parseInt(idString);
   return (
     <PageAuthGuard
-      auths={[Authorizations.admin]}
+      auths={[Authorizations.registered]}
       loadingIcon={<CardSkeleton />}
     >
       <Layout>

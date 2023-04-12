@@ -18,7 +18,7 @@ const PrivateProductPage: NextPage = () => {
 
     const id = parseInt(idString);
 
-    if (localAccount?.is_admin) {
+    if (localAccount) {
       router.replace(PageRoutes.privateProductProfile(id));
       return;
     } else {

@@ -78,8 +78,8 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register a product");
+    /*    if (!currentUser.is_admin )
+         return res.status(401).send("You are not authorized to register a product"); */
 
     const newProduct = await registerProduct(params);
 

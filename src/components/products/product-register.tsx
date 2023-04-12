@@ -56,7 +56,7 @@ const RegisterProduct: FC = () => {
   }
 
   return (
-    <div className="register-partner-form">
+    <div className="register-product-form">
       <h1>{en ? "Register Product" : "Enregistrer un Produit"}</h1>
       <Form
         form={form}
