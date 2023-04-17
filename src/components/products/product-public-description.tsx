@@ -65,7 +65,7 @@ const PublicProductDescription: FC<Props> = ({ product }) => {
         </SafeLink>
       </Item>
 
-      <Item label={en ? "Product Partnership" : "Partenariat du produit"}>
+      <Item label={en ? "Product Partnership" : "Partenaires du produit"}>
         {product.product_partnership.map((entry, i) => (
           <Tag key={entry.organization.id} color="blue">
             {en ? entry.organization.name_en : entry.organization.name_fr}
