@@ -76,11 +76,11 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
 
   const title = (
     <>
-      <Title level={3}>{en ? "New Keyword" : "Nouveau Mot Clé"}</Title>
+      <Title level={3}>{en ? "New Keyword" : "Nouveau mot-clé"}</Title>
       <Text style={{ fontSize: "14px" }}>
         {en
           ? "You are encouraged to provide both languages, but it is not required."
-          : "Vous êtes encouragé à fournir les deux langues, mais ce n'est pas obligatoire."}
+          : "Vous êtes encouragé(e) à fournir les deux langues, mais ce n'est pas obligatoire."}
       </Text>
     </>
   );
@@ -102,7 +102,7 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
               validator: (_, value?: string) => {
                 if (form.getFieldValue("name_fr") || value) return Promise.resolve();
                 return Promise.reject(
-                  new Error(en ? "Provide at least one" : "Fournir au moins un")
+                  new Error(en ? "Provide at least one" : "Fournissez-en au moins un")
                 );
               },
             }),
@@ -132,7 +132,7 @@ const NewKeywordModal: FC<PropsWithChildren<Props>> = ({
               validator(_, value?: string) {
                 if (form.getFieldValue("name_en") || value) return Promise.resolve();
                 return Promise.reject(
-                  new Error(en ? "Provide at least one" : "Fournir au moins un")
+                  new Error(en ? "Provide at least one" : "Fournissez-en au moins un")
                 );
               },
             }),
