@@ -88,7 +88,7 @@ const PrivatePartnerProfile: FC<Props> = ({ id }) => {
 
   const descriptions: Tab[] = [
     {
-      label: en ? "Public info" : "Publique",
+      label: en ? "Public info" : "Info publique",
       key: keys.public,
       children: <PublicPartnerDescription partner={org} />,
     },
