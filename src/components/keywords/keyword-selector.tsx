@@ -113,12 +113,12 @@ const KeywordSelector: FC<Props> = ({
           <AutoComplete
             id={id}
             className="autocomplete"
-            placeholder={en ? "Search Existing..." : "Rechercher existant..."}
+            placeholder={en ? "Search Existing..." : "Rechercher..."}
             options={options}
             value={selectedValue}
             onChange={setSelectedValue}
             filterOption
-            notFoundContent={en ? "No Matches" : "Pas de Correspondance"}
+            notFoundContent={en ? "No Matches" : "Pas de correspondance"}
             onSelect={onSelect}
             onSearch={setSearchValue}
           />
@@ -128,7 +128,7 @@ const KeywordSelector: FC<Props> = ({
             icon={<PlusOutlined />}
             onClick={onClickCreate}
           >
-            {en ? "Create New" : "Créer un Nouveau"}
+            {en ? "Create New" : "Créer un nouveau"}
           </Button>
         </div>
         <Card className="tag-viewport" size="small">
