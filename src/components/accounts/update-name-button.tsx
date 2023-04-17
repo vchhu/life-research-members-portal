@@ -62,7 +62,7 @@ const UpdateNameButton: FC<Props> = ({ account, setAccount }) => {
           </Form.Item>
           <Form.Item
             name="last_name"
-            label={en ? "Last Name" : "Nom de Famille"}
+            label={en ? "Last Name" : "Nom de famille"}
             rules={[{ required: true, message: "Required" }]}
           >
             <Input />
