@@ -33,9 +33,9 @@ const MemberInsightDescription: FC<Props> = ({ member }) => {
       <Item label={en ? "About Promotions" : "À propos des promotions"}>
         {insight?.about_promotions}
       </Item>
-      <Item label={en ? "Dream" : "Rêver"}>{insight?.dream}</Item>
+      <Item label={en ? "Dream" : "Rêve"}>{insight?.dream}</Item>
 
-      <Item label={en ? "How the institute can help" : "Comment l'institut peut vous aider"}>
+      <Item label={en ? "How the Institute Can Help" : "Comment l'Institut peut vous aider"}>
         {insight?.how_can_we_help}
       </Item>
       <Item label={en ? "Admin Notes" : "Notes d'administration"}>{insight?.admin_notes}</Item>
