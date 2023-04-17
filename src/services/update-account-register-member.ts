@@ -10,7 +10,7 @@ export default async function updateAccountRegisterMember(id: number): Promise<A
 
   const notification = new Notification();
   try {
-    notification.loading(en ? "Registering Member..." : "Enregistrer Membre...");
+    notification.loading(en ? "Registering Member..." : "Enregistrement du membre...");
     const res = await fetch(ApiRoutes.updateAccountRegisterMember(id), {
       headers: authHeader,
       method: "PUT",
