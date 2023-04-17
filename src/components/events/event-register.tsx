@@ -53,7 +53,7 @@ const RegisterEvent: FC = () => {
 
   return (
     <div className="register-event-form">
-      <h1>{en ? "Register Event" : "Enregistrer un Événement"}</h1>
+      <h1>{en ? "Register Event" : "Enregistrer un événement"}</h1>
       <Form
         form={form}
         onFinish={handleRegister}
@@ -62,7 +62,7 @@ const RegisterEvent: FC = () => {
         layout="vertical"
       >
         <Form.Item
-          label={en ? "Name (English)" : "Nom (Anglais)"}
+          label={en ? "Name (English)" : "Nom (anglais)"}
           name="name_en"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
@@ -70,7 +70,7 @@ const RegisterEvent: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Name (French)" : "Nom (Français)"}
+          label={en ? "Name (French)" : "Nom (français)"}
           name="name_fr"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
@@ -78,7 +78,7 @@ const RegisterEvent: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Date Range" : "Plage de Dates"} // Change the label to "Date Range"
+          label={en ? "Date Range" : "Plage de dates"} // Change the label to "Date Range"
           name="date_range" // Change the name to "date_range"
           className="date-range-picker"
         >
@@ -86,7 +86,7 @@ const RegisterEvent: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Event Type" : "Type d'Événement"}
+          label={en ? "Event Type" : "Type d'événement"}
           name="event_type_id"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
