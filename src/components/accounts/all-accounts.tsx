@@ -26,12 +26,12 @@ const AllAccounts: FC = () => {
       sorter: (a, b) => (a.first_name || "").localeCompare(b.first_name || ""),
     },
     {
-      title: en ? "Last Name" : "Nom de Famille",
+      title: en ? "Last Name" : "Nom de famille",
       dataIndex: "last_name",
       sorter: (a, b) => (a.last_name || "").localeCompare(b.last_name || ""),
     },
     {
-      title: en ? "Login Email" : "Compte Email",
+      title: en ? "Login Email" : "Compte courriel",
       dataIndex: "login_email",
       sorter: (a, b) => (a.login_email || "").localeCompare(b.login_email || ""),
     },
@@ -66,17 +66,17 @@ const AllAccounts: FC = () => {
         (b.member ? (b.member.is_active ? 0 : 1) : 2),
     },
     {
-      title: en ? "Work Email" : "Email de Travail",
+      title: en ? "Work Email" : "Courriel au travail",
       dataIndex: ["member", "work_email"],
       sorter: (a, b) => (a.member?.work_email || "").localeCompare(b.member?.work_email || ""),
     },
     {
-      title: en ? "Work Phone" : "Téléphone de Travail",
+      title: en ? "Work Phone" : "Téléphone au travail",
       dataIndex: ["member", "work_phone"],
       sorter: (a, b) => (a.member?.work_phone || "").localeCompare(b.member?.work_phone || ""),
     },
     {
-      title: en ? "Mobile Phone" : "Téléphone Mobile",
+      title: en ? "Mobile Phone" : "Téléphone mobile",
       dataIndex: ["member", "mobile_phone"],
       sorter: (a, b) => (a.member?.mobile_phone || "").localeCompare(b.member?.mobile_phone || ""),
     },
