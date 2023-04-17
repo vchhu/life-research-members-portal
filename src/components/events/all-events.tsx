@@ -329,7 +329,7 @@ const AllEvents: FC = () => {
 
   const startDateColumn: EventColumnType = useMemo(
     () => ({
-      title: "Start Date",
+      title: en ? "Start Date" : "Date de début",
       dataIndex: "start_date",
       className: "start-date-column",
       render: (value) => {
@@ -342,7 +342,7 @@ const AllEvents: FC = () => {
 
   const endDateColumn: EventColumnType = useMemo(
     () => ({
-      title: "End Date",
+      title: en ? "End Date" : "Date de fin",
       dataIndex: "end_date",
       className: "end-date-column",
       render: (value) => {
@@ -366,7 +366,7 @@ const AllEvents: FC = () => {
       size="small"
     >
       <Form.Item
-        label={en ? "Filter by event name" : "Filtrer par nom de l'événement"}
+        label={en ? "Filter by event name" : "Filtrer par nom d'événement"}
         htmlFor="event-name-filter"
       >
         <EventNameFilter
