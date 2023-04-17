@@ -52,7 +52,7 @@ const RegisterSupervision: FC = () => {
 
   return (
     <div className="register-supervision-form">
-      <h1>{en ? "Register Supervision" : "Enregistrer une Supervision"}</h1>
+      <h1>{en ? "Register Supervision" : "Enregistrer une supervision"}</h1>
       <Form
         form={form}
         onFinish={handleRegister}
@@ -76,7 +76,7 @@ const RegisterSupervision: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Date Range" : "Plage de Dates"} // Change the label to "Date Range"
+          label={en ? "Date Range" : "Plage de dates"} // Change the label to "Date Range"
           name="date_range" // Change the name to "date_range"
           className="date-range-picker"
         >
