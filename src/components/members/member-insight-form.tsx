@@ -43,7 +43,7 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
   const submitValidated = useCallback(
     async (data: Data): Promise<boolean> => {
       if (!dirty) {
-        new Notification().warning(en ? "No Changes" : "Aucun changement");
+        new Notification().warning(en ? "No changes" : "Aucun changement");
         return true;
       }
       setLoading(true);
@@ -72,7 +72,7 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
     try {
       return submitValidated(await form.validateFields());
     } catch (e: any) {
-      new Notification().warning(en ? "A field is invalid!" : "Un champ est invalide !");
+      new Notification().warning(en ? "A field is invalid!" : "Un champ est invalide!");
       return false;
     }
   }, [en, form, submitValidated]);
@@ -96,8 +96,8 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
     <div className="member-insight-form-container">
       <Text strong>
         {en
-          ? "The institution is here to help, give us some insight into yourself."
-          : "L'institution est là pour vous aider, donnez-nous un aperçu de vous-même."}
+          ? "The Institute is here to help; give us some insight into yourself."
+          : "L'Institut est là pour vous aider; donnez-nous un aperçu de vous-même."}
       </Text>
       <Divider />
       <Form
@@ -124,12 +124,12 @@ const MemberInsightForm: FC<Props> = ({ member, onSuccess }) => {
           </Form.Item>
         </div>
         <div className="row">
-          <Form.Item label={en ? "Dream" : "Rêver"} name="dream">
+          <Form.Item label={en ? "Dream" : "Rêve"} name="dream">
             <TextArea spellCheck="false" />
           </Form.Item>
 
           <Form.Item
-            label={en ? "How the institute can help" : "Comment l'institut peut vous aider"}
+            label={en ? "How the Institute can help" : "Comment l'Institut peut vous aider"}
             name="how_can_we_help"
           >
             <TextArea spellCheck="false" />
