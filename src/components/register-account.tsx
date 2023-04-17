@@ -39,11 +39,11 @@ const RegisterAccount: FC = () => {
 
   return (
     <div className="register-account-form">
-      <h1>{en ? "Register Account" : "Enregistrer un Compte"}</h1>
+      <h1>{en ? "Create Member Account" : "Créer un compte de membre"}</h1>
       <h2 style={{ marginBottom: 24 }}>
         {en
-          ? "This page will create an account for the given email."
-          : "Cette page créera un compte pour l'e-mail donné."}
+          ? "This form will create an account for the given email."
+          : "Ce formulaire créera un compte pour le courriel fourni."}
       </h2>
       <Form
         form={form}
@@ -60,36 +60,36 @@ const RegisterAccount: FC = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label={en ? "Last Name" : "Nom de Famille"}
+          label={en ? "Last Name" : "Nom de famille"}
           name="last_name"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label={en ? "Email" : "Email"}
+          label={en ? "Email" : "Courriel"}
           name="login_email"
           rules={[
             { required: true, message: en ? "Required" : "Requis" },
-            { type: "email", message: en ? "Invalid Email" : "Email invalide" },
+            { type: "email", message: en ? "Invalid Email" : "Courriel invalide" },
           ]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label={en ? "Confirm Email" : "Confirmer Email"}
+          label={en ? "Confirm Email" : "Confirmer le courriel"}
           name="confirm_email"
           validateFirst={true}
           rules={[
             { required: true, message: en ? "Required" : "Requis" },
-            { type: "email", message: en ? "Invalid Email" : "Email invalide" },
+            { type: "email", message: en ? "Invalid Email" : "Courriel invalide" },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (getFieldValue("login_email") === value)
                   return Promise.resolve();
                 return Promise.reject(
                   new Error(
-                    en ? "Emails do not match" : "Emails ne correspondent pas"
+                    en ? "The two provided emails do not match" : "Les deux courriels fournis ne correspondent pas"
                   )
                 );
               },
