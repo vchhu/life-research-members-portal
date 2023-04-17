@@ -51,14 +51,14 @@ const DeleteAccountButton: FC<Props> = ({ account, setAccount, style }) => {
   return (
     <>
       <Button danger type="primary" size="large" onClick={openModal} style={style}>
-        {en ? "Delete Account" : "Supprimer le Compte"}
+        {en ? "Delete Account" : "Supprimer le compte"}
       </Button>
       <Modal
-        title={(en ? "Delete Account: " : "Supprimer le Compte : ") + memberName}
+        title={(en ? "Delete Account: " : "Supprimer le compte : ") + memberName}
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
         okButtonProps={{ htmlType: "submit", form: "delete-account-form", danger: true }}
-        okText={en ? "Delete Account" : "Supprimer le Compte"}
+        okText={en ? "Delete Account" : "Supprimer le compte"}
         cancelButtonProps={{ danger: true }}
         cancelText={en ? "Cancel" : "Annuler"}
         destroyOnClose
