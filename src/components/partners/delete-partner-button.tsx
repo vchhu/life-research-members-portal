@@ -56,11 +56,11 @@ const DeletePartnerButton: FC<Props> = ({ partner, setPartner, style }) => {
         onClick={openModal}
         style={style}
       >
-        {en ? "Delete Partner" : "Supprimer le Partenaire"}
+        {en ? "Delete Partner" : "Supprimer le partenaire"}
       </Button>
       <Modal
         title={
-          (en ? "Delete Partner: " : "Supprimer le Partenaire : ") + partnerName
+          (en ? "Delete Partner: " : "Supprimer le partenaire : ") + partnerName
         }
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
@@ -69,7 +69,7 @@ const DeletePartnerButton: FC<Props> = ({ partner, setPartner, style }) => {
           form: "delete-partner-form",
           danger: true,
         }}
-        okText={en ? "Delete Partner" : "Supprimer le Partenaire"}
+        okText={en ? "Delete Partner" : "Supprimer le partenaire"}
         cancelButtonProps={{ danger: true }}
         cancelText={en ? "Cancel" : "Annuler"}
         destroyOnClose
@@ -104,7 +104,7 @@ const DeletePartnerButton: FC<Props> = ({ partner, setPartner, style }) => {
             }
             validateFirst
             rules={[
-              { required: true, message: "Required" },
+              { required: true, message: en ? "Required" : "Requis" },
               {
                 validator: (_, v) =>
                   v === partnerName
