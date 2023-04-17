@@ -345,7 +345,7 @@ const AllGrants: FC = () => {
 
   const statusColumn: GrantColumnType = useMemo(
     () => ({
-      title: "Status",
+      title: en ? "Status" : "Statut",
       dataIndex: ["status", en ? "name_en" : "name_fr"],
       className: "source-column",
       sorter: en
@@ -373,7 +373,7 @@ const AllGrants: FC = () => {
 
   const amountColumn: GrantColumnType = useMemo(
     () => ({
-      title: "Amount",
+      title: en ? "Amount" : "Montant",
       dataIndex: "amount",
       className: "amount-column",
       render: (value) => `$ ${value?.toLocaleString()}`,
@@ -383,7 +383,7 @@ const AllGrants: FC = () => {
 
   const submissionDateColumn: GrantColumnType = useMemo(
     () => ({
-      title: "Submission Date",
+      title: en ? "Submission Date" : "Date de soumission",
       dataIndex: "submission_date",
       className: "submission-date-column",
       render: (value) => {
@@ -396,7 +396,7 @@ const AllGrants: FC = () => {
 
   const memberInvolvedColumn: GrantColumnType = useMemo(() => {
     return {
-      title: "Member Involved",
+      title: en ? "Members Involved" : "Membres impliqués",
       dataIndex: "grant_member_involved",
       key: "grant_member_involved",
       render: (
@@ -414,7 +414,7 @@ const AllGrants: FC = () => {
 
   const investigatorMemberColumn: GrantColumnType = useMemo(() => {
     return {
-      title: "Investigator Member",
+      title: en ? "Investigator Members" : "Membres chercheurs",
       dataIndex: "grant_investigator_member",
       key: "grant_investigator_member",
       render: (
@@ -485,7 +485,7 @@ const AllGrants: FC = () => {
         />
       </Form.Item>
       <label htmlFor="show-column-checkboxes">
-        {en ? " Show Columns:" : "Afficher les colonnes:"}
+        {en ? " Show Columns:" : " Afficher les colonnes:"}
       </label>
 
       <span className="show-column-checkboxes" id="show-column-checkboxes">
@@ -493,35 +493,35 @@ const AllGrants: FC = () => {
           checked={showSource}
           onChange={(e) => handleShowSourceChange(e.target.checked)}
         >
-          {en ? " Show Source" : "Afficher la source"}
+          {en ? " Show Source" : " Afficher la source"}
         </Checkbox>
 
         <Checkbox
           checked={showStatus}
           onChange={(e) => handleShowStatusChange(e.target.checked)}
         >
-          {en ? " Show Status" : "Afficher le statut"}
+          {en ? " Show Status" : " Afficher le statut"}
         </Checkbox>
 
         <Checkbox
           checked={showAmount}
           onChange={(e) => handleShowAmountChange(e.target.checked)}
         >
-          {en ? " Show Amount" : "Afficher le montant"}
+          {en ? " Show Amount" : " Afficher le montant"}
         </Checkbox>
 
         <Checkbox
           checked={showSubmissionDate}
           onChange={(e) => handleShowSubmissionDateChange(e.target.checked)}
         >
-          {en ? " Show Submission Date" : "Afficher la date de soumission"}
+          {en ? " Show Submission Date" : " Afficher la date de soumission"}
         </Checkbox>
 
         <Checkbox
           checked={showMemberInvolved}
           onChange={(e) => handleShowMemberInvolvedChange(e.target.checked)}
         >
-          {en ? " Show Member Involved" : "Afficher le membre impliqué"}
+          {en ? " Show Members Involved" : " Afficher les membres impliqués"}
         </Checkbox>
 
         <Checkbox
@@ -529,8 +529,8 @@ const AllGrants: FC = () => {
           onChange={(e) => handleShowInvestigatorMemberChange(e.target.checked)}
         >
           {en
-            ? " Show Investigators Member"
-            : "Afficher les membres investigateur"}
+            ? " Show Investigator Members"
+            : " Afficher les membres investigateurs"}
         </Checkbox>
       </span>
     </Form>
@@ -539,7 +539,7 @@ const AllGrants: FC = () => {
   const Header = () => (
     <>
       <div className="header-title-row">
-        <Title level={1}>{en ? "All Grants" : "Tous les subventions"}</Title>
+        <Title level={1}>{en ? "All Grants" : "Toutes les subventions"}</Title>
         <Button type="primary" onClick={refreshAndClearFilters} size="large">
           {en ? "Reset the filter" : "Réinitialiser le filtre"}
         </Button>{" "}
