@@ -335,7 +335,7 @@ const AllSupervisions: FC = () => {
 
   const startDateColumn: SupervisionColumnType = useMemo(
     () => ({
-      title: "Start Date",
+      title: en ? "Start Date" : "Date de début",
       dataIndex: "start_date",
       className: "start-date-column",
       render: (value) => {
@@ -348,7 +348,7 @@ const AllSupervisions: FC = () => {
 
   const endDateColumn: SupervisionColumnType = useMemo(
     () => ({
-      title: "End Date",
+      title: en ? "End Date" : "Date de fin",
       dataIndex: "end_date",
       className: "end-date-column",
       render: (value) => {
@@ -437,7 +437,7 @@ const AllSupervisions: FC = () => {
     <>
       <div className="header-title-row">
         <Title level={1}>
-          {en ? "All Supervisions" : "Toutes les Supervisions"}
+          {en ? "All Supervisions" : "Toutes les supervisions"}
         </Title>
         <Button type="primary" onClick={refreshAndClearFilters} size="large">
           {en ? "Reset the filter" : "Réinitialiser le filtre"}
