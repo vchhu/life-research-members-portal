@@ -117,12 +117,12 @@ const TopicSelector: FC<Props> = ({
           <AutoComplete
             id={id}
             className="autocomplete"
-            placeholder={en ? "Search Existing..." : "Rechercher existant..."}
+            placeholder={en ? "Search Existing..." : "Rechercher..."}
             options={options}
             value={selectedValue}
             onChange={setSelectedValue}
             filterOption
-            notFoundContent={en ? "No Matches" : "Pas de Correspondance"}
+            notFoundContent={en ? "No Matches" : "Pas de correspondance"}
             onSelect={onSelect}
             onSearch={setSearchValue}
           />
