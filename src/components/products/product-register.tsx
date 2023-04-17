@@ -57,7 +57,7 @@ const RegisterProduct: FC = () => {
 
   return (
     <div className="register-product-form">
-      <h1>{en ? "Register Product" : "Enregistrer un Produit"}</h1>
+      <h1>{en ? "Register Product" : "Enregistrer un produit"}</h1>
       <Form
         form={form}
         onFinish={handleRegister}
@@ -66,7 +66,7 @@ const RegisterProduct: FC = () => {
         layout="vertical"
       >
         <Form.Item
-          label={en ? "Title (English)" : "Titre (Anglais)"}
+          label={en ? "Title (English)" : "Titre (anglais)"}
           name="title_en"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
@@ -74,7 +74,7 @@ const RegisterProduct: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Title (French)" : "Titre (Français)"}
+          label={en ? "Title (French)" : "Titre (français)"}
           name="title_fr"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
@@ -82,7 +82,7 @@ const RegisterProduct: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Published Date" : "Date de Publication"}
+          label={en ? "Published Date" : "Date de publication"}
           name="publish_date"
           className="date-picker"
         >
@@ -92,14 +92,14 @@ const RegisterProduct: FC = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label={en ? "All Authors" : "Tous les Auteurs"}
+          label={en ? "All Authors" : "Tous les auteurs"}
           name="all_author"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Input.TextArea />
         </Form.Item>
         <Form.Item
-          label={en ? "Product Type" : "Type de Produit"}
+          label={en ? "Product Type" : "Type de produit"}
           name="product_type_id"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
@@ -120,7 +120,7 @@ const RegisterProduct: FC = () => {
               valuePropName="checked"
               style={{ display: "inline-block" }}
             >
-              {en ? "On Going: " : "En Cours: "}
+              {en ? "On Going: " : "En cours: "}
 
               <Switch checked={onGoing} onChange={() => setOnGoing(!onGoing)} />
               {onGoing ? " Yes" : " No"}
@@ -132,7 +132,7 @@ const RegisterProduct: FC = () => {
               valuePropName="checked"
               style={{ display: "inline-block" }}
             >
-              {en ? "Peer Reviewed: " : "Examiné par les Pairs: "}
+              {en ? "Peer Reviewed: " : "Examiné par les pairs: "}
               <Switch
                 checked={peerReviewed}
                 onChange={() => setPeerReviewed(!peerReviewed)}
