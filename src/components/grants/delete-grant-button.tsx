@@ -56,11 +56,11 @@ const DeleteGrantButton: FC<Props> = ({ grant, setGrant, style }) => {
         onClick={openModal}
         style={style}
       >
-        {en ? "Delete Grant" : "Supprimer la Subvention"}
+        {en ? "Delete Grant" : "Supprimer la subvention"}
       </Button>
       <Modal
         title={
-          (en ? "Delete Grant: " : "Supprimer la Subvention : ") + grantName
+          (en ? "Delete Grant: " : "Supprimer la subvention : ") + grantName
         }
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
@@ -69,7 +69,7 @@ const DeleteGrantButton: FC<Props> = ({ grant, setGrant, style }) => {
           form: "delete-grant-form",
           danger: true,
         }}
-        okText={en ? "Delete Grant" : "Supprimer la Subvention"}
+        okText={en ? "Delete Grant" : "Supprimer la subvention"}
         cancelButtonProps={{ danger: true }}
         cancelText={en ? "Cancel" : "Annuler"}
         destroyOnClose
