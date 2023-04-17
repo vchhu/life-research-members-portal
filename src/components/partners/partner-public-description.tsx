@@ -35,17 +35,17 @@ const PublicPartnerDescription: FC<Props> = ({ partner }) => {
       <Item label={en ? "Orgnanization type" : "Type d'organisation"}>
         <PartnerTypeLink org_type={partner.org_type} />
       </Item>
-      <Item label={en ? "Organization Scope" : "Champ d'organisation"}>
+      <Item label={en ? "Organization Scope" : "Portée de l'organisation"}>
         <PartnerScopeLink org_scope={partner.org_scope} />
       </Item>
-      <Item label={en ? "Organization Description" : "Description"}>
+      <Item label={en ? "Description" : "Description"}>
         {partner.description}
       </Item>
 
       {partner.partnership_member_org.length > 0 &&
         localAccount &&
         localAccount.is_admin && (
-          <Item label={en ? "Member Partner" : "Membre du partenaire"}>
+          <Item label={en ? "Partner Members" : "Membres du partenaire"}>
             {partner.partnership_member_org.map((entry, i) => (
               <SafeLink
                 key={entry.member.id}
