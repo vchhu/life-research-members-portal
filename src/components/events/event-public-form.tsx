@@ -434,9 +434,9 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Name (French)" : "Nom (Français)"}
+          label={en ? "Name (French)" : "Nom (français)"}
           name="name_fr"
-          rules={[{ required: true, message: "Required" }]}
+          rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Input />
         </Form.Item>
