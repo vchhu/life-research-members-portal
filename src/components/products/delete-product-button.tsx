@@ -56,11 +56,11 @@ const DeleteProductButton: FC<Props> = ({ product, setProduct, style }) => {
         onClick={openModal}
         style={style}
       >
-        {en ? "Delete Product" : "Supprimer le Produit"}
+        {en ? "Delete Product" : "Supprimer le produit"}
       </Button>
       <Modal
         title={
-          (en ? "Delete Product: " : "Supprimer le Produit : ") + productName
+          (en ? "Delete Product: " : "Supprimer le produit : ") + productName
         }
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
@@ -69,7 +69,7 @@ const DeleteProductButton: FC<Props> = ({ product, setProduct, style }) => {
           form: "delete-product-form",
           danger: true,
         }}
-        okText={en ? "Delete Product" : "Supprimer le Produit"}
+        okText={en ? "Delete Product" : "Supprimer le produit"}
         cancelButtonProps={{ danger: true }}
         cancelText={en ? "Cancel" : "Annuler"}
         destroyOnClose
@@ -106,7 +106,7 @@ const DeleteProductButton: FC<Props> = ({ product, setProduct, style }) => {
             }
             validateFirst
             rules={[
-              { required: true, message: "Required" },
+              { required: true, message: en ? "Required" : "Requis" },
               {
                 validator: (_, v) =>
                   v === productName
