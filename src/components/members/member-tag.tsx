@@ -6,6 +6,8 @@ import type { CSSProperties, FC } from "react";
 import colorFromString from "../../utils/front-end/color-from-string";
 import SafeLink from "../link/safe-link";
 import PageRoutes from "../../routing/page-routes";
+import { LanguageCtx } from "../../services/context/language-ctx";
+
 
 type Props = {
   member: MemberPublicInfo;
@@ -33,7 +35,7 @@ const MemberTag: FC<Props> = ({
 
   const fullName = member.account
     ? `${member.account.first_name} ${member.account.last_name}`
-    : "Unknown";
+    : (en ? "Unknown" : "Inconnu");
   const content = linked ? (
     <SafeLink href={PageRoutes.memberProfile(member.id)}>{fullName}</SafeLink>
   ) : (
