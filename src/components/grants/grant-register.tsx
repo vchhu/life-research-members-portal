@@ -66,7 +66,7 @@ const RegisterGrant: FC = () => {
 
   return (
     <div className="register-grant-form">
-      <h1>{en ? "Register Grant" : "Enregistrer une Subvention"}</h1>
+      <h1>{en ? "Register Grant" : "Enregistrer une subvention"}</h1>
       <Form
         form={form}
         onFinish={handleRegister}
@@ -106,7 +106,7 @@ const RegisterGrant: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Submission Date" : "Date de Soumission"}
+          label={en ? "Submission Date" : "Date de soumission"}
           name="submission_date"
           className="date-picker"
         >
@@ -114,7 +114,7 @@ const RegisterGrant: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Obtained Date" : "Date d'Obtention"}
+          label={en ? "Obtained Date" : "Date d'obtention"}
           name="obtained_date"
           className="date-picker"
         >
@@ -122,7 +122,7 @@ const RegisterGrant: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Completed Date" : "Date de Clôture"}
+          label={en ? "Completed Date" : "Date de clôture"}
           name="completed_date"
           className="date-picker"
         >
@@ -145,7 +145,7 @@ const RegisterGrant: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "All Investigators" : "Tous les Chercheurs"}
+          label={en ? "All Investigators" : "Tous les chercheurs"}
           name="all_investigator"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
