@@ -60,11 +60,11 @@ const DeleteSupervisionButton: FC<Props> = ({
         onClick={openModal}
         style={style}
       >
-        {en ? "Delete Supervision" : "Supprimer la Supervision"}
+        {en ? "Delete Supervision" : "Supprimer la supervision"}
       </Button>
       <Modal
         title={
-          (en ? "Delete Supervision: " : "Supprimer la Supervision : ") +
+          (en ? "Delete Supervision: " : "Supprimer la supervision : ") +
           supervisionName
         }
         open={modalOpen}
@@ -74,7 +74,7 @@ const DeleteSupervisionButton: FC<Props> = ({
           form: "delete-supervision-form",
           danger: true,
         }}
-        okText={en ? "Delete Supervision" : "Supprimer la Supervision"}
+        okText={en ? "Delete Supervision" : "Supprimer la supervision"}
         cancelButtonProps={{ danger: true }}
         cancelText={en ? "Cancel" : "Annuler"}
         destroyOnClose
@@ -86,8 +86,8 @@ const DeleteSupervisionButton: FC<Props> = ({
           message={en ? "Warning!" : "Avertissement !"}
           description={
             en
-              ? "This action is irreversible, this supervision will be permanently deleted. To confirm, input the supervision's name."
-              : "Cette action est irréversible, cette supervision sera définitivement supprimée. Pour confirmer, saisissez le nom de la supervision."
+              ? "This action is irreversible; this supervision will be permanently deleted. To confirm, input the supervision's name."
+              : "Cette action est irréversible; cette supervision sera définitivement supprimée. Pour confirmer, saisissez le nom de la supervision."
           }
           style={{ marginBottom: 16 }}
         ></Alert>
