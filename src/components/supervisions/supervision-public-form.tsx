@@ -477,7 +477,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           </Select>
         </Form.Item>
 
-        <label htmlFor="membersTrainee">{en ? "Trainee" : "Superviseur"}</label>
+        <label htmlFor="membersTrainee">{en ? "Trainee" : "Supervisé(e)"}</label>
         <Form.Item name="membersTrainee">
           <SupervisionTraineeSelector
             setErrors={(e) =>
@@ -487,7 +487,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
         </Form.Item>
 
         <label htmlFor="membersSupervisor">
-          {en ? "Principal Supervisor" : "Superviseur principal"}
+          {en ? "Principal Supervisor" : "Superviseur(e) principal(e)"}
         </label>
         <Form.Item name="membersSupervisor">
           <SupervisionSupervisorSelector
@@ -498,7 +498,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
         </Form.Item>
 
         <label htmlFor="membersCoSupervisor">
-          {en ? "Co-Supervisor" : "Co-superviseur"}
+          {en ? "Co-Supervisors" : "Co-superviseur(e)s"}
         </label>
         <Form.Item name="membersCoSupervisor">
           <SupervisionCoSupervisorSelector
@@ -508,7 +508,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           />
         </Form.Item>
 
-        <label htmlFor="membersCommittee">{en ? "Committee" : "Comité"}</label>
+        <label htmlFor="membersCommittee">{en ? "Committee Members" : "Membres du comité"}</label>
         <Form.Item name="membersCommittee">
           <SupervisionCommitteeSelector
             setErrors={(e) =>
