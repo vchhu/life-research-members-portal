@@ -43,7 +43,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       layout={screens.xs ? "vertical" : "horizontal"}
     >
       <Item
-        label={en ? "About Me" : "À Propos de Moi"}
+        label={en ? "About Me" : "À propos de moi"}
         style={{ whiteSpace: "break-spaces" }}
       >
         {en ? member.about_me_en : member.about_me_fr}
@@ -51,12 +51,12 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       <Item label={en ? "Faculty" : "Faculté"}>
         <FacultyLink faculty={member.faculty} />
       </Item>
-      <Item label={en ? "Member Type" : "Type de Membre"}>
+      <Item label={en ? "Member Type" : "Type de membre"}>
         <MemberTypeLink member_type={member.member_type} />
       </Item>
       <Item
         label={
-          en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"
+          en ? "Problems I Work On" : "Problèmes sur lesquels je travaille"
         }
         labelStyle={{ whiteSpace: "break-spaces" }}
       >
@@ -68,15 +68,15 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
           </React.Fragment>
         ))}
       </Item>
-      <Item label={en ? "Keywords" : "Mots Clés"}>
+      <Item label={en ? "Keywords" : "Mots-clés"}>
         {member.has_keyword.map((entry, i) => (
           <KeywordTag key={i} keyword={entry.keyword} linked />
         ))}
       </Item>
-      <Item label="Email">
+      <Item label=en ? "Email" : "Courriel">
         <a href={"mailto:" + member.work_email}>{member.work_email}</a>
       </Item>
-      <Item label="Phone">
+      <Item label=en ? "Phone" : "Téléphone">
         <a href={"tel:" + member.work_phone}>{member.work_phone}</a>
       </Item>
       <Item label={en ? "Links" : "Liens"}>
@@ -124,7 +124,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       </Item>
 
       {member.product_member_author.length > 0 && (
-        <Item label={en ? "Member's Product" : "Produit du Membre"}>
+        <Item label={en ? "Member's Products" : "Produits du membre"}>
           {getMemberProduct(member.product_member_author)}
         </Item>
       )}
@@ -132,7 +132,7 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
       {member.partnership_member_org.length > 0 &&
         localAccount &&
         (localAccount.member?.id === member.id || localAccount.is_admin) && (
-          <Item label={en ? "Member's Partner" : "Partenaire du Membre"}>
+          <Item label={en ? "Member's Partners" : "Partenaires du membre"}>
             {getMemberOrg(member.partnership_member_org)}
           </Item>
         )}
