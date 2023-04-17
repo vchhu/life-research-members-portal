@@ -120,7 +120,7 @@ const ProductAdminForm: FC<Props> = ({ product, onSuccess }) => {
       >
         <div className="row">
           <label htmlFor="topics">
-            {en ? "Product topic" : "Sujet du produit		"}
+            {en ? "Product topic" : "Sujet du produit"}
           </label>
           <Divider />
           <Form.Item name="topics">
