@@ -52,7 +52,7 @@ const PublicEventDescription: FC<Props> = ({ event }) => {
           : ""}
       </Item>
 
-      <Item label={en ? "Member Involved" : "Membre impliqué"}>
+      <Item label={en ? "Members Involved" : "Membres impliqués"}>
         {event.event_member_involved.map((entry, i) => (
           <SafeLink
             key={entry.member.id}
@@ -123,7 +123,7 @@ const PublicEventDescription: FC<Props> = ({ event }) => {
         </ol>
       </Item>
 
-      <Item label={en ? "Grant Resulted" : "Subvention résultante"}>
+      <Item label={en ? "Grants Resulted" : "Subventions résultantes"}>
         <ol>
           {event.event_grant_resulted.map((entry, i) =>
             entry.grant ? (
@@ -137,7 +137,7 @@ const PublicEventDescription: FC<Props> = ({ event }) => {
         </ol>
       </Item>
 
-      <Item label={en ? "Product Resulted" : "Produit résultant"}>
+      <Item label={en ? "Product Resulted" : "Produits résultants"}>
         <ol>
           {event.event_product_resulted.map((entry, i) =>
             entry.product ? (
