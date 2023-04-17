@@ -93,7 +93,7 @@ const DeleteAccountButton: FC<Props> = ({ account, setAccount, style }) => {
             }
             validateFirst
             rules={[
-              { required: true, message: "Required" },
+              { required: true, message: en ? "Required" : "Requis" },
               {
                 validator: (_, v) =>
                   v === memberName
