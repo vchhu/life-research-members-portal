@@ -13,7 +13,7 @@ export default async function registerAccount(
 
   const notification = new Notification();
   try {
-    notification.loading(en ? "Registering Account..." : "Compte d'enregistrement");
+    notification.loading(en ? "Registering Account..." : "Enregistrement du compte");
     const res = await fetch(ApiRoutes.registerAccount, {
       method: "PUT",
       headers: { ...authHeader, ...contentTypeJsonHeader },
