@@ -28,7 +28,7 @@ const PrivateProductDescription: FC<Props> = ({ product }) => {
         {product.peer_reviewed ? (en ? "Yes" : "Oui") : en ? "No" : "Non"}
       </Item>
 
-      <Item label={en ? "On going " : "En cours"}>
+      <Item label={en ? "Ongoing " : "En cours"}>
         {product.on_going ? (en ? "Yes" : "Oui") : en ? "No" : "Non"}
       </Item>
     </Descriptions>
