@@ -73,10 +73,10 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
           <KeywordTag key={i} keyword={entry.keyword} linked />
         ))}
       </Item>
-      <Item label=en ? "Email" : "Courriel">
+      <Item label={en ? "Email" : "Courriel"}>
         <a href={"mailto:" + member.work_email}>{member.work_email}</a>
       </Item>
-      <Item label=en ? "Phone" : "Téléphone">
+      <Item label={en ? "Phone" : "Téléphone"}>
         <a href={"tel:" + member.work_phone}>{member.work_phone}</a>
       </Item>
       <Item label={en ? "Links" : "Liens"}>
