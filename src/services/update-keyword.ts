@@ -15,7 +15,7 @@ export default async function updateKeyword(
 
   const notification = new Notification();
   try {
-    notification.loading(en ? "Updating keyword..." : "Mise à jour du mot clé...");
+    notification.loading(en ? "Updating keyword..." : "Mise à jour du mot-clé...");
     const res = await fetch(ApiRoutes.updateKeyword(id), {
       method: "PATCH",
       headers: { ...authHeader, ...contentTypeJsonHeader },
