@@ -40,12 +40,12 @@ const UpdateEmailButton: FC<Props> = ({ account, setAccount }) => {
   return (
     <>
       <Button ghost type="primary" onClick={openModal}>
-        {en ? "Change Email" : "Changer l'e-mail"}
+        {en ? "Change Email" : "Changer le courriel"}
       </Button>
       <Modal
         title={
           <>
-            {en ? "Change Login Email: " : "Changer l'e-mail de connexion: "}
+            {en ? "Change Login Email: " : "Changer le courriel de connexion: "}
             {account.login_email}
           </>
         }
@@ -65,27 +65,27 @@ const UpdateEmailButton: FC<Props> = ({ account, setAccount }) => {
           preserve={false}
         >
           <Form.Item
-            label={en ? "New Email" : "Nouveau Email"}
+            label={en ? "New Email" : "Nouveau courriel"}
             name="login_email"
             rules={[
               { required: true, message: en ? "Required" : "Requis" },
-              { type: "email", message: en ? "Invalid Email" : "Email invalide" },
+              { type: "email", message: en ? "Invalid Email" : "Courriel invalide" },
             ]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label={en ? "Confirm Email" : "Confirmer Email"}
+            label={en ? "Confirm Email" : "Confirmer courriel"}
             name="confirm_email"
             validateFirst={true}
             rules={[
               { required: true, message: en ? "Required" : "Requis" },
-              { type: "email", message: en ? "Invalid Email" : "Email invalide" },
+              { type: "email", message: en ? "Invalid Email" : "Courriel invalide" },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (getFieldValue("login_email") === value) return Promise.resolve();
                   return Promise.reject(
-                    new Error(en ? "Emails do not match" : "Emails ne correspondent pas")
+                    new Error(en ? "Emails do not match" : "Les courriels ne correspondent pas")
                   );
                 },
               }),
