@@ -48,7 +48,7 @@ const PrivateMemberDescription: FC<Props> = ({ member }) => {
           ? en
             ? "Yes"
             : "Oui"
-          : (en ? "No, Last Active: " : "Non, Dernier Actif: ") + member.last_active?.split("T")[0]}
+          : (en ? "No, Last Active: " : "Non, dernièrement actif: ") + member.last_active?.split("T")[0]}
       </Item>
       <Item label={en ? "Date Joined" : "Date d'inscription"}>
         {member.date_joined?.split("T")[0]}
