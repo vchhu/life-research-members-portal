@@ -15,7 +15,7 @@ export default async function updateAccountEmail(
 
   const notification = new Notification();
   try {
-    notification.loading(en ? "Updating account email..." : "Mise à jour de l'e-mail du compte...");
+    notification.loading(en ? "Updating account email..." : "Mise à jour du courriel du compte...");
     const res = await fetch(ApiRoutes.updateAccountEmail(id), {
       headers: { ...authHeader, ...contentTypeJsonHeader },
       method: "PATCH",
