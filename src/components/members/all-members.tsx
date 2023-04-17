@@ -436,7 +436,7 @@ const AllMembers: FC = () => {
   const Header = () => (
     <>
       <div className="header-title-row">
-        <Title level={1}>{en ? "All Members" : "Tous les Membres"}</Title>
+        <Title level={1}>{en ? "All Members" : "Tous les membres"}</Title>
         <Button type="primary" onClick={refreshAndClearFilters} size="large">
           {en ? "Reset" : "Réinitialiser"}
         </Button>
@@ -449,7 +449,7 @@ const AllMembers: FC = () => {
     <Descriptions size="small" layout="vertical" className="problems-container">
       <Item
         label={
-          en ? "Problems I Work On" : "Problèmes sur Lesquels Je Travaille"
+          en ? "Problems I Work On" : "Problèmes sur lesquels je travaille"
         }
       >
         {member.problem.map((p, i) => (
