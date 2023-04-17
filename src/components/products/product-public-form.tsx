@@ -270,7 +270,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         onValuesChange={() => setDirty(true)}
       >
         <Form.Item
-          label={en ? "Title (English)" : "Titre (Anglais)"}
+          label={en ? "Title (English)" : "Titre (anglais)"}
           name="title_en"
           rules={[{ required: true, message: "Required" }]}
         >
@@ -278,7 +278,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Title (French)" : "Titre (Français)"}
+          label={en ? "Title (French)" : "Titre (français)"}
           name="title_fr"
           rules={[{ required: true, message: "Required" }]}
         >
@@ -308,7 +308,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         </Form.Item>
 
         <label htmlFor="targets">
-          {en ? "Product target" : "Cible du produit	"}
+          {en ? "Product target" : "Cible du produit"}
         </label>
         <Form.Item name="targets">
           <TargetSelector
@@ -317,7 +317,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         </Form.Item>
 
         <label htmlFor="organizations">
-          {en ? "Product partner" : "Partenaire du produit		"}
+          {en ? "Product partner" : "Partenaire du produit"}
         </label>
 
         <Form.Item name="organizations">
