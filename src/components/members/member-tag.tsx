@@ -30,6 +30,7 @@ const MemberTag: FC<Props> = ({
   onEdit = () => {},
   style,
 }) => {
+  const { en } = useContext(LanguageCtx);
   const classList = ["member-tag"];
   if (linked || editable || onClick) classList.push("cursor-pointer");
 
