@@ -51,11 +51,11 @@ const EditKeywordModal: FC<Props> = ({ keyword, open, onSuccess, onCancel }) => 
 
   const title = (
     <>
-      <Title level={3}>{en ? "Edit Keyword" : "Modifier Mot Clé"}</Title>
+      <Title level={3}>{en ? "Edit Keyword" : "Modifier mot-clé"}</Title>
       <Text style={{ fontSize: "14px", whiteSpace: "pre-wrap", color: red[5] }}>
         {en
           ? "This will affect any other members with this keyword!\nPlease only edit keywords to correct typos or provide translations."
-          : "Cela affectera tous les autres membres avec ce mot-clé !\nVeuillez ne modifier les mots clés que pour corriger les fautes de frappe ou fournir des traductions."}
+          : "Cela affectera tous les autres membres avec ce mot-clé !\nVeuillez ne modifier les mots-clés que pour corriger les fautes d'orthographe ou fournir des traductions."}
       </Text>
     </>
   );
@@ -77,7 +77,7 @@ const EditKeywordModal: FC<Props> = ({ keyword, open, onSuccess, onCancel }) => 
               validator: (_, value?: string) => {
                 if (form.getFieldValue("name_fr") || value) return Promise.resolve();
                 return Promise.reject(
-                  new Error(en ? "Provide at least one" : "Fournir au moins un")
+                  new Error(en ? "Provide at least one" : "Fournissez-en au moins un")
                 );
               },
             }),
@@ -111,7 +111,7 @@ const EditKeywordModal: FC<Props> = ({ keyword, open, onSuccess, onCancel }) => 
               validator(_, value?: string) {
                 if (form.getFieldValue("name_en") || value) return Promise.resolve();
                 return Promise.reject(
-                  new Error(en ? "Provide at least one" : "Fournir au moins un")
+                  new Error(en ? "Provide at least one" : "Fournissez-en au moins un")
                 );
               },
             }),
