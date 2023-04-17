@@ -37,7 +37,9 @@ const MemberTag: FC<Props> = ({
 
   const fullName = member.account
     ? `${member.account.first_name} ${member.account.last_name}`
-    : (en ? "Unknown" : "Inconnu");
+    : en
+    ? "Unknown"
+    : "Inconnu";
   const content = linked ? (
     <SafeLink href={PageRoutes.memberProfile(member.id)}>{fullName}</SafeLink>
   ) : (
