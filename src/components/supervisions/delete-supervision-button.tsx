@@ -86,8 +86,8 @@ const DeleteSupervisionButton: FC<Props> = ({
           message={en ? "Warning!" : "Avertissement !"}
           description={
             en
-              ? "This action is irreversible; this supervision will be permanently deleted. To confirm, input the supervision's name."
-              : "Cette action est irréversible; cette supervision sera définitivement supprimée. Pour confirmer, saisissez le nom de la supervision."
+              ? "This action is irreversible; this supervision will be permanently deleted. To confirm, input the following name."
+              : "Cette action est irréversible; cette supervision sera définitivement supprimée. Pour confirmer, saisissez le nom suivant."
           }
           style={{ marginBottom: 16 }}
         ></Alert>
