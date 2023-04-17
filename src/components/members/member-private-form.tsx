@@ -78,7 +78,7 @@ const PrivateMemberForm: FC<Props> = ({ member, onSuccess }) => {
     try {
       return submitValidated(await form.validateFields());
     } catch (e: any) {
-      new Notification().warning(en ? "A field is invalid!" : "Un champ est invalide !");
+      new Notification().warning(en ? "A field is invalid!" : "Un champ est invalide!");
       return false;
     }
   }, [en, form, submitValidated]);
@@ -159,7 +159,7 @@ const PrivateMemberForm: FC<Props> = ({ member, onSuccess }) => {
             <Input />
           </Form.Item>
           <Form.Item
-            label={en ? "Postal Code" : "Code Postal"}
+            label={en ? "Postal Code" : "Code postal"}
             name="postal_code"
             className="postal-code"
           >
