@@ -45,7 +45,7 @@ const RegisterPartner: FC = () => {
 
   return (
     <div className="register-partner-form">
-      <h1>{en ? "Register Partner" : "Enregistrer un Partenaire"}</h1>
+      <h1>{en ? "Register Partner" : "Enregistrer un partenaire"}</h1>
       <Form
         form={form}
         onFinish={handleRegister}
@@ -54,14 +54,14 @@ const RegisterPartner: FC = () => {
         layout="vertical"
       >
         <Form.Item
-          label={en ? "Name (English)" : "Nom (Anglais)"}
+          label={en ? "Name (English)" : "Nom (anglais)"}
           name="name_en"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label={en ? "Name (French)" : "Nom (Français)"}
+          label={en ? "Name (French)" : "Nom (français)"}
           name="name_fr"
           rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
@@ -83,7 +83,7 @@ const RegisterPartner: FC = () => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "Organization Type" : "Type de l'organisation"}
+          label={en ? "Organization Type" : "Type d'organisation"}
           name="type_id"
         >
           <Select>
