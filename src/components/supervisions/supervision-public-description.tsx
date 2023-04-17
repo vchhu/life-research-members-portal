@@ -50,7 +50,7 @@ const PublicSupervisionDescription: FC<Props> = ({ supervision }) => {
         {supervision.level ? supervision.level.name_en : ""}
       </Item>
 
-      <Item label={en ? "Trainee" : "Superviseur"}>
+      <Item label={en ? "Trainee" : "Supervisé(e)"}>
         {supervision.supervision_trainee.map((entry, i) => (
           <SafeLink
             key={entry.member.id}
@@ -65,7 +65,7 @@ const PublicSupervisionDescription: FC<Props> = ({ supervision }) => {
         ))}
       </Item>
 
-      <Item label={en ? "Principal Supervisor" : "Superviseur principal"}>
+      <Item label={en ? "Principal Supervisor" : "Superviseur(e) principal(e)"}>
         {supervision.supervision_principal_supervisor.map((entry, i) => (
           <SafeLink
             key={entry.member.id}
@@ -80,7 +80,7 @@ const PublicSupervisionDescription: FC<Props> = ({ supervision }) => {
         ))}
       </Item>
 
-      <Item label={en ? "Co-Supervisor" : "Co-superviseur"}>
+      <Item label={en ? "Co-Supervisor" : "Co-superviseur(e)"}>
         {supervision.supervision_co_supervisor.map((entry, i) => (
           <SafeLink
             key={entry.member.id}
@@ -95,7 +95,7 @@ const PublicSupervisionDescription: FC<Props> = ({ supervision }) => {
         ))}
       </Item>
 
-      <Item label={en ? "Committee" : "Comité"}>
+      <Item label={en ? "Committee Members" : "Membres du comité"}>
         {supervision.supervision_committee.map((entry, i) => (
           <SafeLink
             key={entry.member.id}
