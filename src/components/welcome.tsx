@@ -54,8 +54,8 @@ const Welcome: FC = () => {
   const adminGreeting = (
     <h4 style={{ color: green[6] }}>
       {en
-        ? "You are login in as an administrator"
-        : "Vous êtes connecté en tant qu'administrateur"}
+        ? "You are logged in as an administrator"
+        : "Vous êtes connecté(e) en tant qu'administrateur"}
     </h4>
   );
 
@@ -63,7 +63,7 @@ const Welcome: FC = () => {
     <>
       <h4>
         {en
-          ? "please uptade your profile!"
+          ? "Please update your profile!"
           : "veuillez mettre à jour votre profil!"}
       </h4>
     </>
@@ -73,8 +73,8 @@ const Welcome: FC = () => {
     <>
       <h4>
         {en
-          ? "You are login in as an member"
-          : "Vous êtes connecté en tant que membre"}
+          ? "You are logged in as a member"
+          : "Vous êtes connecté(e) en tant que membre"}
       </h4>
     </>
   );
@@ -82,8 +82,8 @@ const Welcome: FC = () => {
     <>
       <h1>
         {en
-          ? "This account is not registered."
-          : "Ce compte n'est pas enregistré."}
+          ? "This account does not exist."
+          : "Ce compte n'existe pas."}
       </h1>
 
       <h4>
@@ -116,7 +116,7 @@ const Welcome: FC = () => {
       <>
         <h3>
           {en
-            ? `Good morning, ${localAccount.first_name}!`
+            ? `Hello ${localAccount.first_name}!`
             : `Bonjour ${localAccount.first_name} !`}
         </h3>
         <h1>
@@ -185,12 +185,12 @@ const Welcome: FC = () => {
         <Row gutter={[16, 16]}>
           <Col xs={24} md={6}>
             <Title level={4}>
-              {en ? "LRI Portal at a glance" : "Aperçu du portail LRI"}
+              {en ? "LRI Portal at a glance" : "Aperçu du portail de l'IRL"}
             </Title>
             <p>
               {en
-                ? "The portal provides to members a comprehensive overview of our research, partnerships, and initiatives. Stay informed and engaged with our work by exploring the Database Portal today."
-                : "Le portail fournit aux membres un aperçu complet de nos recherches, partenariats et initiatives. Restez informé et impliqué dans notre travail en explorant le portail de base de données aujourd'hui."}
+                ? "The portal provides LRI members with a comprehensive overview of our research, partnerships, and initiatives. Stay informed and engaged with our work by exploring the portal information today!"
+                : "Le portail fournit aux membres de l'IRL un aperçu de nos recherches, partenariats et initiatives. Restez informé(e) et impliqué(e) dans notre travail en explorant l'information de ce portail dès aujourd'hui."}
             </p>
           </Col>
           <Col xs={24} md={6}>
