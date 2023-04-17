@@ -58,7 +58,7 @@ const AccountProfile: FC<Props> = ({ id }) => {
   );
 
   const loginItem = (
-    <Item label={<>{en ? "Login Email" : "Compte email"}</>}>
+    <Item label={<>{en ? "Login Email" : "Compte courriel"}</>}>
       <a href={"mailto:" + account.login_email}>{account.login_email}</a>
       <UpdateEmailButton account={account} setAccount={setAccount} />
     </Item>
