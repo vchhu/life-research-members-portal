@@ -275,7 +275,7 @@ const AllPartners: FC = () => {
 
   const scopeColumn: OrganizationColumnType = useMemo(
     () => ({
-      title: en ? "Organization Scope" : "Champ d'activité",
+      title: en ? "Organization Scope" : "Portée de l'organisation",
       dataIndex: ["org_scope", en ? "name_en" : "name_fr"],
       className: "scope-column",
       sorter: en
@@ -326,7 +326,7 @@ const AllPartners: FC = () => {
       </Form.Item>
 
       <Form.Item
-        label={en ? "Filter by scope" : "Filtrer par champ d'activité"}
+        label={en ? "Filter by scope" : "Filtrer par portée"}
         htmlFor="scope-filter"
       >
         <OrgScopeFilter
@@ -352,7 +352,7 @@ const AllPartners: FC = () => {
           checked={showScope}
           onChange={(e) => handleShowScopeChange(e.target.checked)}
         >
-          {en ? "Show Organization Scope" : "Afficher le champ d'activité"}
+          {en ? "Show Organization Scope" : "Afficher la portée de l'organisation"}
         </Checkbox>
       </span>
     </Form>
