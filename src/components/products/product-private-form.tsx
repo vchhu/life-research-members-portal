@@ -132,10 +132,10 @@ const PrivateProductForm: FC<Props> = ({ product, onSuccess }) => {
           label={
             on_going_status
               ? en
-                ? "On going: Yes"
+                ? "Ongoing: Yes"
                 : "En cours	 : Oui"
               : en
-              ? "On going: No"
+              ? "Ongoing: No"
               : "En cours	: Non"
           }
         >
