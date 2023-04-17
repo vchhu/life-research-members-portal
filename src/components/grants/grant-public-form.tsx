@@ -397,14 +397,14 @@ const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
         </Form.Item>
 
         <Form.Item
-          label={en ? "All Investigators" : "Tous les enquêteurs"}
+          label={en ? "All Investigators" : "Tous les chercheurs"}
           name="all_investigator"
           rules={[
             {
               required: true,
               message: en
                 ? "Please input all investigators!"
-                : "Veuillez saisir tous les enquêteurs !",
+                : "Veuillez saisir tous les chercheurs !",
             },
           ]}
         >
@@ -412,7 +412,7 @@ const PublicGrantForm: FC<Props> = ({ grant, onSuccess }) => {
         </Form.Item>
 
         <label htmlFor="membersInvestigator">
-          {en ? "Grant Investigator Member" : "Membre enquêteur"}
+          {en ? "Grant Investigator Member" : "Membre chercheur"}
         </label>
         <Form.Item name="membersInvestigator">
           <GrantMemberInvestigatorSelector
