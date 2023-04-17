@@ -26,12 +26,12 @@ const Greeting: FC = () => {
       <h2>
         {en
           ? "This account has no member information!"
-          : "Ce compte ne contient aucune information de membre !"}
+          : "Ce compte ne contient aucune information sur le membre !"}
       </h2>
       <h2>
         {en
-          ? "If you are a member, please go to your profile and add your info!"
-          : "Si vous êtes membre, rendez-vous sur votre profil et ajoutez vos informations !"}
+          ? "If you are a member, please go to 'My Profile' and add your info!"
+          : "Si vous êtes membre, rendez-vous sur 'Mon profil' et ajoutez vos informations !"}
       </h2>
     </>
   );
@@ -41,12 +41,12 @@ const Greeting: FC = () => {
       <h2>
         {en
           ? "Looks like you have some member information."
-          : "Il semble que vous ayez des informations sur les membres."}
+          : "Il semble que vous ayez des informations sur le membre."}
       </h2>
       <h2>
         {en
-          ? "Please go to My Profile and make sure it is up to date!"
-          : "Veuillez vous rendre sur Mon profil et assurez-vous qu'il est à jour !"}
+          ? "Please go to 'My Profile' and make sure it is up to date!"
+          : "Veuillez vous rendre sur 'Mon profil' et assurez-vous qu'il est à jour !"}
       </h2>
     </>
   );
@@ -71,12 +71,12 @@ const Greeting: FC = () => {
       <h2>
         {en
           ? "If you are a member, please login."
-          : "Si vous êtes membre, connectez-vous s'il vous plaît."}
+          : "Si vous êtes membre, veuillez vous connecter."}
       </h2>
       <h2>
         {en
-          ? "Otherwise, feel free to look around."
-          : "Sinon, n'hésitez pas à regarder autour de vous."}
+          ? "Otherwise, feel free to look around!"
+          : "Sinon, n'hésitez pas à jeter un coup d'oeil!"}
       </h2>
     </>
   );
@@ -89,7 +89,7 @@ const Greeting: FC = () => {
         <h1>
           {en
             ? `Good to see you ${localAccount.first_name}.`
-            : `C'est bon de te voir ${localAccount.first_name}.`}
+            : `Bonjour ${localAccount.first_name}.`}
         </h1>
         {localAccount?.member ? memberGreeting : noMemberInfo}
         {localAccount.is_admin ? adminGreeting : null}
@@ -102,7 +102,7 @@ const Greeting: FC = () => {
       <h1>
         {en
           ? "Welcome to the LIFE Research Insitute Member Portal!"
-          : "Bienvenue sur le Portail des Membres du LIFE Research Institute !"}
+          : "Bienvenue sur le portail des membres de l'Institut de recherche LIFE !"}
       </h1>
       <UnauthenticatedTemplate>
         {unauthenticatedGreeting}
