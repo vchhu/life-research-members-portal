@@ -40,6 +40,10 @@ const MyProfile: FC = () => {
     router.push("/partners/register-partner");
   };
 
+  const handleRegisterSupervision = () => {
+    router.push("/supervisions/register-supervision");
+  };
+
   useEffect(() => {
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,6 +92,17 @@ const MyProfile: FC = () => {
     </Button>
   );
 
+  const addSupervisionButton = localAccount && (
+    <Button
+      type="primary"
+      size="large"
+      onClick={() => handleRegisterSupervision()}
+      style={{ marginRight: 16 }}
+    >
+      {en ? "Add a supervision" : "Ajouter une supervision"}
+    </Button>
+  );
+
   const editButton = (
     <Button
       size="large"
@@ -124,6 +139,7 @@ const MyProfile: FC = () => {
       >
         {localAccount.first_name + " " + localAccount.last_name}
       </Title>
+      {addSupervisionButton}
       {addPartnerButton}
       {editMode ? doneButton : editButton}
     </div>

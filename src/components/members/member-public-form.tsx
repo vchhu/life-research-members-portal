@@ -26,7 +26,7 @@ import GetLanguage from "../../utils/front-end/get-language";
 import Divider from "antd/lib/divider";
 import type { UpdateMemberPublicParams } from "../../pages/api/update-member/[id]/public";
 import Text from "antd/lib/typography/Text";
-import type { organization } from "@prisma/client";
+import type { organization, supervision } from "@prisma/client";
 
 import KeywordSelector from "../keywords/keyword-selector";
 import Notification from "../../services/notifications/notification";
@@ -155,6 +155,7 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
       const { addProblems, deleteProblems } = diffProblems(data.problems);
       const { addKeywords, deleteKeywords } = diffKeywords(data.keywords);
       const { addPartners, deletePartners } = diffPartners(data.organizations);
+
       const params: UpdateMemberPublicParams = {
         first_name: data.first_name,
         last_name: data.last_name,
@@ -190,6 +191,7 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
       diffKeywords,
       diffProblems,
       diffPartners,
+
       member.id,
       dirty,
       en,
@@ -255,6 +257,7 @@ const PublicMemberForm: FC<Props> = ({ member, onSuccess }) => {
     facebook_link: member.facebook_link || "",
     tiktok_link: member.tiktok_link || "",
     organizations: getInitialPartners(),
+
     problems: getInitialProblems(),
     keywords: getInitialKeywords(),
   };

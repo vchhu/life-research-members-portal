@@ -15,6 +15,7 @@ const _includeAllMemberInfo = {
     faculty: true,
     member_type: true,
     partnership_member_org: { include: { organization: true } },
+    supervision_principal_supervisor: { select: { supervision: true } },
     current_promotion_strategy: { include: { promotion_strategy: true } },
     desired_partnership: true,
     desired_promotion_strategy: { include: { promotion_strategy: true } },
@@ -60,6 +61,8 @@ const _selectPublicMemberInfo = {
     has_keyword: { select: { keyword: true } },
     product_member_author: { select: { product: true } },
     partnership_member_org: { include: { organization: true } },
+    supervision_principal_supervisor: { select: { supervision: true } },
+
 
 } as const;
 
@@ -551,7 +554,20 @@ const _selectPublicSupervisionInfo = {
     note: true,
     supervision_co_supervisor: { include: { member: { include: { account: true } } } },
     supervision_committee: { include: { member: { include: { account: true } } } },
-    supervision_principal_supervisor: { include: { member: { include: { account: true } } } },
+    supervision_principal_supervisor: {
+        include: {
+            member: {
+                include: {
+                    account: {
+                        select: {
+                            first_name: true,
+                            last_name: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
     supervision_trainee: {
         include: {
             member: {

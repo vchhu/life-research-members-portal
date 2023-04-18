@@ -14,6 +14,7 @@ const ApiRoutes = {
   registerPartnerMember: "/api/register-partner-member",
   registerProduct: "/api/register-product",
   registerSupervision: "/api/register-supervision",
+  registerSupervisionMember: "/api/register-supervision-member",
   registerEvent: "/api/register-event",
   activeAccount: "/api/active-account",
   activeAccountUpdateLastLogin: "/api/active-account/update-last-login",

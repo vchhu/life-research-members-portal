@@ -26,6 +26,7 @@ export type UpdateMemberPublicParams = {
   addKeywords?: number[];
   addPartners?: number[];
   deletePartners?: number[];
+
 };
 
 function updateMember(
@@ -51,6 +52,7 @@ function updateMember(
     addKeywords = [],
     addPartners = [],
     deletePartners = [],
+
   }: UpdateMemberPublicParams
 ) {
   return db.member.update({
@@ -89,6 +91,8 @@ function updateMember(
         deleteMany: deletePartners.map((id) => ({ organization_id: id })),
         createMany: { data: addPartners.map((id) => ({ organization_id: id })) },
       },
+
+
     },
     include: includeAllMemberInfo,
   });

@@ -21,6 +21,7 @@ import MemberTypeLink from "../link/member-type-link";
 import FacultyLink from "../link/faculty-link";
 import getMemberProduct from "../getters/member-product-author-getter";
 import getMemberOrg from "../getters/member-partner-getter";
+import getMemberSupervision from "../getters/member-supervision-getter";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 
 const { useBreakpoint } = Grid;
@@ -134,6 +135,14 @@ const PublicMemberDescription: FC<Props> = ({ member }) => {
         (localAccount.member?.id === member.id || localAccount.is_admin) && (
           <Item label={en ? "Member's Partners" : "Partenaires du membre"}>
             {getMemberOrg(member.partnership_member_org)}
+          </Item>
+        )}
+
+      {member.supervision_principal_supervisor.length > 0 &&
+        localAccount &&
+        (localAccount.member?.id === member.id || localAccount.is_admin) && (
+          <Item label={en ? "Member's Supervision" : "Supervisions du membre"}>
+            {getMemberSupervision(member.supervision_principal_supervisor)}
           </Item>
         )}
     </Descriptions>

@@ -6,6 +6,8 @@ import usePublicSupervisionInfo from "../../services/use-public-supervision-info
 import CardSkeleton from "../loading/card-skeleton";
 import PublicSupervisionDescription from "./supervision-public-description";
 import { LanguageCtx } from "../../services/context/language-ctx";
+import DeleteSupervisionButton from "./delete-supervision-button";
+
 
 type Props = {
   id: number;
@@ -38,6 +40,7 @@ const PublicSupervisionProfile: FC<Props> = ({ id }) => {
   return (
     <Card title={header}>
       <PublicSupervisionDescription supervision={supervision} />
+      
     </Card>
   );
 };

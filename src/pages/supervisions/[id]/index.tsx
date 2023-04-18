@@ -23,7 +23,11 @@ const PrivateSupervisionPage: NextPage = () => {
       return;
     }
 
-    router.replace(PageRoutes.publicSupervisionProfile(id));
+    if (localAccount?.member) {
+      router.replace(PageRoutes.publicSupervisionProfile(id));
+
+      return;
+    }
   }, [localAccount, loading, idString, router]);
 
   return <CardSkeleton />;

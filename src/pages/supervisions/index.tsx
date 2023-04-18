@@ -7,7 +7,7 @@ import Authorizations from "../../components/auth-guard/authorizations";
 const SupervisionsPage: NextPage = () => {
   return (
     <Layout>
-      <PageAuthGuard auths={[Authorizations.registered]}>
+      <PageAuthGuard auths={[Authorizations.admin]}>
         <AllSupervisions />;
       </PageAuthGuard>
     </Layout>
