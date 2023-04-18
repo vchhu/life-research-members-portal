@@ -2,25 +2,32 @@
 
 import { Row, Col } from "antd";
 import SafeLink from "./link/safe-link";
+import { useContext } from "react";
+import { LanguageCtx } from "../services/context/language-ctx";
 
 const Footer = () => {
+  const { en } = useContext(LanguageCtx);
+
   return (
     <footer>
       <Row justify="space-between" align="middle" style={{ padding: "16px 0" }}>
         <Col>
           <span>
-            © {new Date().getFullYear()} LIFE Research Insitute. All rights
-            reserved.
+            © {new Date().getFullYear()} LIFE Research Institute.{" "}
+            {en ? "All rights reserved." : "Tous droits réservés."}
           </span>
         </Col>
         <Col>
           <SafeLink
-            href={"https://www.uottawa.ca/about-us/aipo/privacy-rights"}
+            href={
+              en
+                ? "https://www.uottawa.ca/about-us/aipo/privacy-rights"
+                : "https://www.uottawa.ca/notre-universite/baipvp/protection-vie-privee"
+            }
             external
           >
-            Privacy Policy
+            {en ? "Privacy Policy" : "Politique de confidentialité"}
           </SafeLink>
-          {/*    <a href="/terms-of-use">Terms of Use</a> */}
         </Col>
       </Row>
     </footer>

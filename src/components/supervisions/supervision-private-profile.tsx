@@ -92,7 +92,7 @@ const PrivateSupervisionProfile: FC<Props> = ({ id }) => {
 
   const descriptions: Tab[] = [
     {
-      label: en ? "Public" : "Publique",
+      label: en ? "Supervision info" : "Info sur la supervision",
       key: keys.public,
       children: <PublicSupervisionDescription supervision={supervision} />,
     },
@@ -100,7 +100,9 @@ const PrivateSupervisionProfile: FC<Props> = ({ id }) => {
 
   const forms: Tab[] = [
     {
-      label: en ? "Public" : "Publique",
+      label: en
+        ? "Edit supervision's Info"
+        : "Éditer les infos de la supervision",
       key: keys.public,
       children: (
         <PublicSupervisionForm

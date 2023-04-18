@@ -29,6 +29,20 @@ const PublicSupervisionDescription: FC<Props> = ({ supervision }) => {
       <Item label={en ? "Last Name" : "Nom"}>{supervision.last_name}</Item>
 
       <Item label={en ? "First Name" : "Prénom"}>{supervision.first_name}</Item>
+      <Item label={en ? "Trainee" : "Supervisé(e)"}>
+        {supervision.supervision_trainee.map((entry, i) => (
+          <SafeLink
+            key={entry.member.id}
+            href={PageRoutes.memberProfile(entry.member.id)}
+          >
+            <Tag color="magenta">
+              {entry.member.account.first_name +
+                " " +
+                entry.member.account.last_name}
+            </Tag>
+          </SafeLink>
+        ))}
+      </Item>
 
       <Item label={en ? "Start Date" : "Date de début"}>
         {supervision.start_date
@@ -43,26 +57,19 @@ const PublicSupervisionDescription: FC<Props> = ({ supervision }) => {
       </Item>
 
       <Item label={en ? "Faculty" : "Faculté"}>
-        {supervision.faculty ? supervision.faculty.name_en : ""}
+        {supervision.faculty
+          ? en
+            ? supervision.faculty.name_en
+            : supervision.faculty.name_fr
+          : ""}
       </Item>
 
       <Item label={en ? "Level" : "Niveau"}>
-        {supervision.level ? supervision.level.name_en : ""}
-      </Item>
-
-      <Item label={en ? "Trainee" : "Supervisé(e)"}>
-        {supervision.supervision_trainee.map((entry, i) => (
-          <SafeLink
-            key={entry.member.id}
-            href={PageRoutes.memberProfile(entry.member.id)}
-          >
-            <Tag color="magenta">
-              {entry.member.account.first_name +
-                " " +
-                entry.member.account.last_name}
-            </Tag>
-          </SafeLink>
-        ))}
+        {supervision.level
+          ? en
+            ? supervision.level.name_en
+            : supervision.level.name_fr
+          : ""}
       </Item>
 
       <Item label={en ? "Principal Supervisor" : "Superviseur(e) principal(e)"}>

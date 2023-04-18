@@ -416,7 +416,6 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
 
   return (
     <div className="public-event-form-container">
-      <Divider />
       <Form
         form={form}
         onFinish={submitValidated}

@@ -343,7 +343,7 @@ const AllSupervisions: FC = () => {
         return date.toISOString().split("T")[0];
       },
     }),
-    []
+    [en]
   );
 
   const endDateColumn: SupervisionColumnType = useMemo(
@@ -356,7 +356,7 @@ const AllSupervisions: FC = () => {
         return date.toISOString().split("T")[0];
       },
     }),
-    []
+    [en]
   );
 
   const columns: SupervisionColumnType[] = [nameColumn];

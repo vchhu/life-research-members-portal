@@ -382,7 +382,6 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
 
   return (
     <div className="public-supervision-form-container">
-      <Divider />
       <Form
         form={form}
         onFinish={submitValidated}
@@ -419,6 +418,17 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           ]}
         >
           <Input />
+        </Form.Item>
+
+        <label htmlFor="membersTrainee">
+          {en ? "Trainee" : "Supervisé(e)"}
+        </label>
+        <Form.Item name="membersTrainee">
+          <SupervisionTraineeSelector
+            setErrors={(e) =>
+              form.setFields([{ name: "membersTrainee", errors: e }])
+            }
+          />
         </Form.Item>
 
         <Form.Item
@@ -477,15 +487,6 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           </Select>
         </Form.Item>
 
-        <label htmlFor="membersTrainee">{en ? "Trainee" : "Supervisé(e)"}</label>
-        <Form.Item name="membersTrainee">
-          <SupervisionTraineeSelector
-            setErrors={(e) =>
-              form.setFields([{ name: "membersTrainee", errors: e }])
-            }
-          />
-        </Form.Item>
-
         <label htmlFor="membersSupervisor">
           {en ? "Principal Supervisor" : "Superviseur(e) principal(e)"}
         </label>
@@ -508,7 +509,9 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           />
         </Form.Item>
 
-        <label htmlFor="membersCommittee">{en ? "Committee Members" : "Membres du comité"}</label>
+        <label htmlFor="membersCommittee">
+          {en ? "Committee Members" : "Membres du comité"}
+        </label>
         <Form.Item name="membersCommittee">
           <SupervisionCommitteeSelector
             setErrors={(e) =>

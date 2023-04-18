@@ -80,11 +80,7 @@ const Welcome: FC = () => {
   );
   const notRegistered = (
     <>
-      <h1>
-        {en
-          ? "This account does not exist."
-          : "Ce compte n'existe pas."}
-      </h1>
+      <h1>{en ? "This account does not exist." : "Ce compte n'existe pas."}</h1>
 
       <h4>
         {en
@@ -283,28 +279,6 @@ const Welcome: FC = () => {
           <Col xs={24} md={6}>
             <Space direction="vertical">
               {localAccount ? (
-                <Link href={PageRoutes.allSupervisions}>
-                  <a>
-                    <div className="rounded-box rounded-box-gradient-5">
-                      <SolutionOutlined className="icon-gradient" />
-                      <span className="count">{activeSupervisionsCount}</span>
-                      <span className="title">
-                        {en ? "Supervisions" : "Supervisions"}
-                      </span>
-                    </div>
-                  </a>
-                </Link>
-              ) : (
-                <div className="rounded-box rounded-box-gradient-5">
-                  <SolutionOutlined className="icon-gradient" />
-                  <span className="count">{activeSupervisionsCount}</span>
-                  <span className="title">
-                    {en ? "Supervisions" : "Supervisions"}
-                  </span>
-                </div>
-              )}
-
-              {localAccount ? (
                 <Link href={PageRoutes.allPartners}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-6">
@@ -322,6 +296,28 @@ const Welcome: FC = () => {
                   <span className="count">{activePartnersCount}</span>
                   <span className="title">
                     {en ? "Partners" : "Partenaires"}
+                  </span>
+                </div>
+              )}
+
+              {localAccount?.is_admin ? (
+                <Link href={PageRoutes.allSupervisions}>
+                  <a>
+                    <div className="rounded-box rounded-box-gradient-5">
+                      <SolutionOutlined className="icon-gradient" />
+                      <span className="count">{activeSupervisionsCount}</span>
+                      <span className="title">
+                        {en ? "Supervisions" : "Supervisions"}
+                      </span>
+                    </div>
+                  </a>
+                </Link>
+              ) : (
+                <div className="rounded-box rounded-box-gradient-5">
+                  <SolutionOutlined className="icon-gradient" />
+                  <span className="count">{activeSupervisionsCount}</span>
+                  <span className="title">
+                    {en ? "Supervisions" : "Supervisions"}
                   </span>
                 </div>
               )}
