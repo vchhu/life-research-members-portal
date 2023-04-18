@@ -121,11 +121,15 @@ const PrivateMemberProfile: FC<Props> = ({ id }) => {
       key: keys.private,
       children: <PrivateMemberDescription member={member} />,
     },
-    {
-      label: en ? "Insight" : "Aperçu",
-      key: keys.insight,
-      children: <MemberInsightDescription member={member} />,
-    },
+    ...(localAccount && localAccount.is_admin
+      ? [
+          {
+            label: en ? "Insight" : "Aperçu",
+            key: keys.insight,
+            children: <MemberInsightDescription member={member} />,
+          },
+        ]
+      : []),
   ];
 
   const forms: Tab[] = [
@@ -139,11 +143,17 @@ const PrivateMemberProfile: FC<Props> = ({ id }) => {
       key: keys.private,
       children: <PrivateMemberForm member={member} onSuccess={onSuccess} />,
     },
-    {
-      label: en ? "Insight" : "Aperçu",
-      key: keys.insight,
-      children: <MemberInsightForm member={member} onSuccess={onSuccess} />,
-    },
+    ...(localAccount && localAccount.is_admin
+      ? [
+          {
+            label: en ? "Insight" : "Aperçu",
+            key: keys.insight,
+            children: (
+              <MemberInsightForm member={member} onSuccess={onSuccess} />
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
