@@ -337,7 +337,7 @@ const AllEvents: FC = () => {
         return date.toISOString().split("T")[0];
       },
     }),
-    []
+    [en]
   );
 
   const endDateColumn: EventColumnType = useMemo(
@@ -350,7 +350,7 @@ const AllEvents: FC = () => {
         return date.toISOString().split("T")[0];
       },
     }),
-    []
+    [en]
   );
 
   const columns: EventColumnType[] = [nameColumn];
