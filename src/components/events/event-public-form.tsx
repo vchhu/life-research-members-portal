@@ -465,10 +465,6 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
           </Select>
         </Form.Item>
 
-        <Form.Item label={en ? "Note" : "Note"} name="note">
-          <TextArea rows={4} spellCheck="false" />
-        </Form.Item>
-
         <label htmlFor="members">
           {en ? "Event Members" : "Membres de l'événement"}
         </label>
@@ -536,6 +532,10 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
           <TopicSelector
             setErrors={(e) => form.setFields([{ name: "topics", errors: e }])}
           />
+        </Form.Item>
+
+        <Form.Item label={en ? "Note" : "Note"} name="note">
+          <TextArea rows={4} spellCheck="false" />
         </Form.Item>
 
         <Form.Item style={{ marginBottom: 0 }}>
