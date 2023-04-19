@@ -469,12 +469,23 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
           <TextArea rows={4} spellCheck="false" />
         </Form.Item>
 
-        <label htmlFor="topics">
-          {en ? "Event Topics" : "Sujets de l'événement"}
+        <label htmlFor="members">
+          {en ? "Event Members" : "Membres de l'événement"}
         </label>
-        <Form.Item name="topics">
-          <TopicSelector
-            setErrors={(e) => form.setFields([{ name: "topics", errors: e }])}
+        <Form.Item name="members">
+          <MemberSelector
+            setErrors={(e) => form.setFields([{ name: "members", errors: e }])}
+          />
+        </Form.Item>
+
+        <label htmlFor="organizations">
+          {en ? "Event Partnership" : "Partenariat de l'événement"}
+        </label>
+        <Form.Item name="organizations">
+          <PartnerSelector
+            setErrors={(e) =>
+              form.setFields([{ name: "organizations", errors: e }])
+            }
           />
         </Form.Item>
 
@@ -500,17 +511,8 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
           />
         </Form.Item>
 
-        <label htmlFor="members">
-          {en ? "Event Members" : "Membres de l'événement"}
-        </label>
-        <Form.Item name="members">
-          <MemberSelector
-            setErrors={(e) => form.setFields([{ name: "members", errors: e }])}
-          />
-        </Form.Item>
-
         <label htmlFor="grants">
-          {en ? "Event Grants" : "Subventions de l'événement"}
+          {en ? "Grant Resulted" : "Subventions résultantes"}
         </label>
         <Form.Item name="grants">
           <GrantSelector
@@ -518,23 +520,21 @@ const PublicEventForm: FC<Props> = ({ event, onSuccess }) => {
           />
         </Form.Item>
 
-        <label htmlFor="organizations">
-          {en ? "Event Partners" : "Partenaires de l'événement"}
-        </label>
-        <Form.Item name="organizations">
-          <PartnerSelector
-            setErrors={(e) =>
-              form.setFields([{ name: "organizations", errors: e }])
-            }
-          />
-        </Form.Item>
-
         <label htmlFor="products">
-          {en ? "Event Products" : "Produits de l'événement"}
+          {en ? "Product Resulted" : "Produits résultants	"}
         </label>
         <Form.Item name="products">
           <ProductSelector
             setErrors={(e) => form.setFields([{ name: "products", errors: e }])}
+          />
+        </Form.Item>
+
+        <label htmlFor="topics">
+          {en ? "Event Topics" : "Sujets de l'événement"}
+        </label>
+        <Form.Item name="topics">
+          <TopicSelector
+            setErrors={(e) => form.setFields([{ name: "topics", errors: e }])}
           />
         </Form.Item>
 

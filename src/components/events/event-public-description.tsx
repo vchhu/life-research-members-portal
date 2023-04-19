@@ -151,16 +151,14 @@ const PublicEventDescription: FC<Props> = ({ event }) => {
         </ol>
       </Item>
 
-      <Item label={en ? "Product Topic" : "Sujet du produit"}>
+      <Item label={en ? "Event Topic" : "Sujet de l'événement"}>
         {event.event_topic.map((entry, i) => (
           <Tag key={i} color="blue">
             {en ? entry.topic.name_fr : entry.topic.name_en}
           </Tag>
         ))}
       </Item>
-      <Item label={en ? "Topic" : "Sujet"}>
-        {event.topic ? (en ? event.topic.name_en : event.topic.name_fr) : ""}
-      </Item>
+
       <Item label={en ? "Note" : "Note"} style={{ whiteSpace: "break-spaces" }}>
         {event.note}
       </Item>

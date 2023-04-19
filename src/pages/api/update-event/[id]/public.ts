@@ -100,8 +100,66 @@ function updateEvent(
     },
 
     select: selectAllEventInfo,
+  }).then(async (updatedEvent) => {
+    // Ensure previous events have their next event updated
+    await Promise.all(
+      addPreviousEvents.map((previous_event_id) =>
+        db.event.update({
+          where: { id: previous_event_id },
+          data: {
+            event_next_event_event_next_event_event_idToevent: {
+              create: { next_event_id: id },
+            },
+          },
+        })
+      )
+    );
+
+    // Ensure next events have their previous event updated
+    await Promise.all(
+      addNextEvents.map((next_event_id) =>
+        db.event.update({
+          where: { id: next_event_id },
+          data: {
+            event_previous_event_event_previous_event_event_idToevent: {
+              create: { previous_event_id: id },
+            },
+          },
+        })
+      )
+    );
+
+    await Promise.all(
+      deleteNextEvents.map((next_event_id) =>
+        db.event.update({
+          where: { id: next_event_id },
+          data: {
+            event_previous_event_event_previous_event_event_idToevent: {
+              deleteMany: { previous_event_id: id },
+            },
+          },
+        })
+      )
+    );
+
+    await Promise.all(
+      deletePreviousEvents.map((previous_event_id) =>
+        db.event.update({
+          where: { id: previous_event_id },
+          data: {
+            event_next_event_event_next_event_event_idToevent: {
+              deleteMany: { next_event_id: id },
+            },
+          },
+        })
+      )
+    );
+
+
+    return updatedEvent;
   });
-}
+};
+
 
 
 export default async function handler(
