@@ -30,6 +30,9 @@ export default async function handler(
 
     return res.status(200).send(supervision);
   } catch (e: any) {
+    if (e.code === "P2003") {
+      return res.status(409).send("Cannot delete supervision due to related supervision member records. Please delete related records first.");
+    }
     return res.status(500).send({ ...e, message: e.message }); // prisma error messages are getters
   }
 }
