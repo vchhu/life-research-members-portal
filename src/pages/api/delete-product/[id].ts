@@ -23,8 +23,8 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    if (!currentAccount.is_admin)
-      return res.status(401).send("You are not authorized to delete products.");
+    /* if (!currentAccount.is_admin)
+      return res.status(401).send("You are not authorized to delete products."); */
 
     const product = await deleteProduct(id);
 
