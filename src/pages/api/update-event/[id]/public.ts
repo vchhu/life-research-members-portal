@@ -129,6 +129,8 @@ function updateEvent(
       )
     );
 
+
+    // Ensure next events have their previous event deleted
     await Promise.all(
       deleteNextEvents.map((next_event_id) =>
         db.event.update({
@@ -141,6 +143,7 @@ function updateEvent(
         })
       )
     );
+    // Ensure previous events have their next event deleted
 
     await Promise.all(
       deletePreviousEvents.map((previous_event_id) =>

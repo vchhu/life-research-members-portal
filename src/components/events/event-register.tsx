@@ -18,10 +18,8 @@ const { RangePicker } = DatePicker; // Add RangePicker import
 type EventData = {
   name_en: string;
   name_fr: string;
-
   date_range: [Moment | null, Moment | null];
   event_type_id: number;
-  topic_id: number;
   note: string;
 };
 
@@ -29,14 +27,12 @@ const RegisterEvent: FC = () => {
   const [form] = useForm<EventData>();
   const { en } = useContext(LanguageCtx);
   const { eventTypes } = useContext(EventTypesCtx);
-  const { topics } = useContext(AllTopicsCtx);
 
   async function handleRegister({
     name_en,
     name_fr,
     date_range,
     event_type_id,
-    topic_id,
     note,
   }: EventData) {
     const res = await registerEvent({
@@ -45,7 +41,7 @@ const RegisterEvent: FC = () => {
       start_date: date_range[0] ? date_range[0].toDate() : null, // Access start_date from date_range
       end_date: date_range[1] ? date_range[1].toDate() : null, // Access end_date from date_range
       event_type_id,
-      topic_id,
+
       note,
     });
     if (res) form.resetFields();
@@ -93,17 +89,6 @@ const RegisterEvent: FC = () => {
           <Select>
             <Option value="">{""}</Option>
             {eventTypes.map((f) => (
-              <Option key={f.id} value={f.id}>
-                <GetLanguage obj={f} />
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item label={en ? "Topic" : "Sujet"} name="topic_id">
-          <Select>
-            <Option value="">{""}</Option>
-            {topics.map((f) => (
               <Option key={f.id} value={f.id}>
                 <GetLanguage obj={f} />
               </Option>

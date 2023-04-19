@@ -9,7 +9,6 @@ export type RegisterEventParams = {
   start_date: Date | null;
   end_date: Date | null;
   event_type_id: number | null;
-  topic_id: number | null;
   note: string | null;
 };
 
@@ -23,7 +22,6 @@ function registerEvent(params: RegisterEventParams) {
       start_date: params.start_date,
       end_date: params.end_date,
       event_type_id: params.event_type_id,
-      topic_id: params.topic_id,
       note: params.note,
     },
     select: {
@@ -43,7 +41,6 @@ export default async function handler(
     start_date,
     end_date,
     event_type_id,
-    topic_id,
     note,
   } = params;
 
