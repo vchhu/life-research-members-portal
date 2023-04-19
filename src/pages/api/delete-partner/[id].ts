@@ -23,7 +23,7 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    if (!currentAccount.is_admin)
+    if (!currentAccount.is_admin || !currentAccount.member)
       return res.status(401).send("You are not authorized to delete partners.");
 
     const partner = await deletePartner(id);

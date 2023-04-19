@@ -30,6 +30,9 @@ export default async function handler(
 
     return res.status(200).send(event);
   } catch (e: any) {
+    if (e.code === "P2003") {
+      return res.status(409).send("Cannot delete event due to related records in next_event or previous_event table. Please delete related records first.");
+    }
     return res.status(500).send({ ...e, message: e.message }); // prisma error messages are getters
   }
 }
