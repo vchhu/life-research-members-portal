@@ -11,12 +11,12 @@ import usePrivateProductInfo from "../../services/use-private-product-info";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import Tabs from "antd/lib/tabs";
 import type { ProductPrivateInfo } from "../../services/_types";
-
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
 import ProductAdminDescription from "./product-admin-description";
 import PrivateProductDescription from "./product-private-description";
 import PrivateProductForm from "./product-private-form";
 import DeleteProductButton from "./delete-product-button";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -32,7 +32,7 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
   const [editMode, setEditMode] = useState(false);
   const [activeTabKey, setActiveTabKey] = useState(keys.public);
   const { saveChangesPrompt } = useContext(SaveChangesCtx);
-
+  const { localAccount } = useContext(ActiveAccountCtx);
   /** After saving changes via submit button - dependency of form's submit */
   const onSuccess = useCallback(
     (updatedProduct: ProductPrivateInfo) => setProduct(updatedProduct),
@@ -103,12 +103,15 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
       key: keys.private,
       children: <PrivateProductDescription product={product} />,
     },
-
-    {
-      label: en ? "Admin" : "Admin",
-      key: keys.admin,
-      children: <ProductAdminDescription product={product} />,
-    },
+    ...(localAccount && localAccount.is_admin
+      ? [
+          {
+            label: en ? "Admin" : "Admin",
+            key: keys.admin,
+            children: <ProductAdminDescription product={product} />,
+          },
+        ]
+      : []),
   ];
 
   const forms: Tab[] = [
@@ -122,11 +125,17 @@ const PrivateProductProfile: FC<Props> = ({ id }) => {
       key: keys.private,
       children: <PrivateProductForm product={product} onSuccess={onSuccess} />,
     },
-    {
-      label: en ? "Admin" : "Admin",
-      key: keys.admin,
-      children: <ProductAdminForm product={product} onSuccess={onSuccess} />,
-    },
+    ...(localAccount && localAccount.is_admin
+      ? [
+          {
+            label: en ? "Admin" : "Admin",
+            key: keys.admin,
+            children: (
+              <ProductAdminForm product={product} onSuccess={onSuccess} />
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (

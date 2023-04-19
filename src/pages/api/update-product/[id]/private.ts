@@ -49,7 +49,7 @@ export default async function handler(
 
     const authorized = currentUser.is_admin || currentUser.member?.id === id;
     if (!authorized)
-      return res.status(401).send("You are not authorized to edit this member information.");
+      return res.status(401).send("You are not authorized to edit this product information.");
 
     const updated = await updateProduct(id, params);
 
