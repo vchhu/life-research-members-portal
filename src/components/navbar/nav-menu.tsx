@@ -71,6 +71,22 @@ const NavMenu: FC = () => {
     if (localAccount) for (const it of registeredItemsLast) items.push(it);
   }
 
+  function isMenuItemActive(item: { href: string; children?: any }): boolean {
+    if (router.pathname === item.href) {
+      return true;
+    }
+
+    if (item.children) {
+      return item.children.some(
+        (child: { href: string }) => router.pathname === child.href
+      );
+    }
+
+    return false;
+  }
+
+  const activeItem = items.find(isMenuItemActive);
+
   const menuItems: MenuItemType[] = items.map((it) => {
     if (it.children) {
       return {
@@ -103,8 +119,6 @@ const NavMenu: FC = () => {
   });
 
   if (loading) menuItems.push({ label: <Spin />, key: "loading" });
-
-  const activeItem = items.find((it) => router.pathname.startsWith(it.href));
 
   return (
     <div className="nav-menu">
