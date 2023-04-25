@@ -25,7 +25,8 @@ import type {
 import GetLanguage from "../../utils/front-end/get-language";
 import updateSupervisionPublic from "../../services/update-supervision-public";
 import type { UpdateSupervisionPublicParams } from "../../pages/api/update-supervision/[id]/public";
-import SupervisionSelector from "./supervision-selector";
+import MemberSelector from "../members/member-selector";
+
 const { Option } = Select;
 
 type Props = {
@@ -387,6 +388,20 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
         onValuesChange={() => setDirty(true)}
       >
         <Form.Item
+          label={en ? "First Name" : "Prénom"}
+          name="first_name"
+          rules={[
+            {
+              required: true,
+              message: en
+                ? "Please input the first name!"
+                : "Veuillez saisir le prénom !",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
           label={en ? "Last Name" : "Nom"}
           name="last_name"
           rules={[
@@ -401,26 +416,11 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           <Input />
         </Form.Item>
 
-        <Form.Item
-          label={en ? "First Name" : "Prénom"}
-          name="first_name"
-          rules={[
-            {
-              required: true,
-              message: en
-                ? "Please input the first name!"
-                : "Veuillez saisir le prénom !",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
         <label htmlFor="membersTrainee">
           {en ? "Trainee" : "Supervisé(e)"}
         </label>
         <Form.Item name="membersTrainee">
-          <SupervisionSelector
+          <MemberSelector
             setErrors={(e) =>
               form.setFields([{ name: "membersTrainee", errors: e }])
             }
@@ -487,7 +487,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           {en ? "Principal Supervisor" : "Superviseur(e) principal(e)"}
         </label>
         <Form.Item name="membersSupervisor">
-          <SupervisionSelector
+          <MemberSelector
             setErrors={(e) =>
               form.setFields([{ name: "membersSupervisor", errors: e }])
             }
@@ -498,7 +498,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           {en ? "Co-Supervisors" : "Co-superviseur(e)s"}
         </label>
         <Form.Item name="membersCoSupervisor">
-          <SupervisionSelector
+          <MemberSelector
             setErrors={(e) =>
               form.setFields([{ name: "membersCoSupervisor", errors: e }])
             }
@@ -509,7 +509,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           {en ? "Committee Members" : "Membres du comité"}
         </label>
         <Form.Item name="membersCommittee">
-          <SupervisionSelector
+          <MemberSelector
             setErrors={(e) =>
               form.setFields([{ name: "membersCommittee", errors: e }])
             }

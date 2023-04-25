@@ -26,9 +26,8 @@ const PublicSupervisionDescription: FC<Props> = ({ supervision }) => {
       labelStyle={{ whiteSpace: "nowrap", width: 0 }}
       layout={screens.xs ? "vertical" : "horizontal"}
     >
-      <Item label={en ? "Last Name" : "Nom"}>{supervision.last_name}</Item>
-
       <Item label={en ? "First Name" : "Prénom"}>{supervision.first_name}</Item>
+      <Item label={en ? "Last Name" : "Nom"}>{supervision.last_name}</Item>
       <Item label={en ? "Trainee" : "Supervisé(e)"}>
         {supervision.supervision_trainee.map((entry, i) => (
           <SafeLink
