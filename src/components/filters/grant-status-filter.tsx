@@ -1,3 +1,10 @@
+// GrantStatusFilter  Accepts a set of grant status IDs as value, and a callback function onChange for value updates
+// Renders a multi-select dropdown menu with grant statuses as options
+// Uses grant statuses from GrantStatusCtx and language context from LanguageCtx to determine label language
+// Triggers onSelect or onDeselect when an option is selected or deselected
+// Supports custom popup container through getPopupContainer prop
+// Exports the component as the default export
+
 import Select, { SelectProps } from "antd/lib/select";
 import { FC, useContext, useMemo } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";

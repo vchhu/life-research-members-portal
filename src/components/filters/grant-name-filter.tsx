@@ -1,7 +1,12 @@
+/*
+GrantNameFilter component - filters grants based on their title using fuzzy search.
+Uses the AllGrantsCtx for all grants data, and receives filter value, change event handler and getPopupContainer as props.
+Renders antd Select component with multiple select mode, filter option, clear button, select/deselect events, and getPopupContainer prop.
+*/
+
 import Select, { SelectProps } from "antd/lib/select";
 import { FC, useContext, useMemo } from "react";
 import { AllGrantsCtx } from "../../services/context/all-grants-ctx";
-import { LanguageCtx } from "../../services/context/language-ctx";
 import type { GrantPublicInfo } from "../../services/_types";
 import fuzzyIncludes from "../../utils/front-end/fuzzy-includes";
 
@@ -43,7 +48,7 @@ const GrantNameFilter: FC<Props> = ({
 
   function filterOption(
     input: string,
-    option?: typeof options[number]
+    option?: (typeof options)[number]
   ): boolean {
     if (!option) return false;
     return fuzzyIncludes(option.label, input);
