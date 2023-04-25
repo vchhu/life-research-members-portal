@@ -10,7 +10,6 @@ import DatePicker from "antd/lib/date-picker";
 import type { Moment } from "moment";
 import { FacultiesCtx } from "../../services/context/faculties-ctx";
 import { LevelsCtx } from "../../services/context/levels-ctx";
-
 import Divider from "antd/lib/divider";
 import Notification from "../../services/notifications/notification";
 import {
@@ -26,10 +25,7 @@ import type {
 import GetLanguage from "../../utils/front-end/get-language";
 import updateSupervisionPublic from "../../services/update-supervision-public";
 import type { UpdateSupervisionPublicParams } from "../../pages/api/update-supervision/[id]/public";
-import SupervisionTraineeSelector from "./supervision-trainee-selector";
-import SupervisionSupervisorSelector from "./supervision-supervisor-selector";
-import SupervisionCoSupervisorSelector from "./supervision-cosupervisor-selector";
-import SupervisionCommitteeSelector from "./supervision-committee-selector";
+import SupervisionSelector from "./supervision-selector";
 const { Option } = Select;
 
 type Props = {
@@ -424,7 +420,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           {en ? "Trainee" : "Supervisé(e)"}
         </label>
         <Form.Item name="membersTrainee">
-          <SupervisionTraineeSelector
+          <SupervisionSelector
             setErrors={(e) =>
               form.setFields([{ name: "membersTrainee", errors: e }])
             }
@@ -491,7 +487,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           {en ? "Principal Supervisor" : "Superviseur(e) principal(e)"}
         </label>
         <Form.Item name="membersSupervisor">
-          <SupervisionSupervisorSelector
+          <SupervisionSelector
             setErrors={(e) =>
               form.setFields([{ name: "membersSupervisor", errors: e }])
             }
@@ -502,7 +498,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           {en ? "Co-Supervisors" : "Co-superviseur(e)s"}
         </label>
         <Form.Item name="membersCoSupervisor">
-          <SupervisionCoSupervisorSelector
+          <SupervisionSelector
             setErrors={(e) =>
               form.setFields([{ name: "membersCoSupervisor", errors: e }])
             }
@@ -513,7 +509,7 @@ const PublicSupervisionForm: FC<Props> = ({ supervision, onSuccess }) => {
           {en ? "Committee Members" : "Membres du comité"}
         </label>
         <Form.Item name="membersCommittee">
-          <SupervisionCommitteeSelector
+          <SupervisionSelector
             setErrors={(e) =>
               form.setFields([{ name: "membersCommittee", errors: e }])
             }

@@ -18,7 +18,7 @@ type Props = {
   style?: CSSProperties;
 };
 
-const SupervisionCommitteeTag: FC<Props> = ({
+const SupervisionTag: FC<Props> = ({
   member,
   linked = false,
   editable = false,
@@ -65,4 +65,4 @@ const SupervisionCommitteeTag: FC<Props> = ({
   );
 };
 
-export default SupervisionCommitteeTag;
+export default SupervisionTag;

@@ -6,7 +6,7 @@ import Card from "antd/lib/card";
 import { FC, useContext, useEffect, useState } from "react";
 import { AllMembersSelectorCtx } from "../../services/context/all-members-selector-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import SupervisionSupervisorTag from "./supervision-supervisor-tag";
+import SupervisionTag from "./supervision-tag";
 
 type Props = {
   id?: string;
@@ -16,7 +16,7 @@ type Props = {
   max?: number;
 };
 
-const SupervisionSupervisorSelector: FC<Props> = ({
+const SupervisionSelector: FC<Props> = ({
   id = "",
   value = new Map<number, MemberPublicInfo>(),
   max = 10,
@@ -43,7 +43,7 @@ const SupervisionSupervisorSelector: FC<Props> = ({
     setSearchValue("");
   }
 
-  function onSelect(optionValue: string, option: typeof options[number]) {
+  function onSelect(optionValue: string, option: (typeof options)[number]) {
     clearState();
     addToList(option.member);
   }
@@ -63,7 +63,7 @@ const SupervisionSupervisorSelector: FC<Props> = ({
 
   return (
     <>
-      <div className="supervision-supervisor-selector">
+      <div className="supervision-committee-selector">
         <div className="header">
           <AutoComplete
             id={id}
@@ -80,7 +80,7 @@ const SupervisionSupervisorSelector: FC<Props> = ({
         </div>
         <Card className="tag-viewport" size="small">
           {Array.from(value.values()).map((m) => (
-            <SupervisionSupervisorTag
+            <SupervisionTag
               key={m.id}
               member={m}
               deletable
@@ -93,4 +93,4 @@ const SupervisionSupervisorSelector: FC<Props> = ({
   );
 };
 
-export default SupervisionSupervisorSelector;
+export default SupervisionSelector;
