@@ -1,3 +1,9 @@
+/**
+PublicGrantForm component displays a form for updating public information of a grant.
+The form allows users to update the title, amount, status, source, topic, and notes of the grant.
+Additionally, it also allows users to associate investigators and members involved with the grant.
+*/
+
 import React, { FC, useContext, useState, useCallback, useEffect } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import { useForm } from "antd/lib/form/Form";
