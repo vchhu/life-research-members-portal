@@ -1,3 +1,8 @@
+// This component displays the public information of a supervision in a description list format with the help of Ant Design's Descriptions component.
+// The supervision data is passed down as a prop to the component.
+// The component uses the `LanguageCtx` context to determine the language to display the text.
+// SafeLink is used to make the links to the member profiles safe.
+
 import Grid from "antd/lib/grid";
 import Descriptions from "antd/lib/descriptions";
 import Item from "antd/lib/descriptions/Item";

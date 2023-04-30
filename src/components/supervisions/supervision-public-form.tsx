@@ -1,3 +1,5 @@
+//This is a form component that allows the user to edit public information of a supervision.
+
 import React, { FC, useContext, useState, useCallback, useEffect } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import { useForm } from "antd/lib/form/Form";
