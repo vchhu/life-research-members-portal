@@ -1,5 +1,5 @@
 /*
-This component is a form element that allows a user to search for grants and select one or more of them. 
+This component is a form element that allows a user to search for existing grants and select one or more of them. 
 It uses the antd AutoComplete component to search for grants and display the results. 
 The selected grants are displayed as tags, and the user can delete or edit the tags if desired. 
 The component also provides an onChange callback that returns the selected grants as a Map.

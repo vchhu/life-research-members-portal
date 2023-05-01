@@ -1,4 +1,4 @@
-//This component is a form element that allows a user to search for products and select one or more of them. 
+//This component is a form element that allows a user to search for existing products and select one or more of them.
 
 import React, { FC, useContext, useEffect, useState } from "react";
 import type { product } from "@prisma/client";
@@ -59,7 +59,7 @@ const ProductSelector: FC<Props> = ({
     setSearchValue("");
   }
 
-  function onSelect(optionValue: string, option: typeof options[number]) {
+  function onSelect(optionValue: string, option: (typeof options)[number]) {
     clearState();
     addToList(option.product);
   }
