@@ -1,5 +1,5 @@
 /*
-GrantNameFilter component - filters grants based on their title using fuzzy search.
+This is a component that provides a dropdown list for selecting multiple name of grants
 Uses the AllGrantsCtx for all grants data, and receives filter value, change event handler and getPopupContainer as props.
 Renders antd Select component with multiple select mode, filter option, clear button, select/deselect events, and getPopupContainer prop.
 */

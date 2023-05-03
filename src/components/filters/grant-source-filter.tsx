@@ -1,4 +1,4 @@
-/* GrantSourceFilter is a component that provides a dropdown list for selecting multiple sources of grants
+/* This is a component that provides a dropdown list for selecting multiple sources of grants
 Renders a list of options for grant sources with a value of 0 for "empty" 
 Receives onChange, value, id and getPopupContainer props
 */
