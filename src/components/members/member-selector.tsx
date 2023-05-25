@@ -19,7 +19,7 @@ type Props = {
 const MemberSelector: FC<Props> = ({
   id = "",
   value = new Map<number, MemberPublicInfo>(),
-  max = 100,
+  max = 1000,
   onChange = () => {},
   setErrors = () => {},
 }) => {
