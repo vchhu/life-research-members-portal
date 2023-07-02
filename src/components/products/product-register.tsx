@@ -106,7 +106,6 @@ const RegisterProduct: FC = () => {
         <Form.Item
           label={en ? "Product Type" : "Type de produit"}
           name="product_type_id"
-          rules={[{ required: true, message: en ? "Required" : "Requis" }]}
         >
           <Select>
             <Option value="">{""}</Option>
