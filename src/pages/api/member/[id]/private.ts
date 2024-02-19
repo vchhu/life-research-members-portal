@@ -4,7 +4,9 @@ import { includeAllMemberInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
 
-export type PrivateMemberDBRes = Awaited<ReturnType<typeof getPrivateMemberInfo>>;
+export type PrivateMemberDBRes = Awaited<
+  ReturnType<typeof getPrivateMemberInfo>
+>;
 
 // Dates will be stringified when sending response!
 export type PrivateMemberRes = Omit<
@@ -13,7 +15,9 @@ export type PrivateMemberRes = Omit<
 > & {
   date_joined: string | null;
   last_active: string | null;
-  insight: (Omit<insight, "interview_date"> & { interview_date: string | null }) | null;
+  insight:
+    | (Omit<insight, "interview_date"> & { interview_date: string | null })
+    | null;
 };
 
 function getPrivateMemberInfo(id: number) {
@@ -37,12 +41,15 @@ export default async function handler(
     if (!currentAccount) return;
 
     const authorized =
-      currentAccount.is_admin || (currentAccount.member && currentAccount.member.id === id);
+      currentAccount.is_admin ||
+      (currentAccount.member && currentAccount.member.id === id);
 
     if (!authorized)
       return res
         .status(401)
-        .send("You are not authorized to view this member's private information.");
+        .send(
+          "You are not authorized to view this member's private information."
+        );
 
     const member = await getPrivateMemberInfo(id);
     if (!member) return res.status(400).send("Member not found. ID: " + id);

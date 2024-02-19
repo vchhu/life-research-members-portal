@@ -23,13 +23,16 @@ import Form from "antd/lib/form";
 import type { keyword } from "@prisma/client";
 import KeywordFilter from "../filters/keyword-filter";
 import blurActiveElement from "../../utils/front-end/blur-active-element";
-import { Checkbox } from "antd";
+import { Checkbox, Input } from "antd";
 import type { MemberPublicInfo } from "../../services/_types";
 import MemberTypeFilter from "../filters/member-type-filter";
 import FacultyFilter from "../filters/faculty-filter";
 import MemberNameFilter from "../filters/member-name-filter";
 import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
 import type { ParsedUrlQueryInput } from "querystring";
+import { AllMembersPrivateCtx } from "../../services/context/all-members-private-ctx";
+import Authorizations from "../auth-guard/authorizations";
+import type { PrivateMemberRes } from "../../pages/api/all-members-private";
 
 function nameSorter(a: { name: string }, b: { name: string }) {
   return a.name.localeCompare(b.name);
@@ -39,6 +42,68 @@ function getName(member: MemberPublicInfo) {
   return member.account.first_name + " " + member.account.last_name;
 }
 
+function matchesPartialSearchTerm(
+  member: MemberPublicInfo & { name: string },
+  searchTerm: string
+) {
+  const searchWords = searchTerm
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((word) => word.trim() !== "");
+
+  const memberData = [
+    member.name.toLowerCase(),
+    member.faculty?.name_en?.toLowerCase() ?? "",
+    member.faculty?.name_fr?.toLowerCase() ?? "",
+    member.member_type?.name_en?.toLowerCase() ?? "",
+    member.member_type?.name_fr?.toLowerCase() ?? "",
+    ...member.has_keyword.map((k) => k.keyword.name_en?.toLowerCase() ?? ""),
+    ...member.has_keyword.map((k) => k.keyword.name_fr?.toLowerCase() ?? ""),
+    member.about_me_en?.toLowerCase() ?? "",
+    member.about_me_fr?.toLowerCase() ?? "",
+    ...member.problem.map((p) => p.name_en?.toLowerCase() ?? ""),
+    ...member.problem.map((p) => p.name_fr?.toLowerCase() ?? ""),
+  ];
+
+  return searchWords.some((word) =>
+    memberData.some((data) => data.includes(word))
+  );
+}
+
+function matchesPartialSearchTermPrivate(
+  member: PrivateMemberRes & { name: string },
+  searchTerm: string
+) {
+  const searchWords = searchTerm
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((word) => word.trim() !== "");
+
+  const memberData = [
+    member.name.toLowerCase(),
+    member.faculty?.name_en?.toLowerCase() ?? "",
+    member.faculty?.name_fr?.toLowerCase() ?? "",
+    member.member_type?.name_en?.toLowerCase() ?? "",
+    member.member_type?.name_fr?.toLowerCase() ?? "",
+    ...member.has_keyword.map((k) => k.keyword.name_en?.toLowerCase() ?? ""),
+    ...member.has_keyword.map((k) => k.keyword.name_fr?.toLowerCase() ?? ""),
+    member.about_me_en?.toLowerCase() ?? "",
+    member.about_me_fr?.toLowerCase() ?? "",
+    ...member.problem.map((p) => p.name_en?.toLowerCase() ?? ""),
+    ...member.problem.map((p) => p.name_fr?.toLowerCase() ?? ""),
+    member.insight?.about_member?.toLowerCase() ?? "",
+    member.insight?.about_promotions?.toLowerCase() ?? "",
+    member.insight?.dream?.toLowerCase() ?? "",
+    member.insight?.how_can_we_help?.toLowerCase() ?? "",
+    member.insight?.admin_notes?.toLowerCase() ?? "",
+    member.insight?.other_notes?.toLowerCase() ?? "",
+  ];
+
+  return searchWords.some((word) =>
+    memberData.some((data) => data.includes(word))
+  );
+}
+
 function filterFn(
   m: MemberPublicInfo & { name: string },
   filters: {
@@ -46,7 +111,8 @@ function filterFn(
     facultyFilter: Set<number>;
     memberTypeFilter: Set<number>;
     keywordFilter: Set<number>;
-  }
+  },
+  searchTerm: string
 ): boolean {
   const { nameFilter, facultyFilter, memberTypeFilter, keywordFilter } =
     filters;
@@ -63,6 +129,42 @@ function filterFn(
     if (!m.has_keyword.some(({ keyword }) => keywordFilter.has(keyword.id)))
       return false;
   }
+  if (searchTerm && !matchesPartialSearchTerm(m, searchTerm)) {
+    return false;
+  }
+
+  return true;
+}
+
+function filterFnPrivate(
+  m: PrivateMemberRes & { name: string },
+  filters: {
+    nameFilter: Set<number>;
+    facultyFilter: Set<number>;
+    memberTypeFilter: Set<number>;
+    keywordFilter: Set<number>;
+  },
+  searchTerm: string
+): boolean {
+  const { nameFilter, facultyFilter, memberTypeFilter, keywordFilter } =
+    filters;
+  if (nameFilter.size > 0 && !nameFilter.has(m.id)) return false;
+  if (facultyFilter.size > 0) {
+    if (!m.faculty && !facultyFilter.has(0)) return false; // id 0 is for null
+    if (m.faculty && !facultyFilter.has(m.faculty.id)) return false;
+  }
+  if (memberTypeFilter.size > 0) {
+    if (!m.member_type && !memberTypeFilter.has(0)) return false; // id 0 is for null
+    if (m.member_type && !memberTypeFilter.has(m.member_type.id)) return false;
+  }
+  if (keywordFilter.size > 0) {
+    if (!m.has_keyword.some(({ keyword }) => keywordFilter.has(keyword.id)))
+      return false;
+  }
+  if (searchTerm && !matchesPartialSearchTermPrivate(m, searchTerm)) {
+    return false;
+  }
+
   return true;
 }
 
@@ -193,6 +295,13 @@ const AllMembers: FC = () => {
     loading,
     refresh: refreshMembers,
   } = useContext(AllMembersCtx);
+
+  const {
+    allMembersPrivate,
+    loading: loadingPrivate,
+    refresh: refreshMembersPrivate,
+  } = useContext(AllMembersPrivateCtx);
+
   const { refresh: refreshKeywords } = useContext(AllKeywordsCtx);
 
   useEffect(() => {
@@ -215,6 +324,7 @@ const AllMembers: FC = () => {
   const [facultyFilter, setFacultyFilter] = useState(new Set<number>());
   const [memberTypeFilter, setMemberTypeFilter] = useState(new Set<number>());
   const [keywordFilter, setKeywordFilter] = useState(new Set<number>());
+  const [searchTerm, setSearchTerm] = useState("");
 
   const router = useRouter();
   const showFacultyQuery = router.query[queryKeys.showFaculty];
@@ -277,17 +387,54 @@ const AllMembers: FC = () => {
       allMembers
         .map((m) => ({ ...m, key: m.id, name: getName(m) }))
         .filter((m) =>
-          filterFn(m, {
-            nameFilter,
-            facultyFilter,
-            memberTypeFilter,
-            keywordFilter,
-          })
+          filterFn(
+            m,
+            {
+              nameFilter,
+              facultyFilter,
+              memberTypeFilter,
+              keywordFilter,
+            },
+            searchTerm
+          )
         ),
-    [allMembers, facultyFilter, keywordFilter, memberTypeFilter, nameFilter]
+    [
+      allMembers,
+      facultyFilter,
+      keywordFilter,
+      memberTypeFilter,
+      nameFilter,
+      searchTerm,
+    ]
   );
 
-  type MemberColumnType = ColumnType<typeof filteredMembers[number]>;
+  const filteredMembersPrivate = useMemo(
+    () =>
+      allMembersPrivate
+        .map((m) => ({ ...m, key: m.id, name: getName(m) }))
+        .filter((m) =>
+          filterFnPrivate(
+            m,
+            {
+              nameFilter,
+              facultyFilter,
+              memberTypeFilter,
+              keywordFilter,
+            },
+            searchTerm
+          )
+        ),
+    [
+      allMembersPrivate,
+      facultyFilter,
+      keywordFilter,
+      memberTypeFilter,
+      nameFilter,
+      searchTerm,
+    ]
+  );
+
+  type MemberColumnType = ColumnType<(typeof filteredMembers)[number]>;
 
   const nameColumn: MemberColumnType = useMemo(
     () => ({
@@ -407,6 +554,17 @@ const AllMembers: FC = () => {
           getPopupContainer={getPopupContainer}
         />
       </Form.Item>
+      <Form.Item
+        label={en ? "Search" : "Rechercher"}
+        htmlFor="search-input"
+        className="search-input"
+      >
+        <Input
+          id="search-input"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Form.Item>
       <label htmlFor="show-column-checkboxes">
         {en ? "Show Columns:" : "Afficher les colonnes:"}
       </label>
@@ -447,6 +605,12 @@ const AllMembers: FC = () => {
 
   const expandedRowRender = (member: MemberPublicInfo) => (
     <Descriptions size="small" layout="vertical" className="problems-container">
+      {/* Add About Me section if available */}
+      {(member.about_me_en || member.about_me_fr) && (
+        <Item label={en ? "About Me" : "À propos de moi"}>
+          {en ? member.about_me_en : member.about_me_fr}
+        </Item>
+      )}
       <Item
         label={
           en ? "Problems I Work On" : "Problèmes sur lesquels je travaille"
@@ -469,7 +633,9 @@ const AllMembers: FC = () => {
       size="small"
       tableLayout="auto"
       columns={columns}
-      dataSource={filteredMembers}
+      dataSource={
+        Authorizations.admin ? filteredMembersPrivate : filteredMembers
+      }
       loading={loading}
       title={Header}
       pagination={false}

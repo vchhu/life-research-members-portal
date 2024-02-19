@@ -6,6 +6,7 @@ import { AllTargetsCtxProvider } from "./all-targets-ctx";
 import { AllOrganizationsCtxProvider } from "./all-organizations-ctx";
 import { AllTopicsCtxProvider } from "./all-topics-ctx";
 import { AllMembersCtxProvider } from "./all-members-ctx";
+import { AllMembersPrivateCtxProvider } from "./all-members-private-ctx";
 import { AllPartnersCtxProvider } from "./all-partners-ctx";
 import { FacultiesCtxProvider } from "./faculties-ctx";
 import { LanguageCtxProvider } from "./language-ctx";
@@ -42,6 +43,7 @@ const AllContextProviders: FC<PropsWithChildren> = [
   AllMembersSelectorCtxProvider,
   AllAccountsCtxProvider,
   AllMembersCtxProvider,
+  AllMembersPrivateCtxProvider,
   AllPartnersCtxProvider,
   OrgTypesCtxProvider,
   OrgScopeCtxProvider,
