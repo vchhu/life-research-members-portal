@@ -4,8 +4,19 @@ generator client {
 
 datasource db {
   provider = "sqlserver"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_TEST")
 }
+
+model Institute {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+
+  member      member[]
+
+
+}
+
 
 model account {
   id           Int       @id(map: "PK_account") @default(autoincrement())
@@ -314,6 +325,7 @@ model member {
   supervision_committee            supervision_committee[]
   supervision_principal_supervisor supervision_principal_supervisor[]
   supervision_trainee              supervision_trainee[]
+  institutes                         Institute[]
 }
 
 model member_type {
