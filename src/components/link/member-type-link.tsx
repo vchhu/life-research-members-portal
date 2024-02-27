@@ -14,7 +14,7 @@ const MemberTypeLink: FC<Props> = ({ member_type }) => {
   return (
     <SafeLink
       href={{
-        pathname: PageRoutes.allMembers,
+        pathname: PageRoutes.allMembers("lri"),
         query: {
           [queryKeys.memberTypes]: member_type.id,
           [queryKeys.showMemberType]: true,

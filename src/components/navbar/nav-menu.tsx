@@ -29,9 +29,15 @@ const NavMenu: FC = () => {
 
   // Registered Acounts
   const registeredItemsFirst = [
-    { label: en ? "Members" : "Membres", href: PageRoutes.allMembers },
-    { label: en ? "Products" : "Produits", href: PageRoutes.products },
-    { label: en ? "Partners" : "Partenaires", href: PageRoutes.allPartners },
+    { label: en ? "Members" : "Membres", href: PageRoutes.allMembers("lri") },
+    {
+      label: en ? "Products" : "Produits",
+      href: PageRoutes.allProducts("lri"),
+    },
+    {
+      label: en ? "Partners" : "Partenaires",
+      href: PageRoutes.allPartners("lri"),
+    },
   ];
 
   // Registered Acounts
@@ -41,20 +47,20 @@ const NavMenu: FC = () => {
 
   // Admins
   const adminItems = [
-    { label: en ? "Grants" : "Subventions", href: PageRoutes.allGrants },
-    { label: en ? "Events" : "Événements", href: PageRoutes.allEvents },
+    { label: en ? "Grants" : "Subventions", href: PageRoutes.allGrants("lri") },
+    { label: en ? "Events" : "Événements", href: PageRoutes.allEvents("lri") },
     {
       label: en ? "Supervisions" : "Supervisions",
-      href: PageRoutes.allSupervisions,
+      href: PageRoutes.allSupervisions("lri"),
     },
 
     {
       label: en ? "Accounts" : "Comptes",
-      href: PageRoutes.allAccounts,
+      href: PageRoutes.allAccounts("lri"),
       children: [
         {
           label: en ? "All accounts" : "Tous les comptes",
-          href: PageRoutes.allAccounts,
+          href: PageRoutes.allAccounts("lri"),
         },
         {
           label: en ? "Register an account" : "Enregistrer un compte",

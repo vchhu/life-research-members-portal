@@ -14,7 +14,7 @@ const FacultyLink: FC<Props> = ({ faculty }) => {
   return (
     <SafeLink
       href={{
-        pathname: PageRoutes.allMembers,
+        pathname: PageRoutes.allMembers("lri"),
         query: {
           [queryKeys.faculties]: faculty.id,
           [queryKeys.showFaculty]: true,

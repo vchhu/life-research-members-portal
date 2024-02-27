@@ -49,7 +49,7 @@ const DeleteSupervisionButton: FC<Props> = ({
     if (res) {
       setModalOpen(false);
       if (localAccount?.is_admin) {
-        router.push(PageRoutes.allSupervisions);
+        router.push(PageRoutes.allSupervisions("lri"));
       } else {
         router.push(PageRoutes.myProfile);
       }

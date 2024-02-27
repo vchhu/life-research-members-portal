@@ -14,7 +14,7 @@ const PartnerScopeLink: FC<Props> = ({ org_scope }) => {
   return (
     <SafeLink
       href={{
-        pathname: PageRoutes.allPartners,
+        pathname: PageRoutes.allPartners("lri"),
         query: {
           [queryKeys.partnerScope]: org_scope.id,
           [queryKeys.showScope]: true,

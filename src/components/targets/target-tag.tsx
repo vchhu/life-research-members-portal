@@ -46,7 +46,7 @@ const TargetTag: FC<Props> = ({
   const content = linked ? (
     <SafeLink
       href={{
-        pathname: PageRoutes.allProducts,
+        pathname: PageRoutes.allProducts("lri"),
         query: { [queryKeys.targets]: k.id },
       }}
     >

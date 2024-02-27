@@ -197,7 +197,7 @@ const Welcome: FC = () => {
           <Col xs={24} md={6}>
             <Space direction="vertical">
               {localAccount ? (
-                <Link href={PageRoutes.allMembers}>
+                <Link href={PageRoutes.allMembers("lri")}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-1">
                       <TeamOutlined className="icon-gradient" />
@@ -218,7 +218,7 @@ const Welcome: FC = () => {
                 </div>
               )}
               {localAccount?.is_admin ? (
-                <Link href={PageRoutes.allGrants}>
+                <Link href={PageRoutes.allGrants("lri")}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-3">
                       <FundOutlined className="icon-gradient" />
@@ -241,7 +241,7 @@ const Welcome: FC = () => {
           <Col xs={24} md={6}>
             <Space direction="vertical">
               {localAccount ? (
-                <Link href={PageRoutes.allProducts}>
+                <Link href={PageRoutes.allProducts("lri")}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-2">
                       <AppstoreOutlined className="icon-gradient" />
@@ -261,7 +261,7 @@ const Welcome: FC = () => {
               )}
 
               {localAccount && localAccount.is_admin ? (
-                <Link href={PageRoutes.allEvents}>
+                <Link href={PageRoutes.allEvents("lri")}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-4">
                       <CalendarOutlined className="icon-gradient" />
@@ -284,7 +284,7 @@ const Welcome: FC = () => {
           <Col xs={24} md={6}>
             <Space direction="vertical">
               {localAccount ? (
-                <Link href={PageRoutes.allPartners}>
+                <Link href={PageRoutes.allPartners("lri")}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-6">
                       <TeamOutlined className="icon-gradient" />
@@ -306,7 +306,7 @@ const Welcome: FC = () => {
               )}
 
               {localAccount?.is_admin ? (
-                <Link href={PageRoutes.allSupervisions}>
+                <Link href={PageRoutes.allSupervisions("lri")}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-5">
                       <SolutionOutlined className="icon-gradient" />

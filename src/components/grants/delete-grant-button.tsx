@@ -42,7 +42,7 @@ const DeleteGrantButton: FC<Props> = ({ grant, setGrant, style }) => {
     const res = await deleteGrant(grant.id);
     if (res) {
       setModalOpen(false);
-      router.push(PageRoutes.allGrants);
+      router.push(PageRoutes.allGrants("lri"));
     }
   }
 

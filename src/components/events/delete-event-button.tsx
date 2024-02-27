@@ -42,7 +42,7 @@ const DeleteEventButton: FC<Props> = ({ event, setEvent, style }) => {
     const res = await deleteEvent(event.id);
     if (res) {
       setModalOpen(false);
-      router.push(PageRoutes.allEvents);
+      router.push(PageRoutes.allEvents("lri"));
     }
   }
 

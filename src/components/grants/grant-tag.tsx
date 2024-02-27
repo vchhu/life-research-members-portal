@@ -48,7 +48,7 @@ const GrantTag: FC<Props> = ({
   const content = linked ? (
     <SafeLink
       href={{
-        pathname: PageRoutes.allGrants,
+        pathname: PageRoutes.allGrants("lri"),
         //query: { [queryKeys.grants]: g.id },
       }}
     >

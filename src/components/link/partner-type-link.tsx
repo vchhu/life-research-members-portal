@@ -14,7 +14,7 @@ const PartnerTypeLink: FC<Props> = ({ org_type }) => {
   return (
     <SafeLink
       href={{
-        pathname: PageRoutes.allPartners,
+        pathname: PageRoutes.allPartners("lri"),
         query: {
           [queryKeys.partnerType]: org_type.id,
           [queryKeys.showType]: true,

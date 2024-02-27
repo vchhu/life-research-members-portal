@@ -45,7 +45,7 @@ const DeletePartnerButton: FC<Props> = ({ partner, setPartner, style }) => {
     const res = await deletePartner(partner.id);
     if (res) {
       setModalOpen(false);
-      router.push(PageRoutes.allPartners); // Update the route
+      router.push(PageRoutes.allPartners("lri")); // Update the route
     }
   }
 

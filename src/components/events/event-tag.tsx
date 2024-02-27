@@ -48,7 +48,7 @@ const EventTag: FC<Props> = ({
   const content = linked ? (
     <SafeLink
       href={{
-        pathname: PageRoutes.allEvents,
+        pathname: PageRoutes.allEvents("lri"),
         // query: { [queryKeys.events]: k.id },
       }}
     >

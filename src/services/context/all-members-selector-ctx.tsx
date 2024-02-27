@@ -49,7 +49,8 @@ export const AllMembersSelectorCtxProvider: FC<PropsWithChildren> = ({
   const { en } = useContext(LanguageCtx);
 
   async function getMembers() {
-    const members = await fetchAllMembers();
+    //TODO: fetch members from the server
+    // const members = await fetchAllMembers();
     setMembers(members.sort(en ? enSorter : frSorter));
     setMemberMap(new Map(members.map((m) => [m.id, m])));
   }

@@ -31,6 +31,10 @@ import MemberNameFilter from "../filters/member-name-filter";
 import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
 import type { ParsedUrlQueryInput } from "querystring";
 
+type Props = {
+  instituteId: string;
+};
+
 function nameSorter(a: { name: string }, b: { name: string }) {
   return a.name.localeCompare(b.name);
 }
@@ -186,13 +190,19 @@ function getPopupContainer(): HTMLElement {
   return document.querySelector(".all-members-table .filters") || document.body;
 }
 
-const AllMembers: FC = () => {
+const AllMembers: FC<Props> = ({ instituteId }) => {
   const { en } = useContext(LanguageCtx);
   const {
     allMembers,
     loading,
     refresh: refreshMembers,
+    setInstituteId,
   } = useContext(AllMembersCtx);
+
+  useEffect(() => {
+    if (instituteId) setInstituteId(instituteId);
+  }, [instituteId, setInstituteId]);
+
   const { refresh: refreshKeywords } = useContext(AllKeywordsCtx);
 
   useEffect(() => {
@@ -287,7 +297,7 @@ const AllMembers: FC = () => {
     [allMembers, facultyFilter, keywordFilter, memberTypeFilter, nameFilter]
   );
 
-  type MemberColumnType = ColumnType<typeof filteredMembers[number]>;
+  type MemberColumnType = ColumnType<(typeof filteredMembers)[number]>;
 
   const nameColumn: MemberColumnType = useMemo(
     () => ({

@@ -5,7 +5,6 @@
 // The component uses the SafeLink component to make the tag linkable if specified.
 */
 
-
 import CloseOutlined from "@ant-design/icons/lib/icons/CloseOutlined";
 import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import type { organization } from "@prisma/client";
@@ -54,7 +53,7 @@ const OrganizationTag: FC<Props> = ({
   const content = linked ? (
     <SafeLink
       href={{
-        pathname: PageRoutes.allPartners,
+        pathname: PageRoutes.allPartners("lri"),
         // query: { [queryKeys.partners]: k.id },
       }}
     >

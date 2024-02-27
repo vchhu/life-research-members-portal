@@ -52,7 +52,7 @@ const KeywordTag: FC<Props> = ({
   const content = linked ? (
     <SafeLink
       href={{
-        pathname: PageRoutes.allMembers,
+        pathname: PageRoutes.allMembers("lri"),
         query: { [queryKeys.keywords]: k.id },
       }}
     >

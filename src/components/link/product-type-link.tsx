@@ -14,7 +14,7 @@ const ProductTypeLink: FC<Props> = ({ product_type }) => {
   return (
     <SafeLink
       href={{
-        pathname: PageRoutes.allProducts,
+        pathname: PageRoutes.allProducts("lri"),
         query: {
           [queryKeys.productTypes]: product_type.id,
           [queryKeys.showType]: true,

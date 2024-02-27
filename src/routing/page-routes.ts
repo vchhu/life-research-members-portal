@@ -1,6 +1,14 @@
 const PageRoutes = {
   home: "/",
-  allMembers: "/members",
+  instituteHome: (urlIdentifier: string) => `/${urlIdentifier}`,
+  allMembers: (urlIdentifier: string) => `/${urlIdentifier}/members`,
+  allProducts: (urlIdentifier: string) => `/${urlIdentifier}/products`,
+  allEvents: (urlIdentifier: string) => `/${urlIdentifier}/events`,
+  allGrants: (urlIdentifier: string) => `/${urlIdentifier}/grants`,
+  allSupervisions: (urlIdentifier: string) => `/${urlIdentifier}/supervisions`,
+  allPartners: (urlIdentifier: string) => `/${urlIdentifier}/partners`,
+  allAccounts: (urlIdentifier: string) => `/${urlIdentifier}/accounts`,
+
   memberProfile: (id: number) => "/members/" + id,
   productProfile: (id: number) => "/products/" + id,
   grantProfile: (id: number) => "/grants/" + id,
@@ -19,14 +27,10 @@ const PageRoutes = {
   publicGrantProfile: (id: number) => "/grants/" + id + "/public",
   privateEventProfile: (id: number) => "/events/" + id + "/private",
   publicEventProfile: (id: number) => "/events/" + id + "/public",
+
   myProfile: "/my-profile",
-  allAccounts: "/accounts",
-  allPartners: "/partners",
-  allProducts: "/products",
-  allEvents: "/events",
+  //TODO: remove this products route
   products: "/products",
-  allGrants: "/grants",
-  allSupervisions: "/supervisions",
   accountProfile: (id: number) => "/accounts/" + id,
   register: "/register",
   _404: "/404",
