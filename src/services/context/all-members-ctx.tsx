@@ -3,22 +3,21 @@ import {
   FC,
   PropsWithChildren,
   useCallback,
+  useContext,
   useEffect,
   useState,
 } from "react";
 import ApiRoutes from "../../routing/api-routes";
 import Notification from "../notifications/notification";
 import type { MemberPublicInfo } from "../_types";
-import { useRouter } from "next/router";
 import getAuthHeader from "../headers/auth-header";
+import { useSelectedInstitute } from "./selected-institute-ctx";
 
 export const AllMembersCtx = createContext<{
   allMembers: MemberPublicInfo[];
   loading: boolean;
   refreshing: boolean;
   refresh: () => void;
-  instituteId?: string;
-  setInstituteId: (id: string) => void;
 }>(null as any);
 
 type AllMembersCtxProviderProps = PropsWithChildren<{ instituteId?: string }>;
@@ -29,15 +28,22 @@ export const AllMembersCtxProvider: FC<AllMembersCtxProviderProps> = ({
   const [allMembers, setAllMembers] = useState<MemberPublicInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [instituteId, setInstituteId] = useState("");
+  const { institute } = useSelectedInstitute();
+
+  useEffect(() => {
+    console.log("instiute inside members-context", institute);
+  }, [institute]);
 
   const fetchAllMembers = useCallback(async () => {
-    if (!instituteId || instituteId === "") {
+    if (!institute) {
+      console.log("Institute not found.");
       setLoading(false);
       return;
     }
+
     try {
-      const queryParam = instituteId ? `?instituteId=${instituteId}` : "";
+      const queryParam = `?instituteId=${institute?.urlIdentifier}`;
+      console.log(queryParam, "queryParam");
       const authHeader = await getAuthHeader();
       if (!authHeader) return;
       const result = await fetch(`${ApiRoutes.allMembers}${queryParam}`, {
@@ -58,7 +64,7 @@ export const AllMembersCtxProvider: FC<AllMembersCtxProviderProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [instituteId]);
+  }, [institute]);
 
   useEffect(() => {
     async function firstLoad() {
@@ -85,8 +91,6 @@ export const AllMembersCtxProvider: FC<AllMembersCtxProviderProps> = ({
         loading,
         refresh,
         refreshing,
-        instituteId,
-        setInstituteId,
       }}
     >
       {children}

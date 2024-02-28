@@ -7,6 +7,7 @@ import Navbar from "../components/navbar/_navbar";
 import { useRouter } from "next/router";
 import PageRoutes from "../routing/page-routes";
 import AllContextProviders from "../services/context/_ctx-bundler";
+import InstituteGuard from "../components/institute-gaurd";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -20,8 +21,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     return "";
   }
   let suffix = getSuffix();
-  let title = "LIFE";
-  if (suffix) title += " - " + suffix;
+  let title = "";
+  if (suffix) title = suffix;
 
   return (
     <>
@@ -31,9 +32,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <MsalProvider instance={msalInstance}>
         <AllContextProviders>
           <Navbar />
-          <div className="next-page-container">
-            <Component {...pageProps} />
-          </div>
+          <InstituteGuard>
+            <div className="next-page-container">
+              <Component {...pageProps} />
+            </div>
+          </InstituteGuard>
         </AllContextProviders>
       </MsalProvider>
     </>

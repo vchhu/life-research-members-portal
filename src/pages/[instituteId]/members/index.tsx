@@ -8,11 +8,10 @@ import { useRouter } from "next/router";
 
 const MembersPage: NextPage = () => {
   const router = useRouter();
-  const institudeId = String(router.query.instituteId);
   return (
     <Layout>
       <PageAuthGuard auths={[Authorizations.registered]}>
-        <AllMembers instituteId={institudeId} />
+        <AllMembers />
       </PageAuthGuard>
     </Layout>
   );

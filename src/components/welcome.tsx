@@ -31,11 +31,13 @@ import Image from "next/image";
 import life from "../../public/life-home2.png";
 import PageRoutes from "../routing/page-routes";
 import Link from "next/link";
+import { useSelectedInstitute } from "../services/context/selected-institute-ctx";
 
 const { Title } = Typography;
 
 const Welcome: FC = () => {
   const { localAccount, loading } = useContext(ActiveAccountCtx);
+  const { institute } = useSelectedInstitute();
   const { en } = useContext(LanguageCtx);
 
   const { allMembers } = useContext(AllMembersCtx);
@@ -196,8 +198,8 @@ const Welcome: FC = () => {
           </Col>
           <Col xs={24} md={6}>
             <Space direction="vertical">
-              {localAccount ? (
-                <Link href={PageRoutes.allMembers("lri")}>
+              {localAccount && institute?.urlIdentifier ? (
+                <Link href={PageRoutes.allMembers(institute?.urlIdentifier)}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-1">
                       <TeamOutlined className="icon-gradient" />
@@ -217,8 +219,8 @@ const Welcome: FC = () => {
                   </span>
                 </div>
               )}
-              {localAccount?.is_admin ? (
-                <Link href={PageRoutes.allGrants("lri")}>
+              {localAccount?.is_admin && institute?.urlIdentifier ? (
+                <Link href={PageRoutes.allGrants(institute?.urlIdentifier)}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-3">
                       <FundOutlined className="icon-gradient" />
@@ -240,8 +242,8 @@ const Welcome: FC = () => {
           </Col>
           <Col xs={24} md={6}>
             <Space direction="vertical">
-              {localAccount ? (
-                <Link href={PageRoutes.allProducts("lri")}>
+              {localAccount && institute?.urlIdentifier ? (
+                <Link href={PageRoutes.allProducts(institute?.urlIdentifier)}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-2">
                       <AppstoreOutlined className="icon-gradient" />
@@ -260,8 +262,10 @@ const Welcome: FC = () => {
                 </div>
               )}
 
-              {localAccount && localAccount.is_admin ? (
-                <Link href={PageRoutes.allEvents("lri")}>
+              {localAccount &&
+              localAccount.is_admin &&
+              institute?.urlIdentifier ? (
+                <Link href={PageRoutes.allEvents(institute?.urlIdentifier)}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-4">
                       <CalendarOutlined className="icon-gradient" />
@@ -283,8 +287,8 @@ const Welcome: FC = () => {
           </Col>
           <Col xs={24} md={6}>
             <Space direction="vertical">
-              {localAccount ? (
-                <Link href={PageRoutes.allPartners("lri")}>
+              {localAccount && institute?.urlIdentifier ? (
+                <Link href={PageRoutes.allPartners(institute?.urlIdentifier)}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-6">
                       <TeamOutlined className="icon-gradient" />
@@ -305,8 +309,10 @@ const Welcome: FC = () => {
                 </div>
               )}
 
-              {localAccount?.is_admin ? (
-                <Link href={PageRoutes.allSupervisions("lri")}>
+              {localAccount?.is_admin && institute?.urlIdentifier ? (
+                <Link
+                  href={PageRoutes.allSupervisions(institute?.urlIdentifier)}
+                >
                   <a>
                     <div className="rounded-box rounded-box-gradient-5">
                       <SolutionOutlined className="icon-gradient" />

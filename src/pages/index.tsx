@@ -3,11 +3,8 @@ import Welcome from "../components/welcome";
 import Layout from "../components/layout/layout";
 
 const Home: NextPage = () => {
-  return (
-    <Layout>
-      <Welcome />
-    </Layout>
-  );
+  console.log("Home page");
+  return <Layout>Home</Layout>;
 };
 
 export default Home;

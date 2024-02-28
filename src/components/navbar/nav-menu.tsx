@@ -17,10 +17,13 @@ import PageRoutes from "../../routing/page-routes";
 import SafeLink from "../link/safe-link";
 import type { UrlObject } from "url";
 
-const NavMenu: FC = () => {
+const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
+  urlIdentifier,
+}) => {
   const { localAccount, loading } = useContext(ActiveAccountCtx);
   const router = useRouter();
   const { en } = useContext(LanguageCtx);
+  if (!urlIdentifier) return <Spin />;
 
   // Everyone
   const generalItems = [
@@ -29,14 +32,17 @@ const NavMenu: FC = () => {
 
   // Registered Acounts
   const registeredItemsFirst = [
-    { label: en ? "Members" : "Membres", href: PageRoutes.allMembers("lri") },
+    {
+      label: en ? "Members" : "Membres",
+      href: PageRoutes.allMembers(urlIdentifier),
+    },
     {
       label: en ? "Products" : "Produits",
-      href: PageRoutes.allProducts("lri"),
+      href: PageRoutes.allProducts(urlIdentifier),
     },
     {
       label: en ? "Partners" : "Partenaires",
-      href: PageRoutes.allPartners("lri"),
+      href: PageRoutes.allPartners(urlIdentifier),
     },
   ];
 
@@ -47,20 +53,26 @@ const NavMenu: FC = () => {
 
   // Admins
   const adminItems = [
-    { label: en ? "Grants" : "Subventions", href: PageRoutes.allGrants("lri") },
-    { label: en ? "Events" : "Événements", href: PageRoutes.allEvents("lri") },
+    {
+      label: en ? "Grants" : "Subventions",
+      href: PageRoutes.allGrants(urlIdentifier),
+    },
+    {
+      label: en ? "Events" : "Événements",
+      href: PageRoutes.allEvents(urlIdentifier),
+    },
     {
       label: en ? "Supervisions" : "Supervisions",
-      href: PageRoutes.allSupervisions("lri"),
+      href: PageRoutes.allSupervisions(urlIdentifier),
     },
 
     {
       label: en ? "Accounts" : "Comptes",
-      href: PageRoutes.allAccounts("lri"),
+      href: PageRoutes.allAccounts(urlIdentifier),
       children: [
         {
           label: en ? "All accounts" : "Tous les comptes",
-          href: PageRoutes.allAccounts("lri"),
+          href: PageRoutes.allAccounts(urlIdentifier),
         },
         {
           label: en ? "Register an account" : "Enregistrer un compte",

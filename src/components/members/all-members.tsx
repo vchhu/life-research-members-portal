@@ -31,10 +31,6 @@ import MemberNameFilter from "../filters/member-name-filter";
 import { AllKeywordsCtx } from "../../services/context/all-keywords-ctx";
 import type { ParsedUrlQueryInput } from "querystring";
 
-type Props = {
-  instituteId: string;
-};
-
 function nameSorter(a: { name: string }, b: { name: string }) {
   return a.name.localeCompare(b.name);
 }
@@ -190,18 +186,13 @@ function getPopupContainer(): HTMLElement {
   return document.querySelector(".all-members-table .filters") || document.body;
 }
 
-const AllMembers: FC<Props> = ({ instituteId }) => {
+const AllMembers: FC = () => {
   const { en } = useContext(LanguageCtx);
   const {
     allMembers,
     loading,
     refresh: refreshMembers,
-    setInstituteId,
   } = useContext(AllMembersCtx);
-
-  useEffect(() => {
-    if (instituteId) setInstituteId(instituteId);
-  }, [instituteId, setInstituteId]);
 
   const { refresh: refreshKeywords } = useContext(AllKeywordsCtx);
 
