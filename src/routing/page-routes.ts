@@ -8,6 +8,10 @@ const PageRoutes = {
   allSupervisions: (urlIdentifier: string) => `/${urlIdentifier}/supervisions`,
   allPartners: (urlIdentifier: string) => `/${urlIdentifier}/partners`,
   allAccounts: (urlIdentifier: string) => `/${urlIdentifier}/accounts`,
+  registerPartner: (urlIdentifier: string) =>
+    `/${urlIdentifier}/partners/register-partner`,
+  registerSupervision: (urlIdentifier: string) =>
+    `/${urlIdentifier}/supervisions/register-supervision`,
 
   memberProfile: (id: number) => "/members/" + id,
   productProfile: (id: number) => "/products/" + id,
