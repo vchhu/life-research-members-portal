@@ -166,18 +166,23 @@ export const selectAllPartnerInfo: CheckKeysAreValid<
 
 
 const _includeAllProductInfo = {
-    id: true,
-    title_en: true,
-    title_fr: true,
-    doi: true,
-    publish_date: true,
-    note: true,
-    all_author: true,
-    product_type: true,
-    product_target: { include: { target: true } },
-    product_partnership: { include: { organization: true } },
-    product_topic: { include: { topic: true } },
-    product_member_author: { include: { member: true } },
+  id: true,
+  title_en: true,
+  title_fr: true,
+  doi: true,
+  publish_date: true,
+  note: true,
+  all_author: true,
+  product_type: true,
+  product_target: { include: { target: true } },
+  product_partnership: { include: { organization: true } },
+  product_topic: { include: { topic: true } },
+  product_member_author: { include: { member: true } },
+  institutes: {
+    include: {
+      institute: true,
+    },
+  },
 } as const;
 
 export const includeAllProductInfo: CheckKeysAreValid<
@@ -186,67 +191,76 @@ export const includeAllProductInfo: CheckKeysAreValid<
 > = _includeAllProductInfo;
 
 const _selectAllProductInfo = {
-    id: true,
-    title_en: true,
-    title_fr: true,
-    note: true,
-    doi: true,
-    publish_date: true,
-    all_author: true,
-    peer_reviewed: true,
-    product_type_id: true,
-    on_going: true,
-    product_type: true,
-    product_target: { include: { target: true } },
-    product_partnership: { include: { organization: true } },
-    product_topic: { include: { topic: true } },
-    product_member_author: {
-        include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
-            },
-        },
+  id: true,
+  title_en: true,
+  title_fr: true,
+  note: true,
+  doi: true,
+  publish_date: true,
+  all_author: true,
+  peer_reviewed: true,
+  product_type_id: true,
+  on_going: true,
+  product_type: true,
+  product_target: { include: { target: true } },
+  product_partnership: { include: { organization: true } },
+  product_topic: { include: { topic: true } },
+  institutes: {
+    include: {
+      institute: true,
     },
+  },
+  product_member_author: {
+    include: {
+      member: {
+        include: {
+          account: {
+            select: {
+              first_name: true,
+              last_name: true,
+            },
+          },
+        },
+      },
+    },
+  },
 } as const;
 
 export const selectAllProductInfo: CheckKeysAreValid<
-    typeof _selectAllProductInfo,
-    Prisma.productSelect
+  typeof _selectAllProductInfo,
+  Prisma.productSelect
 > = _selectAllProductInfo;
 
-
 const _selectPublicProductInfo = {
-    id: true,
-    title_en: true,
-    title_fr: true,
-    note: true,
-    doi: true,
-    publish_date: true,
-    product_type: true,
-    all_author: true,
-    product_target: { include: { target: true } },
-    product_partnership: { include: { organization: true } },
-    product_member_author: {
-        include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
-            },
-        },
+  id: true,
+  title_en: true,
+  title_fr: true,
+  note: true,
+  doi: true,
+  publish_date: true,
+  product_type: true,
+  all_author: true,
+  product_target: { include: { target: true } },
+  product_partnership: { include: { organization: true } },
+  institutes: {
+    include: {
+      institute: true,
     },
+  },
+  product_member_author: {
+    include: {
+      member: {
+        include: {
+          account: {
+            select: {
+              first_name: true,
+              last_name: true,
+            },
+          },
+        },
+      },
+    },
+  },
 } as const;
 
 export const selectPublicProductInfo: CheckKeysAreValid<
