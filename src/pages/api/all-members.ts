@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { selectPublicMemberInfo } from "../../../prisma/helpers";
 import db from "../../../prisma/prisma-client";
 import type { PublicMemberRes } from "./member/[id]/public";
-import getAccountFromRequest from "../../utils/api/get-account-from-request";
 
 async function allMembers(urlIdentifier: string): Promise<PublicMemberRes[]> {
   const institute = await db.institute.findUnique({
@@ -32,7 +31,6 @@ export default async function handler(
   res: NextApiResponse<PublicMemberRes[] | string>
 ) {
   const { instituteId } = req.query;
-  const currentAccount = await getAccountFromRequest(req, res);
   if (!instituteId) return res.status(400).json("Please select an Institute.");
 
   try {

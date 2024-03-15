@@ -30,10 +30,6 @@ export const AllMembersCtxProvider: FC<AllMembersCtxProviderProps> = ({
   const [refreshing, setRefreshing] = useState(false);
   const { institute } = useSelectedInstitute();
 
-  useEffect(() => {
-    console.log("instiute inside members-context", institute);
-  }, [institute]);
-
   const fetchAllMembers = useCallback(async () => {
     if (!institute) {
       console.log("Institute not found.");
@@ -43,7 +39,6 @@ export const AllMembersCtxProvider: FC<AllMembersCtxProviderProps> = ({
 
     try {
       const queryParam = `?instituteId=${institute?.urlIdentifier}`;
-      console.log(queryParam, "queryParam");
       const authHeader = await getAuthHeader();
       if (!authHeader) return;
       const result = await fetch(`${ApiRoutes.allMembers}${queryParam}`, {
@@ -68,11 +63,11 @@ export const AllMembersCtxProvider: FC<AllMembersCtxProviderProps> = ({
 
   useEffect(() => {
     async function firstLoad() {
-      await fetchAllMembers();
+      institute && (await fetchAllMembers());
       setLoading(false);
     }
     firstLoad();
-  }, [fetchAllMembers]);
+  }, [fetchAllMembers, institute]);
 
   async function refresh() {
     if (loading || refreshing) return;

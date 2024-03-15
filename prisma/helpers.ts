@@ -11,19 +11,20 @@ type CheckKeysAreValid<T, ValidProps> = Exclude<keyof T, keyof ValidProps> exten
     : "Invalid keys" | Exclude<keyof T, keyof ValidProps>; // Hacky error message
 
 const _includeAllMemberInfo = {
-    account: true,
-    faculty: true,
-    member_type: true,
-    partnership_member_org: { include: { organization: true } },
-    supervision_principal_supervisor: { select: { supervision: true } },
-    current_promotion_strategy: { include: { promotion_strategy: true } },
-    desired_partnership: true,
-    desired_promotion_strategy: { include: { promotion_strategy: true } },
-    has_keyword: { include: { keyword: true } },
-    insight: true,
-    problem: true,
-    grant_member_involved: { include: { grant: true } },
-    product_member_author: { include: { product: true } },
+  account: true,
+  faculty: true,
+  member_type: true,
+  partnership_member_org: { include: { organization: true } },
+  supervision_principal_supervisor: { select: { supervision: true } },
+  current_promotion_strategy: { include: { promotion_strategy: true } },
+  desired_partnership: true,
+  desired_promotion_strategy: { include: { promotion_strategy: true } },
+  has_keyword: { include: { keyword: true } },
+  insight: true,
+  problem: true,
+  grant_member_involved: { include: { grant: true } },
+  product_member_author: { include: { product: true } },
+  institutes: true,
 } as const;
 
 export const includeAllMemberInfo: CheckKeysAreValid<

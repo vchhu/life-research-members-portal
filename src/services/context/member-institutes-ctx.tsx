@@ -34,11 +34,9 @@ export const MemberInstituteCtxProvider: FC<
     try {
       const authHeader = await getAuthHeader();
       if (!authHeader) return;
-      console.log(authHeader, "authHeader");
       const result = await fetch(`${ApiRoutes.memberInstitute}`, {
         headers: authHeader,
       });
-      console.log(result, "bcbcbc");
       if (!result.ok) throw await result.text();
       const institutes: MemberInstitutesInfo[] = await result.json();
 

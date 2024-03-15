@@ -305,20 +305,6 @@ const AllProducts: FC = () => {
     refreshProducts();
   }
 
-  const [members, setAccounts] = useState<PublicMemberRes[]>([]);
-
-  useEffect(() => {
-    const fetchAccounts = async () => {
-      const res = await fetch("api/all-members");
-      const data = await res.json();
-      setAccounts(data);
-
-      //console.log(data);
-    };
-
-    fetchAccounts();
-  }, []);
-
   const filteredProducts = useMemo(
     () =>
       allProducts

@@ -15,7 +15,6 @@ const InstituteSelector: FC = () => {
 
   useEffect(() => {
     const currentInstituteUrlIdentifier = router.query.instituteId;
-    console.log(currentInstituteUrlIdentifier, "currentInstituteUrlIdentifier");
     if (!currentInstituteUrlIdentifier) return;
     const currentInstitute = institutes.find(
       (institute) => institute.urlIdentifier === currentInstituteUrlIdentifier
