@@ -75,40 +75,44 @@ export const selectPublicMemberInfo: CheckKeysAreValid<
 
 
 const _selectPublicPartnerInfo = {
-    id: true,
-    name_en: true,
-    name_fr: true,
-    org_scope: true,
-    org_type: true,
-    description: true,
-    event_partner_involved: {
-        select: {
-            event: true,
-            event_id: true,
-            organization_id: true,
-        },
+  id: true,
+  name_en: true,
+  name_fr: true,
+  org_scope: true,
+  org_type: true,
+  description: true,
+  event_partner_involved: {
+    select: {
+      event: true,
+      event_id: true,
+      organization_id: true,
     },
-    partnership_member_org: {
+  },
+  partnership_member_org: {
+    include: {
+      member: {
         include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
+          account: {
+            select: {
+              first_name: true,
+              last_name: true,
             },
+          },
         },
+      },
     },
-    product_partnership: {
-        select: {
-            organization_id: true,
-            product_id: true,
-        },
+  },
+  product_partnership: {
+    select: {
+      organization_id: true,
+      product_id: true,
     },
-
+  },
+  organizationInstitute: {
+    include: {
+      institute: true,
+    },
+  },
 } as const;
 
 
@@ -118,44 +122,57 @@ export const selectPublicPartnerInfo: CheckKeysAreValid<
 > = _selectPublicPartnerInfo;
 
 const _includeAllPartnerInfo = {
-    id: true,
-    name_en: true,
-    name_fr: true,
-    org_scope: true,
-    org_type: true,
-    description: true,
-    event_partner_involved: { include: { event: true } },
-    partnership_member_org: { include: { member: { include: { account: true } } } },
-    product_partnership: { include: { product: true } },
-
+  id: true,
+  name_en: true,
+  name_fr: true,
+  org_scope: true,
+  org_type: true,
+  description: true,
+  event_partner_involved: { include: { event: true } },
+  partnership_member_org: {
+    include: { member: { include: { account: true } } },
+  },
+  product_partnership: { include: { product: true } },
+  organizationInstitute: {
+    include: {
+      institute: true,
+    },
+  },
 } as const;
 
 export const includeAllPartnerInfo: CheckKeysAreValid<
-    typeof _includeAllPartnerInfo,
-    Prisma.organizationSelect
+  typeof _includeAllPartnerInfo,
+  Prisma.organizationSelect
 > = _includeAllPartnerInfo;
 
 const _selectAllPartnerInfo = {
-    id: true,
-    name_en: true,
-    name_fr: true,
-    org_scope: true,
-    org_type: true,
-    description: true,
-    event_partner_involved: {
-        select: {
-            event: true,
-            event_id: true,
-            organization_id: true,
-        },
+  id: true,
+  name_en: true,
+  name_fr: true,
+  org_scope: true,
+  org_type: true,
+  description: true,
+  event_partner_involved: {
+    select: {
+      event: true,
+      event_id: true,
+      organization_id: true,
     },
-    partnership_member_org: { include: { member: { include: { account: true } } } },
-    product_partnership: {
-        select: {
-            organization_id: true,
-            product_id: true,
-        },
+  },
+  partnership_member_org: {
+    include: { member: { include: { account: true } } },
+  },
+  product_partnership: {
+    select: {
+      organization_id: true,
+      product_id: true,
     },
+  },
+  organizationInstitute: {
+    include: {
+      institute: true,
+    },
+  },
 } as const;
 
 export const selectAllPartnerInfo: CheckKeysAreValid<
