@@ -40,7 +40,6 @@ export const ProductsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const fetchAllProducts = useCallback(async () => {
     if (!institute) {
-      console.log("Institute not found.");
       return [];
     }
 
@@ -50,7 +49,7 @@ export const ProductsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
       if (!res.ok) throw await res.text();
       return await res.json();
     } catch (e: any) {
-      new Notification().error(e.message);
+      new Notification().error(e);
       return [];
     }
   }, [institute]);

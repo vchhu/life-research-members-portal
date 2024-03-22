@@ -288,239 +288,248 @@ export const selectPublicProductInfo: CheckKeysAreValid<
 
 
 const _includeAllGrantInfo = {
-    id: true,
-    title: true,
-    amount: true,
-    throught_lri: true,
-    status: true,
-    submission_date: true,
-    obtained_date: true,
-    completed_date: true,
-    source: true,
-    topic: true,
-    note: true,
-    all_investigator: true,
-    grant_member_involved: { include: { member: { include: { account: true } } } },
-    grant_investigator_member: { include: { member: { include: { account: true } } } },
-    event_grant_resulted: { include: { event: true } },
+  id: true,
+  title: true,
+  amount: true,
+  throught_lri: true,
+  status: true,
+  submission_date: true,
+  obtained_date: true,
+  completed_date: true,
+  source: true,
+  topic: true,
+  note: true,
+  all_investigator: true,
+  grant_member_involved: {
+    include: { member: { include: { account: true } } },
+  },
+  grant_investigator_member: {
+    include: { member: { include: { account: true } } },
+  },
+  event_grant_resulted: { include: { event: true } },
+  institute: true,
 } as const;
 
 export const includeAllGrantInfo: CheckKeysAreValid<
-    typeof _includeAllGrantInfo,
-    Prisma.grantSelect
+  typeof _includeAllGrantInfo,
+  Prisma.grantSelect
 > = _includeAllGrantInfo;
 
 const _selectAllGrantInfo = {
-    id: true,
-    title: true,
-    amount: true,
-    throught_lri: true,
-    status: true,
-    status_id: true,
-    source_id: true,
-    topic_id: true,
-    submission_date: true,
-    obtained_date: true,
-    completed_date: true,
-    source: true,
-    topic: true,
-    note: true,
-    all_investigator: true,
-    grant_member_involved: { include: { member: { include: { account: true } } } },
-    grant_investigator_member: { include: { member: { include: { account: true } } } },
-    event_grant_resulted: { include: { event: true } },
-
-
+  id: true,
+  title: true,
+  amount: true,
+  throught_lri: true,
+  status: true,
+  status_id: true,
+  source_id: true,
+  topic_id: true,
+  submission_date: true,
+  obtained_date: true,
+  completed_date: true,
+  source: true,
+  topic: true,
+  note: true,
+  all_investigator: true,
+  grant_member_involved: {
+    include: { member: { include: { account: true } } },
+  },
+  grant_investigator_member: {
+    include: { member: { include: { account: true } } },
+  },
+  event_grant_resulted: { include: { event: true } },
+  institute: true,
 } as const;
 
 export const selectAllGrantInfo: CheckKeysAreValid<
-    typeof _selectAllGrantInfo,
-    Prisma.grantSelect
+  typeof _selectAllGrantInfo,
+  Prisma.grantSelect
 > = _selectAllGrantInfo;
 
 const _selectPublicGrantInfo = {
-    id: true,
-    title: true,
-    amount: true,
-    throught_lri: true,
-    status: true,
-    submission_date: true,
-    obtained_date: true,
-    completed_date: true,
-    status_id: true,
-    source_id: true,
-    topic_id: true,
-    source: true,
-    all_investigator: true,
-    event_grant_resulted: { include: { event: true } },
-    grant_member_involved: {
+  id: true,
+  title: true,
+  amount: true,
+  throught_lri: true,
+  status: true,
+  submission_date: true,
+  obtained_date: true,
+  completed_date: true,
+  status_id: true,
+  source_id: true,
+  topic_id: true,
+  source: true,
+  all_investigator: true,
+  event_grant_resulted: { include: { event: true } },
+  grant_member_involved: {
+    include: {
+      member: {
         include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
+          account: {
+            select: {
+              first_name: true,
+              last_name: true,
             },
+          },
         },
+      },
     },
-    grant_investigator_member: {
+  },
+  grant_investigator_member: {
+    include: {
+      member: {
         include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
+          account: {
+            select: {
+              first_name: true,
+              last_name: true,
             },
+          },
         },
+      },
     },
-    topic: true,
-    note: true,
-
+  },
+  topic: true,
+  note: true,
+  institute: true,
 } as const;
 
 export const selectPublicGrantInfo: CheckKeysAreValid<
-    typeof _selectPublicGrantInfo,
-    Prisma.grantSelect
+  typeof _selectPublicGrantInfo,
+  Prisma.grantSelect
 > = _selectPublicGrantInfo;
 
-
 const _includeAllEventInfo = {
-    id: true,
-    name_en: true,
-    name_fr: true,
-    start_date: true,
-    end_date: true,
-    event_type_id: true,
-    topic_id: true,
-    note: true,
-    topic: true,
-    event_type: true,
-    event_grant_resulted: { include: { grant: true } },
-    event_topic: { include: { topic: true } },
-    event_member_involved: { include: { member: { include: { account: true } } } },
-    event_partner_involved: { include: { organization: true } },
-    event_product_resulted: { include: { product: true } },
-    event_next_event_event_next_event_event_idToevent: {
-        include: { event_event_next_event_next_event_idToevent: true },
-    },
-    event_previous_event_event_previous_event_event_idToevent: {
-        include: { event_event_previous_event_previous_event_idToevent: true },
-    },
-
+  id: true,
+  name_en: true,
+  name_fr: true,
+  start_date: true,
+  end_date: true,
+  event_type_id: true,
+  topic_id: true,
+  note: true,
+  topic: true,
+  event_type: true,
+  event_grant_resulted: { include: { grant: true } },
+  event_topic: { include: { topic: true } },
+  event_member_involved: {
+    include: { member: { include: { account: true } } },
+  },
+  event_partner_involved: { include: { organization: true } },
+  event_product_resulted: { include: { product: true } },
+  event_next_event_event_next_event_event_idToevent: {
+    include: { event_event_next_event_next_event_idToevent: true },
+  },
+  event_previous_event_event_previous_event_event_idToevent: {
+    include: { event_event_previous_event_previous_event_idToevent: true },
+  },
+  institute: true,
 } as const;
 
 export const includeAllEventInfo: CheckKeysAreValid<
-    typeof _includeAllEventInfo,
-    Prisma.eventSelect
+  typeof _includeAllEventInfo,
+  Prisma.eventSelect
 > = _includeAllEventInfo;
 
 const _selectAllEventInfo = {
-    id: true,
-    name_en: true,
-    name_fr: true,
-    start_date: true,
-    end_date: true,
-    event_type_id: true,
-    topic_id: true,
-    note: true,
-    topic: true,
-    event_type: true,
-    event_grant_resulted: { include: { grant: true } },
-    event_topic: { include: { topic: true } },
-    event_member_involved: {
+  id: true,
+  name_en: true,
+  name_fr: true,
+  start_date: true,
+  end_date: true,
+  event_type_id: true,
+  topic_id: true,
+  note: true,
+  topic: true,
+  event_type: true,
+  event_grant_resulted: { include: { grant: true } },
+  event_topic: { include: { topic: true } },
+  event_member_involved: {
+    include: {
+      member: {
         include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
+          account: {
+            select: {
+              first_name: true,
+              last_name: true,
             },
+          },
         },
+      },
     },
-    event_partner_involved: {
-        select: {
-            organization: true,
-            event_id: true,
-            organization_id: true,
-        },
+  },
+  event_partner_involved: {
+    select: {
+      organization: true,
+      event_id: true,
+      organization_id: true,
     },
-    event_product_resulted: { include: { product: true } },
-    event_next_event_event_next_event_event_idToevent: {
-        select: {
-            event_event_next_event_next_event_idToevent: true,
-            event_id: true,
-            next_event_id: true,
-        },
+  },
+  event_product_resulted: { include: { product: true } },
+  event_next_event_event_next_event_event_idToevent: {
+    select: {
+      event_event_next_event_next_event_idToevent: true,
+      event_id: true,
+      next_event_id: true,
     },
-    event_previous_event_event_previous_event_event_idToevent: {
-        select: {
-            event_event_previous_event_previous_event_idToevent: true,
-            event_id: true,
-            previous_event_id: true,
-        },
+  },
+  event_previous_event_event_previous_event_event_idToevent: {
+    select: {
+      event_event_previous_event_previous_event_idToevent: true,
+      event_id: true,
+      previous_event_id: true,
     },
-
-
+  },
+  institute: true,
 } as const;
 
 export const selectAllEventInfo: CheckKeysAreValid<
-    typeof _selectAllEventInfo,
-    Prisma.eventSelect
+  typeof _selectAllEventInfo,
+  Prisma.eventSelect
 > = _selectAllEventInfo;
 
 const _selectPublicEventInfo = {
-    id: true,
-    name_en: true,
-    name_fr: true,
-    start_date: true,
-    end_date: true,
-    event_type_id: true,
-    event_topic: { include: { topic: true } },
-    topic_id: true,
-    topic: true,
-    event_type: true,
-    event_grant_resulted: { include: { grant: true } },
-    event_member_involved: {
+  id: true,
+  name_en: true,
+  name_fr: true,
+  start_date: true,
+  end_date: true,
+  event_type_id: true,
+  event_topic: { include: { topic: true } },
+  topic_id: true,
+  topic: true,
+  event_type: true,
+  event_grant_resulted: { include: { grant: true } },
+  event_member_involved: {
+    include: {
+      member: {
         include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
+          account: {
+            select: {
+              first_name: true,
+              last_name: true,
             },
+          },
         },
+      },
     },
-    event_product_resulted: { include: { product: true } },
-    event_partner_involved: {
-        select: {
-            organization: true,
-            event_id: true,
-            organization_id: true,
-        },
+  },
+  event_product_resulted: { include: { product: true } },
+  event_partner_involved: {
+    select: {
+      organization: true,
+      event_id: true,
+      organization_id: true,
     },
-    event_next_event_event_next_event_event_idToevent: {
-        include: { event_event_next_event_next_event_idToevent: true },
-    },
-    event_previous_event_event_previous_event_event_idToevent: {
-        include: { event_event_previous_event_previous_event_idToevent: true },
-    },
-    note: true,
+  },
+  event_next_event_event_next_event_event_idToevent: {
+    include: { event_event_next_event_next_event_idToevent: true },
+  },
+  event_previous_event_event_previous_event_event_idToevent: {
+    include: { event_event_previous_event_previous_event_idToevent: true },
+  },
+  note: true,
+  institute: true,
 } as const;
 
 export const selectPublicEventInfo: CheckKeysAreValid<

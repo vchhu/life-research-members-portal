@@ -218,7 +218,7 @@ model grant {
   grant_member_involved     grant_member_involved[]
 
   instituteId               Int
-  institute                 institute? @relation(fields: [instituteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  institute                 institute @relation(fields: [instituteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model grant_investigator_member {
