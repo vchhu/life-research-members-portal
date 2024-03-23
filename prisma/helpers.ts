@@ -539,20 +539,27 @@ export const selectPublicEventInfo: CheckKeysAreValid<
 
 
 const _includeAllSupervisionInfo = {
-    id: true,
-    last_name: true,
-    first_name: true,
-    start_date: true,
-    end_date: true,
-    faculty_id: true,
-    level_id: true,
-    note: true,
-    faculty: true,
-    level: true,
-    supervision_co_supervisor: { include: { member: { include: { account: true } } } },
-    supervision_committee: { include: { member: { include: { account: true } } } },
-    supervision_principal_supervisor: { include: { member: { include: { account: true } } } },
-    supervision_trainee: { include: { member: { include: { account: true } } } },
+  id: true,
+  last_name: true,
+  first_name: true,
+  start_date: true,
+  end_date: true,
+  faculty_id: true,
+  level_id: true,
+  note: true,
+  faculty: true,
+  level: true,
+  supervision_co_supervisor: {
+    include: { member: { include: { account: true } } },
+  },
+  supervision_committee: {
+    include: { member: { include: { account: true } } },
+  },
+  supervision_principal_supervisor: {
+    include: { member: { include: { account: true } } },
+  },
+  supervision_trainee: { include: { member: { include: { account: true } } } },
+  institute: true,
 } as const;
 
 export const includeAllSupervisionInfo: CheckKeysAreValid<
@@ -561,69 +568,80 @@ export const includeAllSupervisionInfo: CheckKeysAreValid<
 > = _includeAllSupervisionInfo;
 
 const _selectAllSupervisionInfo = {
-    id: true,
-    last_name: true,
-    first_name: true,
-    start_date: true,
-    end_date: true,
-    faculty_id: true,
-    level_id: true,
-    note: true,
-    faculty: true,
-    level: true,
-    supervision_co_supervisor: { include: { member: { include: { account: true } } } },
-    supervision_committee: { include: { member: { include: { account: true } } } },
-    supervision_principal_supervisor: { include: { member: { include: { account: true } } } },
-    supervision_trainee: { include: { member: { include: { account: true } } } },
-
+  id: true,
+  last_name: true,
+  first_name: true,
+  start_date: true,
+  end_date: true,
+  faculty_id: true,
+  level_id: true,
+  note: true,
+  faculty: true,
+  level: true,
+  supervision_co_supervisor: {
+    include: { member: { include: { account: true } } },
+  },
+  supervision_committee: {
+    include: { member: { include: { account: true } } },
+  },
+  supervision_principal_supervisor: {
+    include: { member: { include: { account: true } } },
+  },
+  supervision_trainee: { include: { member: { include: { account: true } } } },
+  institute: true,
 } as const;
 
 export const selectAllSupervisionInfo: CheckKeysAreValid<
-    typeof _selectAllSupervisionInfo,
-    Prisma.supervisionSelect
+  typeof _selectAllSupervisionInfo,
+  Prisma.supervisionSelect
 > = _selectAllSupervisionInfo;
 
 const _selectPublicSupervisionInfo = {
-    id: true,
-    last_name: true,
-    first_name: true,
-    start_date: true,
-    end_date: true,
-    faculty_id: true,
-    level_id: true,
-    faculty: true,
-    level: true,
-    note: true,
-    supervision_co_supervisor: { include: { member: { include: { account: true } } } },
-    supervision_committee: { include: { member: { include: { account: true } } } },
-    supervision_principal_supervisor: {
+  id: true,
+  last_name: true,
+  first_name: true,
+  start_date: true,
+  end_date: true,
+  faculty_id: true,
+  level_id: true,
+  faculty: true,
+  level: true,
+  note: true,
+  supervision_co_supervisor: {
+    include: { member: { include: { account: true } } },
+  },
+  supervision_committee: {
+    include: { member: { include: { account: true } } },
+  },
+  supervision_principal_supervisor: {
+    include: {
+      member: {
         include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
+          account: {
+            select: {
+              first_name: true,
+              last_name: true,
             },
+          },
         },
+      },
     },
-    supervision_trainee: {
+  },
+  supervision_trainee: {
+    include: {
+      member: {
         include: {
-            member: {
-                include: {
-                    account: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                        },
-                    },
-                },
+          account: {
+            select: {
+              first_name: true,
+              last_name: true,
             },
+          },
         },
+      },
     },
+  },
+  institute: true,
 } as const;
 
 export const selectPublicSupervisionInfo: CheckKeysAreValid<
