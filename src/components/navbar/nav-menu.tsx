@@ -27,7 +27,10 @@ const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
 
   // Everyone
   const generalItems = [
-    { label: en ? "Home" : "Accueil", href: PageRoutes.home },
+    {
+      label: en ? "Home" : "Accueil",
+      href: PageRoutes.instituteHome(urlIdentifier),
+    },
   ];
 
   // Registered Acounts
@@ -82,10 +85,21 @@ const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
     },
   ];
 
+  const superAdminItems = [
+    {
+      label: en ? "Institutes" : "Instituts",
+      href: PageRoutes.allInstitutes(),
+    },
+  ];
+
+  console.log("NavMenu", { localAccount, loading });
+
   const items: { label: string; href: string; children?: any }[] = generalItems;
   if (!loading) {
     if (localAccount) for (const it of registeredItemsFirst) items.push(it);
     if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
+    if (localAccount?.is_super_admin)
+      for (const it of superAdminItems) items.push(it);
     if (localAccount) for (const it of registeredItemsLast) items.push(it);
   }
 

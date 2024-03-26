@@ -36,7 +36,7 @@ const InstituteSelector: FC = () => {
     );
     if (selectedInstitute && selectedInstitute.urlIdentifier) {
       setInstitute(selectedInstitute);
-      router.push(`/${selectedInstitute.urlIdentifier}`);
+      // router.push(`/${selectedInstitute.urlIdentifier}`);
     } else {
       console.error("Selected institute does not have a valid URL identifier.");
     }

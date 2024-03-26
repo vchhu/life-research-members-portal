@@ -15,6 +15,7 @@ import { OrgTypesCtx } from "../../services/context/org-types-ctx";
 import { OrgScopeCtx } from "../../services/context/org-scopes-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 import { MemberInstituteCtx } from "../../services/context/member-institutes-ctx";
+import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
 
 const { Option } = Select;
 
@@ -33,6 +34,7 @@ const RegisterPartner: FC = () => {
   const { orgTypes } = useContext(OrgTypesCtx);
   const { orgScopes } = useContext(OrgScopeCtx);
   const { institutes } = useContext(MemberInstituteCtx);
+  const { institute } = useSelectedInstitute();
 
   async function handleRegister({
     name_en,
@@ -105,19 +107,22 @@ const RegisterPartner: FC = () => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          label={en ? "Select Institute" : "Sélectionnez l'institut"}
-          name="institute_id"
-        >
-          <Select mode="multiple">
-            <Option value="">{""}</Option>
-            {institutes.map((f) => (
-              <Option key={f.id} value={f.id}>
-                {`${f.name} - ${f.urlIdentifier}`}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+        {institute && (
+          <Form.Item
+            label={en ? "Select Institute" : "Sélectionnez l'institut"}
+            name="institute_id"
+            initialValue={[institute.id]}
+          >
+            <Select mode="multiple">
+              <Option value="">{""}</Option>
+              {institutes.map((f) => (
+                <Option key={f.id} value={f.id}>
+                  {`${f.name} - ${f.urlIdentifier}`}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
 
         <Form.Item
           label={en ? "Description" : "Description"}

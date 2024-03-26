@@ -16,6 +16,7 @@ import GetLanguage from "../../utils/front-end/get-language";
 import GetOppositeLanguage from "../../utils/front-end/get-opposite-language";
 import SafeLink from "../link/safe-link";
 import { queryKeys } from "../partners/all-partners";
+import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
 
 type Props = {
   organization: organization;
@@ -41,6 +42,7 @@ const OrganizationTag: FC<Props> = ({
   style,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const { institute } = useSelectedInstitute();
 
   const classList = ["organization-tag"];
   if (linked || editable || onClick) classList.push("cursor-pointer");
@@ -53,7 +55,7 @@ const OrganizationTag: FC<Props> = ({
   const content = linked ? (
     <SafeLink
       href={{
-        pathname: PageRoutes.allPartners("lri"),
+        pathname: PageRoutes.allPartners(institute?.urlIdentifier || ""),
         // query: { [queryKeys.partners]: k.id },
       }}
     >

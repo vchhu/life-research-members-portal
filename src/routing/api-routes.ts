@@ -1,3 +1,5 @@
+import registerInstitute from "../services/register-institute";
+
 // Make sure these start with forward slash '/' - indicates domain root
 const ApiRoutes = {
   allMembers: "/api/all-members",
@@ -9,6 +11,8 @@ const ApiRoutes = {
   allEvents: "/api/all-events",
   allSources: "/api/all-sources",
   allStatuses: "/api/all-statuses",
+  allInstitutes: "/api/all-institutes",
+  registerInstitute: "/api/register-institute",
   registerAccount: "/api/register-account",
   registerPartner: "/api/register-partner",
   registerPartnerMember: "/api/register-partner-member",

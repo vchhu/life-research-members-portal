@@ -28,6 +28,7 @@ import { OrgScopeCtx } from "../../services/context/org-scopes-ctx";
 import { Select } from "antd";
 import GetLanguage from "../../utils/front-end/get-language";
 import { MemberInstituteCtx } from "../../services/context/member-institutes-ctx";
+import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
 
 type Props = {
   partner: PartnerPublicInfo;
@@ -51,6 +52,7 @@ const PublicPartnerForm: FC<Props> = ({ partner, onSuccess }) => {
   const { orgTypes } = useContext(OrgTypesCtx);
   const { orgScopes } = useContext(OrgScopeCtx);
   const { institutes } = useContext(MemberInstituteCtx);
+  const { institute } = useSelectedInstitute();
   const [loading, setLoading] = useState(false);
   const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
   useResetDirtyOnUnmount();
@@ -170,6 +172,7 @@ const PublicPartnerForm: FC<Props> = ({ partner, onSuccess }) => {
         <Form.Item
           label={en ? "Select Institute" : "Sélectionnez l'institut"}
           name="institute_id"
+          initialValue={[institute?.id]}
         >
           <Select mode="multiple">
             <Option value="">{""}</Option>

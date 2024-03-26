@@ -11,7 +11,8 @@ model institute {
   id             Int                 @id @default(autoincrement())
   name           String              @unique
   urlIdentifier  String              @unique
-  domain        String?             // Optional: for institute-specific subdomains
+  description_en    String?
+  description_fr    String?
   members       memberInstitute[]
   products      productInstitute[]
   organizations OrganizationInstitute[]

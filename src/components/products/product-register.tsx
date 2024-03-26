@@ -16,6 +16,7 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 import { ProductTypesCtx } from "../../services/context/products-types-ctx";
 import GetLanguage from "../../utils/front-end/get-language";
 import { MemberInstituteCtx } from "../../services/context/member-institutes-ctx";
+import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
 
 const { Option } = Select;
 
@@ -36,6 +37,7 @@ const RegisterProduct: FC = () => {
   const [form] = useForm<Data>();
   const { en } = useContext(LanguageCtx);
   const { institutes } = useContext(MemberInstituteCtx);
+  const { institute } = useSelectedInstitute();
   const { productTypes } = useContext(ProductTypesCtx);
   const [onGoing, setOnGoing] = useState(false);
   const [peerReviewed, setPeerReviewed] = useState(false);
@@ -121,19 +123,22 @@ const RegisterProduct: FC = () => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          label={en ? "Select Institute" : "Sélectionnez l'institut"}
-          name="institute_id"
-        >
-          <Select mode="multiple">
-            <Option value="">{""}</Option>
-            {institutes.map((f) => (
-              <Option key={f.id} value={f.id}>
-                {`${f.name} - ${f.urlIdentifier}`}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+        {institute && (
+          <Form.Item
+            label={en ? "Select Institute" : "Sélectionnez l'institut"}
+            name="institute_id"
+            initialValue={[institute.id]}
+          >
+            <Select mode="multiple">
+              <Option value="">{""}</Option>
+              {institutes.map((f) => (
+                <Option key={f.id} value={f.id}>
+                  {`${f.name} - ${f.urlIdentifier}`}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
 
         <Row gutter={16}>
           <Col span={12}>

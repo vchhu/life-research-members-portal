@@ -101,8 +101,8 @@ const Welcome: FC = () => {
     <>
       <h1>
         {en
-          ? "Welcome to the LIFE Research Institute Member Portal!"
-          : "Bienvenue sur le portail des membres de l'Institut de recherche LIFE!"}
+          ? `Welcome to the ${institute?.name} Member Portal!`
+          : `Bienvenue sur le portail des membres de l'${institute?.name}!`}
       </h1>
       <h4>
         {en
@@ -124,8 +124,8 @@ const Welcome: FC = () => {
         </h3>
         <h1>
           {en
-            ? "Welcome to the LIFE Research Institute Member Portal"
-            : "Bienvenue sur le portail des membres de l'Institut de recherche LIFE"}
+            ? `Welcome to the ${institute?.urlIdentifier.toUpperCase()} Member Portal`
+            : `Bienvenue sur le portail des membres de l'${institute?.urlIdentifier.toUpperCase()}`}
         </h1>
 
         {localAccount.is_admin
@@ -178,9 +178,7 @@ const Welcome: FC = () => {
       </div>
       <div className="center-title">
         <Title level={2}>
-          {en
-            ? "Live well. Live long. Live with voice and choice."
-            : "Bien vivre. Vivre longtemps. Vivre avec des choix et une voix."}
+          {en ? institute?.description_en : institute?.description_fr}
         </Title>
       </div>
 
@@ -188,12 +186,14 @@ const Welcome: FC = () => {
         <Row gutter={[16, 16]}>
           <Col xs={24} md={6}>
             <Title level={4}>
-              {en ? "LRI Portal at a glance" : "Aperçu du portail de l'IRL"}
+              {en
+                ? `${institute?.urlIdentifier.toUpperCase()} Portal at a glance`
+                : `Aperçu du portail de l'${institute?.urlIdentifier.toUpperCase()}`}
             </Title>
             <p>
               {en
-                ? "The portal provides LRI members with a comprehensive overview of our research, partnerships, and initiatives. Stay informed and engaged with our work by exploring the portal information today!"
-                : "Le portail fournit aux membres de l'IRL un aperçu de nos recherches, partenariats et initiatives. Restez informé(e) et impliqué(e) dans notre travail en explorant l'information de ce portail dès aujourd'hui."}
+                ? `The portal provides ${institute?.urlIdentifier.toUpperCase()} members with a comprehensive overview of our research, partnerships, and initiatives. Stay informed and engaged with our work by exploring the portal information today!`
+                : `Le portail fournit aux membres de l'${institute?.urlIdentifier.toUpperCase()} un aperçu de nos recherches, partenariats et initiatives. Restez informé(e) et impliqué(e) dans notre travail en explorant l'information de ce portail dès aujourd'hui.`}
             </p>
           </Col>
           <Col xs={24} md={6}>
