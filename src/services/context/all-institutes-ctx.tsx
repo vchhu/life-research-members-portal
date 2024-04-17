@@ -44,7 +44,7 @@ export const AllInstitutesCtxProvider: FC<PropsWithChildren> = ({
   }
 
   useEffect(() => {
-    if (!localAccount?.is_admin) return;
+    if (!localAccount?.is_super_admin) return;
     async function firstLoad() {
       await fetchAllInstitutes();
       setLoading(false);
@@ -53,7 +53,7 @@ export const AllInstitutesCtxProvider: FC<PropsWithChildren> = ({
   }, [localAccount]);
 
   async function refresh() {
-    if (!localAccount?.is_admin) return;
+    if (!localAccount?.is_super_admin) return;
     if (loading || refreshing) return;
     const notification = new Notification("bottom-right");
     setRefreshing(true);

@@ -1,15 +1,12 @@
+import { account } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { includeAllAccountInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import type { AccountDBRes } from "../../account/[id]";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
 
-function deleteMember(id: number): Promise<AccountDBRes> {
-  return db.account.update({
-    where: { id },
-    data: { member: { delete: true } },
-    include: includeAllAccountInfo,
-  });
+function deleteMember(id: number) {
+  return db.member.delete({ where: { id } });
 }
 
 export default async function handler(
@@ -25,10 +22,26 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to delete member information.");
+    const account = await db.account.findUnique({
+      where: { id },
+      include: { member: true },
+    });
 
-    const updated = await deleteMember(id);
+    if (!account?.member) return res.status(404).send("Member not found.");
+    await db.memberInstitute.deleteMany({
+      where: { memberId: account?.member?.id },
+    });
+
+    await db.instituteAdmin.deleteMany({
+      where: { memberId: account?.member?.id },
+    });
+
+    await deleteMember(account?.member?.id);
+
+    const updated = await db.account.findUnique({
+      where: { id },
+      include: includeAllAccountInfo,
+    });
 
     return res.status(200).send(updated);
   } catch (e: any) {

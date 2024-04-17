@@ -32,7 +32,10 @@ import { AllGrantsCtx } from "../../services/context/all-grants-ctx";
 import type { GrantPublicInfo } from "../../services/_types";
 import getMemberInvolved from "../getters/grant-member-involved-getter";
 import getInvestigatorMember from "../getters/grant-investigator-member-getter";
-import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
+import {
+  useAdminDetails,
+  useSelectedInstitute,
+} from "../../services/context/selected-institute-ctx";
 
 function nameSorter(a: { title: string }, b: { title: string }) {
   return a.title.localeCompare(b.title);
@@ -218,6 +221,7 @@ const AllGrants: FC = () => {
   } = useContext(AllGrantsCtx);
 
   const { localAccount } = useContext(ActiveAccountCtx);
+  const isAdmin = useAdminDetails();
 
   const handleCreateGrant = () => {
     if (institute) {
@@ -554,7 +558,7 @@ const AllGrants: FC = () => {
         <Button type="primary" onClick={refreshAndClearFilters} size="large">
           {en ? "Reset the filter" : "Réinitialiser le filtre"}
         </Button>{" "}
-        {localAccount && localAccount.is_admin && (
+        {localAccount && isAdmin && (
           <Button
             type="primary"
             size="large"

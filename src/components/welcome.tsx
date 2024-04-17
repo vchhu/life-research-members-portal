@@ -31,12 +31,16 @@ import Image from "next/image";
 import life from "../../public/life-home2.png";
 import PageRoutes from "../routing/page-routes";
 import Link from "next/link";
-import { useSelectedInstitute } from "../services/context/selected-institute-ctx";
+import {
+  useAdminDetails,
+  useSelectedInstitute,
+} from "../services/context/selected-institute-ctx";
 
 const { Title } = Typography;
 
 const Welcome: FC = () => {
   const { localAccount, loading } = useContext(ActiveAccountCtx);
+  const isAdmin = useAdminDetails();
   const { institute } = useSelectedInstitute();
   const { en } = useContext(LanguageCtx);
 
@@ -128,7 +132,7 @@ const Welcome: FC = () => {
             : `Bienvenue sur le portail des membres de l'${institute?.urlIdentifier.toUpperCase()}`}
         </h1>
 
-        {localAccount.is_admin
+        {isAdmin
           ? adminGreeting
           : localAccount.member
           ? memberGreeting
@@ -219,7 +223,7 @@ const Welcome: FC = () => {
                   </span>
                 </div>
               )}
-              {localAccount?.is_admin && institute?.urlIdentifier ? (
+              {isAdmin && institute?.urlIdentifier ? (
                 <Link href={PageRoutes.allGrants(institute?.urlIdentifier)}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-3">
@@ -262,9 +266,7 @@ const Welcome: FC = () => {
                 </div>
               )}
 
-              {localAccount &&
-              localAccount.is_admin &&
-              institute?.urlIdentifier ? (
+              {localAccount && isAdmin && institute?.urlIdentifier ? (
                 <Link href={PageRoutes.allEvents(institute?.urlIdentifier)}>
                   <a>
                     <div className="rounded-box rounded-box-gradient-4">
@@ -309,7 +311,7 @@ const Welcome: FC = () => {
                 </div>
               )}
 
-              {localAccount?.is_admin && institute?.urlIdentifier ? (
+              {isAdmin && institute?.urlIdentifier ? (
                 <Link
                   href={PageRoutes.allSupervisions(institute?.urlIdentifier)}
                 >

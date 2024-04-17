@@ -23,7 +23,10 @@ import PrivateMemberForm from "./member-private-form";
 import MemberInsightForm from "./member-insight-form";
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
 import router from "next/router";
-import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
+import {
+  useAdminDetails,
+  useSelectedInstitute,
+} from "../../services/context/selected-institute-ctx";
 import PageRoutes from "../../routing/page-routes";
 
 type Tab = { label: string; key: string; children: ReactNode };
@@ -34,6 +37,7 @@ const MyProfile: FC = () => {
   const { en } = useContext(LanguageCtx);
   const { localAccount, setLocalAccount, loading, refresh } =
     useContext(ActiveAccountCtx);
+  const isAdmin = useAdminDetails();
   const [editMode, setEditMode] = useState(false);
   const { institute } = useSelectedInstitute();
   const [activeTabKey, setActiveTabKey] = useState(keys.public);
@@ -161,7 +165,7 @@ const MyProfile: FC = () => {
       key: keys.private,
       children: <PrivateMemberDescription member={member} />,
     },
-    ...(localAccount && localAccount.is_admin
+    ...(localAccount && isAdmin
       ? [
           {
             label: en ? "Insight" : "Aperçu",
@@ -183,7 +187,7 @@ const MyProfile: FC = () => {
       key: keys.private,
       children: <PrivateMemberForm member={member} onSuccess={onSuccess} />,
     },
-    ...(localAccount && localAccount.is_admin
+    ...(localAccount && isAdmin
       ? [
           {
             label: en ? "Insight" : "Aperçu",

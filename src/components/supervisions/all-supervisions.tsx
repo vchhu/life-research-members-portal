@@ -31,7 +31,10 @@ import FacultyFilter from "../filters/faculty-filter";
 import SupervisionNameFilter from "../filters/supervision-name-filter";
 import type { ParsedUrlQueryInput } from "querystring";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
-import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
+import {
+  useAdminDetails,
+  useSelectedInstitute,
+} from "../../services/context/selected-institute-ctx";
 
 function nameSorter(a: { name: string }, b: { name: string }) {
   return a.name.localeCompare(b.name);
@@ -446,6 +449,8 @@ const AllSupervisions: FC = () => {
     </Form>
   );
 
+  const isAdmin = useAdminDetails();
+
   const Header = () => (
     <>
       <div className="header-title-row">
@@ -455,7 +460,7 @@ const AllSupervisions: FC = () => {
         <Button type="primary" onClick={refreshAndClearFilters} size="large">
           {en ? "Reset the filter" : "Réinitialiser le filtre"}
         </Button>{" "}
-        {localAccount && localAccount.is_admin && (
+        {localAccount && isAdmin && (
           <Button
             type="primary"
             size="large"

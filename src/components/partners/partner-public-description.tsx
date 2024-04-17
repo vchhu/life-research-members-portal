@@ -17,6 +17,7 @@ import PartnerScopeLink from "../link/partner-scope-link";
 import PartnerTypeLink from "../link/partner-type-link";
 import PageRoutes from "../../routing/page-routes";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
+import { useAdminDetails } from "../../services/context/selected-institute-ctx";
 
 const { useBreakpoint } = Grid;
 
@@ -28,6 +29,7 @@ const PublicPartnerDescription: FC<Props> = ({ partner }) => {
   const screens = useBreakpoint();
   const { en } = useContext(LanguageCtx);
   const { localAccount } = useContext(ActiveAccountCtx);
+  const isAdmin = useAdminDetails();
 
   return (
     <Descriptions
@@ -56,24 +58,22 @@ const PublicPartnerDescription: FC<Props> = ({ partner }) => {
         {partner.description}
       </Item>
 
-      {partner.partnership_member_org.length > 0 &&
-        localAccount &&
-        localAccount.is_admin && (
-          <Item label={en ? "Partner Members" : "Membres du partenaire"}>
-            {partner.partnership_member_org.map((entry, i) => (
-              <SafeLink
-                key={entry.member.id}
-                href={PageRoutes.memberProfile(entry.member.id)}
-              >
-                <Tag color="blue">
-                  {entry.member.account.first_name +
-                    " " +
-                    entry.member.account.last_name}
-                </Tag>
-              </SafeLink>
-            ))}
-          </Item>
-        )}
+      {partner.partnership_member_org.length > 0 && localAccount && isAdmin && (
+        <Item label={en ? "Partner Members" : "Membres du partenaire"}>
+          {partner.partnership_member_org.map((entry, i) => (
+            <SafeLink
+              key={entry.member.id}
+              href={PageRoutes.memberProfile(entry.member.id)}
+            >
+              <Tag color="blue">
+                {entry.member.account.first_name +
+                  " " +
+                  entry.member.account.last_name}
+              </Tag>
+            </SafeLink>
+          ))}
+        </Item>
+      )}
     </Descriptions>
   );
 };

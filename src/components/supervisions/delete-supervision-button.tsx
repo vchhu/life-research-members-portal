@@ -23,7 +23,10 @@ import { useRouter } from "next/router";
 import PageRoutes from "../../routing/page-routes";
 import Notification from "../../services/notifications/notification";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx"; // Add this import
-import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
+import {
+  useAdminDetails,
+  useSelectedInstitute,
+} from "../../services/context/selected-institute-ctx";
 
 type Data = { confirmation: string };
 type Props = {
@@ -42,6 +45,7 @@ const DeleteSupervisionButton: FC<Props> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = useForm<Data>();
   const { institute } = useSelectedInstitute();
+  const isAdmin = useAdminDetails();
 
   const supervisionName = supervision.first_name + " " + supervision.last_name;
   const { localAccount } = useContext(ActiveAccountCtx);
@@ -50,7 +54,7 @@ const DeleteSupervisionButton: FC<Props> = ({
     const res = await deleteSupervision(supervision.id);
     if (res) {
       setModalOpen(false);
-      if (localAccount?.is_admin) {
+      if (isAdmin) {
         router.push(PageRoutes.allSupervisions(institute?.urlIdentifier || ""));
       } else {
         router.push(PageRoutes.myProfile);

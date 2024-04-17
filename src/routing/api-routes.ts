@@ -43,6 +43,9 @@ const ApiRoutes = {
   deleteEvent: (id: number) => "/api/delete-event/" + id,
   deleteSupervision: (id: number) => "/api/delete-supervision/" + id,
   updateAccountName: (id: number) => "/api/update-account/" + id + "/name",
+  addInstitute: (id: number) => "/api/update-account/" + id + "/add-institute",
+  removeInstitute: (id: number) =>
+    "/api/update-account/" + id + "/remove-institute",
   updateAccountEmail: (id: number) => "/api/update-account/" + id + "/email",
   updateAccountGrantAdmin: (id: number) =>
     "/api/update-account/" + id + "/grant-admin",

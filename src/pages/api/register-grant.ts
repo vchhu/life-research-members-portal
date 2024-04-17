@@ -78,9 +78,6 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register a grant");
-
     const newGrant = await registerGrant(params);
 
     // Get the matched investigators

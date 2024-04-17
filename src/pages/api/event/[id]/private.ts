@@ -32,14 +32,6 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    const authorized =
-      currentAccount.is_admin || (currentAccount.member && currentAccount.member.id === id);
-
-    if (!authorized)
-      return res
-        .status(401)
-        .send("You are not authorized to view this event's private information.");
-
     const event = await getPrivateEventInfo(id);
     if (!event) return res.status(400).send("Event not found. ID: " + id);
 

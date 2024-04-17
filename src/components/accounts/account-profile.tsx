@@ -20,6 +20,12 @@ import GrantAdminButton from "./grant-admin-button";
 import DeleteMemberButton from "./delete-member-button";
 import RegisterMemberButton from "./register-member-button";
 import DeleteAccountButton from "./delete-account-button";
+import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
+import { AccountInfo } from "../../services/_types";
+import { List, Tag } from "antd";
+import UpdateInstituteButton from "./update-institute-button";
+import AddInstituteButton from "./add-institute-button";
+import RemoveInstituteButton from "./remove-institute-button";
 
 const { Item } = Descriptions;
 
@@ -30,6 +36,16 @@ type Props = {
 const AccountProfile: FC<Props> = ({ id }) => {
   const { en } = useContext(LanguageCtx);
   const { account, setAccount, loading, refresh } = useAccount(id);
+  const { institute } = useSelectedInstitute();
+
+  const isAdminOfInstitute = (
+    account: AccountInfo,
+    instituteId: number | undefined
+  ) => {
+    return account.instituteAdmin.some(
+      (admin) => admin.instituteId === instituteId
+    );
+  };
 
   useEffect(() => {
     refresh();
@@ -85,13 +101,15 @@ const AccountProfile: FC<Props> = ({ id }) => {
 
   const adminItem = (
     <Item label={en ? "Administrator Privileges" : "Privilèges administratifs"}>
-      {account.is_admin ? (
+      {isAdminOfInstitute(account, institute?.id) ? (
         <>
           <Text>
             {trueSymbol}
             {en
-              ? "This account has administrative privileges"
-              : "Ce compte a des privilèges administratifs"}
+              ? "This account has administrative privileges for " +
+                institute?.name
+              : "Ce compte a des privilèges administratifs pour " +
+                institute?.name}
           </Text>
           <RemoveAdminButton account={account} setAccount={setAccount} />
         </>
@@ -100,8 +118,10 @@ const AccountProfile: FC<Props> = ({ id }) => {
           <Text>
             {falseSymbol}
             {en
-              ? "This account does not have administrative privileges"
-              : "Ce compte n'a pas de privilèges administratifs"}
+              ? "This account does not have administrative privileges for " +
+                institute?.name
+              : "Ce compte n'a pas de privilèges administratifs pour " +
+                institute?.name}
           </Text>
           <GrantAdminButton account={account} setAccount={setAccount} />
         </>
@@ -142,6 +162,40 @@ const AccountProfile: FC<Props> = ({ id }) => {
     </Item>
   );
 
+  const addToMoreInstitutes = (
+    <Item label={en ? "Institute Information" : "Informations sur les membres"}>
+      {account.member?.institutes ? (
+        <>
+          <Text>
+            {trueSymbol}
+            {en
+              ? "This account is part of following institutes"
+              : "Ce compte est enregistré en tant que membre"}
+          </Text>
+          {account.member.institutes.map((institute) => {
+            return (
+              <Tag key={institute.instituteId}>
+                {institute.institute.name} - {institute.institute.urlIdentifier}{" "}
+              </Tag>
+            );
+          })}
+          <AddInstituteButton account={account} setAccount={setAccount} />
+          <RemoveInstituteButton account={account} setAccount={setAccount} />
+        </>
+      ) : (
+        <>
+          <Text>
+            {falseSymbol}
+            {en
+              ? "This account is not registered as a member"
+              : "Ce compte n'est pas enregistré en tant que membre"}
+          </Text>
+          <RegisterMemberButton account={account} setAccount={setAccount} />
+        </>
+      )}
+    </Item>
+  );
+
   return (
     <Card title={header} className="account-profile-card">
       <Descriptions
@@ -160,6 +214,7 @@ const AccountProfile: FC<Props> = ({ id }) => {
         {loginItem}
         {adminItem}
         {memberItem}
+        {addToMoreInstitutes}
       </Descriptions>
       <div style={{ display: "block", height: 24 }}></div>
       <DeleteAccountButton

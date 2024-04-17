@@ -46,10 +46,25 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    //if (!currentAccount.is_admin && !currentAccount.member)
+    const productInstitutes = await db.productInstitute.findMany({
+      where: { productId: id },
+    });
 
-    if (!(currentAccount.is_admin || await isProductMemberAuthor(currentAccount.member?.id, id))) {
-      return res.status(401).send("You are not authorized to delete that product.");
+    const isUserAdmin = currentAccount.instituteAdmin.some((admin) =>
+      productInstitutes.some(
+        (institute) => institute.instituteId === admin.instituteId
+      )
+    );
+
+    if (
+      !(
+        isUserAdmin ||
+        (await isProductMemberAuthor(currentAccount.member?.id, id))
+      )
+    ) {
+      return res
+        .status(401)
+        .send("You are not authorized to delete that product.");
     }
 
     const product = await deleteProduct(id);

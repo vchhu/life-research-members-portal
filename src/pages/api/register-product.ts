@@ -82,9 +82,6 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    /*    if (!currentUser.is_admin )
-         return res.status(401).send("You are not authorized to register a product"); */
-
     const newProduct = await registerProduct(params);
 
     // Get the matched authors
@@ -128,6 +125,25 @@ export default async function handler(
         })
       )
     );
+
+    //temp code keep here incase we want to add the person adding product as user!
+    // const check =
+    //   currentUser.member &&
+    //   (await db.product_member_author.upsert({
+    //     where: {
+    //       member_id_product_id: {
+    //         member_id: currentUser.id,
+    //         product_id: newProduct.id,
+    //       },
+    //     },
+    //     create: {
+    //       member_id: currentUser.member?.id,
+    //       product_id: newProduct.id,
+    //     },
+    //     update: {},
+    //   }));
+
+    // console.log("check", check);
 
     await Promise.all(
       params.institute_id.map((instituteId) =>

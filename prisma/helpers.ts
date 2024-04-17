@@ -24,17 +24,25 @@ const _includeAllMemberInfo = {
   problem: true,
   grant_member_involved: { include: { grant: true } },
   product_member_author: { include: { product: true } },
-  institutes: true,
+  institutes: {
+    include: {
+      institute: true,
+    },
+  },
 } as const;
 
 export const includeAllMemberInfo: CheckKeysAreValid<
-    typeof _includeAllMemberInfo,
-    Prisma.memberInclude
-
+  typeof _includeAllMemberInfo,
+  Prisma.memberInclude
 > = _includeAllMemberInfo;
 
 const _includeAllAccountInfo = {
-    member: { include: _includeAllMemberInfo } as const,
+  member: { include: _includeAllMemberInfo } as const,
+  instituteAdmin: {
+    include: {
+      institute: true,
+    },
+  },
 } as const;
 
 export const includeAllAccountInfo: CheckKeysAreValid<

@@ -9,7 +9,7 @@ const AccountsPage: NextPage = () => {
   return (
     <Layout>
       <PageAuthGuard
-        auths={[Authorizations.admin]}
+        auths={[Authorizations.admin, Authorizations.superAdmin]}
         loadingIcon={<Table loading={true}></Table>}
       >
         <AllAccounts />

@@ -7,6 +7,7 @@ import { MemberInstituteCtx } from "../../services/context/member-institutes-ctx
 import { useRouter } from "next/router";
 import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
 import Notification from "../../services/notifications/notification";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 
 const InstituteSelector: FC = () => {
   const { institutes, loading } = useContext(MemberInstituteCtx);
@@ -24,7 +25,6 @@ const InstituteSelector: FC = () => {
       setInstitute(currentInstitute);
     } else if (institutes.length > 0 && !currentInstitute) {
       const notification = new Notification();
-      console.log("Pushing to home page", currentInstitute, institutes);
       setInstitute(null);
       router.push("/");
     }
@@ -36,7 +36,9 @@ const InstituteSelector: FC = () => {
     );
     if (selectedInstitute && selectedInstitute.urlIdentifier) {
       setInstitute(selectedInstitute);
-      // router.push(`/${selectedInstitute.urlIdentifier}`);
+      if ((router.asPath = "/")) {
+        router.push(`/${selectedInstitute.urlIdentifier}`);
+      }
     } else {
       console.error("Selected institute does not have a valid URL identifier.");
     }

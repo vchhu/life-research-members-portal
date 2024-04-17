@@ -41,6 +41,7 @@ import TargetSelector from "../targets/target-selector";
 import PartnerSelector from "../partners/partner-selector";
 import MemberSelector from "../members/member-selector";
 import { MemberInstituteCtx } from "../../services/context/member-institutes-ctx";
+import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
 
 const { Option } = Select;
 
@@ -80,6 +81,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const { dirty, setDirty, setSubmit } = useContext(SaveChangesCtx);
   const { institutes } = useContext(MemberInstituteCtx);
+  const { institute: selectedInstitute } = useSelectedInstitute();
   useResetDirtyOnUnmount();
 
   const diffMembers = useCallback(
@@ -180,7 +182,10 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
         institutes: data.institutes,
       };
 
-      const newInfo = await updateProductPublic(product.id, params);
+      const newInfo =
+        selectedInstitute &&
+        (await updateProductPublic(product.id, params, selectedInstitute?.id));
+
       setLoading(false);
       if (newInfo) {
         setDirty(false);
@@ -197,6 +202,7 @@ const PublicProductForm: FC<Props> = ({ product, onSuccess }) => {
       dirty,
       en,
       setDirty,
+      selectedInstitute,
     ]
   );
 

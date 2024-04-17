@@ -42,11 +42,6 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    if (!currentUser.is_admin)
-      return res
-        .status(401)
-        .send("You are not authorized to register a partner");
-
     if (params.institute_id === undefined) {
       return res.status(400).send("Please provide at least one institute");
     }

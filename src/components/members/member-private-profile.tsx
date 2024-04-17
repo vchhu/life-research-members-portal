@@ -17,6 +17,7 @@ import MemberInsightForm from "./member-insight-form";
 import { SaveChangesCtx } from "../../services/context/save-changes-ctx";
 import router from "next/router";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
+import { useAdminDetails } from "../../services/context/selected-institute-ctx";
 
 type Tab = { label: string; key: string; children: ReactNode };
 
@@ -38,6 +39,7 @@ const PrivateMemberProfile: FC<Props> = ({ id }) => {
   };
 
   const { localAccount } = useContext(ActiveAccountCtx);
+  const isAdmin = useAdminDetails();
 
   /** After saving changes via submit button - dependency of form's submit */
   const onSuccess = useCallback(
@@ -121,7 +123,7 @@ const PrivateMemberProfile: FC<Props> = ({ id }) => {
       key: keys.private,
       children: <PrivateMemberDescription member={member} />,
     },
-    ...(localAccount && localAccount.is_admin
+    ...(localAccount && isAdmin
       ? [
           {
             label: en ? "Insight" : "Aperçu",
@@ -143,7 +145,7 @@ const PrivateMemberProfile: FC<Props> = ({ id }) => {
       key: keys.private,
       children: <PrivateMemberForm member={member} onSuccess={onSuccess} />,
     },
-    ...(localAccount && localAccount.is_admin
+    ...(localAccount && isAdmin
       ? [
           {
             label: en ? "Insight" : "Aperçu",

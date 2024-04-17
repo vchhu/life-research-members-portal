@@ -10,7 +10,10 @@ import Checkbox from "antd/lib/checkbox/Checkbox";
 import { useForm } from "antd/lib/form/Form";
 import { LanguageCtx } from "../services/context/language-ctx";
 import { MemberInstituteCtx } from "../services/context/member-institutes-ctx";
-import { useSelectedInstitute } from "../services/context/selected-institute-ctx";
+import {
+  useAdminDetails,
+  useSelectedInstitute,
+} from "../services/context/selected-institute-ctx";
 import { ActiveAccountCtx } from "../services/context/active-account-ctx";
 type Data = {
   login_email: string;
@@ -32,6 +35,7 @@ const RegisterAccount: FC = () => {
   const { en } = useContext(LanguageCtx);
   const { institute } = useSelectedInstitute();
   const { institutes } = useContext(MemberInstituteCtx);
+  const isAdmin = useAdminDetails();
 
   async function handleRegister({
     first_name,
@@ -134,9 +138,9 @@ const RegisterAccount: FC = () => {
           >
             <Select mode="multiple" defaultValue={institute?.id}>
               <Option value="">{""}</Option>
-              {institutes.map((f) => (
-                <Option key={f.id} value={f.id}>
-                  {`${f.name} - ${f.urlIdentifier}`}
+              {localAccount?.instituteAdmin.map((f) => (
+                <Option key={f.institute.id} value={f.institute.id}>
+                  {`${f.institute.name} - ${f.institute.urlIdentifier}`}
                 </Option>
               ))}
             </Select>
@@ -155,7 +159,7 @@ const RegisterAccount: FC = () => {
           </Form.Item>
           {
             // Only super admins can grant admin privileges
-            localAccount?.is_super_admin && (
+            isAdmin && (
               <Form.Item name="is_admin" valuePropName="checked">
                 <Checkbox>
                   {en

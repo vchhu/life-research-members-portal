@@ -32,7 +32,10 @@ import EventDateFilter from "../filters/event-date-filter";
 import type { EventPublicInfo } from "../../services/_types";
 import moment, { Moment } from "moment";
 import type { RangeValue } from "rc-picker/lib/interface";
-import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
+import {
+  useAdminDetails,
+  useSelectedInstitute,
+} from "../../services/context/selected-institute-ctx";
 
 function nameSorter(en: boolean) {
   return (
@@ -221,6 +224,7 @@ const AllEvents: FC = () => {
   };
 
   const { localAccount } = useContext(ActiveAccountCtx);
+  const isAdmin = useAdminDetails();
 
   const [showType, setShowType] = useState<boolean>(defaultQueries.showType);
   const [showStartDate, setShowStartDate] = useState<boolean>(
@@ -446,7 +450,7 @@ const AllEvents: FC = () => {
         <Button type="primary" onClick={refreshAndClearFilters} size="large">
           {en ? "Reset the filter" : "Réinitialiser le filtre"}
         </Button>{" "}
-        {localAccount && localAccount.is_admin && (
+        {localAccount && isAdmin && (
           <Button
             type="primary"
             size="large"

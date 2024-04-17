@@ -59,11 +59,12 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    const authorized = currentUser.is_admin || currentUser.member?.id === id;
-    if (!authorized)
-      return res
-        .status(401)
-        .send("You are not authorized to edit this partner information.");
+    //chnange this to check if user is admin of any partner institutes this is wrong!!
+    // const authorized = currentUser.is_admin || currentUser.member?.id === id;
+    // if (!authorized)
+    //   return res
+    //     .status(401)
+    //     .send("You are not authorized to edit this partner information.");
 
     const updated = await updatePartner(id, params);
 

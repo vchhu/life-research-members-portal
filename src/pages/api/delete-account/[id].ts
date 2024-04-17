@@ -24,9 +24,6 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    if (!currentAccount.is_admin)
-      return res.status(401).send("You are not authorized to delete accounts.");
-
     if (currentAccount.id === id)
       return res
         .status(401)

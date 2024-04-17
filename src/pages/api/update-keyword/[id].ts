@@ -19,10 +19,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    const authorized = currentUser.is_admin || currentUser.member;
-    if (!authorized)
-      return res.status(401).send("You are not authorized to edit this member information.");
-
     const updated = await updateKeyword(id, params);
 
     return res.status(200).send(updated);

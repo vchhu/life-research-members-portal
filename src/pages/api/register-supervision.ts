@@ -55,9 +55,6 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register a supervision");
-
     const newSupervision = await registerSupervision(params);
 
     return res.status(200).send(newSupervision);

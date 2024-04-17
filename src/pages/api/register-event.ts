@@ -53,9 +53,6 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register an event");
-
     const newEvent = await registerEvent(params);
 
     return res.status(200).send(newEvent);

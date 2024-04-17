@@ -20,7 +20,6 @@ function registerAccount(params: RegisterAccountParams) {
     const newAccount = await prisma.account.create({
       data: {
         login_email: params.login_email.toLocaleLowerCase(),
-        is_admin: params.is_super_admin === true ? true : params.is_admin,
         is_super_admin: params.is_super_admin,
         first_name: params.first_name,
         last_name: params.last_name,
@@ -43,6 +42,22 @@ function registerAccount(params: RegisterAccountParams) {
           })
         )
       );
+
+      if (params.is_admin && newAccount.member) {
+        await Promise.all(
+          params.institute_id.map(
+            (instituteId) =>
+              newAccount.member &&
+              prisma.instituteAdmin.create({
+                data: {
+                  accountId: newAccount.id,
+                  instituteId: instituteId,
+                  memberId: newAccount.member.id,
+                },
+              })
+          )
+        );
+      }
     }
 
     return newAccount;
@@ -73,11 +88,6 @@ export default async function handler(
   try {
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
-
-    if (!currentUser.is_admin)
-      return res
-        .status(401)
-        .send("You are not authorized to register accounts.");
 
     const newUser = await registerAccount(params);
 

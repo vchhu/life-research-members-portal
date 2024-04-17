@@ -36,14 +36,6 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    const authorized =
-      currentAccount.is_admin || (currentAccount.member && currentAccount.member.id === id);
-
-    if (!authorized)
-      return res
-        .status(401)
-        .send("You are not authorized to view this member's private information.");
-
     const member = await getPrivateMemberInfo(id);
     if (!member) return res.status(400).send("Member not found. ID: " + id);
 

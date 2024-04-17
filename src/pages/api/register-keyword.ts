@@ -25,9 +25,6 @@ export default async function handler(
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
 
-    const authorized = currentUser.is_admin || currentUser.member;
-    if (!authorized) return res.status(401).send("You are not authorized to create keywords.");
-
     const keyword = await registerKeyword(params);
 
     return res.status(200).send(keyword);

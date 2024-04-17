@@ -7,6 +7,7 @@ import React, {
   useEffect,
 } from "react";
 import type { MemberInstitutesRes } from "../../pages/api/member-institute";
+import { ActiveAccountCtx } from "./active-account-ctx";
 
 interface SelectedInstituteContextType {
   institute: MemberInstitutesRes | null;
@@ -21,10 +22,6 @@ export const SelectedInstituteCtxProvider: FC<PropsWithChildren<{}>> = ({
   children,
 }) => {
   const [institute, setInstitute] = useState<MemberInstitutesRes | null>(null);
-
-  useEffect(() => {
-    console.log(institute, "checking in selected institute context");
-  }, [institute]);
 
   return (
     <SelectedInstituteCtx.Provider value={{ institute, setInstitute }}>
@@ -43,3 +40,19 @@ export const useSelectedInstitute = () => {
   }
   return context;
 };
+
+export const useAdminDetails = () => {
+  const { institute } = useContext(SelectedInstituteCtx);
+  const { localAccount } = useContext(ActiveAccountCtx);
+  const isAdmin = localAccount?.instituteAdmin.some(
+    (admin) => admin.instituteId === institute?.id
+  );
+  return isAdmin;
+};
+
+export const useSuperAdminDetails = () => {
+  const { localAccount } = useContext(ActiveAccountCtx);
+  return localAccount?.is_super_admin;
+};
+
+

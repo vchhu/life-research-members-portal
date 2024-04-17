@@ -16,6 +16,7 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 import PageRoutes from "../../routing/page-routes";
 import SafeLink from "../link/safe-link";
 import type { UrlObject } from "url";
+import { useAdminDetails } from "../../services/context/selected-institute-ctx";
 
 const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
   urlIdentifier,
@@ -23,6 +24,7 @@ const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
   const { localAccount, loading } = useContext(ActiveAccountCtx);
   const router = useRouter();
   const { en } = useContext(LanguageCtx);
+  const isAdmin = useAdminDetails();
   if (!urlIdentifier) return <Spin />;
 
   // Everyone
@@ -92,12 +94,11 @@ const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
     },
   ];
 
-  console.log("NavMenu", { localAccount, loading });
-
   const items: { label: string; href: string; children?: any }[] = generalItems;
   if (!loading) {
     if (localAccount) for (const it of registeredItemsFirst) items.push(it);
-    if (localAccount?.is_admin) for (const it of adminItems) items.push(it);
+    if (localAccount?.is_super_admin || isAdmin)
+      for (const it of adminItems) items.push(it);
     if (localAccount?.is_super_admin)
       for (const it of superAdminItems) items.push(it);
     if (localAccount) for (const it of registeredItemsLast) items.push(it);

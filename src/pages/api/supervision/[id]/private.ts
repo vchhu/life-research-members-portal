@@ -45,13 +45,6 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    const authorized = currentAccount.is_admin || await isPrincipalSupervisor(currentAccount.member?.id, id);
-
-    if (!authorized)
-      return res
-        .status(401)
-        .send("You are not authorized to view this supervision's private information.");
-
     const supervision = await getPrivateSupervisionInfo(id);
     if (!supervision) return res.status(400).send("Supervision not found. ID: " + id);
 
