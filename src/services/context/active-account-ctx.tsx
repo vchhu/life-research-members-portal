@@ -5,6 +5,7 @@ import {
   FC,
   PropsWithChildren,
   SetStateAction,
+  useCallback,
   useEffect,
   useState,
 } from "react";
@@ -39,7 +40,9 @@ export const ActiveAccountCtx = createContext<{
   setLocalAccount: Dispatch<SetStateAction<AccountInfo | null>>;
 }>(null as any);
 
-export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) => {
+export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({
+  children,
+}) => {
   const { instance } = useMsal();
 
   const [localAccount, setLocalAccount] = useState<AccountInfo | null>(null);
@@ -67,8 +70,11 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
       const res = await fetch(ApiRoutes.activeAccountUpdateLastLogin, {
         headers: authHeader,
       });
+
+      const tempLocalAccount = await res.json();
+
       if (!res.ok) throw await res.text();
-      setLocalAccount(await res.json());
+      setLocalAccount(tempLocalAccount);
     } catch (e: any) {
       new Notification().error(e);
     }
@@ -106,14 +112,24 @@ export const ActiveAccountCtxProvider: FC<PropsWithChildren> = ({ children }) =>
   function logout() {
     setLocalAccount(null);
     // returning false stops redirect but still clears the cache and active user
-    instance.logoutRedirect({ onRedirectNavigate: () => false }).catch((e: any) => {
-      new Notification().error(e);
-    });
+    instance
+      .logoutRedirect({ onRedirectNavigate: () => false })
+      .catch((e: any) => {
+        new Notification().error(e);
+      });
   }
 
   return (
     <ActiveAccountCtx.Provider
-      value={{ localAccount, loading, login, logout, refresh, refreshing, setLocalAccount }}
+      value={{
+        localAccount,
+        loading,
+        refresh,
+        login,
+        logout,
+        refreshing,
+        setLocalAccount,
+      }}
     >
       {children}
     </ActiveAccountCtx.Provider>

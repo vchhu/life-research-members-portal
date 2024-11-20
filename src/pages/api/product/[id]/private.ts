@@ -32,12 +32,6 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    const authorized = currentAccount.is_admin || currentAccount.member;
-    if (!authorized)
-      return res
-        .status(401)
-        .send("You are not authorized to view this product's private information.");
-
     const product = await getPrivateProductInfo(id);
     if (!product) return res.status(400).send("Product not found. ID: " + id);
 

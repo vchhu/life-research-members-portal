@@ -10,6 +10,7 @@ export type RegisterEventParams = {
   end_date: Date | null;
   event_type_id: number | null;
   note: string | null;
+  institute_id: number;
 };
 
 export type RegisterEventRes = Awaited<ReturnType<typeof registerEvent>>;
@@ -23,6 +24,7 @@ function registerEvent(params: RegisterEventParams) {
       end_date: params.end_date,
       event_type_id: params.event_type_id,
       note: params.note,
+      instituteId: params.institute_id,
     },
     select: {
       id: true,
@@ -50,9 +52,6 @@ export default async function handler(
   try {
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
-
-    if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register an event");
 
     const newEvent = await registerEvent(params);
 

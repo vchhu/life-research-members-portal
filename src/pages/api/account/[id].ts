@@ -32,9 +32,6 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    const authorized = currentAccount.is_admin || currentAccount.id === id;
-    if (!authorized)
-      return res.status(401).send("You are not authorized to view this account information.");
 
     const account = await getAccountById(id);
     if (!account) return res.status(400).send("Account not found. ID: " + id);

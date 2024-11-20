@@ -4,6 +4,10 @@ import getAuthHeader from "../headers/auth-header";
 import Notification from "../notifications/notification";
 import type { AccountInfo } from "../_types";
 import { ActiveAccountCtx } from "./active-account-ctx";
+import {
+  useAdminDetails,
+  useSelectedInstitute,
+} from "./selected-institute-ctx";
 
 export const AllAccountsCtx = createContext<{
   allAccounts: AccountInfo[];
@@ -17,12 +21,17 @@ export const AllAccountsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   const [allAccounts, setAllAccounts] = useState<AccountInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { institute } = useSelectedInstitute();
+  const isAdmin = useAdminDetails();
 
   async function fetchAllAccounts() {
     try {
       const authHeader = await getAuthHeader();
+      const queryParam = `?instituteId=${institute?.urlIdentifier}`;
       if (!authHeader) return;
-      const result = await fetch(ApiRoutes.allAccounts, { headers: authHeader });
+      const result = await fetch(`${ApiRoutes.allAccounts}${queryParam}`, {
+        headers: authHeader,
+      });
       if (!result.ok) throw await result.text();
       const accounts: AccountInfo[] = await result.json();
       accounts.sort((a, b) => a.first_name.localeCompare(b.first_name));
@@ -33,16 +42,16 @@ export const AllAccountsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   useEffect(() => {
-    if (!localAccount?.is_admin) return;
+    if (!isAdmin && !localAccount?.is_super_admin) return;
     async function firstLoad() {
       await fetchAllAccounts();
       setLoading(false);
     }
     firstLoad();
-  }, [localAccount]);
+  }, [localAccount, isAdmin]);
 
   async function refresh() {
-    if (!localAccount?.is_admin) return;
+    if (!isAdmin && !localAccount?.is_super_admin) return;
     if (loading || refreshing) return;
     const notification = new Notification("bottom-right");
     setRefreshing(true);
@@ -53,7 +62,9 @@ export const AllAccountsCtxProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   return (
-    <AllAccountsCtx.Provider value={{ allAccounts, loading, refresh, refreshing }}>
+    <AllAccountsCtx.Provider
+      value={{ allAccounts, loading, refresh, refreshing }}
+    >
       {children}
     </AllAccountsCtx.Provider>
   );

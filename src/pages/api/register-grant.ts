@@ -17,6 +17,7 @@ export type RegisterGrantParams = {
   all_investigator: string;
   topic_id: number;
   note: string;
+  institute_id: number;
 };
 
 export type RegisterGrantRes = Awaited<ReturnType<typeof registerGrant>>;
@@ -35,6 +36,7 @@ function registerGrant(params: RegisterGrantParams) {
       all_investigator: params.all_investigator,
       topic_id: params.topic_id,
       note: params.note,
+      instituteId: params.institute_id,
     },
     select: {
       id: true,
@@ -75,9 +77,6 @@ export default async function handler(
   try {
     const currentUser = await getAccountFromRequest(req, res);
     if (!currentUser) return;
-
-    if (!currentUser.is_admin)
-      return res.status(401).send("You are not authorized to register a grant");
 
     const newGrant = await registerGrant(params);
 

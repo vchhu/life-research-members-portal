@@ -27,11 +27,17 @@ import { LevelsCtxProvider } from "./levels-ctx";
 import { AllMembersSelectorCtxProvider } from "./all-members-selector-ctx";
 import { GrantsCtxProvider } from "./grants-ctx";
 import { EventsCtxProvider } from "./events-ctx";
+import { MemberInstituteCtxProvider } from "./member-institutes-ctx";
+import { SelectedInstituteCtxProvider } from "./selected-institute-ctx";
+import { AllInstitutesCtxProvider } from "./all-institutes-ctx";
 
 // Bundles context providers, first element in array is the outer-most provider
 const AllContextProviders: FC<PropsWithChildren> = [
   ActiveAccountCtxProvider,
+  SelectedInstituteCtxProvider,
   LanguageCtxProvider,
+  AllAccountsCtxProvider,
+  MemberInstituteCtxProvider,
   MemberTypesCtxProvider,
   FacultiesCtxProvider,
   SaveChangesCtxProvider,
@@ -40,6 +46,7 @@ const AllContextProviders: FC<PropsWithChildren> = [
   AllTopicsCtxProvider,
   AllOrganizationsCtxProvider,
   AllMembersSelectorCtxProvider,
+  AllInstitutesCtxProvider,
   AllAccountsCtxProvider,
   AllMembersCtxProvider,
   AllPartnersCtxProvider,

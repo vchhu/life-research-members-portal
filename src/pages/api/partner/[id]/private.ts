@@ -34,14 +34,6 @@ export default async function handler(
     const currentAccount = await getAccountFromRequest(req, res);
     if (!currentAccount) return;
 
-    const authorized =
-      currentAccount.is_admin || (currentAccount.member && currentAccount.member.id === id);
-
-    if (!authorized)
-      return res
-        .status(401)
-        .send("You are not authorized to view this partner's private information.");
-
     const partner = await getPrivatePartnerInfo(id);
     if (!partner) return res.status(400).send("Partner not found. ID: " + id);
 

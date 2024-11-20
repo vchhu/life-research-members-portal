@@ -8,10 +8,12 @@ import { LanguageCtx } from "../../services/context/language-ctx";
 import CheckCircleTwoTone from "@ant-design/icons/lib/icons/CheckCircleTwoTone";
 import LoginButton from "./login-button";
 import { useMsal } from "@azure/msal-react";
+import { useAdminDetails } from "../../services/context/selected-institute-ctx";
 
 const AvatarMenu: FC = () => {
   const { en } = useContext(LanguageCtx);
   const { localAccount } = useContext(ActiveAccountCtx);
+  const isAdmin = useAdminDetails();
   const { instance } = useMsal();
   const msalAccount = instance.getActiveAccount();
 
@@ -34,7 +36,7 @@ const AvatarMenu: FC = () => {
     </Typography>
   );
 
-  const administrator = localAccount?.is_admin ? (
+  const administrator = isAdmin ? (
     <Typography>
       {en ? "Administrator" : "Administrateur"} &nbsp; <CheckCircleTwoTone />
     </Typography>
@@ -63,7 +65,9 @@ const AvatarMenu: FC = () => {
   return (
     <Dropdown
       overlay={dropdown}
-      getPopupContainer={() => document.querySelector(".navbar") || document.body}
+      getPopupContainer={() =>
+        document.querySelector(".navbar") || document.body
+      }
     >
       <div className="avatar">{avatarLabel}</div>
     </Dropdown>
