@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 import Dropdown from "antd/lib/dropdown";
 import Menu from "antd/lib/menu";
 import Button from "antd/lib/button";
@@ -43,10 +43,16 @@ const InstituteSelector: FC = () => {
       console.error("Selected institute does not have a valid URL identifier.");
     }
   };
-
+  const filteredInstitutes = useMemo(
+    () =>
+      institutes
+        .map((m) => ({...m, key: m.id, name: m.name}))
+        .filter((m) => (m.is_active)),
+    [institutes]
+  );
   const menu = (
     <Menu onClick={handleMenuClick}>
-      {institutes.map((institute) => (
+      {filteredInstitutes.map((institute) => (
         <Menu.Item key={institute.id}>{institute.name}</Menu.Item>
       ))}
     </Menu>
