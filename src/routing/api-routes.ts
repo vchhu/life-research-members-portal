@@ -21,6 +21,7 @@ const ApiRoutes = {
   activeAccount: "/api/active-account",
   activeAccountUpdateLastLogin: "/api/active-account/update-last-login",
   memberInstitute: "/api/member-institute",
+  instituteSelector: "/api/institute-selector",
   account: (id: number) => "/api/account/" + id,
   institute: (id: number) => "/api/institute/" +id,
   publicMemberInfo: (id: number) => "/api/member/" + id + "/public",
