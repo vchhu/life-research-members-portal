@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { AccountDBRes } from "../../account/[id]";
+import type { AccountDBRes } from "../../account/[id]";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
 import db from "../../../../../prisma/prisma-client";
 import { includeAllAccountInfo } from "../../../../../prisma/helpers";
