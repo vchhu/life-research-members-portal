@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import { AllAccountsCtx } from "../../services/context/all-accounts-ctx";
 import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
-import { AccountInfo } from "../../services/_types";
+import type { AccountInfo } from "../../services/_types";
 
 const AllAccounts: FC = () => {
   const router = useRouter();

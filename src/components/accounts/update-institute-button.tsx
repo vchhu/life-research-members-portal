@@ -12,7 +12,7 @@ import {
   useState,
 } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import { AccountInfo } from "../../services/_types";
+import type { AccountInfo } from "../../services/_types";
 import { institute } from "@prisma/client";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 

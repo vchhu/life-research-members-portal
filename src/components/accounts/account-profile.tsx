@@ -21,7 +21,7 @@ import DeleteMemberButton from "./delete-member-button";
 import RegisterMemberButton from "./register-member-button";
 import DeleteAccountButton from "./delete-account-button";
 import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
-import { AccountInfo } from "../../services/_types";
+import type { AccountInfo } from "../../services/_types";
 import { List, Tag } from "antd";
 import UpdateInstituteButton from "./update-institute-button";
 import AddInstituteButton from "./add-institute-button";
