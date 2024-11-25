@@ -3,7 +3,7 @@
 // The component also  provides an overview of the portal information and displays a banner image, a tagline, and quick links to key sections of the portal
 // The information displayed is dynamic and changes based on the user's authentication status, language preference and profile information.
 
-import { Row, Col, Typography, Divider, Space } from "antd";
+import { Row, Col, Typography, Space } from "antd";
 import {
   TeamOutlined,
   AppstoreOutlined,
@@ -20,12 +20,11 @@ import { AllPartnersCtx } from "../services/context/all-partners-ctx";
 import {
   AuthenticatedTemplate,
   UnauthenticatedTemplate,
-  useMsal,
 } from "@azure/msal-react";
 import Spin from "antd/lib/spin";
-import { FC, useContext } from "react";
+import { type FC, useContext } from "react";
 import { ActiveAccountCtx } from "../services/context/active-account-ctx";
-import { blue, green } from "@ant-design/colors";
+import { green } from "@ant-design/colors";
 import { LanguageCtx } from "../services/context/language-ctx";
 import Image from "next/image";
 import life from "../../public/life-home2.png";

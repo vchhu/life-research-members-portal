@@ -6,7 +6,7 @@ import PageRoutes from "../../routing/page-routes";
 import { useRouter } from "next/router";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import { AllInstitutesCtx } from "../../services/context/all-institutes-ctx";
-import { institute } from "@prisma/client";
+import type { institute } from "@prisma/client";
 import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
 
 const AllInstitutes: FC = () => {

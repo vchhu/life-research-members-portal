@@ -1,4 +1,3 @@
-import { member } from "@prisma/client";
 import db from "../../../prisma/prisma-client";
 import getAccountFromRequest from "../../utils/api/get-account-from-request";
 import type { NextApiRequest, NextApiResponse } from "next";

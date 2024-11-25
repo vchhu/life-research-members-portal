@@ -6,9 +6,7 @@ import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
 import {
-  FC,
-  Fragment,
-  useCallback,
+  type FC,
   useContext,
   useEffect,
   useMemo,
