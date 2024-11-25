@@ -40,8 +40,9 @@ const UpdateInstituteButton: FC<Props> = ({ account, setAccount }) => {
   //     form.setFieldsValue({ institutes: account.institutes });
   //   }, [form, account, modalOpen]);
 
+  //TODO: Fix This if/when used
   async function submit(data: Data) {
-    const res = await updateInstituteName(account.id, data);
+    const res = "";//await updateInstituteName(account.id, data);
     if (res) {
       setAccount(res);
       setModalOpen(false);
