@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import PageRoutes from "../../routing/page-routes";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import Notification from "../../services/notifications/notification";
+import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
 
 type Data = { confirmation: string };
 type Props = {
@@ -27,14 +28,16 @@ const DeleteAccountButton: FC<Props> = ({ account, setAccount, style }) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = useForm<Data>();
+  const { institute } = useSelectedInstitute();
+  const urlIdentifier = institute?.urlIdentifier;
 
   const memberName = account.first_name + " " + account.last_name;
 
   async function submit() {
     const res = await deleteAccount(account.id);
-    if (res) {
+    if (res && urlIdentifier) {
       setModalOpen(false);
-      router.push(PageRoutes.allAccounts);
+      router.push(PageRoutes.allAccounts(urlIdentifier));
     }
   }
 
