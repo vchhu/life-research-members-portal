@@ -1,7 +1,7 @@
 import Empty from "antd/lib/empty";
 import Card from "antd/lib/card/Card";
 import Title from "antd/lib/typography/Title";
-import { FC, useContext, useEffect } from "react";
+import { type FC, useContext, useEffect } from "react";
 import CardSkeleton from "../loading/card-skeleton";
 import useAccount from "../../services/use-account";
 import { LanguageCtx } from "../../services/context/language-ctx";
@@ -22,8 +22,7 @@ import RegisterMemberButton from "./register-member-button";
 import DeleteAccountButton from "./delete-account-button";
 import { useSelectedInstitute } from "../../services/context/selected-institute-ctx";
 import type { AccountInfo } from "../../services/_types";
-import { List, Tag } from "antd";
-import UpdateInstituteButton from "./update-institute-button";
+import { Tag } from "antd";
 import AddInstituteButton from "./add-institute-button";
 import RemoveInstituteButton from "./remove-institute-button";
 

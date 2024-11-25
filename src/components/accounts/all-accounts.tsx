@@ -1,7 +1,7 @@
 import Button from "antd/lib/button";
 import Table, { ColumnType } from "antd/lib/table";
 import Title from "antd/lib/typography/Title";
-import { FC, useContext, useEffect } from "react";
+import { type FC, useContext, useEffect } from "react";
 import type { AccountRes } from "../../pages/api/account/[id]";
 import PageRoutes from "../../routing/page-routes";
 import { useRouter } from "next/router";

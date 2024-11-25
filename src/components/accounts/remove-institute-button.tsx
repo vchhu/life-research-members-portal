@@ -4,11 +4,10 @@ import Form from "antd/lib/form";
 import Modal from "antd/lib/modal";
 import Select from "antd/lib/select";
 import {
-  Dispatch,
-  FC,
-  SetStateAction,
+  type Dispatch,
+  type FC,
+  type SetStateAction,
   useContext,
-  useEffect,
   useState,
 } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
