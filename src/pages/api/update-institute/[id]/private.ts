@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { selectAllInstituteInfo } from "../../../../../prisma/helpers";
 import db from "../../../../../prisma/prisma-client";
 import getAccountFromRequest from "../../../../utils/api/get-account-from-request";
-import { InstituteInfo } from "../../../../services/_types";
+import type { InstituteInfo } from "../../../../services/_types";
 
 export type UpdateInstituteParams = {
   name: string;
