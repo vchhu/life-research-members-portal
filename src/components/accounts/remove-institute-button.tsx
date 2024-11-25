@@ -12,7 +12,7 @@ import {
   useState,
 } from "react";
 import { LanguageCtx } from "../../services/context/language-ctx";
-import { AccountInfo } from "../../services/_types";
+import type { AccountInfo } from "../../services/_types";
 import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import removeInstitute from "../../services/remove-institute"; // Assume this service function exists
 
