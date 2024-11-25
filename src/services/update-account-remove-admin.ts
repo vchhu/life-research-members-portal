@@ -1,4 +1,3 @@
-import { institute } from "@prisma/client";
 import ApiRoutes from "../routing/api-routes";
 import { en } from "./context/language-ctx";
 import getAuthHeader from "./headers/auth-header";
