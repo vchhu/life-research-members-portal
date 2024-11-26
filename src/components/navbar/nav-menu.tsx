@@ -73,22 +73,22 @@ const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
       label: en ? "Supervisions" : "Supervisions",
       href: PageRoutes.allSupervisions(urlIdentifier),
     },
-
-    {
-      label: en ? "Accounts" : "Comptes",
-      href: PageRoutes.allAccounts(urlIdentifier),
-      children: [
-        {
-          label: en ? "All accounts" : "Tous les comptes",
-          href: PageRoutes.allAccounts(urlIdentifier),
-        },
-        {
-          label: en ? "Register an account" : "Enregistrer un compte",
-          href: PageRoutes.register,
-        },
-      ],
-    },
   ];
+
+  const adminSuperAdminItems = {
+    label: en ? "Accounts" : "Comptes",
+    href: PageRoutes.allAccounts(urlIdentifier),
+    children: [
+      {
+        label: en ? "All accounts" : "Tous les comptes",
+        href: PageRoutes.allAccounts(urlIdentifier),
+      },
+      {
+        label: en ? "Register an account" : "Enregistrer un compte",
+        href: PageRoutes.register,
+      },
+    ],
+  };
 
   const superAdminItems = [
     {
@@ -102,8 +102,10 @@ const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
     if (localAccount && isMember) for (const it of registeredItemsFirst) items.push(it);
     if (localAccount?.is_super_admin || isAdmin)
       for (const it of adminItems) items.push(it);
-    if (localAccount?.is_super_admin)
+    if (localAccount?.is_super_admin) {
+      items.push(adminSuperAdminItems)
       for (const it of superAdminItems) items.push(it);
+    }
     if (localAccount) for (const it of registeredItemsLast) items.push(it);
   }
 
