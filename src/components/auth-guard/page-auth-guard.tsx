@@ -3,7 +3,7 @@ import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 import { LanguageCtx } from "../../services/context/language-ctx";
 import CenteredSpinner from "../loading/centered-spinner";
 import Authorizations from "./authorizations";
-import { useAdminDetails } from "../../services/context/selected-institute-ctx";
+import { useAdminDetails, useMemberDetails } from "../../services/context/selected-institute-ctx";
 //import { auth } from "googleapis/build/src/apis/abusiveexperiencereport";
 
 type Props = {
@@ -20,6 +20,7 @@ const PageAuthGuard: FC<PropsWithChildren<Props>> = ({
 }) => {
   const { localAccount, loading } = useContext(ActiveAccountCtx);
   const isAdmin = useAdminDetails();
+  const isMember = useMemberDetails();
   const { en } = useContext(LanguageCtx);
 
   if (loading) return loadingIcon || <CenteredSpinner />;
@@ -38,6 +39,7 @@ const PageAuthGuard: FC<PropsWithChildren<Props>> = ({
 
   if (!localAccount) return notAuthorized;
   if (auths.includes(Authorizations.registered)) return c;
+  if (auths.includes(Authorizations.member) && isMember) return c;
   if (auths.includes(Authorizations.admin) && isAdmin) return c;
   if (auths.includes(Authorizations.superAdmin) && localAccount.is_super_admin)
     return c;

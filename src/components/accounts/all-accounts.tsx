@@ -25,6 +25,15 @@ const AllAccounts: FC = () => {
     );
   };
 
+  const isMemberOfInstitute = (
+    account: AccountInfo,
+    instituteId: number | undefined
+  ) => {
+    return account.member?.institutes.some(
+      (member) => member.instituteId === instituteId
+    );
+  };
+
   const keyedAccounts = allAccounts.map((m) => ({ ...m, key: m.id }));
 
   useEffect(() => {
@@ -63,12 +72,15 @@ const AllAccounts: FC = () => {
     },
     {
       title: en ? "Member" : "Membre",
-      dataIndex: "member",
+      dataIndex: "is_member",
       width: "6rem",
-      render: (text, record, index) => {
-        return record.member ? (en ? "Yes" : "Oui") : en ? "No" : "Non";
+      render: (_, account) => {
+        const is_member = isMemberOfInstitute(account, institute?.id);
+        return is_member ? (en ? "Yes" : "Oui") : en ? "No" : "Non";
       },
-      sorter: (a, b) => (a.member ? 0 : 1) - (b.member ? 0 : 1),
+      sorter: (a, b) =>
+        (isMemberOfInstitute(a, institute?.id) ? -1 : 1) -
+        (isMemberOfInstitute(b, institute?.id) ? -1 : 1),
     },
     {
       title: en ? "Active" : "Actif",
