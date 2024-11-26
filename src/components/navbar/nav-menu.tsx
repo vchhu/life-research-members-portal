@@ -100,7 +100,7 @@ const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
   const items: { label: string; href: string; children?: any }[] = generalItems;
   if (!loading) {
     if (localAccount && isMember) for (const it of registeredItemsFirst) items.push(it);
-    if (localAccount?.is_super_admin || isAdmin)
+    if (isAdmin)
       for (const it of adminItems) items.push(it);
     if (localAccount?.is_super_admin) {
       items.push(adminSuperAdminItems)
