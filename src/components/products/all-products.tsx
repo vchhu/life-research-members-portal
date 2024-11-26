@@ -229,11 +229,10 @@ const AllProducts: FC = () => {
 
   const handleRegisterProduct = () => {
     if (institute) {
-      console.log(institute);
-      // router.push({
-      //   pathname: "/[instituteId]/products/register",
-      //   query: { instituteId: institute.urlIdentifier },
-      // });
+      router.push({
+         pathname: "/[instituteId]/products/register",
+         query: { instituteId: institute.urlIdentifier },
+      });
     }
   };
 
