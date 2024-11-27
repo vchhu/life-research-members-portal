@@ -102,10 +102,10 @@ const NavMenu: FC<{ urlIdentifier: string | undefined }> = ({
     if (localAccount && isMember) for (const it of registeredItemsFirst) items.push(it);
     if (isAdmin)
       for (const it of adminItems) items.push(it);
-    if (localAccount?.is_super_admin) {
+    if (isAdmin || localAccount?.is_super_admin)
       items.push(adminSuperAdminItems)
+    if (localAccount?.is_super_admin)
       for (const it of superAdminItems) items.push(it);
-    }
     if (localAccount) for (const it of registeredItemsLast) items.push(it);
   }
 
