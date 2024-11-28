@@ -25,6 +25,7 @@ import type { AccountInfo } from "../../services/_types";
 import { Tag } from "antd";
 import AddInstituteButton from "./add-institute-button";
 import RemoveInstituteButton from "./remove-institute-button";
+import { ActiveAccountCtx } from "../../services/context/active-account-ctx";
 
 const { Item } = Descriptions;
 
@@ -36,6 +37,18 @@ const AccountProfile: FC<Props> = ({ id }) => {
   const { en } = useContext(LanguageCtx);
   const { account, setAccount, loading, refresh } = useAccount(id);
   const { institute } = useSelectedInstitute();
+  const { localAccount } = useContext(ActiveAccountCtx);
+  var hasPermission = false;
+
+  if (localAccount?.is_super_admin) hasPermission = true;
+  var permissions = localAccount?.instituteAdmin.map((admin) => admin.instituteId) || [];
+  var memberInstituteIds = account?.member?.institutes.map((institute) => institute.instituteId) || [];
+  for (var a of permissions) {
+    if (memberInstituteIds.includes(a)) {
+      hasPermission = true;
+      break;
+    }
+  }
 
   const isAdminOfInstitute = (
     account: AccountInfo,
@@ -68,14 +81,14 @@ const AccountProfile: FC<Props> = ({ id }) => {
       <Title level={2} style={{ display: "inline-block", margin: 0 }}>
         {account.first_name + " " + account.last_name}
       </Title>
-      <UpdateNameButton account={account} setAccount={setAccount} />
+      {hasPermission && (<UpdateNameButton account={account} setAccount={setAccount} />)}
     </div>
   );
 
   const loginItem = (
     <Item label={<>{en ? "Login Email" : "Compte courriel"}</>}>
       <a href={"mailto:" + account.login_email}>{account.login_email}</a>
-      <UpdateEmailButton account={account} setAccount={setAccount} />
+      {hasPermission && (<UpdateEmailButton account={account} setAccount={setAccount} />)}
     </Item>
   );
 
@@ -128,6 +141,9 @@ const AccountProfile: FC<Props> = ({ id }) => {
     </Item>
   );
 
+  var memberProfile = "";
+  if (hasPermission) memberProfile = PageRoutes.privateMemberProfile(account.member?.id || 0);
+  else memberProfile = PageRoutes.publicMemberProfile(account.member?.id || 0);
   const memberItem = (
     <Item label={en ? "Member Information" : "Informations sur les membres"}>
       {account.member ? (
@@ -140,12 +156,12 @@ const AccountProfile: FC<Props> = ({ id }) => {
           </Text>
           <Button ghost type="primary">
             <SafeLink
-              href={PageRoutes.privateMemberProfile(account.member?.id || 0)}
+              href={memberProfile}
             >
               {en ? "Go to member profile" : "Accéder au profil du membre"}
             </SafeLink>
           </Button>
-          <DeleteMemberButton account={account} setAccount={setAccount} />
+          {hasPermission && (<DeleteMemberButton account={account} setAccount={setAccount} />)}
         </>
       ) : (
         <>
@@ -216,11 +232,11 @@ const AccountProfile: FC<Props> = ({ id }) => {
         {addToMoreInstitutes}
       </Descriptions>
       <div style={{ display: "block", height: 24 }}></div>
-      <DeleteAccountButton
+      {hasPermission && (<DeleteAccountButton
         account={account}
         setAccount={setAccount}
         style={{ marginLeft: "auto", display: "block" }}
-      />
+      />)}
     </Card>
   );
 };
